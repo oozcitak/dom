@@ -1,0 +1,49 @@
+{
+  "name": "livedom",
+  "version": "0.0.1",
+  "keywords": [
+    "dom",
+    "whatwg"
+  ],
+  "homepage": "http://github.com/oozcitak/livedom",
+  "description": "A modern DOM implementation",
+  "author": "Ozgur Ozcitak <oozcitak@gmail.com>",
+  "contributors": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oozcitak/livedom.git"
+  },
+  "bugs": {
+    "url": "http://github.com/oozcitak/livedom/issues"
+  },
+  "main": "./lib/index",
+  "engines": {
+    "node": ">=6.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "dedent": "*",
+    "glob": "*",
+    "@types/node": "*",
+    "@types/jest": "*",
+    "@types/dedent": "*"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "/test/.*\\.test\\.tsx?$",
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ]
+  },
+  "scripts": {
+    "test": "tsc && jest",
+    "cover": "tsc && jest --coverage"
+  }
+}
