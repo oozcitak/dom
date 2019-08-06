@@ -1,6 +1,6 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { TreeQuery } from "./util/TreeQuery"
-import { HTMLCollectionInternal } from "./interfacesInternal"
+import { HTMLCollectionInternal, ElementInternal } from "./interfacesInternal"
 
 /**
  * Represents a collection of elements.
@@ -9,21 +9,20 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
 
   _live: boolean = true
   _root: Node
-  _filter: ((element: Element) => any)
+  _filter: ((element: ElementInternal) => any) = (() => true)
 
   protected static reservedNames = ['_root', '_live', '_filter', 'length',
     'item', 'namedItem', 'get']
 
   /**
    * Initializes a new instance of `HTMLCollection`.
-   *
-   * @param root - the root node
-   * @param filter - a node filter
+   * 
+   * @param root - root node
+   * @param filter - node filter
    */
-  public constructor(root: Node, filter?: (element: Element) => any) {
+  private constructor(root: Node, filter: ((element: ElementInternal) => any)) {
     this._root = root
-
-    this._filter = filter || function (element: Element) { return true }
+    this._filter = filter
 
     return new Proxy<HTMLCollectionImpl>(this, this)
   }
@@ -78,7 +77,7 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
    */
   *[Symbol.iterator](): IterableIterator<Element> {
     yield* TreeQuery.getDescendantElements(this._root, false, false,
-      (ele) => { return !!this._filter(ele) })
+      (ele) => { return !!this._filter(ele as ElementInternal) })
   }
 
   /**
@@ -106,5 +105,17 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
     } else {
       return Reflect.get(target, key, receiver)
     }
+  }
+
+
+  /**
+   * Creates a new `HTMLCollection`.
+   * 
+   * @param root - root node
+   * @param filter - node filter
+   */
+  static _create(root: Node,
+    filter: ((element: ElementInternal) => any) = (() => true)): HTMLCollectionInternal {
+    return new HTMLCollectionImpl(root, filter)
   }
 }

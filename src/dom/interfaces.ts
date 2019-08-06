@@ -1,4 +1,21 @@
-import { HTMLSlotElement } from "../htmldom/interfaces"
+/**
+ * Represents a type that an object can be instances of.
+ */
+export interface Type<T> extends Function { new (...args: any[]): T; }
+
+/**
+ * Represents a window containing a DOM document.
+ */
+export interface Window extends EventTarget {
+  /**
+   * Returns the Event which is currently being handled.
+   * 
+   * _Note:_ Note: This property can be fragile, in that there may be situations
+   * in which the returned Event is not the expected value. In addition, 
+   * Window.event is not accurate for events dispatched within shadow trees.
+   */
+  readonly event?: Event
+}
 
 /**
  * Represents a DOM event.
@@ -730,6 +747,7 @@ export interface Document extends Node, NonElementParentNode,
    * Returns a new {@link Element} with the given `localName`.
    * 
    * @param localName - local name
+   * @param options - element options
    * 
    * @returns the new {@link Element}
    */
@@ -741,6 +759,7 @@ export interface Document extends Node, NonElementParentNode,
    * 
    * @param namespace - namespace URL
    * @param qualifiedName - qualified name
+   * @param options - element options
    * 
    * @returns the new {@link Element}
    */
@@ -1555,7 +1574,6 @@ export interface NamedNodeMap extends Iterable<Attr> {
  * Represents a node filter.
  */
 export interface NodeFilter {
-
   /** 
    * Callback function.
    */
@@ -2170,4 +2188,13 @@ export type EventPathItem = {
   touchTargetList: PotentialEventTarget[]
   rootOfClosedTree: boolean
   slotInClosedTree: boolean
+}
+
+/**
+ * Represents a `<slot>` element.
+ */
+export interface HTMLSlotElement {
+  name: string
+  assignedNodes(options?: any): Node[]
+  assignedElements(options?: any): Element[]
 }

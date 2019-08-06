@@ -617,8 +617,8 @@ export class TreeMutation {
         attributeName: name,
         attributeNamespace: namespace,
         oldValue: mappedOldValue,
-        addedNodes: new NodeListStaticImpl(addedNodes),
-        removedNodes: new NodeListStaticImpl(removedNodes),
+        addedNodes: NodeListStaticImpl._create(target, addedNodes),
+        removedNodes: NodeListStaticImpl._create(target, removedNodes),
         previousSibling: previousSibling,
         nextSibling: nextSibling
       }

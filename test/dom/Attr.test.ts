@@ -11,7 +11,9 @@ describe('Attr', function () {
   doc.documentElement.appendChild(ele)
   ele.id = 'uniq'
   ele.setAttributeNS('http://www.w3.org/1999/xhtml', 'ns:name', 'value')
-  const attr = <any>ele.getAttributeNode('ns:name')
+  const attr = ele.getAttributeNode('ns:name')
+  if (attr === null)
+    throw new Error("attr is null")
 
   test('constructor()', function () {
     expect(attr.nodeType).toBe(2)
@@ -55,7 +57,7 @@ describe('Attr', function () {
   })
 
   test('cloneNode()', function () {
-    const clonedAttr = attr.cloneNode()
+    const clonedAttr = attr.cloneNode() as any
     expect(clonedAttr).not.toBe(attr)
     expect(clonedAttr.nodeType).toBe(2)
     expect(clonedAttr.nodeName).toBe('ns:name')
@@ -68,14 +70,14 @@ describe('Attr', function () {
 
   test('lookupPrefix()', function () {
     expect(attr.lookupPrefix('myns')).toBe('n')
-    expect(attr.lookupPrefix()).toBeNull()
+    expect(attr.lookupPrefix(null)).toBeNull()
     const cloned = <any>(attr.cloneNode())
     expect(cloned.lookupPrefix('none')).toBeNull()
   })
 
   test('lookupNamespaceURI()', function () {
     expect(attr.lookupNamespaceURI('n')).toBe('myns')
-    expect(attr.lookupNamespaceURI()).toBe('mydefaultns')
+    expect(attr.lookupNamespaceURI(null)).toBe('mydefaultns')
     const cloned = <any>(attr.cloneNode())
     expect(cloned.lookupNamespaceURI('none')).toBeNull()
   })

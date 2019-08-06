@@ -8,7 +8,7 @@ export class NodeListImpl implements NodeListInternal {
 
   _live: boolean = true
   _root: Node
-  _filter: ((node: Node) => any)
+  _filter: ((node: Node) => any) = (() => true)
   _length = 0
 
   /**
@@ -16,9 +16,8 @@ export class NodeListImpl implements NodeListInternal {
    * 
    * @param root - root node
    */
-  constructor(root: Node) {
+  private constructor(root: Node) {
     this._root = root
-    this._filter = function (node: Node) { return true }
   }
 
   /**
@@ -109,5 +108,14 @@ export class NodeListImpl implements NodeListInternal {
     for (const [index, node] of this.entries()) {
       callback.call(thisArg, node, index, this)
     }
+  }
+
+  /**
+   * Creates a new `NodeList`.
+   * 
+   * @param root - root node
+   */
+  static _create(root: Node): NodeListInternal {
+    return new NodeListImpl(root)
   }
 }

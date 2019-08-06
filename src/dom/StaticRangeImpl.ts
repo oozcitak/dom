@@ -8,8 +8,8 @@ import { Node, BoundaryPoint } from './interfaces'
  */
 export class StaticRangeImpl extends AbstractRangeImpl implements StaticRangeInternal {
   
-  _start: BoundaryPoint = [<Node><unknown>undefined, 0]
-  _end: BoundaryPoint = [<Node><unknown>undefined, 0]
+  _start: BoundaryPoint
+  _end: BoundaryPoint
 
   /**
    * Initializes a new instance of `StaticRange`.

@@ -7,18 +7,13 @@ import { ProcessingInstructionInternal } from "./interfacesInternal"
  */
 export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstructionInternal {
 
-  _target: string
+  _target: string = ''
 
   /**
    * Initializes a new instance of `ProcessingInstruction`.
-   *
-   * @param ownerDocument - the parent document
-   * @param data - the text content
    */
-  public constructor(ownerDocument: Document | null,
-    target: string, data: string | null = null) {
-    super(ownerDocument, data)
-    this._target = target
+  private constructor() {
+    super()
   }
 
   /** 
@@ -46,8 +41,10 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new ProcessingInstructionImpl(this._nodeDocument,
-      this.target, this.data)
+    const node = new ProcessingInstructionImpl()
+    node._data = this._data
+    node._target = this._target
+    return node
   }
 
   /**
@@ -61,4 +58,18 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
 
     return (this.target === (<ProcessingInstruction>node).target)
   }
+
+  /**
+   * Creates a new `ProcessingInstruction`.
+   * 
+   * @param target - instruction target
+   * @param data - node contents
+   */
+  static _create(target: string, data: string): ProcessingInstructionInternal {
+    const node = new ProcessingInstructionImpl()
+    node._data = data
+    node._target = target
+    return node
+  }
+
 }

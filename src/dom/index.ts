@@ -13,16 +13,19 @@ import { DocumentImpl } from './DocumentImpl'
 import { DocumentOrShadowRootImpl } from './DocumentOrShadowRootImpl'
 import { DocumentTypeImpl } from './DocumentTypeImpl'
 import { DOMException } from './DOMException'
-import { DOMImplementationImpl, Instance as DOMImplementationInstance } from './DOMImplementationImpl'
+import { DOMImplementationImpl } from './DOMImplementationImpl'
 import { DOMTokenListImpl } from './DOMTokenListImpl'
 import { ElementImpl } from './ElementImpl'
 import { EventImpl } from './EventImpl'
 import { EventTargetImpl } from './EventTargetImpl'
 import { HTMLCollectionImpl } from './HTMLCollectionImpl'
+import { MutationObserverImpl } from './MutationObserverImpl'
 import { NamedNodeMapImpl } from './NamedNodeMapImpl'
 import { NodeFilterImpl } from './NodeFilterImpl'
 import { NodeImpl } from './NodeImpl'
+import { NodeIteratorImpl } from './NodeIteratorImpl'
 import { NodeListImpl } from './NodeListImpl'
+import { NodeListStaticImpl } from './NodeListStaticImpl'
 import { NonDocumentTypeChildNodeImpl } from './NonDocumentTypeChildNodeImpl'
 import { NonElementParentNodeImpl } from './NonElementParentNodeImpl'
 import { ParentNodeImpl } from './ParentNodeImpl'
@@ -32,6 +35,9 @@ import { ShadowRootImpl } from './ShadowRootImpl'
 import { SlotableImpl } from './SlotableImpl'
 import { StaticRangeImpl } from './StaticRangeImpl'
 import { TextImpl } from './TextImpl'
+import { TraverserImpl } from './TraverserImpl'
+import { TreeWalkerImpl } from './TreeWalkerImpl'
+import { WindowImpl } from './WindowImpl'
 import { XMLDocumentImpl } from './XMLDocumentImpl'
 
 // Apply mixins
@@ -57,14 +63,21 @@ applyMixin(TextImpl, SlotableImpl)
 applyMixin(ElementImpl, SlotableImpl)
 
 // Export classes
-export { 
-  AbstractRangeImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl, 
-  CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl, 
-  DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl, 
-  ElementImpl, EventImpl, EventTargetImpl, HTMLCollectionImpl, 
-  NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl, 
-  ProcessingInstructionImpl, RangeImpl, ShadowRootImpl, 
-  StaticRangeImpl, TextImpl, XMLDocumentImpl
+export {
+  AbstractRangeImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
+  CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl,
+  DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl,
+  ElementImpl, EventImpl, EventTargetImpl, HTMLCollectionImpl,
+  MutationObserverImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl,
+  NodeIteratorImpl, NodeListImpl, NodeListStaticImpl, ProcessingInstructionImpl,
+  RangeImpl, ShadowRootImpl, StaticRangeImpl, TextImpl, TraverserImpl,
+  TreeWalkerImpl, WindowImpl, XMLDocumentImpl
 }
-export { DOMImplementationInstance }
 export { DOMParser, MimeType } from './parser'
+export { XMLSerializer, PreSerializer } from './serializer'
+export { Namespace, HTMLSpec, XMLSpec } from './spec'
+
+// Export interfaces
+import * as Interfaces from './interfaces'
+import * as InternalInterfaces from './interfacesInternal'
+export { Interfaces, InternalInterfaces }

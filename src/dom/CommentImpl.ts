@@ -1,4 +1,4 @@
-import { Node, Document, NodeType } from "./interfaces"
+import { Node, NodeType } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
 import { CommentInternal } from "./interfacesInternal"
 
@@ -10,12 +10,12 @@ export class CommentImpl extends CharacterDataImpl implements CommentInternal {
   /**
    * Initializes a new instance of `Comment`.
    *
-   * @param ownerDocument - the owner document
    * @param data - the text content
    */
-  public constructor(ownerDocument: Document | null,
-    data: string | null = null) {
-    super(ownerDocument, data)
+  public constructor(data: string = '') {
+    super()
+
+    this._data = data
   }
 
   /** 
@@ -38,6 +38,6 @@ export class CommentImpl extends CharacterDataImpl implements CommentInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new CommentImpl(this._nodeDocument, this.data)
+    return new CommentImpl(this.data)
   }
 }

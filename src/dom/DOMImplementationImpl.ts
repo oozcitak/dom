@@ -2,8 +2,6 @@ import { DocumentType, Document, XMLDocument } from "./interfaces"
 import { DocumentTypeImpl } from "./DocumentTypeImpl"
 import { DocumentImpl } from "./DocumentImpl"
 import { XMLDocumentImpl } from "./XMLDocumentImpl"
-import { TextImpl } from "./TextImpl"
-import { ElementImpl } from "./ElementImpl"
 import { Namespace } from './spec'
 import { DOMImplementationInternal } from "./interfacesInternal"
 
@@ -24,7 +22,11 @@ export class DOMImplementationImpl implements DOMImplementationInternal {
     publicId: string, systemId: string): DocumentType {
     Namespace.validateQName(qualifiedName)
 
-    return new DocumentTypeImpl(null, qualifiedName, publicId, systemId)
+    const node = DocumentTypeImpl._create()
+    node._name = qualifiedName
+    node._publicId = publicId
+    node._systemId = systemId
+    return node
   }
 
   /**
@@ -63,32 +65,32 @@ export class DOMImplementationImpl implements DOMImplementationInternal {
    * @param title - document title
    */
   createHTMLDocument(title?: string): Document {
-    const document = new DocumentImpl()
-    document._contentType = 'text/html'
+    const doc = new DocumentImpl()
+    doc._contentType = 'text/html'
 
-    const doctype = new DocumentTypeImpl(document, 'html')
-    document.appendChild(doctype)
+    const doctype = this.createDocumentType('html', '', '')
+    doc.appendChild(doctype)
 
-    const htmlElement = new ElementImpl(document, 'html', Namespace.HTML)
-    document.appendChild(htmlElement)
+    const htmlElement = doc.createElementNS(Namespace.HTML, 'html')
+    doc.appendChild(htmlElement)
 
-    const headElement = new ElementImpl(document, 'head', Namespace.HTML)
+    const headElement = doc.createElementNS(Namespace.HTML, 'head')
     htmlElement.appendChild(headElement)
 
     if (title !== undefined) {
-      const titleElement = new ElementImpl(document, 'title', Namespace.HTML)
+      const titleElement = doc.createElementNS(Namespace.HTML, 'title')
       headElement.appendChild(titleElement)
-      const textElement = new TextImpl(document, title)
+      const textElement = doc.createTextNode(title)
       titleElement.appendChild(textElement)
     }
 
-    const bodyElement = new ElementImpl(document, 'body', Namespace.HTML)
+    const bodyElement = doc.createElementNS(Namespace.HTML, 'body')
     htmlElement.appendChild(bodyElement)
 
     // document's content type is determined by namespace
-    document._contentType = 'application/xhtml+xml'
+    doc._contentType = 'application/xhtml+xml'
 
-    return document
+    return doc
   }
 
   /**
@@ -96,5 +98,3 @@ export class DOMImplementationImpl implements DOMImplementationInternal {
    */
   hasFeature(): boolean { return true }
 }
-
-export const Instance = new DOMImplementationImpl()

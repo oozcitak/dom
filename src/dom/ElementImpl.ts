@@ -1,5 +1,5 @@
 import {
-  Attr, NamedNodeMap, DOMTokenList, Document, ShadowRoot, NodeType, Node, 
+  Attr, NamedNodeMap, DOMTokenList, Document, ShadowRoot, NodeType, Node,
   Element, HTMLCollection, NodeList, ShadowRootMode
 } from './interfaces'
 import { HTMLSpec } from './spec'
@@ -26,30 +26,26 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   _namespacePrefix: string | null
   _localName: string
   _shadowRoot: ShadowRoot | null = null
-  _attributeList: NamedNodeMap = new NamedNodeMapImpl(this)
+  _attributeList: NamedNodeMap
 
   _customElementState: "undefined" | "failed" | "uncustomized" | "custom" = "undefined"
-  _customElementDefinition  = ElementImpl
-  _is: string = ""
+  _customElementDefinition = ElementImpl
+  _is: string | null = null
 
   _uniqueIdentifier?: string | undefined;
 
 
   /**
    * Initializes a new instance of `Element`.
-   *
-   * @param ownerDocument - the owner document
-   * @param localName - the local name of the element
-   * @param namespaceURI - the namespace URI
-   * @param prefix - the namespace prefix
    */
-  public constructor(ownerDocument: Document | null,
-    localName: string, namespaceURI: string | null, prefix: string | null = null) {
-    super(ownerDocument)
+  private constructor(localName: string, namespace: string | null = null,
+    namespacePrefix: string | null = null) {
+    super()
 
     this._localName = localName
-    this._namespace = namespaceURI
-    this._namespacePrefix = prefix || null
+    this._namespace = namespace
+    this._namespacePrefix = namespacePrefix
+    this._attributeList = NamedNodeMapImpl._create(this)
   }
 
   /** 
@@ -97,7 +93,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /** 
    * Returns a {@link DOMTokenList} with tokens from the class attribute.
    */
-  get classList(): DOMTokenList { return new DOMTokenListImpl(this, 'class') }
+  get classList(): DOMTokenList { return DOMTokenListImpl._create(this, 'class') }
 
   /** 
    * Gets or sets the slot attribute of this element.
@@ -162,9 +158,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     if (attr) {
       attr.value = value
     } else {
-      attr = new AttrImpl(this._nodeDocument, this, name,
-        null, null, value)
-      this.attributes.setNamedItem(attr)
+      let newAttr = AttrImpl._create()
+      newAttr._element = this
+      newAttr._localName = name
+      newAttr._value = value
+      this.attributes.setNamedItem(newAttr)
     }
   }
   /**
@@ -182,9 +180,13 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     if (attr) {
       attr.value = value
     } else {
-      attr = new AttrImpl(this._nodeDocument, this, names.localName,
-        namespace, names.prefix, value)
-      this.attributes.setNamedItemNS(attr)
+      let newAttr = AttrImpl._create()
+      newAttr._element = this
+      newAttr._localName = names.localName
+      newAttr._namespace = namespace
+      newAttr._namespacePrefix = names.prefix
+      newAttr._value = value
+      this.attributes.setNamedItemNS(newAttr)
     }
   }
 
@@ -313,7 +315,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     if (this._shadowRoot)
       throw DOMException.InvalidStateError
 
-    const shadow = new ShadowRootImpl(this._nodeDocument, this, init.mode)
+    const shadow = ShadowRootImpl._create(this)
+    shadow._mode = init.mode
     this._shadowRoot = shadow
     return shadow
   }
@@ -373,7 +376,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     return str
   }
   set textContent(value: string | null) {
-    const node = new TextImpl(this._nodeDocument, value || '')
+    const node = new TextImpl(value || '')
     TreeMutation.replaceAllNode(node, this)
   }
 
@@ -387,8 +390,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    const clonedSelf = new ElementImpl(this._nodeDocument,
-      this.localName, this.namespaceURI, this.prefix)
+    const clonedSelf = new ElementImpl(this._localName, this._namespace,
+      this._namespacePrefix)
 
     // clone attributes
     for (const attr of this.attributes) {
@@ -449,9 +452,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * elements
    */
   getElementsByTagName(qualifiedName: string): HTMLCollection {
-    return new HTMLCollectionImpl(this, function (ele: Element) {
+    const coll = HTMLCollectionImpl._create(this)
+    coll._filter = function (ele: Element) {
       return (qualifiedName === '*' || ele.tagName === qualifiedName)
-    })
+    }
+    return coll
   }
 
   /**
@@ -467,10 +472,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * elements
    */
   getElementsByTagNameNS(namespace: string, localName: string): HTMLCollection {
-    return new HTMLCollectionImpl(this, function (ele: Element) {
+    const coll = HTMLCollectionImpl._create(this)
+    coll._filter = function (ele: Element) {
       return ((localName === '*' || ele.localName === localName) &&
         (namespace === '*' || ele.namespaceURI === namespace))
-    })
+    }
+    return coll
   }
 
   /**
@@ -485,7 +492,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    */
   getElementsByClassName(classNames: string): HTMLCollection {
     const arr = OrderedSet.parse(classNames)
-    return new HTMLCollectionImpl(this, function (ele: Element) {
+    const coll = HTMLCollectionImpl._create(this)
+    coll._filter = function (ele: Element) {
       const classes = ele.classList
       let allClassesFound = true
       for (const className of arr) {
@@ -495,7 +503,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
         }
       }
       return allClassesFound
-    })
+    }
+    return coll
   }
 
   /**
@@ -548,7 +557,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * @returns the inserted element
    */
   insertAdjacentText(where: string, data: string): void {
-    const text = new TextImpl(this._nodeDocument, data)
+    const text = new TextImpl(data)
 
     switch (where.toLowerCase()) {
       case 'beforebegin':
@@ -682,4 +691,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /* istanbul ignore next */
   get assignedSlot(): HTMLSlotElement | null { throw new Error("Mixin: Slotable not implemented.") }
 
+  /**
+   * Creates a new `Element`.
+   */
+  static _create(localName: string, namespace: string | null = null,
+    namespacePrefix: string | null = null): ElementInternal {
+    return new ElementImpl(localName, namespace, namespacePrefix)
+  }
 }

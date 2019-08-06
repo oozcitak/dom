@@ -15,10 +15,12 @@ export class NodeListStaticImpl implements NodeListInternal {
 
   /**
    * Initializes a new instance of `NodeList`.
+   * 
+   * @param root - root node
    */
-  constructor(items: Node[]) {
-    this._items = items
-    this._root = <Node><unknown>undefined
+  private constructor(root: Node) {
+    this._root = root
+    this._items = []
     this._filter = function (node: Node) { return true }
   }
 
@@ -91,4 +93,17 @@ export class NodeListStaticImpl implements NodeListInternal {
       callback.call(thisArg, node, index, this)
     }
   }
+
+  /**
+   * Creates a new `NodeList`.
+   * 
+   * @param root - root node
+   * @param items - a list of items to initialize the list
+   */
+  static _create(root: Node, items: Node[]): NodeListInternal {
+    const list = new NodeListStaticImpl(root)
+    list._items = items
+    return list
+  }
+
 }

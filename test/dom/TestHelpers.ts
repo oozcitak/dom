@@ -1,12 +1,12 @@
 import TestHelpersRoot from "../TestHelpers"
-
+import { window } from '../../src/index'
 import { 
   DOMImplementationImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl, 
   CommentImpl, DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl, 
   DOMException, DOMTokenListImpl, ElementImpl, 
   HTMLCollectionImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl, 
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl, 
-  XMLDocumentImpl, DOMImplementationInstance
+  XMLDocumentImpl
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
 import { XMLSerializer } from '../../src/dom/serializer'
@@ -39,7 +39,11 @@ export default class TestHelpers extends TestHelpersRoot {
   static XMLSerializer = XMLSerializer
   
   /**
-   * Returns the dom implemention.
+   * Returns the window object.
    */
-  static dom: DOMImplementationImpl = DOMImplementationInstance
+  static window = window
+  /**
+   * Returns the DOM implementation object.
+   */
+  static dom = window.document.implementation
 }

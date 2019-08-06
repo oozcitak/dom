@@ -1,4 +1,4 @@
-import { Node, NodeFilter, WhatToShow, FilterResult } from "./interfaces"
+import { Node, FilterResult } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
 import { Traverse } from "./util/Traverse"
 import { TreeWalkerInternal } from "./interfacesInternal"
@@ -12,16 +12,11 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
 
   /**
    * Initializes a new instance of `TreeWalker`.
-   * 
-   * @param root - the node to which the iterator is attached.
-   * @param whatToShow - a filter on node type.
-   * @param filter - a user defined filter.
    */
-  constructor(root: Node, whatToShow: WhatToShow, filter: NodeFilter |
-    ((node: Node) => FilterResult) | null) {
-    super(root, whatToShow, filter)
+  private constructor(root: Node, current: Node) {
+    super(root)
 
-    this._current = root
+    this._current = current
   }
 
   /**
@@ -164,6 +159,16 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
     }
 
     return null
+  }
+
+  /**
+   * Creates a new `TreeWalker`.
+   * 
+   * @param root - iterator's root node
+   * @param current - current node
+   */
+  static _create(root: Node, current: Node): TreeWalkerInternal {
+    return new TreeWalkerImpl(root, current)
   }
 
 }

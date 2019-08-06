@@ -1,8 +1,11 @@
 import { NodeType } from '../interfaces'
-import { HTMLSlotElement } from '../../htmldom/interfaces'
-import { 
-  SlotableInternal, NodeInternal, TextInternal, ElementInternal, ShadowRootInternal, CharacterDataInternal 
+import {
+  SlotableInternal, NodeInternal, TextInternal, ElementInternal,
+  ShadowRootInternal, CharacterDataInternal, DocumentInternal, 
+  DocumentTypeInternal, AttrInternal, CommentInternal, 
+  ProcessingInstructionInternal
 } from '../interfacesInternal'
+import { HTMLSlotElement } from '../../htmldom/interfaces'
 
 /**
  * Contains user-defined type guards for DOM objects.
@@ -18,6 +21,32 @@ export class Guard {
     return (a.nodeType !== undefined)
   }
 
+  /**
+   * Determines if the given object is a `Document`.
+   * 
+   * @param a - the object to check
+   */
+  static isDocumentNode(a: any): a is DocumentInternal {
+    return (a.nodeType === NodeType.Document)
+  }
+
+  /**
+   * Determines if the given object is a `DocumentType`.
+   * 
+   * @param a - the object to check
+   */
+  static isDocumentTypeNode(a: any): a is DocumentTypeInternal {
+    return (a.nodeType === NodeType.DocumentType)
+  }
+
+  /**
+   * Determines if the given object is a `Attr`.
+   * 
+   * @param a - the object to check
+   */
+  static isAttrNode(a: any): a is AttrInternal {
+    return (a.nodeType === NodeType.Attribute)
+  }
 
   /**
    * Determines if the given node is a `CharacterData` node.
@@ -32,7 +61,7 @@ export class Guard {
       type === NodeType.Comment ||
       type === NodeType.CData)
   }
-  
+
   /**
    * Determines if the given object is a `Text`.
    * 
@@ -40,6 +69,24 @@ export class Guard {
    */
   static isTextNode(a: any): a is TextInternal {
     return (a.nodeType === NodeType.Text)
+  }
+
+  /**
+   * Determines if the given object is a `Comment`.
+   * 
+   * @param a - the object to check
+   */
+  static isCommentNode(a: any): a is CommentInternal {
+    return (a.nodeType === NodeType.Comment)
+  }
+
+  /**
+   * Determines if the given object is a `ProcessingInstruction`.
+   * 
+   * @param a - the object to check
+   */
+  static isProcessingInstructionNode(a: any): a is ProcessingInstructionInternal {
+    return (a.nodeType === NodeType.ProcessingInstruction)
   }
 
   /**
@@ -104,5 +151,5 @@ export class Guard {
    */
   static isWindow(a: any): boolean {
     return a.navigator !== undefined
-  }  
+  }
 }

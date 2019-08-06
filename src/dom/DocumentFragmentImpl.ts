@@ -1,6 +1,4 @@
-import {
-  Node, Document, Element, NodeType, HTMLCollection, NodeList
-} from "./interfaces"
+import { Node, Element, NodeType, HTMLCollection, NodeList } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
 import { TextImpl } from "./TextImpl"
 import { TreeMutation } from "./util/TreeMutation"
@@ -15,11 +13,9 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragmentIn
 
   /**
    * Initializes a new instance of `DocumentFragment`.
-   *
-   * @param ownerDocument - the owner document
    */
-  public constructor(ownerDocument: Document | null) {
-    super(ownerDocument)
+  public constructor() {
+    super()
   }
 
   /** 
@@ -50,7 +46,7 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragmentIn
     return str
   }
   set textContent(value: string | null) {
-    const node = new TextImpl(this._nodeDocument, value || '')
+    const node = new TextImpl(value || '')
     TreeMutation.replaceAllNode(node, this)
   }
 
@@ -64,7 +60,7 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragmentIn
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    const clonedSelf = new DocumentFragmentImpl(this._nodeDocument)
+    const clonedSelf = new DocumentFragmentImpl()
 
     // clone child nodes
     if (deep) {

@@ -12,7 +12,7 @@ export class CustomEventImpl extends EventImpl implements CustomEventInternal {
   /**
    * Initializes a new instance of `CustomEvent`.
    */
-  constructor(type: string, eventInit?: CustomEventInit) {
+  public constructor(type: string, eventInit?: CustomEventInit) {
     super(type, eventInit)
 
     this._detail = (eventInit && eventInit.detail) || null

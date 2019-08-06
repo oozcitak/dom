@@ -3,56 +3,68 @@ import {
   NodeFilter, NodeType, Node, HTMLCollection, DocumentFragment,
   NodeList, WhatToShow, Attr, ProcessingInstruction, Comment,
   CDATASection, NodeIterator, TreeWalker, FilterResult, Range, Event,
-  EventTarget
+  EventTarget, Type
 } from './interfaces'
-import { NodeImpl } from './NodeImpl'
+import {
+  DocumentInternal, NodeInternal, AttrInternal, NodeIteratorInternal,
+  NodeListInternal, DOMAlgorithmInternal
+} from './interfacesInternal'
 import { DOMException } from './DOMException'
-import { CDATASectionImpl } from './CDATASectionImpl'
-import { TextImpl } from './TextImpl'
-import { AttrImpl } from './AttrImpl'
-import { ProcessingInstructionImpl } from './ProcessingInstructionImpl'
-import { CommentImpl } from './CommentImpl'
-import { DocumentFragmentImpl } from './DocumentFragmentImpl'
-import { HTMLCollectionImpl } from './HTMLCollectionImpl'
-import { ElementImpl } from './ElementImpl'
+import { NodeImpl } from './NodeImpl'
 import { Namespace, XMLSpec } from './spec'
-import { OrderedSet } from './util/OrderedSet'
-import { TreeQuery } from './util/TreeQuery'
-import { TreeMutation } from './util/TreeMutation'
-import { NodeIteratorImpl } from './NodeIteratorImpl'
-import { TreeWalkerImpl } from './TreeWalkerImpl'
-import { RangeImpl } from './RangeImpl'
-import { DocumentInternal, NodeInternal } from './interfacesInternal'
-import { Guard } from './util/Guard'
+import { Guard } from './util'
+import { globalStore, isFunction, isString } from '../util'
 
 /**
  * Represents a document node.
  */
 export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
-  _encoding: string = "UTF-8"
+  _encoding: { name: string, labels: string[] } = {
+    name: "UTF-8",
+    labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
+  }
   _contentType: string = 'application/xml'
+  // TODO: https://url.spec.whatwg.org/#concept-url
   _URL: string = 'about:blank'
+  // TODO: https://html.spec.whatwg.org/multipage/origin.html#concept-origin
   _origin: string = ''
   _type: "xml" | "html" = "xml"
-  _mode: string = "no-quirks"
-  _compatMode: string = 'CSS1Compat'
+  _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
   _rangeList: Range[] = []
+
+  protected _implementation: DOMImplementation
 
   /**
    * Initializes a new instance of `Document`.
    */
   public constructor() {
-    super(null)
+    super()
+
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    this._implementation = algo.createDOMImplementation()
 
     this._nodeDocument = this
+
+    // TODO: return a new document whose origin is the origin of current global object’s associated Document.
   }
 
   /**
    * Returns the document's URL.
    */
-  get URL(): string { return this._URL }
+  get URL(): string {
+    // TODO: Return serialized URL. See: https://url.spec.whatwg.org/#concept-url-serializer
+    return this._URL
+  }
+
+  /**
+   * Gets or sets the document's URL.
+   */
+  get documentURI(): string {
+    // TODO: Return serialized URL. See: https://url.spec.whatwg.org/#concept-url-serializer
+    return this._URL
+  }
 
   /**
    * Returns sets the document's origin.
@@ -63,12 +75,24 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * Returns whether the document is rendered in Quirks mode or
    * Standards mode.
    */
-  get compatMode(): string { return this._compatMode }
+  get compatMode(): string {
+    return this._mode === "quirks" ? "BackCompat" : "CSS1Compat"
+  }
 
   /**
    * Returns the character set.
    */
-  get characterSet(): string { return this._encoding }
+  get characterSet(): string { return this._encoding.name }
+
+  /**
+   * Gets or sets the character set.
+   */
+  get charset(): string { return this._encoding.name }
+
+  /**
+   * Returns the character set.
+   */
+  get inputEncoding(): string { return this._encoding.name }
 
   /**
    * Returns the MIME type of the document.
@@ -89,24 +113,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * Returns the {@link DOMImplementation} object that is associated 
    * with the document.
    */
-  get implementation(): DOMImplementation {
-    return require('./DOMImplementationImpl').Instance
-  }
-
-  /**
-   * Gets or sets the document's URL.
-   */
-  get documentURI(): string { return this._URL }
-
-  /**
-   * Gets or sets the character set.
-   */
-  get charset(): string { return this._encoding }
-
-  /**
-   * Returns the character set.
-   */
-  get inputEncoding(): string { return this._encoding }
+  get implementation(): DOMImplementation { return this._implementation }
 
   /** 
    * Returns the {@link DocType} or `null` if there is none.
@@ -141,9 +148,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * elements
    */
   getElementsByTagName(qualifiedName: string): HTMLCollection {
-    return new HTMLCollectionImpl(this, function (ele: Element) {
-      return (qualifiedName === '*' || ele.tagName === qualifiedName)
-    })
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.listOfElementsWithQualifiedName(qualifiedName, this)
   }
 
   /**
@@ -158,11 +164,9 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
-  getElementsByTagNameNS(namespace: string, localName: string): HTMLCollection {
-    return new HTMLCollectionImpl(this, function (ele: Element) {
-      return ((localName === '*' || ele.localName === localName) &&
-        (namespace === '*' || ele.namespaceURI === namespace))
-    })
+  getElementsByTagNameNS(namespace: string | null, localName: string): HTMLCollection {
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.listOfElementsWithNamespace(namespace, localName, this)
   }
 
   /**
@@ -176,32 +180,59 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * elements
    */
   getElementsByClassName(classNames: string): HTMLCollection {
-    const arr = OrderedSet.parse(classNames)
-    return new HTMLCollectionImpl(this, function (ele: Element) {
-      const classes = ele.classList
-      let allClassesFound = true
-      for (const className of arr) {
-        if (!classes.contains(className)) {
-          allClassesFound = false
-          break
-        }
-      }
-      return allClassesFound
-    })
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.listOfElementsWithClassNames(classNames, this)
   }
 
   /**
    * Returns a new {@link Element} with the given `localName`.
    * 
    * @param localName - local name
+   * @param options - element options
    * 
    * @returns the new {@link Element}
    */
-  createElement(localName: string): Element {
+  createElement(localName: string, options?: string | { is: string }): Element {
+
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+
+    /**
+     * 1. If localName does not match the Name production, then throw an
+     * "InvalidCharacterError" DOMException.
+     * 2. If the context object is an HTML document, then set localName to
+     * localName in ASCII lowercase.
+     * 3. Let is be null.
+     * 4. If options is a dictionary and options’s is is present, then set is
+     * to it.
+     * 5. Let namespace be the HTML namespace, if the context object is an
+     * HTML document or context object’s content type is 
+     * "application/xhtml+xml", and null otherwise.
+     * 6. Return the result of creating an element given the context object, 
+     * localName, namespace, null, is, and with the synchronous custom elements 
+     * flag set.
+     */
+
     if (!localName.match(XMLSpec.Name))
       throw DOMException.InvalidCharacterError
 
-    return new ElementImpl(this, localName, null, null)
+    // TODO: https://infra.spec.whatwg.org/#ascii-lowercase
+    localName = localName.toLowerCase()
+
+    let is: string | null = null
+    if (options !== undefined) {
+      if (isString(options)) {
+        is = options
+      } else {
+        is = options.is
+      }
+    }
+
+    let namespace: string | null = null
+    if (this._type === "html" || this._contentType === "application/xhtml+xml") {
+      namespace = Namespace.HTML
+    }
+
+    return algo.createAnElement(this, localName, namespace, null, is, true)
   }
 
   /**
@@ -210,14 +241,15 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * 
    * @param namespace - namespace URL
    * @param qualifiedName - qualified name
+   * @param options - element options
    * 
    * @returns the new {@link Element}
    */
-  createElementNS(namespace: string | null, qualifiedName: string): Element {
-    const names = Namespace.extractNames(namespace, qualifiedName)
+  createElementNS(namespace: string | null, qualifiedName: string,
+    options?: string | { is: string }): Element {
 
-    return new ElementImpl(this, names.localName, names.namespace,
-      names.prefix)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.internalCreateElementNS(this, namespace, qualifiedName, options)
   }
 
   /**
@@ -226,7 +258,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link DocumentFragment}
    */
   createDocumentFragment(): DocumentFragment {
-    return new DocumentFragmentImpl(this)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.createDocumentFragment()
   }
 
   /**
@@ -237,7 +270,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link Text}
    */
   createTextNode(data: string): Text {
-    return new TextImpl(this, data)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.createTextNode(data)
   }
 
   /**
@@ -248,9 +282,22 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link CDATASection}
    */
   createCDATASection(data: string): CDATASection {
+    /**
+     * 1. If context object is an HTML document, then throw a 
+     * "NotSupportedError" DOMException.
+     * 2. If data contains the string "]]>", then throw an 
+     * "InvalidCharacterError" DOMException.
+     * 3. Return a new CDATASection node with its data set to data and node
+     * document set to the context object.
+     */
+    if (this._type === "html")
+      throw DOMException.NotSupportedError
+
     if (data.includes(']]>'))
       throw DOMException.InvalidCharacterError
-    return new CDATASectionImpl(this, data)
+
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.createCDATASection(data)
   }
 
   /**
@@ -261,7 +308,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link Comment}
    */
   createComment(data: string): Comment {
-    return new CommentImpl(this, data)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.createComment(data)
   }
 
   /**
@@ -274,12 +322,23 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link ProcessingInstruction}
    */
   createProcessingInstruction(target: string, data: string): ProcessingInstruction {
+    /**
+     * 1. If target does not match the Name production, then throw an 
+     * "InvalidCharacterError" DOMException.
+     * 2. If data contains the string "?>", then throw an 
+     * "InvalidCharacterError" DOMException.
+     * 3. Return a new ProcessingInstruction node, with target set to target,
+     * data set to data, and node document set to the context object.
+     */
+
     if (!target.match(XMLSpec.Name))
       throw DOMException.InvalidCharacterError
+
     if (data.includes("?>"))
       throw DOMException.InvalidCharacterError
 
-    return new ProcessingInstructionImpl(this, target, data)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.createProcessingInstruction(target, data)
   }
 
   /**
@@ -290,24 +349,17 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns clone of node
    */
   importNode(node: Node, deep: boolean = false): Node {
-    if (node.nodeType === NodeType.Document)
+    /**
+     * 1. If node is a document or shadow root, then throw a "NotSupportedError" DOMException.
+     */
+    if (Guard.isDocumentNode(node) || Guard.isShadowRoot(node))
       throw DOMException.NotSupportedError
 
-    if (Guard.isShadowRoot(node))
-      throw DOMException.NotSupportedError
-
-    const clonedNode = node.cloneNode(deep)
-
-    for (const child of TreeQuery.getDescendantNodes(clonedNode, true, false)) {
-      (<NodeImpl>child)._nodeDocument = this
-      if (child.nodeType === NodeType.Element) {
-        for (const attr of (<ElementImpl>child).attributes) {
-          (<AttrImpl>attr)._nodeDocument = this
-        }
-      }
-    }
-
-    return clonedNode
+    /**
+     * 2. Return a clone of node, with context object and the clone children flag set if deep is true.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    return algo.cloneNode(node as NodeInternal, this, deep)
   }
 
   /**
@@ -319,14 +371,24 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the adopted node
    */
   adoptNode(node: Node): Node {
-    if (node.nodeType === NodeType.Document)
+    /**
+     * 1. If node is a document, then throw a "NotSupportedError" DOMException.
+     */
+    if (Guard.isDocumentNode(node))
       throw DOMException.NotSupportedError
 
+    /**
+     * 2. If node is a shadow root, then throw a "HierarchyRequestError" DOMException.
+     */
     if (Guard.isShadowRoot(node))
       throw DOMException.HierarchyRequestError
 
-    TreeMutation.adoptNode(node as NodeInternal, this)
-
+    /**
+     * 3. Adopt node into the context object.
+     * 4. Return node.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    algo.adoptNode(node as NodeInternal, this)
     return node
   }
 
@@ -338,10 +400,26 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link Attr}
    */
   createAttribute(localName: string): Attr {
+    /**
+     * 1. If localName does not match the Name production in XML, then throw
+     * an "InvalidCharacterError" DOMException.
+     * 2. If the context object is an HTML document, then set localName to
+     * localName in ASCII lowercase.
+     * 3. Return a new attribute whose local name is localName and node document
+     * is context object.
+     */
     if (!localName.match(XMLSpec.Name))
       throw DOMException.InvalidCharacterError
 
-    return new AttrImpl(this, null, localName, null, null, '')
+    if(this._type === "html") {
+      localName = localName.toLowerCase()
+    }
+
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    const attr = algo.createAttrNode()
+    attr._localName = localName
+    attr._nodeDocument = this
+    return attr
   }
 
   /**
@@ -354,22 +432,33 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * @returns the new {@link Attr}
    */
   createAttributeNS(namespace: string, qualifiedName: string): Attr {
-    const names = Namespace.extractNames(namespace, qualifiedName)
 
-    return new AttrImpl(this, null, names.localName, names.namespace,
-      names.prefix, '')
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+
+    /**
+     * 1. Let namespace, prefix, and localName be the result of passing 
+     * namespace and qualifiedName to validate and extract.
+     * 2. Return a new attribute whose namespace is namespace, namespace prefix
+     * is prefix, local name is localName, and node document is context object.
+     */
+    const [ns, prefix, localName] = algo.validateAndExtract(namespace, qualifiedName)
+
+    const attr = algo.createAttrNode()
+    attr._namespace = ns
+    attr._namespacePrefix = prefix
+    attr._localName = localName
+    attr._nodeDocument = this
+    return attr
   }
 
   /**
    * Creates an event of the type specified.
    * 
-   * This method is not supported by this module and will throw an
-   * exception.
-   * 
    * @param eventInterface - a string representing the type of event 
    * to be created
    */
   createEvent(eventInterface: string): never {
+    // TODO: Implementation
     throw DOMException.NotSupportedError
   }
 
@@ -377,8 +466,10 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    * Creates a new Range object.
    */
   createRange(): Range {
-    const range = new RangeImpl([this, 0], [this, 0])
-    this._rangeList.push(range)
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    const range = algo.createRange()
+    range._start = [this, 0]
+    range._end = [this, 0]
     return range
   }
 
@@ -391,7 +482,26 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    */
   createNodeIterator(root: Node, whatToShow: WhatToShow = WhatToShow.All,
     filter: NodeFilter | ((node: Node) => FilterResult) | null = null): NodeIterator {
-    return new NodeIteratorImpl(root, whatToShow, filter)
+
+    /**
+     * 1. Let iterator be a new NodeIterator object.
+     * 2. Set iterator’s root and iterator’s reference to root.
+     * 3. Set iterator’s pointer before reference to true.
+     * 4. Set iterator’s whatToShow to whatToShow.
+     * 5. Set iterator’s filter to filter.
+     * 6. Return iterator.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    const iterator = algo.createNodeIterator(root as NodeInternal, root as NodeInternal, true)
+    iterator._whatToShow = whatToShow
+    iterator._iteratorCollection = algo.createNodeList(root as NodeInternal)
+    if (isFunction(filter)) {
+      iterator._filter = algo.createNodeFilter()
+      iterator._filter.acceptNode = filter
+    } else {
+      iterator._filter = filter
+    }
+    return iterator
   }
 
   /**
@@ -403,7 +513,23 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    */
   createTreeWalker(root: Node, whatToShow: WhatToShow = WhatToShow.All,
     filter: NodeFilter | ((node: Node) => FilterResult) | null = null): TreeWalker {
-    return new TreeWalkerImpl(root, whatToShow, filter)
+    /**
+     * 1. Let walker be a new TreeWalker object.
+     * 2. Set walker’s root and walker’s current to root.
+     * 3. Set walker’s whatToShow to whatToShow.
+     * 4. Set walker’s filter to filter.
+     * 5. Return walker.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithmInternal
+    const walker = algo.createTreeWalker(root as NodeInternal, root as NodeInternal)
+    walker._whatToShow = whatToShow
+    if (isFunction(filter)) {
+      walker._filter = algo.createNodeFilter()
+      walker._filter.acceptNode = filter
+    } else {
+      walker._filter = filter
+    }
+    return walker
   }
 
   /**
@@ -468,8 +594,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
     if (event.type === "load") {
       return null
     } else {
-      // TODO: return the document's relevant global object 
-      return null
+      return globalStore["window"]
     }
   }
 

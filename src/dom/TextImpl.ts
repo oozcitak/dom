@@ -1,8 +1,8 @@
-import { Text, Document, Node, NodeType } from "./interfaces"
+import { Text, Node, NodeType } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
 import { TextUtility } from "./util/TextUtility"
 import { TextInternal } from "./interfacesInternal"
-import { HTMLSlotElement } from "../htmldom/interfaces"
+import { HTMLSlotElement } from '../htmldom/interfaces'
 
 /**
  * Represents a text node.
@@ -12,12 +12,12 @@ export class TextImpl extends CharacterDataImpl implements TextInternal {
   /**
    * Initializes a new instance of `Text`.
    *
-   * @param ownerDocument - the owner document
    * @param data - the text content
    */
-  public constructor(ownerDocument: Document | null,
-    data: string | null = null) {
-    super(ownerDocument, data)
+  public constructor(data: string = '') {
+    super()
+    
+    this._data = data
   }
 
   /** 
@@ -73,7 +73,7 @@ export class TextImpl extends CharacterDataImpl implements TextInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new TextImpl(this._nodeDocument, this.data)
+    return new TextImpl(this.data)
   }
 
   // MIXIN: Slotable

@@ -1,8 +1,42 @@
-import { Element, Node } from "../dom/interfaces"
+import {
+  Window as DOMWindow, Document as DOMDocument, Element, Node
+} from "../dom/interfaces"
 
 /**
- * Represents a html element node.
+ * Represents a window containing a DOM document.
  */
+export interface Window extends DOMWindow {
+  /**
+   * Returns the current window.
+   */
+  readonly window: Window
+
+  /**
+   * Returns the current window.
+   */
+  readonly self: Window
+
+  /**
+   * Returns the current window.
+   */
+  readonly frames: Window
+
+  /**
+   * Returns the associated Document.
+   */
+  readonly document: Document
+}
+
+/**
+ * Represents a DOM document.
+ */
+export interface Document extends DOMDocument {
+
+}
+
+/**
+* Represents a html element node.
+*/
 export interface HTMLElement extends Element {
   /**
    * Reflects the title content attribute.

@@ -43,6 +43,7 @@
     ]
   },
   "scripts": {
+    "compile": "tsc",
     "test": "tsc && jest",
     "cover": "tsc && jest --coverage"
   }

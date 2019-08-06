@@ -8,16 +8,15 @@ import { NamedNodeMapInternal } from "./interfacesInternal"
 export class NamedNodeMapImpl implements NamedNodeMapInternal {
 
   _element: Element
-  _attributeList: Attr[]
+  _attributeList: Attr[] = []
 
   /**
    * Initializes a new instance of `NamedNodeMap`.
    * 
-   * @param ownerElement - owner element node
+   * @param element - parent element
    */
-  constructor(ownerElement: Element) {
-    this._element = ownerElement
-    this._attributeList = []
+  private constructor(element: Element) {
+    this._element = element
   }
 
   /** 
@@ -142,5 +141,14 @@ export class NamedNodeMapImpl implements NamedNodeMapInternal {
    */
   *[Symbol.iterator](): IterableIterator<Attr> {
     yield* this._attributeList
+  }
+
+  /**
+   * Creates a new `NamedNodeMap`.
+   * 
+   * @param element - parent element
+   */
+  static _create(element: Element): NamedNodeMapInternal {
+    return new NamedNodeMapImpl(element)
   }
 }

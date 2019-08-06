@@ -38,4 +38,35 @@ export class OrderedSet {
   static sanitize(value: string): string {
     return OrderedSet.serialize(OrderedSet.parse(value))
   }
+
+  /**
+   * Determines whether a set contains the other.
+   * 
+   * @param set1 - a set
+   * @param set1 - a set that is contained in set1
+   * @param caseSensitive - whether matches are case-sensitive
+   */
+  static contains(set1: Set<string>, set2: Set<string>,
+    caseSensitive: boolean = true): boolean {
+
+    for (const val2 of set2) {
+      let found = false
+      for (const val1 of set1) {
+        if (caseSensitive) {
+          if (val1 === val2) {
+            found = true
+            break
+          }
+        } else {
+          if (val1.toUpperCase() !== val2.toUpperCase()) {
+            found = true
+            break
+          }
+        }
+      }
+      if (!found) return false
+    }
+
+    return true
+  }
 }

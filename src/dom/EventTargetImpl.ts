@@ -26,7 +26,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
   /**
    * Initializes a new instance of `EventTarget`.
    */
-  constructor() { }
+  public constructor() { }
 
   /**
    * Registers an event handler.

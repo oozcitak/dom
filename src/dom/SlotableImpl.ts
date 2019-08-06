@@ -1,8 +1,8 @@
-import { HTMLSlotElement } from '../htmldom/interfaces'
 import { SlotableInternal, ElementInternal } from './interfacesInternal'
 import { TreeQuery } from './util/TreeQuery'
 import { Guard } from './util/Guard'
 import { Cast } from './util/Cast'
+import { HTMLSlotElement } from '../htmldom/interfaces'
 
 /**
  * Represents a mixin that allows nodes to become the contents of

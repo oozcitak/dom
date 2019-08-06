@@ -18,20 +18,13 @@ export abstract class TraverserImpl implements TraverserInternal {
   /**
    * Initializes a new instance of `TraverserImpl`.
    * 
-   * @param root - the node to which the iterator is attached.
-   * @param whatToShow - a filter on node type.
-   * @param filter - a user defined filter.
+   * @param root - root node
    */
-  constructor(root: Node, whatToShow: WhatToShow, filter: NodeFilter |
-    ((node: Node) => FilterResult) | null) {
+  constructor(root: Node) {
     this._activeFlag = false
     this._root = root
-    this._whatToShow = whatToShow
-    if (filter instanceof Function) {
-      this._filter = new NodeFilterImpl(filter)
-    } else {
-      this._filter = filter
-    }
+    this._whatToShow = WhatToShow.All
+    this._filter = null
   }
 
   /**

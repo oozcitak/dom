@@ -1,3 +1,10 @@
+import { GlobalStore } from './GlobalStore'
+
+/**
+ * Stores global variables.
+ */
+export const globalStore: GlobalStore = GlobalStore.instance
+
 /**
  * Applies the mixin to a given class.
  * 

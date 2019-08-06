@@ -8,25 +8,15 @@ import { DocumentTypeInternal } from "./interfacesInternal"
  */
 export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
 
-  _name: string
-  _publicId: string
-  _systemId: string
+  _name: string = ''
+  _publicId: string = ''
+  _systemId: string = ''
 
   /**
    * Initializes a new instance of `DocumentType`.
-   *
-   * @param ownerDocument - the owner document
-   * @param name - the name of the node
-   * @param publicId - the `PUBLIC` identifier
-   * @param publicId - the `SYSTEM` identifier
    */
-  public constructor(ownerDocument: Document | null,
-    name: string, publicId: string = '', systemId: string = '') {
-    super(ownerDocument)
-
-    this._name = name
-    this._publicId = publicId
-    this._systemId = systemId
+  private constructor() {
+    super()
   }
 
   /** 
@@ -64,8 +54,11 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new DocumentTypeImpl(this._nodeDocument, this.name,
-      this.publicId, this.systemId)
+    const node = new DocumentTypeImpl()
+    node._name = this._name
+    node._publicId = this._publicId
+    node._systemId = this._systemId
+    return node
   }
 
   /**
@@ -95,5 +88,12 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
   replaceWith(...nodes: (Node | string)[]): void { throw new Error("Mixin: ChildNode not implemented.") }
   /* istanbul ignore next */
   remove(): void { throw new Error("Mixin: ChildNode not implemented.") }
+
+  /**
+   * Creates a new `DocumentType`.
+   */
+  static _create(): DocumentTypeInternal {
+    return new DocumentTypeImpl()
+  }
 
 }

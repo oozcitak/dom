@@ -24,21 +24,24 @@ export class NodeFilterImpl implements NodeFilterInternal {
   static readonly SHOW_DOCUMENT_FRAGMENT: number = 0x400
   static readonly SHOW_NOTATION: number = 0x800
 
-  protected _callback: (node: Node) => FilterResult
-
   /**
    * Initializes a new instance of `NodeFilter`.
-   *
-   * @param callback - the callback function
    */
-  public constructor(callback: (node: Node) => FilterResult) {
-    this._callback = callback
+  private constructor() {
+
   }
 
   /** 
    * Callback function.
    */
   acceptNode(node: Node): FilterResult {
-    return this._callback(node)
+    return FilterResult.Accept
+  }
+
+  /**
+   * Creates a new `NodeFilter`.
+   */
+  static _create(): NodeFilterInternal {
+    return new NodeFilterImpl()
   }
 }

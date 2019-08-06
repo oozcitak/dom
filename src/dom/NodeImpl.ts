@@ -7,6 +7,7 @@ import { NodeListImpl } from './NodeListImpl'
 import { TreeMutation } from './util/TreeMutation'
 import { TreeQuery } from './util/TreeQuery'
 import { NodeInternal, DocumentInternal } from './interfacesInternal'
+import { globalStore } from '../util'
 
 /**
  * Represents a generic XML node.
@@ -45,17 +46,17 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
   _lastChild: Node | null = null
   _previousSibling: Node | null = null
   _nextSibling: Node | null = null
-  
+
   /**
    * Initializes a new instance of `Node`.
-   *
-   * @param ownerDocument - the owner document
    */
-  protected constructor(ownerDocument: Document | null) {
+  protected constructor() {
     super()
-    // TODO: Set document to global object's document
-    this._nodeDocument = <DocumentInternal>(ownerDocument || null)
-    this._childNodes = new NodeListImpl(this)
+
+    const window = globalStore.window
+    this._nodeDocument = <DocumentInternal>window.document
+
+    this._childNodes = NodeListImpl._create(this)
   }
 
   /** 

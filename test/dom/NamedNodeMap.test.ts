@@ -111,9 +111,9 @@ describe('NamedNodeMap', function () {
 
     let names = ''
     let values = ''
-    for (const ele of list) {
-      names += '_' + ele.name
-      values += '_' + ele.value
+    for (const att of list) {
+      names += '_' + att.name
+      values += '_' + att.value
     }
     expect(names).toBe('_att_d:att2')
     expect(values).toBe('_val_val2')

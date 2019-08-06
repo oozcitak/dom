@@ -1,4 +1,4 @@
-import { Node, Document, NodeType } from "./interfaces"
+import { Node, NodeType } from "./interfaces"
 import { TextImpl } from "./TextImpl"
 import { CDATASectionInternal } from "./interfacesInternal"
 
@@ -8,13 +8,9 @@ import { CDATASectionInternal } from "./interfacesInternal"
 export class CDATASectionImpl extends TextImpl implements CDATASectionInternal {
   /**
    * Initializes a new instance of `CDATASection`.
-   *
-   * @param ownerDocument - the owner document
-   * @param data - the text content
    */
-  public constructor(ownerDocument: Document | null,
-    data: string | null = null) {
-    super(ownerDocument, data)
+  private constructor() {
+    super()
   }
 
   /** 
@@ -37,6 +33,18 @@ export class CDATASectionImpl extends TextImpl implements CDATASectionInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new CDATASectionImpl(this._nodeDocument, this.data)
+    const node = new CDATASectionImpl()
+    node._data = this._data
+    return node
   }
+
+  /**
+   * Creates a new `CDATASection`.
+   */
+  static _create(data: string = ''): CDATASectionInternal {
+    const node = new CDATASectionImpl()
+    node._data = data
+    return node
+  }
+
 }

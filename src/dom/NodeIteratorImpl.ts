@@ -1,8 +1,7 @@
-import { Node, NodeFilter, WhatToShow, FilterResult } from "./interfaces"
+import { Node } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
 import { Traverse } from "./util/Traverse"
 import { NodeIteratorInternal, CollectionInternal } from "./interfacesInternal"
-import { NodeListImpl } from ".";
 
 /**
  * Represents an object which can be used to iterate through the nodes
@@ -16,22 +15,17 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
 
   /**
    * Initializes a new instance of `NodeIterator`.
-   * 
-   * @param root - the node to which the iterator is attached.
-   * @param whatToShow - a filter on node type.
-   * @param filter - a user defined filter.
    */
-  constructor(root: Node, whatToShow: WhatToShow, filter: NodeFilter | 
-    ((node: Node) => FilterResult) | null) {
-    super(root, whatToShow, filter)
+  private constructor(root: Node, reference: Node, pointerBeforeReference: boolean) {
+    super(root)
 
-    this._iteratorCollection = new NodeListImpl(root)
-    this._reference = root
-    this._pointerBeforeReference = true
+    this._iteratorCollection = undefined as unknown as CollectionInternal
+    this._reference = reference
+    this._pointerBeforeReference = pointerBeforeReference
   }
 
   /**
-   * Gets the node current nofe of the.
+   * Gets the current node.
    */
   get referenceNode(): Node { return this._reference }
 
@@ -68,4 +62,17 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
    */
   detach(): void { }
 
+
+  /**
+   * Creates a new `NodeIterator`.
+   * 
+   * @param root - iterator's root node
+   * @param reference - reference node
+   * @param pointerBeforeReference - whether the iterator is before or after the
+   * reference node 
+   */
+  static _create(root: Node, reference: Node, pointerBeforeReference: boolean):
+    NodeIteratorInternal {
+    return new NodeIteratorImpl(root, reference, pointerBeforeReference)
+  }
 }

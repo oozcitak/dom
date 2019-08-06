@@ -1,4 +1,4 @@
-import { Attr, Node, Element, Document, NodeType } from "./interfaces"
+import { Attr, Node, Element, NodeType } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
 import { AttrInternal } from "./interfacesInternal"
 
@@ -7,41 +7,23 @@ import { AttrInternal } from "./interfacesInternal"
  */
 export class AttrImpl extends NodeImpl implements AttrInternal {
 
-  _namespace: string | null
-  _namespacePrefix: string | null
-  _element: Element | null
-  _localName: string
-  _value: string
+  _namespace: string | null = null
+  _namespacePrefix: string | null = null
+  _element: Element | null = null
+  _localName: string = ''
+  _value: string = ''
+
+  /**
+   * Initializes a new instance of `Attr`.
+   */
+  private constructor() {
+    super()
+  }
 
   /** 
    * Always returns true.
    */
   readonly specified: boolean = true
-
-  /**
-   * Initializes a new instance of `Attr`.
-   *
-   * @param ownerDocument - owner document
-   * @param ownerElement - owner element node
-   * @param localName - the local name of the element
-   * @param namespaceURI - the namespace URI
-   * @param prefix - the namespace prefix
-   * @param value - attribute value
-   */
-  public constructor(ownerDocument: Document | null,
-    ownerElement: Element | null, localName: string,
-    namespaceURI: string | null, prefix: string | null,
-    value: string) {
-    super(ownerDocument)
-
-    this._element = ownerElement
-
-    this._localName = localName
-    this._namespace = namespaceURI || null
-    this._namespacePrefix = prefix || null
-    this._value = value
-  }
-
 
   /** 
    * Returns the type of node. 
@@ -106,8 +88,13 @@ export class AttrImpl extends NodeImpl implements AttrInternal {
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep: boolean = false): Node {
-    return new AttrImpl(null, null,
-      this.localName, this.namespaceURI, this.prefix, this.value)
+    const attr = new AttrImpl()
+    attr._namespace = this._namespace
+    attr._namespacePrefix = this._namespacePrefix
+    attr._localName = this._localName
+    attr._value = this._value
+
+    return attr
   }
 
   /**
@@ -163,4 +150,12 @@ export class AttrImpl extends NodeImpl implements AttrInternal {
       this._namespacePrefix + ':' + this.localName :
       this.localName)
   }
+
+  /**
+   * Creates a `Attr`.
+   */
+  static _create(): AttrInternal {
+    return new AttrImpl()
+  }
+
 }

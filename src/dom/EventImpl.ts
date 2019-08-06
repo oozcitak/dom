@@ -38,7 +38,7 @@ export class EventImpl implements EventInternal {
   /**
    * Initializes a new instance of `Event`.
    */
-  constructor(type: string, eventInit?: EventInit) {
+  public constructor(type: string, eventInit?: EventInit) {
     this._type = type
     if (eventInit) {
       this._bubbles = eventInit.bubbles || false

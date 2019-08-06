@@ -19,7 +19,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
    * @param ownerElement - the owner element
    * @param localName - the local name of the associated attribute
    */
-  public constructor(ownerElement: Element, localName: string) {
+  private constructor(ownerElement: Element, localName: string) {
     this._element = ownerElement
     this._localName = localName
   }
@@ -174,4 +174,15 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
     const set = Convert.attValueToSet(this._element, this._localName)
     yield* set
   }
+
+  /**
+   * Creates a new `DOMTokenList`.
+   *
+   * @param ownerElement - the owner element
+   * @param localName - the local name of the associated attribute
+   */
+  static _create(ownerElement: Element, localName: string): DOMTokenListInternal {
+    return new DOMTokenListImpl(ownerElement, localName)
+  }
+
 }

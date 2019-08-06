@@ -11,14 +11,16 @@ import { RangeQuery } from './util/RangeQuery'
 import { TextUtility } from './util/TextUtility'
 import { RangeInternal, NodeInternal } from './interfacesInternal'
 import { Guard } from './util/Guard'
+import { globalStore } from '../util'
+import { WindowInternal } from '../htmldom/interfacesInternal';
 
 /**
  * Represents a live range.
  */
 export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
-  _start: BoundaryPoint = [<Node><unknown>undefined, 0]
-  _end: BoundaryPoint = [<Node><unknown>undefined, 0]
+  _start: BoundaryPoint
+  _end: BoundaryPoint
   get _root(): Node { return TreeQuery.rootNode(this._startNode) }
 
   static readonly START_TO_START: number = 0
@@ -29,15 +31,15 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
   /**
    * Initializes a new instance of `Range`.
    */
-  constructor(start?: BoundaryPoint, end?: BoundaryPoint) {
+  public constructor() {
     super()
-    /**
-     * TODO: The Range() constructor, when invoked, must return a new live 
-     * range with (current global object’s associated Document, 0) as its 
-     * start and end.
-     */
-    if (start) { this.setStart(start[0], start[1]) }
-    if (end) { this.setEnd(end[0], end[1]) }
+
+    const window = globalStore.window as WindowInternal
+    const doc = window.document
+
+    const bp: BoundaryPoint = [doc, 0]
+    this._start = bp
+    this._end = bp
   }
 
   /** @inheritdoc */
@@ -273,7 +275,10 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
   /** @inheritdoc */
   cloneRange(): Range {
-    return new RangeImpl(this._start, this._end)
+    const range = new RangeImpl()
+    range._start = this._start
+    range._end = this._end
+    return range
   }
 
   /** @inheritdoc */
@@ -352,5 +357,18 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
   toString(): string {
     return RangeQuery.stringify(this)
+  }
+
+  /**
+   * Creates a new `Range`.
+   * 
+   * @param start - start point
+   * @param end - end point
+   */
+  static _create(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal {
+    const range = new RangeImpl()
+    if (start) range._start = start
+    if (end) range._end = end
+    return range
   }
 }

@@ -1,4 +1,4 @@
-import { Document, Element, Node } from "./interfaces"
+import { Element, Node } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
 import { TextUtility } from "./util/TextUtility"
 import { CharacterDataInternal } from "./interfacesInternal"
@@ -8,20 +8,7 @@ import { CharacterDataInternal } from "./interfacesInternal"
  */
 export abstract class CharacterDataImpl extends NodeImpl implements CharacterDataInternal {
 
-  _data: string
-
-  /**
-   * Initializes a new instance of `CharacterData`.
-   *
-   * @param ownerDocument - the owner document
-   * @param data - the text content
-   */
-  protected constructor(ownerDocument: Document | null,
-    data: string | null) {
-    super(ownerDocument)
-
-    this._data = data || ''
-  }
+  _data: string = ''
 
   /**
    * Determines if the given node is equal to this one.

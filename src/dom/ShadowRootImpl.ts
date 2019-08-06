@@ -1,4 +1,4 @@
-import { Element, Document, ShadowRootMode } from "./interfaces"
+import { Element, ShadowRootMode } from "./interfaces"
 import { DocumentFragmentImpl } from "./DocumentFragmentImpl"
 import { ShadowRootInternal } from "./interfacesInternal"
 
@@ -12,15 +12,12 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRootIn
 
   /**
    * Initializes a new instance of `ShadowRoot`.
-   *
-   * @param ownerDocument - the owner document
    */
-  constructor(ownerDocument: Document | null,
-    host: Element, mode: ShadowRootMode) {
-    super(ownerDocument)
+  private constructor(host: Element) {
+    super()
 
     this._host = host
-    this._mode = mode
+    this._mode = "closed"
   }
 
   /** 
@@ -35,4 +32,13 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRootIn
 
   // MIXIN: DocumentOrShadowRoot
   // No elements
+
+  /**
+   * Creates a new `ShadowRoot`.
+   */
+  static _create(host: Element): ShadowRootInternal {
+    const node = new ShadowRootImpl(host)
+    node._mode = "closed"
+    return node
+  }
 }

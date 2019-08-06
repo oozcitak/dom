@@ -15,7 +15,8 @@ export class ParentNodeImpl implements ParentNodeInternal {
    * Returns the child elements.
    */
   get children(): HTMLCollection {
-    return new HTMLCollectionImpl(Cast.asNode(this))
+    const coll = HTMLCollectionImpl._create(Cast.asNode(this))
+    return coll
   }
 
   /**

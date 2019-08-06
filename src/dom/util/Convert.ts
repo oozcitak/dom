@@ -2,6 +2,8 @@ import { Node, Document, Element } from '../interfaces'
 import { TextImpl } from '../TextImpl'
 import { DocumentFragmentImpl } from '../DocumentFragmentImpl'
 import { OrderedSet } from './OrderedSet'
+import { isString } from '../../util'
+import { DocumentInternal } from '../../htmldom/interfacesInternal'
 
 /**
  * Includes conversion methods.
@@ -15,17 +17,17 @@ export class Convert {
    * @param nodes - the array of nodes or strings
    */
   static nodesIntoNode(nodes: (Node | string)[], document: Document): Node {
-    if (nodes.length === 1) {
-      if (typeof nodes[0] === 'string')
-        return new TextImpl(document, <string>nodes[0])
-      else
-        return <Node>nodes[0]
+    if (nodes.length === 1 && isString(nodes[0])) {
+      const node = new TextImpl(<string>nodes[0])
+      node._nodeDocument = document as DocumentInternal
+      return node
     } else {
-      const fragment = new DocumentFragmentImpl(document)
+      const fragment = new DocumentFragmentImpl()
+      fragment._nodeDocument = document as DocumentInternal
 
       for (const child of nodes) {
         if (typeof child === 'string')
-          fragment.appendChild(new TextImpl(document, child))
+          fragment.appendChild(new TextImpl(child))
         else
           fragment.appendChild(child)
       }

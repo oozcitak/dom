@@ -174,7 +174,8 @@ export class RangeQuery {
    * @param range - a range
    */
   static extractContents(range: RangeInternal): DocumentFragment {
-    const fragment = new DocumentFragmentImpl((range._root as NodeInternal)._nodeDocument)
+    const fragment = new DocumentFragmentImpl()
+    fragment._nodeDocument = (range._root as NodeInternal)._nodeDocument
 
     if (range.collapsed) {
       return fragment
@@ -250,8 +251,9 @@ export class RangeQuery {
     } else if (firstPartiallyContainedChild !== null) {
       const clone = originalStartNode.cloneNode()
       fragment.append(clone)
-      const subrange = new RangeImpl([originalStartNode, originalStartOffset],
-        [firstPartiallyContainedChild, TreeQuery.nodeLength(firstPartiallyContainedChild)])
+      const subrange = new RangeImpl()
+      subrange._start = [originalStartNode, originalStartOffset]
+      subrange._end =[firstPartiallyContainedChild, TreeQuery.nodeLength(firstPartiallyContainedChild)]
       const subfragment = RangeQuery.cloneContents(subrange)
       clone.appendChild(subfragment)
     }
@@ -270,8 +272,9 @@ export class RangeQuery {
     } else if (lastPartiallyContainedChild !== null) {
       const clone = lastPartiallyContainedChild.cloneNode()
       fragment.append(clone)
-      const subrange = new RangeImpl([lastPartiallyContainedChild, 0],
-        [originalEndNode, originalEndOffset])
+      const subrange = new RangeImpl()
+      subrange._start = [lastPartiallyContainedChild, 0]
+      subrange._end = [originalEndNode, originalEndOffset]
       const subfragment = RangeQuery.cloneContents(subrange)
       clone.appendChild(subfragment)
     }
@@ -285,7 +288,8 @@ export class RangeQuery {
    * @param range - a range
    */
   static cloneContents(range: RangeInternal): DocumentFragment {
-    const fragment = new DocumentFragmentImpl((range._root as NodeInternal)._nodeDocument)
+    const fragment = new DocumentFragmentImpl()
+    fragment._nodeDocument = (range._root as NodeInternal)._nodeDocument    
 
     if (range.collapsed) {
       return fragment
@@ -358,8 +362,9 @@ export class RangeQuery {
     } else if (firstPartiallyContainedChild !== null) {
       const clone = originalStartNode.cloneNode()
       fragment.append(clone)
-      const subrange = new RangeImpl([originalStartNode, originalStartOffset],
-        [firstPartiallyContainedChild, TreeQuery.nodeLength(firstPartiallyContainedChild)])
+      const subrange = new RangeImpl()
+      subrange._start = [originalStartNode, originalStartOffset]
+      subrange._end = [firstPartiallyContainedChild, TreeQuery.nodeLength(firstPartiallyContainedChild)]
       const subfragment = RangeQuery.cloneContents(subrange)
       clone.appendChild(subfragment)
     }
@@ -378,8 +383,9 @@ export class RangeQuery {
     } else if (lastPartiallyContainedChild !== null) {
       const clone = lastPartiallyContainedChild.cloneNode()
       fragment.append(clone)
-      const subrange = new RangeImpl([lastPartiallyContainedChild, 0],
-        [originalEndNode, originalEndOffset])
+      const subrange = new RangeImpl()
+      subrange._start = [lastPartiallyContainedChild, 0]
+      subrange._end= [originalEndNode, originalEndOffset]
       const subfragment = RangeQuery.cloneContents(subrange)
       clone.appendChild(subfragment)
     }
