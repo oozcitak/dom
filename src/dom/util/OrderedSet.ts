@@ -58,7 +58,7 @@ export class OrderedSet {
             break
           }
         } else {
-          if (val1.toUpperCase() !== val2.toUpperCase()) {
+          if (val1.toUpperCase() === val2.toUpperCase()) {
             found = true
             break
           }

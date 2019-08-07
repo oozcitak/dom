@@ -320,7 +320,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithmInternal {
     const caseSensitive = (root._nodeDocument._mode !== "quirks")
     return this.createHTMLCollection(root, function (ele) {
       const eleClasses = ele.classList as DOMTokenListInternal
-      return OrderedSet.contains(classes, eleClasses._tokenSet, caseSensitive)
+      return OrderedSet.contains(eleClasses._tokenSet, classes, caseSensitive)
     })
 
   }

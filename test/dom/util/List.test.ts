@@ -3,10 +3,12 @@ import { List } from '../../../src/dom/util/List'
 
 describe('List', function () {
 
+  const doc = $$.window.document
+
   test('append()', function () {
-    const node = new $$.Element(null, 'node', '')
-    const child1 = new $$.Text(null, 'text1')
-    const child2 = new $$.Text(null, 'text2')
+    const node = doc.createElement('node')
+    const child1 = doc.createTextNode('text1')
+    const child2 = doc.createTextNode('text2')
 
     expect(node.childNodes.length).toBe(0)
     List.append(child1, node)
@@ -24,9 +26,9 @@ describe('List', function () {
   })
 
   test('insert()', function () {
-    const node = new $$.Element(null, 'node', '')
-    const child1 = new $$.Text(null, 'text1')
-    const child2 = new $$.Text(null, 'text2')
+    const node = doc.createElement('node')
+    const child1 = doc.createTextNode('text1')
+    const child2 = doc.createTextNode('text2')
 
     expect(node.childNodes.length).toBe(0)
     List.insert(child1, node, null)
@@ -44,9 +46,9 @@ describe('List', function () {
   })
 
   test('remove()', function () {
-    const node = new $$.Element(null, 'node', '')
-    const child1 = new $$.Text(null, 'text1')
-    const child2 = new $$.Text(null, 'text2')
+    const node = doc.createElement('node')
+    const child1 = doc.createTextNode('text1')
+    const child2 = doc.createTextNode('text2')
     List.append(child1, node)
     List.append(child2, node)
 
