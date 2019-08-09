@@ -31,14 +31,24 @@ export class EventImpl implements EventInternal {
   _isTrustedFlag: boolean = false
   
   _type: string
-  protected _bubbles: boolean = false
-  protected _cancelable: boolean = false
+  _bubbles: boolean = false
+  _cancelable: boolean = false
   protected _timeStamp: number
 
   /**
    * Initializes a new instance of `Event`.
    */
   public constructor(type: string, eventInit?: EventInit) {
+    /**
+     * TODO:
+     * When a constructor of the Event interface, or of an interface that
+     * inherits from the Event interface, is invoked, these steps must be run, 
+     * given the arguments type and eventInitDict:
+     * 1. Let event be the result of running the inner event creation steps with
+     * this interface, null, now, and eventInitDict.
+     * 2. Initialize event’s type attribute to type.
+     * 3. Return event.
+     */
     this._type = type
     if (eventInit) {
       this._bubbles = eventInit.bubbles || false
@@ -81,7 +91,7 @@ export class EventImpl implements EventInternal {
 
     const path = this._path
 
-    if (path.length == 0) return composedPath
+    if (path.length === 0) return composedPath
 
     const currentTarget = this.currentTarget
     if (currentTarget === null) {
@@ -239,39 +249,4 @@ export class EventImpl implements EventInternal {
     EventImpl._initialize(this, type, bubbles, cancelable)
   }
 
-  /**
-   * Sets the canceled flag of an event.
-   * 
-   * @param event - an event
-   */
-  protected static _setCanceled(event: Event): void {
-    const impl = <EventImpl>event
-
-    if (impl._cancelable && !impl._inPassiveListenerFlag) {
-      impl._canceledFlag = true
-    }
-  }
-
-  /**
-   * Initializes the value of an event.
-   * 
-   * @param event - an event to initialize
-   * @param type - the type of event
-   * @param bubbles - whether the event propagates in reverse
-   * @param cancelable - whether the event can be cancelled
-   */
-  protected static _initialize(event: Event, type: string, bubbles: boolean, cancelable: boolean): void {
-    const impl = <EventImpl>event
-
-    impl._initializedFlag = true
-    impl._stopPropagationFlag = false
-    impl._stopImmediatePropagationFlag = false
-    impl._canceledFlag = false
-    impl._isTrustedFlag = false
-    impl._target = null
-
-    impl._type = type
-    impl._bubbles = bubbles
-    impl._cancelable = cancelable
-  }
 }

@@ -1,6 +1,6 @@
 import { Element, NodeType } from './interfaces'
 import { NonDocumentTypeChildNodeInternal } from './interfacesInternal'
-import { Cast } from './util/Cast'
+import { Cast, Guard } from './util'
 
 /**
  * Represents a mixin that extends child nodes that can have siblings
@@ -9,28 +9,32 @@ import { Cast } from './util/Cast'
  */
 export class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNodeInternal {
 
-  /**
-   * Returns the previous sibling that is an element node.
-   */
+  /** @inheritdoc */
   get previousElementSibling(): Element | null {
+    /**
+     * The previousElementSibling attribute’s getter must return the first 
+     * preceding sibling that is an element, and null otherwise.
+     */
     let node = Cast.asNode(this).previousSibling
     while (node) {
-      if (node.nodeType === NodeType.Element)
-        return <Element>node
+      if (Guard.isElementNode(node))
+        return node
       else
         node = node.previousSibling
     }
     return null
   }
 
-  /**
-   * Returns the next sibling that is an element node.
-   */
+  /** @inheritdoc */
   get nextElementSibling(): Element | null {
+    /**
+     * The nextElementSibling attribute’s getter must return the first 
+     * following sibling that is an element, and null otherwise.
+     */
     let node = Cast.asNode(this).nextSibling
     while (node) {
-      if (node.nodeType === NodeType.Element)
-        return <Element>node
+      if (Guard.isElementNode(node))
+        return node
       else
         node = node.nextSibling
     }

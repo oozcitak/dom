@@ -2,15 +2,16 @@ import { Element } from "./interfaces"
 import { OrderedSet } from "./util/OrderedSet"
 import { Convert } from "./util/Convert"
 import { DOMException } from "./DOMException"
-import { DOMTokenListInternal } from "./interfacesInternal"
+import { DOMTokenListInternal, ElementInternal } from "./interfacesInternal"
 
 /**
  * Represents a token set.
  */
 export class DOMTokenListImpl implements DOMTokenListInternal {
 
-  _element: Element
+  _element: ElementInternal
   _localName: string
+
   get _tokenSet(): Set<string> { return Convert.attValueToSet(this._element, this._localName) }
 
   /**
@@ -19,7 +20,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
    * @param ownerElement - the owner element
    * @param localName - the local name of the associated attribute
    */
-  private constructor(ownerElement: Element, localName: string) {
+  private constructor(ownerElement: ElementInternal, localName: string) {
     this._element = ownerElement
     this._localName = localName
   }
@@ -181,7 +182,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
    * @param ownerElement - the owner element
    * @param localName - the local name of the associated attribute
    */
-  static _create(ownerElement: Element, localName: string): DOMTokenListInternal {
+  static _create(ownerElement: ElementInternal, localName: string): DOMTokenListInternal {
     return new DOMTokenListImpl(ownerElement, localName)
   }
 

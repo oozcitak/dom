@@ -1,9 +1,9 @@
-import { Node, NodeType, HTMLCollection, NodeList, Element } from './interfaces'
-import { HTMLCollectionImpl } from './HTMLCollectionImpl'
+import { Node, HTMLCollection, NodeList, Element } from './interfaces'
 import { DOMException } from './DOMException'
-import { Convert } from './util/Convert'
-import { ParentNodeInternal } from './interfacesInternal'
-import { Cast } from './util/Cast'
+import { ParentNodeInternal, NodeInternal } from './interfacesInternal'
+import { globalStore } from '../util'
+import { DOMAlgorithm } from './algorithm/interfaces'
+import { Cast, Guard } from './util'
 
 /**
  * Represents a mixin that extends parent nodes that can have children.
@@ -11,53 +11,62 @@ import { Cast } from './util/Cast'
  * {@link DocumentFragment}.
  */
 export class ParentNodeImpl implements ParentNodeInternal {
-  /**
-   * Returns the child elements.
-   */
+
+  /** @inheritdoc */
   get children(): HTMLCollection {
-    const coll = HTMLCollectionImpl._create(Cast.asNode(this))
-    return coll
+    /**
+     * The children attribute’s getter must return an HTMLCollection collection 
+     * rooted at context object matching only element children.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithm
+    return algo.create.htmlCollection(Cast.asNode(this))
   }
 
-  /**
-   * Returns the first child that is an element, and `null` otherwise.
-   */
+  /** @inheritdoc */
   get firstElementChild(): Element | null {
+    /**
+     * The firstElementChild attribute’s getter must return the first child 
+     * that is an element, and null otherwise.
+     */
     let node = Cast.asNode(this).firstChild
 
     while (node) {
-      if (node.nodeType === NodeType.Element)
-        return <Element>node
+      if (Guard.isElementNode(node))
+        return node
       else
         node = node.nextSibling
     }
     return null
   }
 
-  /**
-   * Returns the last child that is an element, and `null` otherwise.
-   */
+  /** @inheritdoc */
   get lastElementChild(): Element | null {
+    /**
+     * The lastElementChild attribute’s getter must return the last child that
+     * is an element, and null otherwise.
+     */
     let node = Cast.asNode(this).lastChild
 
     while (node) {
-      if (node.nodeType === NodeType.Element)
-        return <Element>node
+      if (Guard.isElementNode(node))
+        return node
       else
         node = node.previousSibling
     }
     return null
   }
 
-  /**
-   * Returns the number of children that are elements.
-   */
+  /** @inheritdoc */
   get childElementCount(): number {
+    /**
+     * The childElementCount attribute’s getter must return the number of 
+     * children of context object that are elements.
+     */
     let node = Cast.asNode(this).firstChild
     let count = 0
 
     while (node) {
-      if (node.nodeType === NodeType.Element)
+      if (Guard.isElementNode(node))
         count++
 
       node = node.nextSibling
@@ -66,54 +75,56 @@ export class ParentNodeImpl implements ParentNodeInternal {
     return count
   }
 
-  /**
-   * Prepends the list of nodes or strings before the first child node.
-   * Strings are converted into {@link Text} nodes.
-   * 
-   * @param nodes - the array of nodes or strings
-   */
+  /** @inheritdoc */
   prepend(...nodes: (Node | string)[]): void {
+    /**
+     * 1. Let node be the result of converting nodes into a node given nodes 
+     * and context object’s node document.
+     * 2. Pre-insert node into context object before the context object’s first 
+     * child.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithm
     const node = Cast.asNode(this)
 
-    const childNode = Convert.nodesIntoNode(nodes, node._nodeDocument)
-    node.insertBefore(childNode, node.firstChild)
+    const childNode = algo.parentNode.convertNodesIntoANode(
+      nodes as (NodeInternal | string)[], node._nodeDocument)
+    algo.mutation.preInsert(childNode, node, node.firstChild as NodeInternal | null)
   }
 
-  /**
-   * Appends the list of nodes or strings after the last child node.
-   * Strings are converted into {@link Text} nodes.
-   * 
-   * @param nodes - the array of nodes or strings
-   */
+  /** @inheritdoc */
   append(...nodes: (Node | string)[]): void {
+    /**
+     * 1. Let node be the result of converting nodes into a node given nodes 
+     * and context object’s node document.
+     * 2. Append node to context object.
+     */
+    const algo = globalStore.algorithm as DOMAlgorithm
     const node = Cast.asNode(this)
 
-    const childNode = Convert.nodesIntoNode(nodes, node._nodeDocument)
-    node.appendChild(childNode)
+    const childNode = algo.parentNode.convertNodesIntoANode(
+      nodes as (NodeInternal | string)[], node._nodeDocument)
+    algo.mutation.append(childNode, node)
   }
 
-  /**
-   * Returns the first element that is a descendant of node that
-   * matches selectors.
-   * 
-   * This method is not supported by this module and will throw an
-   * exception.
-   * 
-   * @param selectors - a selectors string
-   */
+  /** @inheritdoc */
   querySelector(selectors: string): Element | null {
+    /**
+     * TODO:
+     * The querySelector(selectors) method, when invoked, must return the first
+     * result of running scope-match a selectors string selectors against
+     * context object, if the result is not an empty list, and null otherwise.
+     */
     throw DOMException.NotSupportedError
   }
 
-  /**
-   * Returns all element descendants of node that match selectors.
-   * 
-   * This method is not supported by this module and will throw an
-   * exception.
-   * 
-   * @param selectors - a selectors string
-   */
+  /** @inheritdoc */
   querySelectorAll(selectors: string): NodeList {
+    /**
+     * TODO:
+     * The querySelectorAll(selectors) method, when invoked, must return the 
+     * static result of running scope-match a selectors string selectors against
+     * context object.
+     */
     throw DOMException.NotSupportedError
   }
 

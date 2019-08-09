@@ -20,6 +20,7 @@ import { EventImpl } from './EventImpl'
 import { EventTargetImpl } from './EventTargetImpl'
 import { HTMLCollectionImpl } from './HTMLCollectionImpl'
 import { MutationObserverImpl } from './MutationObserverImpl'
+import { MutationRecordImpl } from './MutationRecordImpl'
 import { NamedNodeMapImpl } from './NamedNodeMapImpl'
 import { NodeFilterImpl } from './NodeFilterImpl'
 import { NodeImpl } from './NodeImpl'
@@ -68,10 +69,10 @@ export {
   CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl,
   DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl,
   ElementImpl, EventImpl, EventTargetImpl, HTMLCollectionImpl,
-  MutationObserverImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl,
-  NodeIteratorImpl, NodeListImpl, NodeListStaticImpl, ProcessingInstructionImpl,
-  RangeImpl, ShadowRootImpl, StaticRangeImpl, TextImpl, TraverserImpl,
-  TreeWalkerImpl, WindowImpl, XMLDocumentImpl
+  MutationObserverImpl, MutationRecordImpl, NamedNodeMapImpl, NodeFilterImpl, 
+  NodeImpl, NodeIteratorImpl, NodeListImpl, NodeListStaticImpl, 
+  ProcessingInstructionImpl, RangeImpl, ShadowRootImpl, StaticRangeImpl, 
+  TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl, XMLDocumentImpl
 }
 export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'

@@ -1,6 +1,6 @@
-import { Node, Document, NodeType } from "./interfaces"
+import { Node, NodeType } from "./interfaces"
 import { NodeImpl } from './NodeImpl'
-import { DocumentTypeInternal } from "./interfacesInternal"
+import { DocumentTypeInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -8,76 +8,36 @@ import { DocumentTypeInternal } from "./interfacesInternal"
  */
 export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
 
+  _nodeType: NodeType = NodeType.DocumentType
+
   _name: string = ''
   _publicId: string = ''
   _systemId: string = ''
 
   /**
    * Initializes a new instance of `DocumentType`.
+   * 
+   * @param name - name of the node
+   * @param publicId - `PUBLIC` identifier
+   * @param systemId - `SYSTEM` identifier
    */
-  private constructor() {
+  private constructor(name: string, publicId: string = '',
+    systemId: string = '') {
     super()
+
+    this._name = name
+    this._publicId = publicId
+    this._systemId = systemId
   }
 
-  /** 
-   * Returns the type of node. 
-   */
-  get nodeType(): NodeType { return NodeType.DocumentType }
-
-  /** 
-   * Returns a string appropriate for the type of node. 
-   */
-  get nodeName(): string { return this._name }
-
-  /**
-   * Returns the name of the node.
-   */
+  /** @inheritdoc */
   get name(): string { return this._name }
 
-  /**
-   * Returns the `PUBLIC` identifier of the node.
-   */
+  /** @inheritdoc */
   get publicId(): string { return this._publicId }
 
-  /**
-   * Returns the `SYSTEM` identifier of the node.
-   */
+  /** @inheritdoc */
   get systemId(): string { return this._systemId }
-
-  /**
-   * Returns a duplicate of this node, i.e., serves as a generic copy 
-   * constructor for nodes. The duplicate node has no parent 
-   * ({@link parentNode} returns `null`).
-   *
-   * @param deep - if `true`, recursively clone the subtree under the 
-   * specified node. If `false`, clone only the node itself (and its 
-   * attributes, if it is an {@link Element}).
-   */
-  cloneNode(deep: boolean = false): Node {
-    const node = new DocumentTypeImpl()
-    node._name = this._name
-    node._publicId = this._publicId
-    node._systemId = this._systemId
-    return node
-  }
-
-  /**
-   * Determines if the given node is equal to this one.
-   * 
-   * @param node - the node to compare with
-   */
-  isEqualNode(node: Node | null = null): boolean {
-    if (!super.isEqualNode(node))
-      return false
-
-    const other = <DocumentTypeInternal>node
-    if (!other || this._name !== other._name ||
-      this._publicId !== other._publicId ||
-      this._systemId !== other._systemId)
-      return false
-    else
-      return true
-  }
 
   // MIXIN: ChildNode
   /* istanbul ignore next */
@@ -91,9 +51,17 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
 
   /**
    * Creates a new `DocumentType`.
+   * 
+   * @param document - owner document
+   * @param name - name of the node
+   * @param publicId - `PUBLIC` identifier
+   * @param systemId - `SYSTEM` identifier
    */
-  static _create(): DocumentTypeInternal {
-    return new DocumentTypeImpl()
+  static _create(document: DocumentInternal, name: string, publicId: string = '',
+    systemId: string = ''): DocumentTypeInternal {
+    const node = new DocumentTypeImpl(name, publicId, systemId)
+    node._nodeDocument = document
+    return node
   }
 
 }

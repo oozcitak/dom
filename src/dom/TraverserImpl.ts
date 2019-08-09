@@ -1,7 +1,4 @@
-import {
-  Node, NodeFilter, WhatToShow, FilterResult
-} from "./interfaces"
-import { NodeFilterImpl } from "./NodeFilterImpl"
+import { Node, NodeFilter, WhatToShow } from "./interfaces"
 import { TraverserInternal } from "./interfacesInternal"
 
 /**
@@ -16,11 +13,11 @@ export abstract class TraverserImpl implements TraverserInternal {
   _filter: NodeFilter | null
 
   /**
-   * Initializes a new instance of `TraverserImpl`.
+   * Initializes a new instance of `Traverser`.
    * 
    * @param root - root node
    */
-  constructor(root: Node) {
+  protected constructor(root: Node) {
     this._activeFlag = false
     this._root = root
     this._whatToShow = WhatToShow.All

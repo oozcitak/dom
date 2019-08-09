@@ -19,29 +19,19 @@ export abstract class AbstractRangeImpl implements AbstractRangeInternal {
       this._start[1] === this._end[1])
   }
 
-  /**
-   * Returns the start node of the range.
-   */
+  /** @inheritdoc */
   get startContainer(): Node { return this._startNode }
 
-  /**
-   * Returns the start offset of the range.
-   */
+  /** @inheritdoc */
   get startOffset(): number { return this._startOffset }
 
-  /**
-   * Returns the end node of the range.
-   */
+  /** @inheritdoc */
   get endContainer(): Node { return this._endNode }
 
-  /**
-   * Returns the end offset of the range.
-   */
+  /** @inheritdoc */
   get endOffset(): number { return this._endOffset }
 
-  /**
-   * Returns `true` if the range starts and ends at the same point.
-   */
+  /** @inheritdoc */
   get collapsed(): boolean { return this._collapsed }
 
 }

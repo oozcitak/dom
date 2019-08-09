@@ -1,9 +1,4 @@
 /**
- * Represents a type that an object can be instances of.
- */
-export interface Type<T> extends Function { new (...args: any[]): T; }
-
-/**
  * Represents a window containing a DOM document.
  */
 export interface Window extends EventTarget {
@@ -176,7 +171,7 @@ export interface MutationRecord {
    * `"characterData"` if it was a mutation to a CharacterData node, 
    * and `"childList"` if it was a mutation to the tree of nodes.
    */
-  readonly type: string
+  readonly type: "attributes" | "characterData" | "childList"
 
   /**
    * Returns the node the mutation affected.
@@ -288,7 +283,7 @@ export interface AbortController {
  * Represents a signal object that communicates with a DOM request and abort
  * it through an AbortController.
  */
-export interface AbortSignal {
+export interface AbortSignal extends EventTarget {
   /**
    * Returns `true` if the controller is to abort, and `false` otherwise.
    */
@@ -982,9 +977,9 @@ export interface Element extends Node, ParentNode,
   /**
    * Returns the value of the attribute with the given `name`.
    * 
-   * @param name - attribute name
+   * @param qualifiedName - attribute name
    */
-  getAttribute(name: string): string | null
+  getAttribute(qualifiedName: string): string | null
 
   /**
    * Returns the value of the attribute with the given `namespace` and 
@@ -998,10 +993,10 @@ export interface Element extends Node, ParentNode,
   /**
    * Sets the value of the attribute with the given `name`.
    * 
-   * @param name - attribute name
+   * @param qualifiedName - attribute name
    * @param value - attribute value to set
    */
-  setAttribute(name: string, value: string): void
+  setAttribute(qualifiedName: string, value: string): void
 
   /**
    * Sets the value of the attribute with the given `namespace` and 
@@ -1017,9 +1012,9 @@ export interface Element extends Node, ParentNode,
   /**
    * Removes the attribute with the given `name`.
    * 
-   * @param name - attribute name
+   * @param qualifiedName - attribute name
    */
-  removeAttribute(name: string): void
+  removeAttribute(qualifiedName: string): void
 
   /**
    * Removes the attribute with the given `namespace` and  `localName`.
@@ -1032,9 +1027,19 @@ export interface Element extends Node, ParentNode,
   /**
    * Determines whether the attribute with the given `name` exists.
    * 
-   * @param name - attribute name
+   * @param qualifiedName - attribute name
    */
-  hasAttribute(name: string): boolean
+  hasAttribute(qualifiedName: string): boolean
+
+  /**
+   * Toggles a boolean attribute (removing it if it is present and adding it
+   * if it is not present).
+   * 
+   * @param qualifiedName - attribute name
+   * @param force - whether the attribute should be added or removed, 
+   * no matter whether the attribute is present or not
+   */
+  toggleAttribute(qualifiedName: string, force?: boolean): boolean
 
   /**
    * Determines whether the attribute with the given `namespace` and 
@@ -1048,9 +1053,9 @@ export interface Element extends Node, ParentNode,
   /**
    * Returns the attribute with the given `name`.
    * 
-   * @param name - attribute name
+   * @param qualifiedName - attribute name
    */
-  getAttributeNode(name: string): Attr | null
+  getAttributeNode(qualifiedName: string): Attr | null
 
   /**
    * Returns the attribute with the given `namespace` and 
@@ -1164,7 +1169,8 @@ export interface Element extends Node, ParentNode,
    * 
    * @returns the inserted element
    */
-  insertAdjacentElement(where: string, element: Element): Element | null
+  insertAdjacentElement(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
+    element: Element): Element | null
 
   /**
    * Inserts a given text node at a given position relative to this
@@ -1179,7 +1185,8 @@ export interface Element extends Node, ParentNode,
    * 
    * @returns the inserted element
    */
-  insertAdjacentText(where: string, data: string): void
+  insertAdjacentText(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
+    data: string): void
 
 }
 
@@ -1319,6 +1326,13 @@ export interface ChildNode {
    * Removes this node form its tree.
    */
   remove(): void
+
+}
+
+/**
+ * Represents a slot element of a shadow tree.
+ */
+export interface Slot extends Element {
 
 }
 

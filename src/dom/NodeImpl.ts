@@ -1,13 +1,17 @@
 import {
   Node, NodeList, Element, Attr, Text, Document, NodeType,
-  Position, GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver
+  Position, GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
+  Event, EventTarget
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
-import { NodeListImpl } from './NodeListImpl'
-import { TreeMutation } from './util/TreeMutation'
-import { TreeQuery } from './util/TreeQuery'
-import { NodeInternal, DocumentInternal } from './interfacesInternal'
+import {
+  NodeInternal, DocumentInternal, TextInternal, RangeInternal, AttrInternal,
+  ElementInternal
+} from './interfacesInternal'
 import { globalStore } from '../util'
+import { DOMAlgorithm } from './algorithm/interfaces'
+import { Guard } from './util'
+import { DOMException } from '.'
 
 /**
  * Represents a generic XML node.
@@ -34,13 +38,14 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
   static readonly DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
   static readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
-  protected _baseURI = ''
+  protected _algo: DOMAlgorithm
   protected _childNodes: NodeList
 
   _nodeDocument: DocumentInternal
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
 
+  abstract _nodeType: NodeType
   _parentNode: Node | null = null
   _firstChild: Node | null = null
   _lastChild: Node | null = null
@@ -52,41 +57,80 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    */
   protected constructor() {
     super()
-
+    
     const window = globalStore.window
-    this._nodeDocument = <DocumentInternal>window.document
+    this._nodeDocument = window.document as DocumentInternal
 
-    this._childNodes = NodeListImpl._create(this)
+    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._childNodes = this._algo.create.nodeList(this)
   }
 
-  /** 
-   * Returns the type of node. 
-   */
-  abstract get nodeType(): NodeType
+  /** @inheritdoc */
+  get nodeType(): NodeType { return this._nodeType }
 
   /** 
    * Returns a string appropriate for the type of node. 
    */
-  abstract get nodeName(): string
+  get nodeName(): string {
+    if (Guard.isElementNode(this)) {
+      return this._htmlUppercasedQualifiedName
+    } else if (Guard.isAttrNode(this)) {
+      return this._qualifiedName
+    } else if (Guard.isExclusiveTextNode(this)) {
+      return "#text"
+    } else if (Guard.isCDATASectionNode(this)) {
+      return "#cdata-section"
+    } else if (Guard.isProcessingInstructionNode(this)) {
+      return this._target
+    } else if (Guard.isCommentNode(this)) {
+      return "#comment"
+    } else if (Guard.isDocumentNode(this)) {
+      return "#document"
+    } else if (Guard.isDocumentTypeNode(this)) {
+      return this._name
+    } else if (Guard.isDocumentFragmentNode(this)) {
+      return "#document-fragment"
+      /** istanbul ignore next*/
+    } else {
+      return ""
+    }
+  }
 
   /**
    * Gets the absolute base URL of the node.
    */
-  get baseURI(): string { return this._baseURI }
+  get baseURI(): string {
+    /**
+     * TODO:
+     * The baseURI attribute’s getter must return node document’s document 
+     * base URL, serialized.
+     * See: https://html.spec.whatwg.org/multipage/urls-and-fetching.html#document-base-url
+     */
+    return ""
+  }
 
   /** 
    * Returns whether the node is rooted to a document node. 
    */
   get isConnected(): boolean {
-    const root = this.getRootNode()
-    return (root.nodeType === NodeType.Document)
+    /**
+     * The isConnected attribute’s getter must return true, if context object 
+     * is connected, and false otherwise.
+     */
+    return Guard.isElementNode(this) && this._algo.shadowTree.isConnected(this)
   }
 
   /** 
    * Returns the parent document. 
    */
   get ownerDocument(): Document | null {
-    if (this.nodeType === NodeType.Document)
+    /**
+     * The ownerDocument attribute’s getter must return null, if the context
+     * object is a document, and the context object’s node document otherwise.
+     * _Note:_ The node document of a document is that document itself. All 
+     * nodes have a node document at all times.
+     */
+    if (this._nodeType === NodeType.Document)
       return null
     else
       return this._nodeDocument
@@ -100,40 +144,74 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * the node's root node.
    */
   getRootNode(options?: GetRootNodeOptions): Node {
-    return TreeQuery.rootNode(this, !!options && options.composed)
+    /**
+     * The getRootNode(options) method, when invoked, must return context
+     * object’s shadow-including root if options’s composed is true,
+     * and context object’s root otherwise.
+     */
+    return this._algo.tree.rootNode(this, !!options && options.composed)
   }
 
   /** 
    * Returns the parent node. 
    */
-  get parentNode(): Node | null { return this._parentNode }
+  get parentNode(): Node | null {
+    /**
+     * The parentNode attribute’s getter must return the context object’s parent.
+     * _Note:_ An Attr node has no parent.
+     */
+    if (this._nodeType === NodeType.Attribute) {
+      return null
+    } else {
+      return this._parentNode
+    }
+  }
 
   /** 
    * Returns the parent element. 
    */
   get parentElement(): Element | null {
-    if (this.parentNode && this.parentNode.nodeType === NodeType.Element)
-      return <Element>this.parentNode
-    else
+    /**
+     * The parentElement attribute’s getter must return the context object’s 
+     * parent element.
+     */
+    if (this.parentNode && Guard.isElementNode(this.parentNode)) {
+      return this.parentNode
+    } else {
       return null
+    }
   }
 
   /** 
    * Determines whether a node has any children.
    */
   hasChildNodes(): boolean {
+    /**
+     * The hasChildNodes() method, when invoked, must return true if the context
+     * object has children, and false otherwise.
+     */
     return (this.firstChild !== null)
   }
 
   /** 
    * Returns a {@link NodeList} of child nodes. 
    */
-  get childNodes(): NodeList { return this._childNodes }
+  get childNodes(): NodeList {
+    /**
+     * The childNodes attribute’s getter must return a NodeList rooted at the 
+     * context object matching only children.
+     */
+    return this._childNodes
+  }
 
   /** 
    * Returns the first child node. 
    */
   get firstChild(): Node | null {
+    /**
+     * The firstChild attribute’s getter must return the context object’s first
+     * child.
+     */
     return this._firstChild
   }
 
@@ -141,6 +219,10 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * Returns the last child node. 
    */
   get lastChild(): Node | null {
+    /**
+     * The lastChild attribute’s getter must return the context object’s last 
+     * child.
+     */
     return this._lastChild
   }
 
@@ -148,6 +230,11 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * Returns the previous sibling node. 
    */
   get previousSibling(): Node | null {
+    /**
+     * The previousSibling attribute’s getter must return the context object’s
+     * previous sibling.
+     * _Note:_ An Attr node has no siblings.
+     */
     return this._previousSibling
   }
 
@@ -155,23 +242,65 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * Returns the next sibling node. 
    */
   get nextSibling(): Node | null {
+    /**
+     * The nextSibling attribute’s getter must return the context object’s 
+     * next sibling.
+     */
     return this._nextSibling
   }
 
   /** 
-   * Gets or sets the data associated with a {@link CharacterData} node.
-   * For other node types returns `null`. 
+   * Gets or sets the data associated with a {@link CharacterData} node or the
+   * value of an {@link @Attr} node. For other node types returns `null`. 
    */
-  get nodeValue(): string | null { return null }
-  set nodeValue(value: string | null) { }
+  get nodeValue(): string | null {
+    if (Guard.isAttrNode(this)) {
+      return this._value
+    } else if (Guard.isCharacterDataNode(this)) {
+      return this._data
+    } else {
+      return null
+    }
+  }
+  set nodeValue(value: string | null) {
+    const algo = this._algo
+    if (value === null) { value = '' }
+
+    if (Guard.isAttrNode(this)) {
+      algo.attr.setAnExistingAttributeValue(this, value)
+    } else if (Guard.isCharacterDataNode(this)) {
+      algo.characterData.replaceData(this, 0, this._data.length, value)
+    }
+  }
 
   /** 
-   * Returns the concatenation of data of all the {@link CharacterData}
+   * Returns the concatenation of data of all the {@link Text}
    * node descendants in tree order. When set, replaces the text 
    * contents of the node with the given value. 
    */
-  get textContent(): string | null { return null }
-  set textContent(value: string | null) { }
+  get textContent(): string | null {
+    const algo = this._algo
+    if (Guard.isDocumentFragmentNode(this) || Guard.isElementNode(this)) {
+      return algo.text.descendantTextContent(this)
+    } else if (Guard.isAttrNode(this)) {
+      return this._value
+    } else if (Guard.isCharacterDataNode(this)) {
+      return this._data
+    } else {
+      return null
+    }
+  }
+  set textContent(value: string | null) {
+    const algo = this._algo
+    if (value === null) { value = '' }
+    if (Guard.isDocumentFragmentNode(this) || Guard.isElementNode(this)) {
+      algo.node.stringReplaceAll(value, this)
+    } else if (Guard.isAttrNode(this)) {
+      algo.attr.setAnExistingAttributeValue(this, value)
+    } else if (Guard.isCharacterDataNode(this)) {
+      algo.characterData.replaceData(this, 0, algo.tree.nodeLength(this), value)
+    }
+  }
 
   /**
    * Puts all {@link Text} nodes in the full depth of the sub-tree
@@ -181,35 +310,99 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * are no adjacent Text nodes.
    */
   normalize(): void {
-    // remove empty text nodes
-    let node = this.firstChild
-    while (node) {
-      const nextNode = node.nextSibling
-      if (node.nodeType === NodeType.Text) {
-        const text = <Text>node
-        if (text.length === 0) {
-          this.removeChild(text)
+    /**
+     * The normalize() method, when invoked, must run these steps for each 
+     * descendant exclusive Text node node of context object:
+     */
+    const algo = this._algo
+    const exclusiveTextNodes: TextInternal[] = []
+    for (const node of algo.tree.getDescendantNodes(this)) {
+      if (Guard.isExclusiveTextNode(node)) {
+        exclusiveTextNodes.push(node)
+      }
+    }
+
+    for (const node of exclusiveTextNodes) {
+      /**
+       * 1. Let length be node’s length.
+       * 2. If length is zero, then remove node and continue with the next 
+       * exclusive Text node, if any.
+       */
+      let length = algo.tree.nodeLength(node)
+      if (length === 0 && node.parentNode !== null) {
+        algo.mutation.remove(node, node.parentNode as NodeInternal)
+        continue
+      }
+      /**
+       * 3. Let data be the concatenation of the data of node’s contiguous 
+       * exclusive Text nodes (excluding itself), in tree order.
+       */
+      const childNodes: TextInternal[] = []
+      let data = ''
+      for (const childNode of algo.text.contiguousExclusiveTextNodes(node)) {
+        childNodes.push(childNode)
+        data += childNode._data
+      }
+
+      /**
+       * 4. Replace data with node node, offset length, count 0, and data data.
+       */
+      algo.characterData.replaceData(node, length, 0, data)
+
+      /**
+       * 5. Let currentNode be node’s next sibling.
+       * 6. While currentNode is an exclusive Text node:
+       */
+      let currentNode = node.nextSibling
+      while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
+        /**
+         * 6.1. For each live range whose start node is currentNode, add length
+         * to its start offset and set its start node to node.
+         * 6.2. For each live range whose end node is currentNode, add length to
+         * its end offset and set its end node to node.
+         * 6.3. For each live range whose start node is currentNode’s parent and
+         * start offset is currentNode’s index, set its start node to node and
+         * its start offset to length.
+         * 6.4. For each live range whose end node is currentNode’s parent and
+         * end offset is currentNode’s index, set its end node to node and its
+         * end offset to length.
+         */
+        const index = algo.tree.index(currentNode)
+        const doc = node._nodeDocument
+        for (const item of doc._rangeList) {
+          const range = item as RangeInternal
+          if (range._start[0] === currentNode) {
+            range._start[0] = node
+            range._start[1] += length
+          }
+          if (range._end[0] === currentNode) {
+            range._end[0] = node
+            range._end[1] += length
+          }
+          if (range._start[0] === currentNode.parentNode && range._start[1] === index) {
+            range._start[0] = node
+            range._start[1] = length
+          }
+          if (range._end[0] === currentNode.parentNode && range._end[1] === index) {
+            range._end[0] = node
+            range._end[1] = length
+          }
         }
+        /**
+         * 6.5. Add currentNode’s length to length.
+         * 6.6. Set currentNode to its next sibling.
+         */
+        length += algo.tree.nodeLength(currentNode)
+        currentNode = currentNode.nextSibling
       }
-      node = nextNode
-    }
-    // combine adjacent text nodes
-    node = this.firstChild
-    while (node) {
-      const nextNode = node.nextSibling
-      if (node.nodeType === NodeType.Text &&
-        nextNode && nextNode.nodeType === NodeType.Text) {
-        const text = <Text>node
-        const nextText = <Text>nextNode
-        text.appendData(nextText.data)
-        this.removeChild(nextText)
-      } else {
-        node = nextNode
+
+      /**
+       * 7. Remove node’s contiguous exclusive Text nodes (excluding itself), 
+       * in tree order.
+       */
+      for (const childNode of childNodes) {
+        algo.mutation.remove(childNode, node)
       }
-    }
-    // normalize child nodes
-    for (const child of this.childNodes) {
-      child.normalize()
     }
   }
 
@@ -222,7 +415,18 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * specified node. If `false`, clone only the node itself (and its 
    * attributes, if it is an {@link Element}).
    */
-  abstract cloneNode(deep?: boolean): Node
+  cloneNode(deep: boolean = false): Node {
+    /**
+     * 1. If context object is a shadow root, then throw a "NotSupportedError" 
+     * DOMException.
+     * 2. Return a clone of the context object, with the clone children flag set 
+     * if deep is true.
+     */
+    if (Guard.isShadowRoot(this))
+      throw DOMException.NotSupportedError
+
+    return this._algo.node.clone(this, null, deep)
+  }
 
   /**
    * Determines if the given node is equal to this one.
@@ -230,22 +434,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @param node - the node to compare with
    */
   isEqualNode(node: Node | null): boolean {
-    if (!node || this.nodeType !== node.nodeType ||
-      this.childNodes.length !== node.childNodes.length) {
-      return false
-    } else {
-      let n1 = this.firstChild
-      let n2 = node.firstChild
-      while (n1 && n2) {
-        if (!n1.isEqualNode(n2)) {
-          return false
-        }
-        n1 = n1.nextSibling
-        n2 = n2.nextSibling
-      }
-
-      return true
-    }
+    /**
+     * The isEqualNode(otherNode) method, when invoked, must return true if
+     * otherNode is non-null and context object equals otherNode, and false 
+     * otherwise.
+     */
+    return (node !== null && this._algo.node.equals(this, node as NodeInternal))
   }
 
   /**
@@ -254,43 +448,84 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @param node - the node to compare with
    */
   isSameNode(node: Node | null): boolean {
-    return (!!node && node === this)
+    /**
+     * The isSameNode(otherNode) method, when invoked, must return true if 
+     * otherNode is context object, and false otherwise.
+     */
+    return (this === node)
   }
 
   /**
    * Returns a bitmask indicating the position of the given `node`
    * relative to this node.
    */
-  compareDocumentPosition(node: Node): Position {
-    if (node === this) return 0
+  compareDocumentPosition(other: Node): Position {
+    const algo = this._algo
 
-    let node1: Node | null = node
-    let node2: Node | null = this
+    /**
+     * 1. If context object is other, then return zero.
+     * 2. Let node1 be other and node2 be context object.
+     * 3. Let attr1 and attr2 be null.
+     * attr1’s element.
+     */
+    if (other === this) return 0
 
-    let attr1: Attr | null = null
-    let attr2: Attr | null = null
+    let node1: NodeInternal | null = other as NodeInternal | null
+    let node2: NodeInternal | null = this as NodeInternal | null
 
-    if (node1.nodeType === NodeType.Attribute) {
-      attr1 = <Attr>node1
-      node1 = attr1.ownerElement
+    let attr1: AttrInternal | null = null
+    let attr2: AttrInternal | null = null
+
+    /**
+     * 4. If node1 is an attribute, then set attr1 to node1 and node1 to
+     */
+    if (node1 && Guard.isAttrNode(node1)) {
+      attr1 = node1
+      node1 = attr1.ownerElement as ElementInternal | null
     }
 
-    if (node2.nodeType === NodeType.Attribute) {
-      attr2 = <Attr>node2
-      node2 = attr2.ownerElement
+    /**
+     * 5. If node2 is an attribute, then:
+     */
+    if (node2 && Guard.isAttrNode(node2)) {
+      /**
+       * 5.1. Set attr2 to node2 and node2 to attr2’s element.
+       */
+      attr2 = node2
+      node2 = attr2.ownerElement as ElementInternal | null
 
+      /**
+       * 5.2. If attr1 and node1 are non-null, and node2 is node1, then:
+       */
       if (attr1 && node1 && (node1 === node2)) {
-        for (const attr of (<Element>node2).attributes) {
-          if (attr.isEqualNode(attr1)) {
+        /**
+         * 5.2. For each attr in node2’s attribute list:
+         */
+        for (const attr of (node2 as ElementInternal)._attributeList) {
+          /**
+           * 5.2.1. If attr equals attr1, then return the result of adding
+           * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and
+           * DOCUMENT_POSITION_PRECEDING.
+           * 5.2.2. If attr equals attr2, then return the result of adding
+           * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and 
+           * DOCUMENT_POSITION_FOLLOWING.
+           */
+          if (algo.node.equals(attr as AttrInternal, attr1)) {
             return Position.ImplementationSpecific | Position.Preceding
-          } else if (attr.isEqualNode(attr2)) {
+          } else if (algo.node.equals(attr as AttrInternal, attr2)) {
             return Position.ImplementationSpecific | Position.Following
           }
         }
       }
     }
 
-    // nodes are null
+    /**
+     * 6. If node1 or node2 is null, or node1’s root is not node2’s root, then
+     * return the result of adding DOCUMENT_POSITION_DISCONNECTED, 
+     * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC, and either 
+     * DOCUMENT_POSITION_PRECEDING or DOCUMENT_POSITION_FOLLOWING, 
+     * with the constraint that this is to be consistent, together.
+     */
     if (node1 === null && node2 === null) {
       return Position.Disconnected | Position.ImplementationSpecific |
         Position.Preceding
@@ -302,26 +537,42 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
         Position.Following
     }
 
-    if (node1.getRootNode() !== node2.getRootNode()) {
+    if (algo.tree.rootNode(node1) !== algo.tree.rootNode(node2)) {
       // TODO: nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
         Position.Preceding
     }
 
-    if ((!attr1 && TreeQuery.isAncestorOf(node2, node1)) ||
+    /**
+     * 7. If node1 is an ancestor of node2 and attr1 is null, or node1 is node2
+     * and attr2 is non-null, then return the result of adding 
+     * DOCUMENT_POSITION_CONTAINS to DOCUMENT_POSITION_PRECEDING.
+     */
+    if ((!attr1 && algo.tree.isAncestorOf(node2, node1)) ||
       (attr2 && (node1 === node2))) {
       return Position.Contains | Position.Preceding
     }
 
-    if ((!attr2 && TreeQuery.isDescendantOf(node2, node1)) ||
+    /**
+     * 8. If node1 is a descendant of node2 and attr2 is null, or node1 is node2
+     * and attr1 is non-null, then return the result of adding 
+     * DOCUMENT_POSITION_CONTAINED_BY to DOCUMENT_POSITION_FOLLOWING.
+     */
+    if ((!attr2 && algo.tree.isDescendantOf(node2, node1)) ||
       (attr1 && (node1 === node2))) {
       return Position.ContainedBy | Position.Following
     }
 
-    if (TreeQuery.isPreceding(node2, node1))
+    /**
+     * 9. If node1 is preceding node2, then return DOCUMENT_POSITION_PRECEDING.
+     */
+    if (algo.tree.isPreceding(node2, node1))
       return Position.Preceding
 
+    /**
+     * 10. Return DOCUMENT_POSITION_FOLLOWING.
+     */
     return Position.Following
   }
 
@@ -329,11 +580,16 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * Returns `true` if given node is an inclusive descendant of this
    * node, and `false` otherwise (including when other node is `null`).
    * 
-   * @param node - the node to check
+   * @param other - the node to check
    */
-  contains(node: Node | null): boolean {
-    if (!node) return false
-    return ((node === this) || TreeQuery.isDescendantOf(this, node))
+  contains(other: Node | null): boolean {
+    /**
+     * The contains(other) method, when invoked, must return true if other is an
+     * inclusive descendant of context object, and false otherwise (including 
+     * when other is null).
+     */
+    if (other === null) return false
+    return this._algo.tree.isDescendantOf(this, other as NodeInternal, true)
   }
 
   /**
@@ -343,12 +599,53 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @param namespace - the namespace to search
    */
   lookupPrefix(namespace: string | null): string | null {
+    /**
+     * 1. If namespace is null or the empty string, then return null.
+     * 2. Switch on the context object:
+     */
     if (!namespace) return null
-
-    if (this.parentElement)
-      return this.parentElement.lookupPrefix(namespace)
-
-    return null
+    if (Guard.isElementNode(this)) {
+      /**
+       * Return the result of locating a namespace prefix for it using 
+       * namespace.
+       */
+      return this._algo.node.locateANamespacePrefix(this, namespace)
+    } else if (Guard.isDocumentNode(this)) {
+      /**
+       * Return the result of locating a namespace prefix for its document
+       * element, if its document element is non-null, and null otherwise.
+       */
+      if (this.documentElement === null) {
+        return null
+      } else {
+        return this._algo.node.locateANamespacePrefix(
+          this.documentElement as ElementInternal, namespace)
+      }
+    } else if (Guard.isDocumentTypeNode(this) || Guard.isDocumentFragmentNode(this)) {
+      return null
+    } else if (Guard.isAttrNode(this)) {
+      /**
+       * Return the result of locating a namespace prefix for its element, 
+       * if its element is non-null, and null otherwise.
+       */
+      if (this._element === null) {
+        return null
+      } else {
+        return this._algo.node.locateANamespacePrefix(
+          this._element as ElementInternal, namespace)
+      }
+    } else {
+      /**
+       * Return the result of locating a namespace prefix for its parent 
+       * element, if its parent element is non-null, and null otherwise.
+       */
+      if (this.parentElement === null) {
+        return null
+      } else {
+        return this._algo.node.locateANamespacePrefix(
+          this.parentElement as ElementInternal, namespace)
+      }
+    }
   }
 
   /**
@@ -358,12 +655,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @param prefix - the prefix to search
    */
   lookupNamespaceURI(prefix: string | null): string | null {
-    if (!prefix) prefix = null
-
-    if (this.parentElement)
-      return this.parentElement.lookupNamespaceURI(prefix)
-
-    return null
+    /**
+     * 1. If prefix is the empty string, then set it to null.
+     * 2. Return the result of running locate a namespace for the context object
+     * using prefix.
+     */
+    return this._algo.node.locateANamespace(this, prefix || null)
   }
 
   /**
@@ -373,11 +670,15 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @param namespace - the namespace to check
    */
   isDefaultNamespace(namespace: string | null): boolean {
+    /**
+     * 1. If namespace is the empty string, then set it to null.
+     * 2. Let defaultNamespace be the result of running locate a namespace for
+     * context object using null.
+     * 3. Return true if defaultNamespace is the same as namespace, and false otherwise.
+     */
     if (!namespace) namespace = null
-
-    const defaultNamespace = this.lookupNamespaceURI(null)
-
-    return defaultNamespace === namespace
+    const defaultNamespace = this._algo.node.locateANamespace(this, null)
+    return (defaultNamespace === namespace)
   }
 
   /**
@@ -397,7 +698,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @returns the newly inserted child node
    */
   insertBefore(newChild: Node, refChild: Node | null): Node {
-    return TreeMutation.preInsert(newChild, this, refChild)
+    /**
+     * The insertBefore(node, child) method, when invoked, must return the 
+     * result of pre-inserting node into context object before child.
+     */
+    return this._algo.mutation.preInsert(newChild as NodeInternal, this,
+      refChild as NodeInternal | null)
   }
 
   /**
@@ -414,7 +720,11 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @returns the newly inserted child node
    */
   appendChild(newChild: Node): Node {
-    return TreeMutation.appendNode(newChild, this)
+    /**
+     * The appendChild(node) method, when invoked, must return the result of 
+     * appending node to context object.
+     */
+    return this._algo.mutation.append(newChild as NodeInternal, this)
   }
 
   /**
@@ -428,7 +738,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * @returns the removed child node
    */
   replaceChild(newChild: Node, oldChild: Node): Node {
-    return TreeMutation.replaceNode(oldChild, newChild, this)
+    /**
+     * The replaceChild(node, child) method, when invoked, must return the 
+     * result of replacing child with node within context object.
+     */
+    return this._algo.mutation.replace(oldChild as NodeInternal,
+      newChild as NodeInternal, this)
   }
 
   /**
@@ -440,7 +755,28 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
   * @returns the removed child node
   */
   removeChild(oldChild: Node): Node {
-    return TreeMutation.preRemoveNode(oldChild, this)
+    /**
+     * The removeChild(child) method, when invoked, must return the result of 
+     * pre-removing child from context object.
+     */
+    return this._algo.mutation.preRemove(oldChild as NodeInternal, this)
+  }
+
+  /**
+   * Gets the parent event target for the given event.
+   * 
+   * @param event - an event
+   */
+  _getTheParent(event: Event): EventTarget | null {
+    /**
+     * A node’s get the parent algorithm, given an event, returns the node’s 
+     * assigned slot, if node is assigned, and node’s parent otherwise.
+     */
+    if (Guard.isSlotable(this) && this._algo.shadowTree.isAssigned(this)) {
+      return this._assignedSlot
+    } else {
+      return this.parentNode
+    }
   }
 
 }

@@ -2,7 +2,9 @@ import {
   NodeIterator, TreeWalker, Node, FilterResult
 } from "../interfaces"
 import { DOMException } from "../DOMException"
-import { TreeQuery } from "./TreeQuery"
+import { globalStore } from "../../util";
+import { DOMAlgorithm } from "../algorithm/interfaces"
+import { NodeInternal } from "../interfacesInternal"
 
 /**
  * Includes methods for tree traversal.
@@ -52,6 +54,8 @@ export class Traverse {
    * return the previous node.
    */
   static traverse(iterator: NodeIterator, forward: boolean): [Node | null, Node, boolean] {
+    const algo = globalStore.algorithm as DOMAlgorithm
+    
     let node = iterator.referenceNode
     let beforeNode = iterator.pointerBeforeReferenceNode
 
@@ -60,7 +64,7 @@ export class Traverse {
         if (!beforeNode) {
           // set node to the first node following node in iterator's
           // iterator collection. If there is no such node, then return null.
-          const nextNode = TreeQuery.getFollowingNode(iterator.root, node)
+          const nextNode = algo.tree.getFollowingNode(iterator.root as NodeInternal, node as NodeInternal)
           if (nextNode) {
             node = nextNode
           } else {
@@ -73,7 +77,7 @@ export class Traverse {
         if (beforeNode) {
           // set node to the first node preceding node in iterator's
           // iterator collection. If there is no such node, then return null.
-          const prevNode = TreeQuery.getPrecedingNode(iterator.root, node)
+          const prevNode = algo.tree.getPrecedingNode(iterator.root as NodeInternal, node as NodeInternal)
           if (prevNode) {
             node = prevNode
           } else {
@@ -103,6 +107,8 @@ export class Traverse {
    * @param toBeRemovedNode- node to remove
    */
   static preRemove(iterator: NodeIterator, toBeRemovedNode: Node): [Node, boolean] {
+    const algo = globalStore.algorithm as DOMAlgorithm
+    
     if (!TreeQuery.isAncestorOf(iterator.referenceNode, toBeRemovedNode, true) ||
       toBeRemovedNode === iterator.root) {
       return [iterator.referenceNode, iterator.pointerBeforeReferenceNode]

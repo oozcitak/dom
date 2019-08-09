@@ -1,13 +1,17 @@
 import { Element, Attr } from "./interfaces"
 import { DOMException } from "./DOMException"
-import { NamedNodeMapInternal } from "./interfacesInternal"
+import { NamedNodeMapInternal, ElementInternal, AttrInternal } from "./interfacesInternal"
+import { DOMAlgorithm } from "./algorithm/interfaces"
+import { globalStore } from "../util"
 
 /**
  * Represents a collection of nodes.
  */
 export class NamedNodeMapImpl implements NamedNodeMapInternal {
 
-  _element: Element
+  private _algo: DOMAlgorithm
+
+  _element: ElementInternal
   _attributeList: Attr[] = []
 
   /**
@@ -16,124 +20,95 @@ export class NamedNodeMapImpl implements NamedNodeMapInternal {
    * @param element - parent element
    */
   private constructor(element: Element) {
-    this._element = element
+    this._algo = globalStore.algorithm as DOMAlgorithm
+
+    this._element = element as ElementInternal
   }
 
-  /** 
-   * Returns the number of attribute in the collection.
-   */
-  get length(): number { return this._attributeList.length }
+  /** @inheritdoc */
+  get length(): number {
+    /**
+     * The length attribute’s getter must return the attribute list’s size.
+     */
+    return this._attributeList.length
+  }
 
-  /** 
-   * Returns the attribute with index `index` from the collection.
-   * 
-   * @param index - the zero-based index of the attribute to return
-   */
-  item(index: number): Attr | null { return this._attributeList[index] || null }
+  /** @inheritdoc */
+  item(index: number): Attr | null {
+    /**
+     * 1. If index is equal to or greater than context object’s attribute list’s
+     * size, then return null.
+     * 2. Otherwise, return context object’s attribute list[index].
+     * 
+     */
+    return this._attributeList[index] || null
+  }
 
-  /**
-   * Returns the attribute with the given `qualifiedName`.
-   * 
-   * @param qualifiedName - qualified name to search for
-   */
+  /** @inheritdoc */
   getNamedItem(qualifiedName: string): Attr | null {
-    for (const att of this._attributeList) {
-      if (att.name === qualifiedName) return att
-    }
-    return null
+    /**
+     * The getNamedItem(qualifiedName) method, when invoked, must return the 
+     * result of getting an attribute given qualifiedName and element.
+     */
+    return this._algo.element.getAnAttributeByName(qualifiedName, this._element)
   }
 
-  /**
-   * Returns the attribute with the given `namespace` and 
-   * `qualifiedName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
+  /** @inheritdoc */
   getNamedItemNS(namespace: string | null, localName: string): Attr | null {
-    for (const att of this._attributeList) {
-      if (att.namespaceURI === namespace && att.localName === localName)
-        return att
-    }
-    return null
+    /**
+     * The getNamedItemNS(namespace, localName) method, when invoked, must 
+     * return the result of getting an attribute given namespace, localName, 
+     * and element.
+     */
+    return this._algo.element.getAnAttributeByNamespaceAndLocalName(
+      namespace || '', localName, this._element)
   }
 
-  /**
-   * Sets the attribute given with `attr`.
-   * 
-   * @param attr - attribute to set
-   */
+  /** @inheritdoc */
   setNamedItem(attr: Attr): Attr | null {
-    return this.setNamedItemNS(attr)
+    /**
+     * The setNamedItem(attr) and setNamedItemNS(attr) methods, when invoked, 
+     * must return the result of setting an attribute given attr and element.
+     */
+    return this._algo.element.setAnAttribute(attr as AttrInternal, this._element)
   }
 
-  /**
-   * Sets the attribute given with `attr`.
-   * 
-   * @param attr - attribute to set
-   */
+  /** @inheritdoc */
   setNamedItemNS(attr: Attr): Attr | null {
-    if (attr.ownerElement && attr.ownerElement !== this._element)
-      throw DOMException.InUseAttributeError
-
-    const oldAttr = this.getNamedItemNS(attr.namespaceURI, attr.localName)
-    if (oldAttr === attr) return attr
-    if (oldAttr) {
-      const index = this._attributeList.indexOf(oldAttr)
-      this._attributeList[index] = attr
-    } else {
-      this._attributeList.push(attr)
-    }
-
-    return oldAttr
+    return this._algo.element.setAnAttribute(attr as AttrInternal, this._element)
   }
 
-  /**
-   * Removes the attribute with the given `qualifiedName`.
-   * 
-   * @param qualifiedName - qualified name to search for
-   */
+  /** @inheritdoc */
   removeNamedItem(qualifiedName: string): Attr {
-    let index = -1
-    for (let i = 0; i < this.length; i++) {
-      const att = this._attributeList[i]
-      if (att.name === qualifiedName) {
-        index = i
-        break
-      }
-    }
+    /**
+     * 1. Let attr be the result of removing an attribute given qualifiedName 
+     * and element.
+     * 2. If attr is null, then throw a "NotFoundError" DOMException.
+     * 3. Return attr.
+     */
+    const attr = this._algo.element.removeAnAttributeByName(qualifiedName, this._element)
 
-    if (index === -1)
+    if (attr === null)
       throw DOMException.NotFoundError
 
-    const removed = this._attributeList[index]
-    this._attributeList.splice(index, 1)
-    return removed
+    return attr
   }
 
-  /**
-   * Removes the attribute with the given `namespace` and 
-   * `qualifiedName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
-  removeNamedItemNS(namespace: string, localName: string): Attr {
-    let index = -1
-    for (let i = 0; i < this.length; i++) {
-      const att = this._attributeList[i]
-      if (att.namespaceURI === namespace && att.localName === localName) {
-        index = i
-        break
-      }
-    }
+  /** @inheritdoc */
+  removeNamedItemNS(namespace: string | null, localName: string): Attr {
+    /**
+     * 1. Let attr be the result of removing an attribute given namespace, 
+     * localName, and element.
+     * 2. If attr is null, then throw a "NotFoundError" DOMException.
+     * 3. Return attr.
+     */
+    const attr = this._algo.element.removeAnAttributeByNamespaceAndLocalName(
+      namespace || '', localName, this._element)
 
-    if (index === -1)
+    if (attr === null)
       throw DOMException.NotFoundError
 
-    const removed = this._attributeList[index]
-    this._attributeList.splice(index, 1)
-    return removed
+    return attr
   }
 
   /**

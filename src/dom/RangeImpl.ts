@@ -12,7 +12,7 @@ import { TextUtility } from './util/TextUtility'
 import { RangeInternal, NodeInternal } from './interfacesInternal'
 import { Guard } from './util/Guard'
 import { globalStore } from '../util'
-import { WindowInternal } from '../htmldom/interfacesInternal';
+import { WindowInternal } from '../htmldom/interfacesInternal'
 
 /**
  * Represents a live range.

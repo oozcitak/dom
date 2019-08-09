@@ -3,7 +3,7 @@ import { WindowInternal, DocumentInternal } from './interfacesInternal'
 import { globalStore } from '../util'
 import { Event } from '../dom/interfaces'
 import { Window, Document } from './interfaces'
-import { DOMAlgorithmImpl } from '../dom/DOMAlgorithmImpl'
+import { DOMAlgorithmImpl } from '../dom/algorithm'
 
 /**
  * Represents a window containing a DOM document.
@@ -44,15 +44,13 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
    * Creates a new window with a blank document.
    */
   static _create(): Window {
-    const algorithm = new DOMAlgorithmImpl()
-    globalStore.algorithm = algorithm
+    const algo = new DOMAlgorithmImpl()
+    globalStore.algorithm = algo
     
     const window = new WindowImpl()
     globalStore.window = window
 
-    // require here to prevent circular reference
-    const DocImpl = require('./DocumentImpl').DocumentImpl
-    const doc = new DocImpl()
+    const doc = algo.create.document()
     window._associatedDocument = doc
 
     return window

@@ -1,11 +1,13 @@
-import { Node, NodeType } from "./interfaces"
+import { NodeType } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { CommentInternal } from "./interfacesInternal"
+import { CommentInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents a comment node.
  */
 export class CommentImpl extends CharacterDataImpl implements CommentInternal {
+
+  _nodeType: NodeType = NodeType.Comment
 
   /**
    * Initializes a new instance of `Comment`.
@@ -13,31 +15,20 @@ export class CommentImpl extends CharacterDataImpl implements CommentInternal {
    * @param data - the text content
    */
   public constructor(data: string = '') {
-    super()
-
-    this._data = data
+    super(data)
   }
-
-  /** 
-   * Returns the type of node. 
-   */
-  get nodeType(): NodeType { return NodeType.Comment }
-
-  /** 
-   * Returns a string appropriate for the type of node. 
-   */
-  get nodeName(): string { return '#comment' }
+ 
 
   /**
-   * Returns a duplicate of this node, i.e., serves as a generic copy 
-   * constructor for nodes. The duplicate node has no parent 
-   * ({@link parentNode} returns `null`).
-   *
-   * @param deep - if `true`, recursively clone the subtree under the 
-   * specified node. If `false`, clone only the node itself (and its 
-   * attributes, if it is an {@link Element}).
+   * Creates a new `Comment`.
+   * 
+   * @param document - owner document
+   * @param data - node contents   
    */
-  cloneNode(deep: boolean = false): Node {
-    return new CommentImpl(this.data)
+  static _create(document: DocumentInternal, data: string = ''): CommentInternal {
+    const node = new CommentImpl(data)
+    node._nodeDocument = document
+    return node
   }
+
 }

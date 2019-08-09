@@ -1,11 +1,13 @@
-import { NodeType } from '../interfaces'
+import {
+  NodeType, RegisteredObserver, TransientRegisteredObserver
+} from '../interfaces'
 import {
   SlotableInternal, NodeInternal, TextInternal, ElementInternal,
-  ShadowRootInternal, CharacterDataInternal, DocumentInternal, 
-  DocumentTypeInternal, AttrInternal, CommentInternal, 
-  ProcessingInstructionInternal
+  ShadowRootInternal, CharacterDataInternal, DocumentInternal,
+  DocumentTypeInternal, AttrInternal, CommentInternal,
+  ProcessingInstructionInternal, SlotInternal, WindowInternal, 
+  CDATASectionInternal, DocumentFragmentInternal
 } from '../interfacesInternal'
-import { HTMLSlotElement } from '../../htmldom/interfaces'
 
 /**
  * Contains user-defined type guards for DOM objects.
@@ -40,6 +42,15 @@ export class Guard {
   }
 
   /**
+   * Determines if the given object is a `DocumentFragment`.
+   * 
+   * @param a - the object to check
+   */
+  static isDocumentFragmentNode(a: any): a is DocumentFragmentInternal {
+    return (a.nodeType === NodeType.DocumentFragment)
+  }
+
+  /**
    * Determines if the given object is a `Attr`.
    * 
    * @param a - the object to check
@@ -63,12 +74,30 @@ export class Guard {
   }
 
   /**
-   * Determines if the given object is a `Text`.
+   * Determines if the given object is a `Text` or a `CDATASection`.
    * 
    * @param a - the object to check
    */
   static isTextNode(a: any): a is TextInternal {
+    return (a.nodeType === NodeType.Text || a.nodeType === NodeType.CData)
+  }
+
+  /**
+   * Determines if the given object is a `Text`.
+   * 
+   * @param a - the object to check
+   */
+  static isExclusiveTextNode(a: any): a is TextInternal {
     return (a.nodeType === NodeType.Text)
+  }
+
+  /**
+   * Determines if the given object is a `CDATASection`.
+   * 
+   * @param a - the object to check
+   */
+  static isCDATASectionNode(a: any): a is CDATASectionInternal {
+    return (a.nodeType === NodeType.CData)
   }
 
   /**
@@ -128,7 +157,8 @@ export class Guard {
    * @param a - the object to check
    */
   static isSlotable(a: any): a is SlotableInternal {
-    return a.name !== undefined && (Guard.isTextNode(a) || Guard.isElementNode(a))
+    return a._name !== undefined && a._assignedSlot !== undefined &&
+      (Guard.isTextNode(a) || Guard.isElementNode(a))
   }
 
   /**
@@ -136,20 +166,36 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isSlot(a: any): a is HTMLSlotElement {
-    return a.name !== undefined && a.assignedNodes !== undefined
+  static isSlot(a: any): a is SlotInternal {
+    return a._name !== undefined && a._assignedNodes !== undefined &&
+      Guard.isElementNode(a)
   }
 
 
   /**
    * Determines if the given object is a `Window`.
    * 
-   * TODO: change return type to guard for `Window` when the HTML DOM 
-   * is implemented. 
+   * @param a - the object to check
+   */
+  static isWindow(a: any): a is WindowInternal {
+    return a.navigator !== undefined
+  }
+
+  /**
+   * Determines if the given object is a `RegisteredObserver`.
    * 
    * @param a - the object to check
    */
-  static isWindow(a: any): boolean {
-    return a.navigator !== undefined
+  static isRegisteredObserver(a: any): a is RegisteredObserver {
+    return a.observer !== undefined && a.options !== undefined
+  }
+
+  /**
+ * Determines if the given object is a `TransientRegisteredObserver`.
+ * 
+ * @param a - the object to check
+ */
+  static isTransientRegisteredObserver(a: any): a is TransientRegisteredObserver {
+    return a.source !== undefined && Guard.isRegisteredObserver(a)
   }
 }

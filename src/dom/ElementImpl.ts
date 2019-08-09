@@ -1,20 +1,13 @@
 import {
-  Attr, NamedNodeMap, DOMTokenList, Document, ShadowRoot, NodeType, Node,
+  Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
   Element, HTMLCollection, NodeList, ShadowRootMode
 } from './interfaces'
-import { HTMLSpec } from './spec'
-import { TextImpl } from './TextImpl'
+import { HTMLSpec, XMLSpec, Namespace } from './spec'
 import { NodeImpl } from './NodeImpl'
-import { AttrImpl } from './AttrImpl'
-import { HTMLCollectionImpl } from './HTMLCollectionImpl'
-import { NamedNodeMapImpl } from './NamedNodeMapImpl'
-import { DOMTokenListImpl } from './DOMTokenListImpl'
 import { DOMException } from './DOMException'
-import { Namespace } from './spec/Namespace'
-import { OrderedSet } from './util/OrderedSet'
-import { TreeMutation } from './util/TreeMutation'
-import { ShadowRootImpl } from './ShadowRootImpl'
-import { ElementInternal, AttrInternal } from './interfacesInternal'
+import {
+  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal
+} from './interfacesInternal'
 import { HTMLSlotElement } from '../htmldom/interfaces'
 
 /**
@@ -22,21 +15,28 @@ import { HTMLSlotElement } from '../htmldom/interfaces'
  */
 export class ElementImpl extends NodeImpl implements ElementInternal {
 
+  _nodeType: NodeType = NodeType.Element
+
   _namespace: string | null
   _namespacePrefix: string | null
   _localName: string
-  _shadowRoot: ShadowRoot | null = null
-  _attributeList: NamedNodeMap
-
   _customElementState: "undefined" | "failed" | "uncustomized" | "custom" = "undefined"
   _customElementDefinition = ElementImpl
   _is: string | null = null
 
-  _uniqueIdentifier?: string | undefined;
+  _shadowRoot: ShadowRoot | null = null
 
+  _attributeList: NamedNodeMap
+
+  _uniqueIdentifier?: string | undefined;
 
   /**
    * Initializes a new instance of `Element`.
+   * 
+   * @param document - owner document
+   * @param localName - local name
+   * @param namespace - namespace
+   * @param prefix - namespace prefix
    */
   private constructor(localName: string, namespace: string | null = null,
     namespacePrefix: string | null = null) {
@@ -45,597 +45,499 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     this._localName = localName
     this._namespace = namespace
     this._namespacePrefix = namespacePrefix
-    this._attributeList = NamedNodeMapImpl._create(this)
+    this._attributeList = this._algo.create.namedNodeMap(this)
   }
 
-  /** 
-   * Returns the type of node. 
-   */
-  get nodeType(): NodeType { return NodeType.Element }
-
-  /** 
-   * Returns a string appropriate for the type of node. 
-   */
-  get nodeName(): string { return this._qualifiedName }
-
-  /** 
-   * Gets the namespace URI.
-   */
+  /** @inheritdoc */
   get namespaceURI(): string | null { return this._namespace }
 
-  /** 
-   * Gets the namespace prefix.
-   */
+  /** @inheritdoc */
   get prefix(): string | null { return this._namespacePrefix }
 
-  /** 
-   * Gets the local name.
-   */
+  /** @inheritdoc */
   get localName(): string { return this._localName }
 
-  /** 
-   * Gets the qualified name.
-   */
-  get tagName(): string { return this._qualifiedName }
+  /** @inheritdoc */
+  get tagName(): string { return this._htmlUppercasedQualifiedName }
 
-  /** 
-   * Gets or sets the identifier of this element.
-   */
-  get id(): string { return this.getAttribute('id') || '' }
-  set id(value: string) { this.setAttribute('id', value) }
+  /** @inheritdoc */
+  get id(): string {
+    return this._algo.element.getAnAttributeValue(this, "id")
+  }
+  set id(value: string) {
+    this._algo.element.setAnAttributeValue(this, "id", value)
+  }
 
-  /** 
-   * Gets or sets the class name of this element.
-   */
-  get className(): string { return this.getAttribute('class') || '' }
-  set className(value: string) { this.setAttribute('class', value) }
+  /** @inheritdoc */
+  get className(): string {
+    return this._algo.element.getAnAttributeValue(this, "class")
+  }
+  set className(value: string) {
+    this._algo.element.setAnAttributeValue(this, "class", value)
+  }
 
-  /** 
-   * Returns a {@link DOMTokenList} with tokens from the class attribute.
-   */
-  get classList(): DOMTokenList { return DOMTokenListImpl._create(this, 'class') }
+  /** @inheritdoc */
+  get classList(): DOMTokenList {
+    return this._algo.create.domTokenList(this, 'class')
+  }
 
-  /** 
-   * Gets or sets the slot attribute of this element.
-   */
-  get slot(): string { return this.getAttribute('slot') || '' }
-  set slot(value: string) { this.setAttribute('slot', value) }
+  /** @inheritdoc */
+  get slot(): string {
+    return this._algo.element.getAnAttributeValue(this, "slot")
+  }
+  set slot(value: string) {
+    this._algo.element.setAnAttributeValue(this, "slot", value)
+  }
 
-  /** 
-   * Returns a {@link NamedNodeMap} of attributes.
-   */
+  /** @inheritdoc */
+  hasAttributes(): boolean {
+    return !this._algo.list.isEmpty(
+      (this._attributeList as NamedNodeMapInternal)._attributeList)
+  }
+
+  /** @inheritdoc */
   get attributes(): NamedNodeMap { return this._attributeList }
 
-  /**
-   * Determines if the element node contains any attributes.
-   */
-  hasAttributes(): boolean { return (this.attributes.length !== 0) }
-
-  /**
-   * Returns the list of all attribute's qualified names.
-   */
+  /** @inheritdoc */
   getAttributeNames(): string[] {
+    /**
+     * The getAttributeNames() method, when invoked, must return the qualified 
+     * names of the attributes in context object’s attribute list, in order, 
+     * and a new list otherwise.
+     */
     const names: string[] = []
 
-    for (const att of this.attributes) {
-      names.push(att.name)
+    for (const attr of this._attributeList) {
+      const attrInt = attr as AttrInternal
+      names.push(attrInt._qualifiedName)
     }
 
     return names
   }
 
-  /**
-   * Returns the value of the attribute with the given `name`.
-   * 
-   * @param name - qualified name to search for
-   */
-  getAttribute(name: string): string | null {
-    const att = this.attributes.getNamedItem(name)
-    return (att ? att.value : null)
+  /** @inheritdoc */
+  getAttribute(qualifiedName: string): string | null {
+    /**
+     * 1. Let attr be the result of getting an attribute given qualifiedName 
+     * and the context object.
+     * 2. If attr is null, return null.
+     * 3. Return attr’s value.
+     */
+    const attr = this._algo.element.getAnAttributeByName(qualifiedName, this)
+    return (attr ? attr._value : null)
   }
 
-  /**
-   * Returns the value of the attribute with the given `namespace` and 
-   * `localName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
+  /** @inheritdoc */
   getAttributeNS(namespace: string, localName: string): string | null {
-    const att = this.attributes.getNamedItemNS(namespace, localName)
-    return (att ? att.value : null)
+    /**
+     * 1. Let attr be the result of getting an attribute given namespace, 
+     * localName, and the context object.
+     * 2. If attr is null, return null.
+     * 3. Return attr’s value.
+     */
+    const attr = this._algo.element.getAnAttributeByNamespaceAndLocalName(namespace, localName, this)
+    return (attr ? attr.value : null)
   }
 
-  /**
-   * Sets the value of the attribute with the given `name`.
-   * 
-   * @param name - qualified name to search for
-   * @param value - attribute value to set
-   */
-  setAttribute(name: string, value: string): void {
-    let attr = this.attributes.getNamedItem(name)
+  /** @inheritdoc */
+  setAttribute(qualifiedName: string, value: string): void {
+    /**
+     * 1. If qualifiedName does not match the Name production in XML, then 
+     * throw an "InvalidCharacterError" DOMException.
+     */
+    if (!XMLSpec.isName(qualifiedName))
+      throw DOMException.InvalidCharacterError
 
-    if (attr) {
-      attr.value = value
-    } else {
-      let newAttr = AttrImpl._create()
-      newAttr._element = this
-      newAttr._localName = name
-      newAttr._value = value
-      this.attributes.setNamedItem(newAttr)
+    /**
+     * 2. If the context object is in the HTML namespace and its node document 
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * lowercase.
+     */
+    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+      qualifiedName = qualifiedName.toLowerCase()
     }
+
+    /**
+     * 3. Let attribute be the first attribute in context object’s attribute
+     * list whose qualified name is qualifiedName, and null otherwise.
+     */
+    let attribute: AttrInternal | null = null
+    for (const attr of this._attributeList) {
+      const attrInt = attr as AttrInternal
+      if (attrInt._qualifiedName === qualifiedName) {
+        attribute = attrInt
+        break
+      }
+    }
+
+    /**
+     * 4. If attribute is null, create an attribute whose local name is
+     * qualifiedName, value is value, and node document is context object’s 
+     * node document, then append this attribute to context object, and 
+     * then return.
+     */
+    if (attribute === null) {
+      attribute = this._algo.create.attr(this._nodeDocument, qualifiedName)
+      attribute._value = value
+      this._algo.element.append(attribute, this)
+      return
+    }
+
+    /**
+     * 5. Change attribute from context object to value.
+     */
+    this._algo.element.change(attribute, this, value)
   }
-  /**
-   * Sets the value of the attribute with the given `namespace` and 
-   * `qualifiedName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param qualifiedName - qualified name to search for
-   * @param value - attribute value to set
-   */
+
+  /** @inheritdoc */
   setAttributeNS(namespace: string, qualifiedName: string, value: string): void {
-    const names = Namespace.extractNames(namespace, qualifiedName)
-    let attr = this.attributes.getNamedItemNS(namespace, names.localName)
-
-    if (attr) {
-      attr.value = value
-    } else {
-      let newAttr = AttrImpl._create()
-      newAttr._element = this
-      newAttr._localName = names.localName
-      newAttr._namespace = namespace
-      newAttr._namespacePrefix = names.prefix
-      newAttr._value = value
-      this.attributes.setNamedItemNS(newAttr)
-    }
+    /**
+     * 1. Let namespace, prefix, and localName be the result of passing
+     * namespace and qualifiedName to validate and extract.
+     * 2. Set an attribute value for the context object using localName, value, 
+     * and also prefix and namespace.
+     */
+    const [ns, prefix, localName] =
+      this._algo.namespace.validateAndExtract(namespace, qualifiedName)
+    this._algo.element.setAnAttributeValue(this, localName, value,
+      prefix || '', ns || '')
   }
 
-  /**
-   * Removes the attribute with the given `name`.
-   * 
-   * @param name - qualified name to search for
-   */
-  removeAttribute(name: string): void {
-    try {
-      this.attributes.removeNamedItem(name)
-    } catch (e) {
-      // ignore NotFoundError thrown by
-      // NamedNodeMap.removeNamedItem()
-    }
+  /** @inheritdoc */
+  removeAttribute(qualifiedName: string): void {
+    /**
+     * The removeAttribute(qualifiedName) method, when invoked, must remove an
+     * attribute given qualifiedName and the context object, and then return 
+     * undefined.
+     */
+    this._algo.element.removeAnAttributeByName(qualifiedName, this)
   }
 
-  /**
-   * Removes the attribute with the given `namespace` and `localName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
+  /** @inheritdoc */
   removeAttributeNS(namespace: string, localName: string): void {
-    try {
-      this.attributes.removeNamedItemNS(namespace, localName)
-    } catch (e) {
-      // ignore NotFoundError thrown by
-      // NamedNodeMap.removeNamedItem()
-    }
+    /**
+     * The removeAttributeNS(namespace, localName) method, when invoked, must 
+     * remove an attribute given namespace, localName, and context object, and 
+     * then return undefined.
+     */
+    this._algo.element.removeAnAttributeByNamespaceAndLocalName(namespace,
+      localName, this)
   }
 
-  /**
-   * Determines whether the attribute with the given `name` exists.
-   * 
-   * @param name - qualified name to search for
-   */
-  hasAttribute(name: string): boolean {
-    for (const att of this.attributes) {
-      if (att.name === name)
+  /** @inheritdoc */
+  hasAttribute(qualifiedName: string): boolean {
+    /**
+     * 1. If the context object is in the HTML namespace and its node document 
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * lowercase.
+     * 2. Return true if the context object has an attribute whose qualified
+     * name is qualifiedName, and false otherwise.
+     */
+    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+      qualifiedName = qualifiedName.toLowerCase()
+    }
+
+    for (const attr of this._attributeList) {
+      const attrInt = attr as AttrInternal
+      if (attrInt._qualifiedName === qualifiedName) {
         return true
+      }
     }
 
     return false
   }
 
-  /**
-   * Determines whether the attribute with the given `namespace` and 
-   * `localName` exists.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
+  /** @inheritdoc */
+  toggleAttribute(qualifiedName: string, force?: boolean): boolean {
+    /**
+     * 1. If qualifiedName does not match the Name production in XML, then
+     * throw an "InvalidCharacterError" DOMException.
+     */
+    if (!XMLSpec.isName(qualifiedName))
+      throw DOMException.InvalidCharacterError
+
+    /**
+     * 2. If the context object is in the HTML namespace and its node document
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * lowercase.
+     */
+    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+      qualifiedName = qualifiedName.toLowerCase()
+    }
+
+    /**
+     * 3. Let attribute be the first attribute in the context object’s attribute
+     * list whose qualified name is qualifiedName, and null otherwise.
+     */
+    let attribute: AttrInternal | null = null
+    for (const attr of this._attributeList) {
+      const attrInt = attr as AttrInternal
+      if (attrInt._qualifiedName === qualifiedName) {
+        attribute = attrInt
+        break
+      }
+    }
+
+    if (attribute === null) {
+      /**
+       * 4. If attribute is null, then:
+       * 4.1. If force is not given or is true, create an attribute whose local
+       * name is qualifiedName, value is the empty string, and node document is
+       * the context object’s node document, then append this attribute to the
+       * context object, and then return true.
+       * 4.2. Return false.
+       */
+      if (force === undefined || force == true) {
+        attribute = this._algo.create.attr(this._nodeDocument, qualifiedName)
+        attribute._value = ''
+        this._algo.element.append(attribute, this)
+        return true
+      }
+      return false
+    } else if (force === undefined || force === false) {
+      /**
+       * 5. Otherwise, if force is not given or is false, remove an attribute
+       * given qualifiedName and the context object, and then return false.
+       */
+      this._algo.element.removeAnAttributeByName(qualifiedName, this)
+      return false
+    }
+
+    /**
+     * 6. Return true.
+     */
+    return true
+  }
+
+  /** @inheritdoc */
   hasAttributeNS(namespace: string, localName: string): boolean {
-    for (const att of this.attributes) {
-      if (att.namespaceURI === namespace && att.localName === localName)
+    /**
+     * 1. If namespace is the empty string, set it to null.
+     * 2. Return true if the context object has an attribute whose namespace is
+     * namespace and local name is localName, and false otherwise.
+     */
+    const ns = namespace || null
+
+    for (const attr of this._attributeList) {
+      const attrInt = attr as AttrInternal
+      if (attrInt._namespace === ns && attrInt._localName === localName) {
         return true
+      }
     }
 
     return false
   }
 
-  /**
-   * Returns the attribute with the given `name`.
-   * 
-   * @param name - qualified name to search for
-   */
+  /** @inheritdoc */
   getAttributeNode(name: string): Attr | null {
-    return this.attributes.getNamedItem(name)
+    /**
+     * The getAttributeNode(qualifiedName) method, when invoked, must return the
+     * result of getting an attribute given qualifiedName and context object.
+     */
+    return this._algo.element.getAnAttributeByName(this._qualifiedName, this)
   }
 
-  /**
-   * Returns the attribute with the given `namespace` and 
-   * `localName`.
-   * 
-   * @param namespace - namespace to search for
-   * @param localName - local name to search for
-   */
+  /** @inheritdoc */
   getAttributeNodeNS(namespace: string, localName: string): Attr | null {
-    return this.attributes.getNamedItemNS(namespace, localName)
+    /**
+     * The getAttributeNodeNS(namespace, localName) method, when invoked, must
+     * return the result of getting an attribute given namespace, localName, and
+     * the context object.
+     */
+    return this._algo.element.getAnAttributeByNamespaceAndLocalName(
+      namespace, localName, this)
   }
 
-  /**
-   * Sets the attribute given with `attr`.
-   * 
-   * @param attr - attribute to set
-   */
+  /** @inheritdoc */
   setAttributeNode(attr: Attr): Attr | null {
-    const attrImpl = <AttrInternal>attr
-    attrImpl._nodeDocument = this._nodeDocument
-    attrImpl._element = this
-    return this.attributes.setNamedItem(attrImpl)
+    /**
+     * The setAttributeNode(attr) and setAttributeNodeNS(attr) methods, when 
+     * invoked, must return the result of setting an attribute given attr and 
+     * the context object.
+     */
+    return this._algo.element.setAnAttribute(attr as AttrInternal, this)
   }
 
-  /**
-   * Sets the attribute given with `attr`.
-   * 
-   * @param attr - attribute to set
-   */
+  /** @inheritdoc */
   setAttributeNodeNS(attr: Attr): Attr | null {
-    const attrImpl = <AttrInternal>attr
-    attrImpl._nodeDocument = this._nodeDocument
-    attrImpl._element = this
-    return this.attributes.setNamedItemNS(attrImpl)
+    return this._algo.element.setAnAttribute(attr as AttrInternal, this)
   }
 
-  /**
-   * Removes the given attribute.
-   * 
-   * @param attr - attribute to remove
-   */
+  /** @inheritdoc */
   removeAttributeNode(attr: Attr): Attr {
-    return this.attributes.removeNamedItemNS(attr.namespaceURI, attr.localName)
+    /**
+     * 1. If context object’s attribute list does not contain attr, then throw 
+     * a "NotFoundError" DOMException.
+     * 2. Remove attr from context object.
+     * 3. Return attr.
+     */
+    let found = false
+    for (const attribute of this._attributeList) {
+      if (attribute === attr) {
+        found = true
+        break
+      }
+    }
+    if (!found)
+      throw DOMException.NotFoundError
+
+    this._algo.element.remove(attr as AttrInternal, this)
+    return attr
   }
 
-  /**
-   * Creates a shadow root for element and returns it.
-   * 
-   * @param init - A ShadowRootInit dictionary.
-   */
+  /** @inheritdoc */
   attachShadow(init: { mode: ShadowRootMode }): ShadowRoot {
-    if (this.namespaceURI !== Namespace.HTML)
+    /**
+     * 1. If context object’s namespace is not the HTML namespace, then throw a
+     * "NotSupportedError" DOMException.
+     */
+    if (this._namespace !== Namespace.HTML)
       throw DOMException.NotSupportedError
-    if (!HTMLSpec.isValidCustomElementName(this.localName) && !HTMLSpec.isValidElementName(this.localName))
-      throw DOMException.NotSupportedError
-    if (this._shadowRoot)
-      throw DOMException.InvalidStateError
 
-    const shadow = ShadowRootImpl._create(this)
+    /**
+     * 2. If context object’s local name is not a valid custom element name, 
+     * "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", 
+     * "h3", "h4", "h5", "h6", "header", "main" "nav", "p", "section", 
+     * or "span", then throw a "NotSupportedError" DOMException.
+     */
+    if (!HTMLSpec.isValidCustomElementName(this._localName))
+      throw DOMException.NotSupportedError
+
+    /**
+     * TODO: 
+     * 3. If context object’s local name is a valid custom element name, 
+     * or context object’s is value is not null, then:
+     * 3.1. Let definition be the result of looking up a custom element 
+     * definition given context object’s node document, its namespace, its 
+     * local name, and its is value.
+     * 3.2. If definition is not null and definition’s disable shadow is true,
+     *  then throw a "NotSupportedError" DOMException.
+     */
+
+    /**
+     * 4. If context object is a shadow host, then throw an "NotSupportedError" 
+     * DOMException.
+     */
+    if (this._shadowRoot !== null)
+      throw DOMException.NotSupportedError
+
+    /**
+     * 5. Let shadow be a new shadow root whose node document is context 
+     * object’s node document, host is context object, and mode is init’s mode.
+     * 6. Set context object’s shadow root to shadow.
+     * 7. Return shadow.
+     */
+    const shadow = this._algo.create.shadowRoot(this._nodeDocument, this)
     shadow._mode = init.mode
     this._shadowRoot = shadow
     return shadow
   }
 
-  /**
-   * Returns element's shadow root, if any, and if shadow root's mode
-   * is `"open"`, and `null` otherwise.
-   */
+  /** @inheritdoc */
   get shadowRoot(): ShadowRoot | null {
-    if (this._shadowRoot && this._shadowRoot.mode === 'open')
-      return this._shadowRoot
-    else
+    /**
+     * 1. Let shadow be context object’s shadow root.
+     * 2. If shadow is null or its mode is "closed", then return null.
+     * 3. Return shadow.
+     */
+    const shadow = this._shadowRoot
+    if (shadow === null || shadow.mode === "closed")
       return null
+    else
+      return shadow
   }
 
-  /**
-   * Returns the first (starting at element) inclusive ancestor that
-   * matches selectors, and `null` otherwise.
-   * 
-   * This method is not supported by this module and will throw an
-   * exception.
-   * 
-   * @param selectors 
-   */
+  /** @inheritdoc */
   closest(selectors: string): Element | null {
+    /**
+     * TODO:
+     * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
+     * 2. If s is failure, throw a "SyntaxError" DOMException.
+     * 3. Let elements be context object’s inclusive ancestors that are 
+     * elements, in reverse tree order.
+     * 4. For each element in elements, if match a selector against an element,
+     * using s, element, and :scope element context object, returns success, 
+     * return element. [SELECTORS4]
+     * 5. Return null.
+     */
     throw DOMException.NotImplementedError
   }
 
-  /**
-   * Returns `true` if matching selectors against element's root yields 
-   * element, and `false` otherwise.
-   * 
-   * This method is not supported by this module and will throw an
-   * exception.
-   * 
-   * @param selectors 
-   */
+  /** @inheritdoc */
   matches(selectors: string): boolean {
+    /**
+     * TODO:
+     * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
+     * 2. If s is failure, throw a "SyntaxError" DOMException.
+     * 3. Return true if the result of match a selector against an element, 
+     * using s, element, and :scope element context object, returns success,
+     * and false otherwise. [SELECTORS4]
+     */
     throw DOMException.NotImplementedError
   }
 
-  /** 
-   * Gets or sets the concatenation of data of all the {@link Text}
-   * node descendants in tree order. When set, replaces the text 
-   * contents of the node with the given value. 
-   */
-  get textContent(): string | null {
-    let str = ''
-    for (const child of this._childNodes) {
-      if (child.nodeType !== NodeType.Comment &&
-        child.nodeType !== NodeType.ProcessingInstruction) {
-        const childContent = child.textContent
-        if (childContent)
-          str += childContent
-      }
-    }
-    return str
-  }
-  set textContent(value: string | null) {
-    const node = new TextImpl(value || '')
-    TreeMutation.replaceAllNode(node, this)
-  }
-
-  /**
-   * Returns a duplicate of this node, i.e., serves as a generic copy 
-   * constructor for nodes. The duplicate node has no parent 
-   * ({@link parentNode} returns `null`).
-   *
-   * @param deep - if `true`, recursively clone the subtree under the 
-   * specified node. If `false`, clone only the node itself (and its 
-   * attributes, if it is an {@link Element}).
-   */
-  cloneNode(deep: boolean = false): Node {
-    const clonedSelf = new ElementImpl(this._localName, this._namespace,
-      this._namespacePrefix)
-
-    // clone attributes
-    for (const attr of this.attributes) {
-      const clonedAtt = <Attr>attr.cloneNode(deep)
-      clonedSelf.attributes.setNamedItem(clonedAtt)
-    }
-
-    // clone child nodes
-    if (deep) {
-      for (const child of this.childNodes) {
-        const clonedChild = child.cloneNode(deep)
-        clonedSelf.appendChild(clonedChild)
-      }
-    }
-
-    return clonedSelf
-  }
-
-  /**
-   * Determines if the given node is equal to this one.
-   * 
-   * @param node - the node to compare with
-   */
-  isEqualNode(node: Node | null = null): boolean {
-    if (!super.isEqualNode(node))
-      return false
-
-    const other = <Element>node
-    if (!other || this.namespaceURI !== other.namespaceURI ||
-      this.prefix !== other.prefix ||
-      this.localName !== other.localName ||
-      this.attributes.length !== other.attributes.length) {
-      return false
-    } else {
-      for (let i = 0; i < this.attributes.length; i++) {
-        const att1 = this.attributes.item(i)
-        const att2 = other.attributes.item(i)
-        if (att1 && att2 && (
-          att1.namespaceURI !== att2.namespaceURI ||
-          att1.localName !== att2.localName ||
-          att1.value !== att2.value)) {
-          return false
-        }
-      }
-
-      return true
-    }
-  }
-
-  /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
-   * whose qualified name is `qualifiedName`.
-   * 
-   * @param qualifiedName - the qualified name to match or `*` to match
-   * all descendant elements.
-   * 
-   * @returns an {@link HTMLCollection} of matching descendant
-   * elements
-   */
+  /** @inheritdoc */
   getElementsByTagName(qualifiedName: string): HTMLCollection {
-    const coll = HTMLCollectionImpl._create(this)
-    coll._filter = function (ele: Element) {
-      return (qualifiedName === '*' || ele.tagName === qualifiedName)
-    }
-    return coll
+    /**
+     * The getElementsByTagName(qualifiedName) method, when invoked, must return
+     * the list of elements with qualified name qualifiedName for context 
+     * object.
+     */
+    return this._algo.node.listOfElementsWithQualifiedName(qualifiedName, this)
   }
 
-  /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
-   * whose namespace is `namespace` and local name is `localName`.
-   * 
-   * @param namespace - the namespace to match or `*` to match any
-   * namespace.
-   * @param localName - the local name to match or `*` to match any
-   * local name.
-   * 
-   * @returns an {@link HTMLCollection} of matching descendant
-   * elements
-   */
+  /** @inheritdoc */
   getElementsByTagNameNS(namespace: string, localName: string): HTMLCollection {
-    const coll = HTMLCollectionImpl._create(this)
-    coll._filter = function (ele: Element) {
-      return ((localName === '*' || ele.localName === localName) &&
-        (namespace === '*' || ele.namespaceURI === namespace))
-    }
-    return coll
+    /**
+     * The getElementsByTagNameNS(namespace, localName) method, when invoked, 
+     * must return the list of elements with namespace namespace and local name
+     * localName for context object.
+     */
+    return this._algo.node.listOfElementsWithNamespace(namespace, localName, this)
   }
 
-  /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
-   * whose classes are contained in the list of classes given in 
-   * `classNames`.
-   * 
-   * @param classNames - a space-separated list of classes
-   * 
-   * @returns an {@link HTMLCollection} of matching descendant
-   * elements
-   */
+  /** @inheritdoc */
   getElementsByClassName(classNames: string): HTMLCollection {
-    const arr = OrderedSet.parse(classNames)
-    const coll = HTMLCollectionImpl._create(this)
-    coll._filter = function (ele: Element) {
-      const classes = ele.classList
-      let allClassesFound = true
-      for (const className of arr) {
-        if (!classes.contains(className)) {
-          allClassesFound = false
-          break
-        }
-      }
-      return allClassesFound
-    }
-    return coll
+    /**
+     * The getElementsByClassName(classNames) method, when invoked, must return 
+     * the list of elements with class names classNames for context object.
+     */
+    return this._algo.node.listOfElementsWithClassNames(classNames, this)
   }
 
-  /**
-   * Inserts a given element node at a given position relative to this
-   * node.
-   * 
-   * @param where - a string defining where to insert the element node.
-   *   - `beforebegin` before this element itself.
-   *   - `afterbegin` before the first child.
-   *   - `beforeend` after the last child.
-   *   - `afterend` after this element itself.
-   * @param element - the element to insert
-   * 
-   * @returns the inserted element
-   */
-  insertAdjacentElement(where: string, element: Element): Element | null {
-    switch (where.toLowerCase()) {
-      case 'beforebegin':
-        if (!this.parentNode) return null
-
-        this.parentNode.insertBefore(element, this)
-        break
-      case 'afterbegin':
-        this.insertBefore(element, this.firstChild)
-        break
-      case 'beforeend':
-        this.insertBefore(element, null)
-        break
-      case 'afterend':
-        if (!this.parentNode) return null
-
-        this.parentNode.insertBefore(element, this.nextSibling)
-        break
-    }
-
-    return element
+  /** @inheritdoc */
+  insertAdjacentElement(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
+    element: Element): Element | null {
+    /**
+     * The insertAdjacentElement(where, element) method, when invoked, must
+     * return the result of running insert adjacent, given context object,
+     *  where, and element.
+     */
+    return this._algo.element.insertAdjacent(this, where,
+      element as ElementInternal) as ElementInternal | null
   }
 
-  /**
-   * Inserts a given text node at a given position relative to this
-   * node.
-   * 
-   * @param where - a string defining where to insert the element node.
-   *   - `beforebegin` before this element itself.
-   *   - `afterbegin` before the first child.
-   *   - `beforeend` after the last child.
-   *   - `afterend` after this element itself.
-   * @param data - text node data 
-   * 
-   * @returns the inserted element
-   */
-  insertAdjacentText(where: string, data: string): void {
-    const text = new TextImpl(data)
-
-    switch (where.toLowerCase()) {
-      case 'beforebegin':
-        if (!this.parentNode) return
-
-        this.parentNode.insertBefore(text, this)
-        break
-      case 'afterbegin':
-        this.insertBefore(text, this.firstChild)
-        break
-      case 'beforeend':
-        this.insertBefore(text, null)
-        break
-      case 'afterend':
-        if (!this.parentNode) return
-
-        this.parentNode.insertBefore(text, this.nextSibling)
-        break
-    }
+  /** @inheritdoc */
+  insertAdjacentText(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
+    data: string): void {
+    /**
+     * 1. Let text be a new Text node whose data is data and node document is
+     * context object’s node document.
+     * 2. Run insert adjacent, given context object, where, and text.
+     */
+    const text = this._algo.create.text(this._nodeDocument, data)
+    this._algo.element.insertAdjacent(this, where, text)
   }
-
-  /**
-   * Returns the prefix for a given namespace URI, if present, and 
-   * `null` if not.
-   * 
-   * @param namespace - the namespace to search
-   */
-  lookupPrefix(namespace: string | null): string | null {
-    if (!namespace) return null
-
-    if (this.namespaceURI === namespace && this.prefix) {
-      return this.prefix
-    }
-
-    for (const attr of this.attributes) {
-      if (attr.prefix === "xmlns" && attr.value === namespace) {
-        return attr.localName
-      }
-    }
-
-    if (this.parentElement)
-      return this.parentElement.lookupPrefix(namespace)
-
-    return null
-  }
-
-  /**
-   * Returns the namespace URI for a given prefix if present, and `null`
-   * if not.
-   * 
-   * @param prefix - the prefix to search
-   */
-  lookupNamespaceURI(prefix: string | null): string | null {
-    if (!prefix) prefix = null
-
-    if (this.namespaceURI && this.prefix === prefix)
-      return this.namespaceURI
-
-    for (const attr of this.attributes) {
-      if (attr.namespaceURI === Namespace.XMLNS) {
-        if ((attr.prefix === 'xmlns' && attr.localName === prefix) ||
-          (!prefix && !attr.prefix && attr.localName === 'xmlns')) {
-          return attr.value || null
-        }
-      }
-    }
-
-    if (this.parentElement)
-      return this.parentElement.lookupNamespaceURI(prefix)
-
-    return null
-  }
-
 
   /** 
    * Returns the qualified name.
    */
   get _qualifiedName(): string {
+    /**
+     * An element’s qualified name is its local name if its namespace prefix is 
+     * null, and its namespace prefix, followed by ":", followed by its 
+     * local name, otherwise.
+     */
     return (this._namespacePrefix ?
       this._namespacePrefix + ':' + this.localName :
       this.localName)
@@ -645,9 +547,15 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * Returns the upper-cased qualified name for a html element.
    */
   get _htmlUppercasedQualifiedName(): string {
+    /**
+     * 1. Let qualifiedName be context object’s qualified name.
+     * 2. If the context object is in the HTML namespace and its node document 
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * uppercase.
+     * 3. Return qualifiedName.
+     */
     let qualifiedName = this._qualifiedName
     if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
-      // TODO: https://infra.spec.whatwg.org/#ascii-uppercase
       qualifiedName = qualifiedName.toUpperCase()
     }
     return qualifiedName
@@ -693,9 +601,17 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   /**
    * Creates a new `Element`.
+   * 
+   * @param document - owner document
+   * @param localName - local name
+   * @param namespace - namespace
+   * @param prefix - namespace prefix
    */
-  static _create(localName: string, namespace: string | null = null,
+  static _create(document: DocumentInternal, localName: string,
+    namespace: string | null = null,
     namespacePrefix: string | null = null): ElementInternal {
-    return new ElementImpl(localName, namespace, namespacePrefix)
+    const node = new ElementImpl(localName, namespace, namespacePrefix)
+    node._nodeDocument = document
+    return node
   }
 }

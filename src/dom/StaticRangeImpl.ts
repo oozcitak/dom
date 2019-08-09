@@ -1,7 +1,7 @@
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
 import { StaticRangeInternal } from './interfacesInternal'
-import { Node, BoundaryPoint } from './interfaces'
+import { BoundaryPoint } from './interfaces'
 
 /**
  * Represents a static range.

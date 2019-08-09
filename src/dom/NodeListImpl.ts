@@ -20,19 +20,22 @@ export class NodeListImpl implements NodeListInternal {
     this._root = root
   }
 
-  /**
-   * Returns the number of nodes in the list.
-   */
+  /** @inheritdoc */
   get length(): number {
+    /**
+     * The length attribute must return the number of nodes represented 
+     * by the collection.
+     */
     return this._length
   }
 
-  /** 
-   * Returns the node with index `index` from the collection.
-   * 
-   * @param index - the zero-based index of the node to return
-   */
+  /** @inheritdoc */
   item(index: number): Node | null {
+    /**
+     * The item(index) method must return the indexth node in the collection. 
+     * If there is no indexth node in the collection, then the method must 
+     * return null.
+     */
     if (index < 0 || index > this.length - 1) return null
 
     if (index < this.length / 2) {
@@ -55,9 +58,7 @@ export class NodeListImpl implements NodeListInternal {
     }
   }
 
-  /**
-   * Returns an iterator for node indices.
-   */
+  /** @inheritdoc */
   *keys(): IterableIterator<number> {
     let index = 0
     for (const child of this) {
@@ -65,16 +66,12 @@ export class NodeListImpl implements NodeListInternal {
     }
   }
 
-  /**
-   * Returns an iterator for nodes.
-   */
+  /** @inheritdoc */
   *values(): IterableIterator<Node> {
     yield* this
   }
 
-  /**
-   * Returns an iterator for indices and nodes.
-   */
+  /** @inheritdoc */
   *entries(): IterableIterator<[number, Node]> {
     let index = 0
     for (const child of this) {
@@ -82,9 +79,7 @@ export class NodeListImpl implements NodeListInternal {
     }
   }
 
-  /**
-   * Returns an iterator for the node list.
-   */
+  /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<Node> {
     let child = this._root.firstChild
     while (child) {
@@ -93,16 +88,7 @@ export class NodeListImpl implements NodeListInternal {
     }
   }
 
-  /**
-   * Calls the callback function for each node in the list. The callback
-   * receives arguments as follows:
-   *   - the current node
-   *   - index of the current node
-   *   - the node list object
-   * 
-   * @param callback - function to execute for each node 
-   * @param thisArg - value to use as `this` when executing callback 
-   */
+  /** @inheritdoc */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
     thisArg: any): void {
     for (const [index, node] of this.entries()) {

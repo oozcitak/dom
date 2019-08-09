@@ -18,19 +18,10 @@ export class CustomEventImpl extends EventImpl implements CustomEventInternal {
     this._detail = (eventInit && eventInit.detail) || null
   }
 
-  /**
-   *  Gets custom event data.
-   */
+  /** @inheritdoc */
   get detail(): any { return this._detail }
 
-  /**
-   * Initializes the value of an event.
-   * 
-   * @param type - the type of event.
-   * @param bubbles - whether the event propagates in reverse.
-   * @param cancelable - whether the event can be cancelled.
-   * @param detail - custom event data
-   */
+  /** @inheritdoc */
   initCustomEvent(type: string, bubbles = false, cancelable = false, detail = null): void {
     if (this._dispatchFlag) return
 

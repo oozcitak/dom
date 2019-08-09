@@ -1,6 +1,5 @@
 import { Element, Node } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
-import { TextUtility } from "./util/TextUtility"
 import { CharacterDataInternal } from "./interfacesInternal"
 
 /**
@@ -11,95 +10,71 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
   _data: string = ''
 
   /**
-   * Determines if the given node is equal to this one.
-   * 
-   * @param node - the node to compare with
+   * Initializes a new instance of `CharacterData`.
+   *
+   * @param data - the text content
    */
-  isEqualNode(node: Node | null = null): boolean {
-    if (!super.isEqualNode(node))
-      return false
+  protected constructor(data: string = '') {
+    super()
 
-    return (this._data === (<CharacterDataInternal>node)._data)
+    this._data = data
   }
 
-  /** 
-   * Gets or sets the data associated with a {@link CharacterData} node.
-   */
-  get nodeValue(): string | null { return this.data }
-  set nodeValue(value: string | null) { this.data = value || '' }
-
-  /** 
-   * Gets or sets the data associated with a {@link CharacterData} node.
-   */
-  get textContent(): string | null { return this.data }
-  set textContent(value: string | null) { this.data = value || '' }
-
-  /** 
-   * Gets or sets the text data of the node. 
-   */
+  /** @inheritdoc */
   get data(): string { return this._data }
   set data(value: string) {
-    TextUtility.replaceData(this, 0, this._data.length, value)
+    this._algo.characterData.replaceData(this, 0, this.length, value)
   }
 
-  /** 
-   * Returns the number of code units in {@link data}.
-   */
+  /** @inheritdoc */
   get length(): number { return this._data.length }
 
-  /**
-   * Appends the given string to text data of the node.
-   * 
-   * @param data - the string of text to add to node data
-   */
-  appendData(data: string): void {
-    TextUtility.replaceData(this, this._data.length, 0, data)
-  }
-
-  /**
-   * Inserts the given string into the text data of the node starting at
-   * the given `offset`.
-   * 
-   * @param offset - the offset at which insertion starts
-   * @param data - the string of text to add to node data
-   */
-  insertData(offset: number, data: string): void {
-    TextUtility.replaceData(this, offset, 0, data)
-  }
-
-  /**
-   * Deletes `count` number of characters from node data starting at
-   * the given `offset`.
-   * 
-   * @param offset - the offset at which removal starts
-   * @param count - the number of characters to delete
-   */
-  deleteData(offset: number, count: number): void {
-    TextUtility.replaceData(this, offset, count, '')
-  }
-
-  /**
-   * Deletes `count` number of characters from node data starting at
-   * the given `offset` and replaces it with the given `data`.
-   * 
-   * @param offset - the offset at which removal starts
-   * @param count - the number of characters to delete
-   * @param data - the string of text to add to node data
-   */
-  replaceData(offset: number, count: number, data: string): void {
-    TextUtility.replaceData(this, offset, count, data)
-  }
-
-  /**
-   * Returns `count` number of characters from node data starting at
-   * the given `offset`.
-   * 
-   * @param offset - the offset at which retrieval starts
-   * @param count - the number of characters to return
-   */
+  /** @inheritdoc */
   substringData(offset: number, count: number): string {
-    return TextUtility.substringData(this, offset, count)
+    /**
+     * The substringData(offset, count) method, when invoked, must return the 
+     * result of running substring data with node context object, offset offset, and count count.
+     */
+    return this._algo.characterData.substringData(this, offset, count)
   }
+
+  /** @inheritdoc */
+  appendData(data: string): void {
+    /**
+     * The appendData(data) method, when invoked, must replace data with node 
+     * context object, offset context object’s length, count 0, and data data.
+     */
+    return this._algo.characterData.replaceData(this, this.length, 0, data)
+  }
+
+  /** @inheritdoc */
+  insertData(offset: number, data: string): void {
+    /**
+     * The insertData(offset, data) method, when invoked, must replace data with 
+     * node context object, offset offset, count 0, and data data.
+     */
+    this._algo.characterData.replaceData(this, offset, 0, data)
+  }
+
+  /** @inheritdoc */
+  deleteData(offset: number, count: number): void {
+    /**
+     * The deleteData(offset, count) method, when invoked, must replace data 
+     * with node context object, offset offset, count count, and data the 
+     * empty string.
+     */
+    this._algo.characterData.replaceData(this, offset, count, '')
+  }
+
+  /** @inheritdoc */
+  replaceData(offset: number, count: number, data: string): void {
+    /**
+     * The replaceData(offset, count, data) method, when invoked, must replace 
+     * data with node context object, offset offset, count count, and data data.
+     */
+    this._algo.characterData.replaceData(this, offset, count, data)
+  }
+
 
   // MIXIN: NonDocumentTypeChildNode
   /* istanbul ignore next */

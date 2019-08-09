@@ -1,6 +1,9 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
-import { TreeQuery } from "./util/TreeQuery"
-import { HTMLCollectionInternal, ElementInternal } from "./interfacesInternal"
+import { HTMLCollectionInternal, ElementInternal, AttrInternal, NodeInternal } from "./interfacesInternal"
+import { Guard } from "./util"
+import { Namespace } from "./spec"
+import { globalStore } from "../util"
+import { DOMAlgorithm } from "./algorithm/interfaces"
 
 /**
  * Represents a collection of elements.
@@ -27,10 +30,12 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
     return new Proxy<HTMLCollectionImpl>(this, this)
   }
 
-  /** 
-   * Returns the number of elements in the collection.
-   */
+  /** @inheritdoc */
   get length(): number {
+    /**
+     * The length attribute’s getter must return the number of nodes
+     * represented by the collection.
+     */
     let count = 0
     for (const node of this) {
       count++
@@ -38,12 +43,13 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
     return count
   }
 
-  /** 
-   * Returns the element with index `index` from the collection.
-   * 
-   * @param index - the zero-based index of the element to return
-   */
+  /** @inheritdoc */
   item(index: number): Element | null {
+    /**
+     * The item(index) method, when invoked, must return the indexth element 
+     * in the collection. If there is no indexth element in the collection, 
+     * then the method must return null.
+     */
     let i = 0
     for (const node of this) {
       if (i === index)
@@ -55,41 +61,49 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
     return null
   }
 
-  /** 
-   * Returns the first element with ID or name `name` from the
-   * collection.
-   * 
-   * @param name - the name of the element to return
-   */
-  namedItem(name: string): Element | null {
-    if (!name) return null
+  /** @inheritdoc */
+  namedItem(key: string): Element | null {
+    /**
+     * 1. If key is the empty string, return null.
+     * 2. Return the first element in the collection for which at least one of
+     * the following is true:
+     * - it has an ID which is key;
+     * - it is in the HTML namespace and has a name attribute whose value is key;
+     * or null if there is no such element.
+     */
+    if (key === '') return null
 
     for (const node of this) {
-      if (node.id === name || node.getAttribute('name') === name)
-        return node
+      if (Guard.isElementNode(node)) {
+        if (node._uniqueIdentifier === key) {
+          return node
+        } else if (node._namespace === Namespace.HTML) {
+          for (const attr of node._attributeList) {
+            const attrInt = attr as AttrInternal
+            if (attrInt._localName === key && attrInt._namespace === null &&
+              attrInt._namespacePrefix === null)
+              return node
+          }
+
+        }
+      }
     }
+
 
     return null
   }
 
-  /**
-   * Returns an iterator for nodes.
-   */
+  /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<Element> {
-    yield* TreeQuery.getDescendantElements(this._root, false, false,
+    const algo = globalStore.algorithm as DOMAlgorithm
+    yield* algo.tree.getDescendantElements(this._root as NodeInternal, false, false,
       (ele) => { return !!this._filter(ele as ElementInternal) })
   }
 
-  /**
-   * Returns the element with index index from the collection. The 
-   * elements are sorted in tree order.
-   */
+  /** @inheritdoc */
   [index: number]: any
 
-  /*
-   * Returns the first element with ID or name name from the 
-   * collection.
-   */
+  /** @inheritdoc */
   [key: string]: any
 
   /**
