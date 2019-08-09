@@ -318,9 +318,9 @@ export interface AbstractRangeInternal extends AbstractRange {
   _start: BoundaryPoint
   _end: BoundaryPoint
 
-  readonly _startNode: Node
+  readonly _startNode: NodeInternal
   readonly _startOffset: number
-  readonly _endNode: Node
+  readonly _endNode: NodeInternal
   readonly _endOffset: number
 
   readonly _collapsed: boolean
@@ -337,7 +337,7 @@ export interface StaticRangeInternal extends AbstractRangeInternal, StaticRange 
  * Represents a live range.
  */
 export interface RangeInternal extends AbstractRangeInternal, Range {
-  readonly _root: Node
+
 }
 
 /**

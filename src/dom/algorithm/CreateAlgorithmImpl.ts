@@ -17,6 +17,7 @@ import {
   NodeFilterImpl, MutationRecordImpl, XMLDocumentImpl, DOMTokenListImpl, 
   ShadowRootImpl
 } from '..'
+import { BoundaryPoint } from '../interfaces'
 
 /**
  * Contains algorithms for creating DOM objects.
@@ -117,8 +118,8 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   }
 
   /** @inheritdoc */
-  range(): RangeInternal {
-    return RangeImpl._create()
+  range(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal {
+    return RangeImpl._create(start, end)
   }
 
   /** @inheritdoc */

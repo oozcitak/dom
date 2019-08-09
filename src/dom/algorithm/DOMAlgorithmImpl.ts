@@ -5,7 +5,8 @@ import {
   AbortAlgorithm, AttributeChangeStep, ShadowTreeAlgorithm, MutationAlgorithm,
   InsertionStep, ParentNodeAlgorithm, CreateAlgorithm, MutationObserverAlgorithm,
   AttrAlgorithm, ElementAlgorithm, CharacterDataAlgorithm, TextAlgorithm,
-  NodeAlgorithm, DocumentAlgorithm, ListAlgorithm
+  NodeAlgorithm, DocumentAlgorithm, ListAlgorithm, BoundaryPointAlgorithm, 
+  RangeAlgorithm
 } from './interfaces'
 import {
   DocumentInternal, ElementInternal, NodeInternal, SlotInternal
@@ -30,6 +31,8 @@ import { CharacterDataAlgorithmImpl } from './CharacterDataAlgorithmImpl'
 import { TextAlgorithmImpl } from './TextAlgorithmImpl'
 import { DocumentAlgorithmImpl } from './DocumentAlgorithmImpl'
 import { ListAlgorithmImpl } from './ListAlgorithmImpl'
+import { BoundaryPointAlgorithmImpl } from './BoundaryPointAlgorithmImpl'
+import { RangeAlgorithmImpl } from './RangeAlgorithmImpl'
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -56,6 +59,8 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   readonly _node: NodeAlgorithm
   readonly _document: DocumentAlgorithm
   readonly _list: ListAlgorithm
+  readonly _boundaryPoint: BoundaryPointAlgorithm
+  readonly _range: RangeAlgorithm
 
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []
@@ -87,6 +92,8 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     this._node = new NodeAlgorithmImpl(this)
     this._document = new DocumentAlgorithmImpl(this)
     this._list = new ListAlgorithmImpl(this)
+    this._boundaryPoint = new BoundaryPointAlgorithmImpl(this)
+    this._range = new RangeAlgorithmImpl(this)
 
     this.attributeChangeSteps.push(this.updateASlotsName)
     this.attributeChangeSteps.push(this.updateASlotablesName)
@@ -149,6 +156,12 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
 
   /** @inheritdoc */
   get list(): ListAlgorithm { return this._list }
+
+  /** @inheritdoc */
+  get boundaryPoint(): BoundaryPointAlgorithm { return this._boundaryPoint }
+
+  /** @inheritdoc */
+  get range(): RangeAlgorithm { return this._range }
 
   /** @inheritdoc */
   runRemovingSteps(removedNode: NodeInternal, oldParent: NodeInternal | null = null): void {

@@ -6,13 +6,12 @@ import {
   NamedNodeMapInternal, RangeInternal, NodeIteratorInternal,
   TreeWalkerInternal, NodeFilterInternal, EventInternal, EventTargetInternal,
   AbortSignalInternal, SlotableInternal, SlotInternal, MutationRecordInternal,
-  CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, ShadowRootInternal
+  CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, ShadowRootInternal, AbstractRangeInternal
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem
+  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition
 } from "../interfaces"
-import { DOMTokenListImpl } from "..";
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -114,6 +113,16 @@ export interface DOMAlgorithm {
    * Contains algorithms for manipulating lists.
    */
   readonly list: ListAlgorithm
+
+  /**
+   * Contains algorithms for boundary points.
+   */
+  readonly boundaryPoint: BoundaryPointAlgorithm
+
+  /**
+   * Contains algorithms for ranges.
+   */
+  readonly range: RangeAlgorithm
 
   /**
    * Runs removing steps for node.
@@ -1424,8 +1433,11 @@ export interface CreateAlgorithm extends SubAlgorithm {
 
   /**
    * Creates a new `Range`.
+   * 
+   * @param start - start point
+   * @param end - end point
    */
-  range(): RangeInternal
+  range(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal
 
   /**
    * Creates a new `NodeIterator`.
@@ -1484,6 +1496,143 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param localName - assocaited attribute's local name
    */
   domTokenList(element: ElementInternal, localName: string): DOMTokenListInternal
+
+}
+
+/**
+ * Contains algorithms for boundary points.
+ */
+export interface BoundaryPointAlgorithm extends SubAlgorithm {
+
+  /**
+   * Defines the position of a boundary point relative to another.
+   * 
+   * @param bp - a boundary point
+   * @param relativeTo - a boundary point to compare to
+   */
+  position(bp: BoundaryPoint, relativeTo: BoundaryPoint): BoundaryPosition
+
+  /**
+   * Returns the boundary point for the start of a node.
+   * 
+   * @param node - a node
+   */
+  nodeStart(node: NodeInternal): BoundaryPoint
+
+  /**
+   * Returns the boundary point for the end of a node.
+   * 
+   * @param node - a node
+   */
+  nodeEnd(node: NodeInternal): BoundaryPoint
+
+}
+
+/**
+ * Contains algorithms for ranges.
+ */
+export interface RangeAlgorithm extends SubAlgorithm {
+
+  /**
+   * Determines if the node's start boundary point is at its end boundary
+   * point.
+   * 
+   * @param range - a range
+   */
+  collapsed(range: AbstractRangeInternal): boolean
+
+  /**
+   * Gets the root node of a range.
+   * 
+   * @param range - a range
+   */
+  root(range: AbstractRangeInternal): NodeInternal
+
+  /**
+   * Determines if a node is fully contained in a range.
+   * 
+   * @param node - a node
+   * @param range - a range
+   */
+  isContained(node: NodeInternal, range: AbstractRangeInternal): boolean
+
+  /**
+   * Determines if a node is partially contained in a range.
+   * 
+   * @param node - a node
+   * @param range - a range
+   */
+  isPartiallyContained(node: NodeInternal, range: AbstractRangeInternal): boolean
+
+  /**
+   * Sets the start boundary point of a range.
+   * 
+   * @param range - a range
+   * @param node - a node
+   * @param offset - an offset into node
+   */
+  setTheStart(range: AbstractRangeInternal, node: NodeInternal, offset: number): void
+
+  /**
+   * Sets the end boundary point of a range.
+   * 
+   * @param range - a range
+   * @param node - a node
+   * @param offset - an offset into node
+   */
+  setTheEnd(range: AbstractRangeInternal, node: NodeInternal, offset: number): void
+
+  /** 
+   * Selects a node.
+   * 
+   * @param range - a range
+   * @param node - a node
+   */
+  select(node: NodeInternal, range: AbstractRangeInternal): void
+
+  /**
+ * EXtracts the contents of range as a document fragment.
+ * 
+ * @param range - a range
+ */
+  extract(range: AbstractRangeInternal): DocumentFragmentInternal
+
+  /**
+   * Clones the contents of range as a document fragment.
+   * 
+   * @param range - a range
+   */
+  cloneTheContents(range: AbstractRangeInternal): DocumentFragmentInternal
+
+  /**
+   * Inserts a node into a range at the start boundary point.
+   * 
+   * @param node - node to insert
+   * @param range - a range
+   */
+  insert(node: NodeInternal, range: AbstractRangeInternal): void
+
+  /**
+   * Traverses through all contained nodes of a range.
+   * 
+   * @param range - a range
+   */
+  getContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
+
+  /**
+   * Traverses through all partially contained nodes of a range.
+   * 
+   * @param range - a range
+   */
+  getPartiallyContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
+
+  /**
+   * Removes a range object from the given document.
+   * 
+   * @param doc - owner document
+   * @param range - the range to remove
+   */
+  removeRange(range: AbstractRangeInternal, doc: DocumentInternal): void
 
 }
 
