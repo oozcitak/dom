@@ -1,6 +1,5 @@
 import { Node } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
-import { Traverse } from "./util/Traverse"
 import { NodeIteratorInternal, CollectionInternal } from "./interfacesInternal"
 
 /**
@@ -24,43 +23,37 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
     this._pointerBeforeReference = pointerBeforeReference
   }
 
-  /**
-   * Gets the current node.
-   */
+  /** @inheritdoc */
   get referenceNode(): Node { return this._reference }
 
-  /**
-   * Gets a flag that indicates whether the iterator is before
-   * or after  the reference node. If is `true`, the iterator is 
-   * before the node, otherwise it is after the node.
-   */
+  /** @inheritdoc */
   get pointerBeforeReferenceNode(): boolean { return this._pointerBeforeReference }
 
-  /**
-   * Returns the next node in the subtree, or `null` if there are none.
-   */
+  /** @inheritdoc */
   nextNode(): Node | null {
-    const [node, ref, beforeNode] = Traverse.traverse(this, true)
-    this._reference = ref
-    this._pointerBeforeReference = beforeNode
-    return node
+    /**
+     * The nextNode() method, when invoked, must return the result of 
+     * traversing with the context object and next.
+     */
+    return this._algo.nodeIterator.traverse(this, true)
   }
 
-  /**
-   * Returns the previous node in the subtree, or `null` if there
-   * are none.
-   */
+  /** @inheritdoc */
   previousNode(): Node | null {
-    const [node, ref, beforeNode] = Traverse.traverse(this, false)
-    this._reference = ref
-    this._pointerBeforeReference = beforeNode
-    return node
+    /**
+     * The previousNode() method, when invoked, must return the result of 
+     * traversing with the context object and previous.
+     */
+    return this._algo.nodeIterator.traverse(this, false)
   }
 
-  /**
-   * This method is a no-op and is not used.
-   */
-  detach(): void { }
+  /** @inheritdoc */
+  detach(): void {
+    /**
+     * TODO:
+     * The detach() method, when invoked, must do nothing.
+     */
+   }
 
 
   /**

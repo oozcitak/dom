@@ -1,11 +1,15 @@
 import { Node, NodeFilter, WhatToShow } from "./interfaces"
 import { TraverserInternal } from "./interfacesInternal"
+import { DOMAlgorithm } from "./algorithm/interfaces"
+import { globalStore } from "../util"
 
 /**
  * Represents an object which can be used to iterate through the nodes
  * of a subtree.
  */
 export abstract class TraverserImpl implements TraverserInternal {
+
+  _algo: DOMAlgorithm
 
   _activeFlag: boolean
   _root: Node
@@ -18,25 +22,21 @@ export abstract class TraverserImpl implements TraverserInternal {
    * @param root - root node
    */
   protected constructor(root: Node) {
+    this._algo = globalStore.algorithm as DOMAlgorithm
+
     this._activeFlag = false
     this._root = root
     this._whatToShow = WhatToShow.All
     this._filter = null
   }
 
-  /**
-   * Gets the root node of the subtree.
-   */
+  /** @inheritdoc */
   get root(): Node { return this._root }
 
-  /**
-   * Gets the node types to match
-   */
+  /** @inheritdoc */
   get whatToShow(): WhatToShow { return this._whatToShow }
 
-  /**
-   * Gets the filter used to selected the nodes.
-   */
+  /** @inheritdoc */
   get filter(): NodeFilter | null { return this._filter }
 
 }

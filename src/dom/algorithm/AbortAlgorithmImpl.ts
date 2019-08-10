@@ -3,7 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { AbortSignalInternal } from '../interfacesInternal'
 
 /**
- * Contains event algorithms.
+ * Contains abort algorithms.
  */
 export class AbortAlgorithmImpl extends SubAlgorithmImpl implements AbortAlgorithm {
 

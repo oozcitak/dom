@@ -10,7 +10,7 @@ import {
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition
+  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult
 } from "../interfaces"
 
 /**
@@ -123,6 +123,21 @@ export interface DOMAlgorithm {
    * Contains algorithms for ranges.
    */
   readonly range: RangeAlgorithm
+
+  /**
+   * Contains algorithms for tree traversal.
+   */
+  readonly traversal: TraversalAlgorithm
+
+  /**
+   * Contains algorithms for node iterators.
+   */
+  readonly nodeIterator: NodeIteratorAlgorithm
+
+  /**
+   * Contains algorithms for tree walkers.
+   */
+  readonly treeWalker: TreeWalkerAlgorithm
 
   /**
    * Runs removing steps for node.
@@ -1637,6 +1652,64 @@ export interface RangeAlgorithm extends SubAlgorithm {
 }
 
 /**
+ * Contains algorithms for traversing the DOM tree.
+ */
+export interface TraversalAlgorithm extends SubAlgorithm {
+
+  /**
+   * Applies the filter to the given node and returns the result.
+   * 
+   * @param traverser - the `NodeIterator` or `TreeWalker` instance
+   * @param node - the node to filter
+   */
+  filter(traverser: NodeIteratorInternal | TreeWalkerInternal,
+    node: NodeInternal): FilterResult
+
+}
+
+/**
+ * Contains algorithms for node iterators.
+ */
+export interface NodeIteratorAlgorithm extends SubAlgorithm {
+
+  /**
+   * Returns the next or previous node in the subtree, or `null` if 
+   * there are none.
+   * 
+   * @param iterator - the `NodeIterator` instance
+   * @param forward- `true` to return the next node, or `false` to 
+   * return the previous node.
+   */
+  traverse(iterator: NodeIteratorInternal, forward: boolean): NodeInternal | null
+
+}
+
+/**
+ * Contains algorithms for tree walkers.
+ */
+export interface TreeWalkerAlgorithm extends SubAlgorithm {
+
+  /**
+   * Returns the first or last child node, or `null` if there are none.
+   * 
+   * @param walker - the `TreeWalker` instance
+   * @param first - `true` to return the first child node, or `false` to 
+   * return the last child node.
+   */
+  traverseChildren(walker: TreeWalkerInternal, first: boolean): NodeInternal | null
+
+  /**
+   * Returns the next or previous sibling node, or `null` if there are none.
+   * 
+   * @param walker - the `TreeWalker` instance
+   * @param next - `true` to return the next sibling node, or `false` to 
+   * return the previous sibling node.
+   */
+  traverseSiblings(walker: TreeWalkerInternal, next: boolean): NodeInternal | null
+
+}
+
+/**
  * Contains algorithms for manipulating lists.
  * See: https://infra.spec.whatwg.org/#list
  */
@@ -1838,6 +1911,12 @@ export type AttributeChangeStep = ((element: ElementInternal, localName: string,
  * Defines an insertion step.
  */
 export type InsertionStep = ((insertedNode: NodeInternal) => any)
+
+/**
+ * Defines a pre-removal step for a node iterator.
+ */
+export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal,
+  toBeRemovedNode: NodeInternal) => any)
 
 /**
  * Defines a boolean out variable of a function.

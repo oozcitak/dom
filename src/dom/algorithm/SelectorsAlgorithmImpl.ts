@@ -4,7 +4,7 @@ import { DOMException } from '../DOMException'
 import { ElementInternal, NodeInternal } from '../interfacesInternal'
 
 /**
- * Contains namespace algorithms.
+ * Contains selectors algorithms.
  */
 export class SelectorsAlgorithmImpl extends SubAlgorithmImpl implements SelectorsAlgorithm {
 

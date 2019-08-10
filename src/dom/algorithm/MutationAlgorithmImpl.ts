@@ -7,7 +7,7 @@ import { List, Guard } from '../util'
 import { isEmpty } from '../../util'
 
 /**
- * Contains namespace algorithms.
+ * Contains mutation algorithms.
  */
 export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationAlgorithm {
 

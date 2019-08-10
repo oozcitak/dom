@@ -5,11 +5,12 @@ import {
   AbortAlgorithm, AttributeChangeStep, ShadowTreeAlgorithm, MutationAlgorithm,
   InsertionStep, ParentNodeAlgorithm, CreateAlgorithm, MutationObserverAlgorithm,
   AttrAlgorithm, ElementAlgorithm, CharacterDataAlgorithm, TextAlgorithm,
-  NodeAlgorithm, DocumentAlgorithm, ListAlgorithm, BoundaryPointAlgorithm, 
-  RangeAlgorithm
+  NodeAlgorithm, DocumentAlgorithm, ListAlgorithm, BoundaryPointAlgorithm,
+  RangeAlgorithm, TraversalAlgorithm, NodeIteratorAlgorithm,
+  TreeWalkerAlgorithm, NodeIteratorPreRemovingSteps
 } from './interfaces'
 import {
-  DocumentInternal, ElementInternal, NodeInternal, SlotInternal
+  DocumentInternal, ElementInternal, NodeInternal, SlotInternal, NodeIteratorInternal
 } from '../interfacesInternal'
 import { Guard } from '../util'
 import { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
@@ -33,6 +34,9 @@ import { DocumentAlgorithmImpl } from './DocumentAlgorithmImpl'
 import { ListAlgorithmImpl } from './ListAlgorithmImpl'
 import { BoundaryPointAlgorithmImpl } from './BoundaryPointAlgorithmImpl'
 import { RangeAlgorithmImpl } from './RangeAlgorithmImpl'
+import { TraversalAlgorithmImpl } from './TraversalAlgorithmImpl'
+import { NodeIteratorAlgorithmImpl } from './NodeIteratorAlgorithmImpl'
+import { TreeWalkerAlgorithmImpl } from './TreeWalkerAlgorithmImpl'
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -61,6 +65,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   readonly _list: ListAlgorithm
   readonly _boundaryPoint: BoundaryPointAlgorithm
   readonly _range: RangeAlgorithm
+  readonly _traversal: TraversalAlgorithm
+  readonly _nodeIterator: NodeIteratorAlgorithm
+  readonly _treeWalker: TreeWalkerAlgorithm
 
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []
@@ -68,6 +75,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   protected childTextContentChangeSteps: ChildTextContentChangeStep[] = []
   protected attributeChangeSteps: AttributeChangeStep[] = []
   protected insertionSteps: InsertionStep[] = []
+  protected nodeIteratorPreRemovingSteps: NodeIteratorPreRemovingSteps[] = []
 
   /**
    * Initializes a new instance of `DOMAlgorithm`.
@@ -94,6 +102,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     this._list = new ListAlgorithmImpl(this)
     this._boundaryPoint = new BoundaryPointAlgorithmImpl(this)
     this._range = new RangeAlgorithmImpl(this)
+    this._traversal = new TraversalAlgorithmImpl(this)
+    this._nodeIterator = new NodeIteratorAlgorithmImpl(this)
+    this._treeWalker = new TreeWalkerAlgorithmImpl(this)
 
     this.attributeChangeSteps.push(this.updateASlotsName)
     this.attributeChangeSteps.push(this.updateASlotablesName)
@@ -164,6 +175,15 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   get range(): RangeAlgorithm { return this._range }
 
   /** @inheritdoc */
+  get traversal(): TraversalAlgorithm { return this._traversal }
+
+  /** @inheritdoc */
+  get nodeIterator(): NodeIteratorAlgorithm { return this._nodeIterator }
+
+  /** @inheritdoc */
+  get treeWalker(): TreeWalkerAlgorithm { return this._treeWalker }
+
+  /** @inheritdoc */
   runRemovingSteps(removedNode: NodeInternal, oldParent: NodeInternal | null = null): void {
     for (const removingStep of this.removingSteps) {
       removingStep.call(this, removedNode, oldParent)
@@ -204,6 +224,14 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   runInsertionSteps(insertedNode: NodeInternal): void {
     for (const insertionStep of this.insertionSteps) {
       insertionStep.call(this, insertedNode)
+    }
+  }
+
+  /** @inheritdoc */
+  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIteratorInternal,
+    toBeRemovedNode: NodeInternal): void {
+    for (const removingStep of this.nodeIteratorPreRemovingSteps) {
+      removingStep.call(this, nodeIterator, toBeRemovedNode)
     }
   }
 
@@ -289,6 +317,69 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
         element._uniqueIdentifier = undefined
       else
         element._uniqueIdentifier = value
+    }
+  }
+
+  /**
+   * Defines pre-removing steps for a node iterator.
+   */
+  private removeNodeIterator(nodeIterator: NodeIteratorInternal,
+    toBeRemovedNode: NodeInternal): void {
+    /**
+     * 1. If toBeRemovedNode is not an inclusive ancestor of nodeIterator’s 
+     * reference, or toBeRemovedNode is nodeIterator’s root, then return.
+     */
+    if (toBeRemovedNode === nodeIterator._root ||
+      !this.tree.isAncestorOf(nodeIterator._reference as NodeInternal, toBeRemovedNode, true)) {
+      return
+    }
+
+    /**
+     * 2. If nodeIterator’s pointer before reference is true, then:
+     */
+    if (nodeIterator._pointerBeforeReference) {
+      /**
+       * 2.1. Let next be toBeRemovedNode’s first following node that is an
+       * inclusive descendant of nodeIterator’s root and is not an inclusive
+       * descendant of toBeRemovedNode, and null if there is no such node.
+       */
+      while (true) {
+        const nextNode = this.tree.getFollowingNode(nodeIterator._root as NodeInternal, toBeRemovedNode)
+        if (nextNode !== null &&
+          this.tree.isDescendantOf(nodeIterator._root as NodeInternal, nextNode, true) &&
+          !this.tree.isDescendantOf(toBeRemovedNode, nextNode, true)) {
+          /**
+           * 2.2. If next is non-null, then set nodeIterator’s reference to next 
+           * and return.
+           */
+          nodeIterator._reference = nextNode
+          return
+        } else if (nextNode === null) {
+          /**
+           * 2.3. Otherwise, set nodeIterator’s pointer before reference to false.        
+           */
+          nodeIterator._pointerBeforeReference = false
+          return
+        }
+      }
+    }
+
+    /**
+     * 3. Set nodeIterator’s reference to toBeRemovedNode’s parent, if 
+     * toBeRemovedNode’s previous sibling is null, and to the inclusive 
+     * descendant of toBeRemovedNode’s previous sibling that appears last in 
+     * tree order otherwise.
+     */
+    if (toBeRemovedNode.previousSibling === null) {
+      if (toBeRemovedNode.parentNode !== null) {
+        nodeIterator._reference = toBeRemovedNode.parentNode
+      }
+    } else {
+      let childNode: NodeInternal = toBeRemovedNode.previousSibling as NodeInternal
+      for (childNode of this.tree.getDescendantElements(toBeRemovedNode.previousSibling as NodeInternal, true)) {
+        // loop through to get the last descendant node
+      }
+      nodeIterator._reference = childNode
     }
   }
 

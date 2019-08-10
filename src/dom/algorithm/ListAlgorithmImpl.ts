@@ -3,7 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { isFunction } from '../../util'
 
 /**
- * Contains attribute algorithms.
+ * Contains list algorithms.
  */
 export class ListAlgorithmImpl extends SubAlgorithmImpl implements ListAlgorithm {
 
