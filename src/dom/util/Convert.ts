@@ -1,9 +1,5 @@
-import { Node, Document, Element } from '../interfaces'
-import { TextImpl } from '../TextImpl'
-import { DocumentFragmentImpl } from '../DocumentFragmentImpl'
+import { Element } from '../interfaces'
 import { OrderedSet } from './OrderedSet'
-import { isString } from '../../util'
-import { DocumentInternal } from '../../htmldom/interfacesInternal'
 
 /**
  * Includes conversion methods.
