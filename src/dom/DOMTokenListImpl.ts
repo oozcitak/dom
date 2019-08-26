@@ -1,5 +1,3 @@
-import { Element } from "./interfaces"
-import { OrderedSet } from "./util/OrderedSet"
 import { Convert } from "./util/Convert"
 import { DOMException } from "./DOMException"
 import { DOMTokenListInternal, ElementInternal } from "./interfacesInternal"

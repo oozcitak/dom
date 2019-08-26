@@ -85,7 +85,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
        * 3.2. Let result be the result of filtering node within iterator.
        * 3.3. If result is FILTER_ACCEPT, then break.
        */
-      const result = this.dom.traverse.filter(iterator, node)
+      const result = this.dom.traversal.filter(iterator, node)
       if (result === FilterResult.Accept) {
         break
       }

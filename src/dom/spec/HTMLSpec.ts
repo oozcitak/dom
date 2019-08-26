@@ -18,6 +18,11 @@ export class HTMLSpec {
     'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'img', 'input', 'keygen',
     'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr']
 
+  /**
+   * Determines if the given string is a valid custom element name.
+   * 
+   * @param name - a name string
+   */
   static isValidCustomElementName(name: string): boolean {
     if (!name.match(HTMLSpec.PotentialCustomElementName))
       return false
@@ -28,10 +33,20 @@ export class HTMLSpec {
     return true
   }
 
+  /**
+   * Determines if the given string is a valid element name.
+   * 
+   * @param name - a name string
+   */
   static isValidElementName(name: string): boolean {
     return (HTMLSpec.ElementNames.includes(name))
   }
 
+  /**
+   * Determines if the given string is a void element name.
+   * 
+   * @param name - a name string
+   */
   static isVoidElementName(name: string): boolean {
     return (HTMLSpec.VoidElementNames.includes(name))
   }

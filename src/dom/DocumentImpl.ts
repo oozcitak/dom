@@ -42,7 +42,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
   public constructor() {
     super()
 
-    this._implementation = this._algo.create.domImplementation()
+    this._implementation = this._algo.create.domImplementation(this)
 
     this._nodeDocument = this
 

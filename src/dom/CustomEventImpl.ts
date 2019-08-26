@@ -23,10 +23,19 @@ export class CustomEventImpl extends EventImpl implements CustomEventInternal {
 
   /** @inheritdoc */
   initCustomEvent(type: string, bubbles = false, cancelable = false, detail = null): void {
+    /**
+     * 1. If the context object’s dispatch flag is set, then return.
+     */
     if (this._dispatchFlag) return
 
-    EventImpl._initialize(this, type, bubbles, cancelable)
+    /**
+     * 2. Initialize the context object with type, bubbles, and cancelable.
+     */
+    this._algo.event.initialize(this, type, bubbles, cancelable)
 
+    /**
+     * 3. Set the context object’s detail attribute to detail.
+     */
     this._detail = detail
   }
 

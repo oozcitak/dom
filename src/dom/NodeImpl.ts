@@ -9,9 +9,8 @@ import {
   ElementInternal
 } from './interfacesInternal'
 import { globalStore } from '../util'
-import { DOMAlgorithm } from './algorithm/interfaces'
 import { Guard } from './util'
-import { DOMException } from '.'
+import { DOMException } from './DOMException'
 
 /**
  * Represents a generic XML node.
@@ -38,7 +37,6 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
   static readonly DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
   static readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
-  protected _algo: DOMAlgorithm
   protected _childNodes: NodeList
 
   _nodeDocument: DocumentInternal
@@ -61,7 +59,6 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
     const window = globalStore.window
     this._nodeDocument = window.document as DocumentInternal
 
-    this._algo = globalStore.algorithm as DOMAlgorithm
     this._childNodes = this._algo.create.nodeList(this)
   }
 

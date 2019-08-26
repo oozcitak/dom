@@ -1508,7 +1508,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * Creates a new `DOMTokenList`.
    * 
    * @param element - owner element
-   * @param localName - assocaited attribute's local name
+   * @param localName - associated attribute's local name
    */
   domTokenList(element: ElementInternal, localName: string): DOMTokenListInternal
 

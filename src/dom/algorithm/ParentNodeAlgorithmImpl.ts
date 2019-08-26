@@ -30,8 +30,7 @@ export class ParentNodeAlgorithmImpl extends SubAlgorithmImpl implements ParentN
     for (let i = 0; i < nodes.length; i++) {
       const item = nodes[i]
       if (isString(item)) {
-        const text = this.dom.createText(item)
-        text._nodeDocument = document
+        const text = this.dom.create.text(document, item)
         nodes[i] = text
       }
     }
@@ -44,8 +43,7 @@ export class ParentNodeAlgorithmImpl extends SubAlgorithmImpl implements ParentN
     if (nodes.length === 1) {
       node = nodes[0] as NodeInternal
     } else {
-      node = this.dom.createDocumentFragment()
-      node._nodeDocument = document
+      node = this.dom.create.documentFragment(document)
       for (const item of nodes) {
         node.appendChild(item as NodeInternal)
       }

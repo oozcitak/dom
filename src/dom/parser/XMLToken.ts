@@ -4,6 +4,7 @@ import { TokenType, XMLToken } from "./interfaces"
  * Represents a token.
  */
 abstract class XMLTokenBase implements XMLToken {
+
   _type: TokenType
 
   /**
@@ -78,7 +79,7 @@ export class DocTypeToken extends XMLTokenBase {
  */
 abstract class CharacterDataToken extends XMLTokenBase {
   data: string
-  
+
   /**
    * Initializes a new instance of `CharacterDataToken`.
    */
@@ -137,7 +138,7 @@ export class TextToken extends CharacterDataToken {
  */
 export class PIToken extends CharacterDataToken {
   target: string
-  
+
   /**
    * Initializes a new instance of `PIToken`.
    */
@@ -153,13 +154,13 @@ export class PIToken extends CharacterDataToken {
  */
 export class ElementToken extends XMLTokenBase {
   name: string
-  attributes: { [key:string]: string }
+  attributes: { [key: string]: string }
   selfClosing: boolean
-  
+
   /**
    * Initializes a new instance of `ElementToken`.
    */
-  constructor(name: string, attributes: { [key:string]: string },
+  constructor(name: string, attributes: { [key: string]: string },
     selfClosing: boolean) {
     super(TokenType.Element)
 
@@ -174,7 +175,7 @@ export class ElementToken extends XMLTokenBase {
  */
 export class ClosingTagToken extends XMLTokenBase {
   name: string
-  
+
   /**
    * Initializes a new instance of `ClosingTagToken`.
    */

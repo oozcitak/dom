@@ -4,6 +4,8 @@ import {
 } from './interfaces'
 import { DOMException } from './DOMException'
 import { EventTargetInternal, EventInternal } from './interfacesInternal'
+import { DOMAlgorithm } from './algorithm/interfaces'
+import { globalStore } from '../util'
 
 /**
  * Represents a target to which an event can be dispatched.
@@ -12,24 +14,24 @@ export abstract class EventTargetImpl implements EventTargetInternal {
 
   _eventListenerList: EventListenerEntry[] = []
 
+  protected _algo: DOMAlgorithm
+
   /**
    * Initializes a new instance of `EventTarget`.
    */
-  public constructor() { }
+  public constructor() { 
+    this._algo = globalStore.algorithm as DOMAlgorithm
+  }
 
-  /**
-   * Registers an event handler.
-   * 
-   * @param type - event type to listen for.
-   * @param callback - object to receive a notification when an event occurs.
-   * @param options - object that specifies event characteristics.
-   */
+  /** @inheritdoc */
   addEventListener(type: string,
     callback: EventListener | null | ((event: Event) => void),
     options: AddEventListenerOptions | boolean = { passive: false, once: false, capture: false }): void {
 
-    // flatten options
-    const [capture, passive, once] = EventTargetImpl._flattenMore(options)
+    /**
+     * 1. Let capture, passive, and once be the result of flattening more options.
+     */
+    const [capture, passive, once] = this._algo.eventTarget.flattenMore(options)
 
     // convert callback function to EventListener, return if null
     let listenerCallback: EventListener
@@ -41,8 +43,12 @@ export abstract class EventTargetImpl implements EventTargetInternal {
       listenerCallback = { handleEvent: <((event: Event) => void)>callback }
     }
 
-    // add to listener list
-    EventTargetImpl._addEventListener(this, {
+    /**
+     * 2. Add an event listener with the context object and an event listener 
+     * whose type is type, callback is callback, capture is capture, passive is
+     * passive, and once is once.
+     */
+    this._algo.eventTarget.addEventListener(this, {
       type: type,
       callback: listenerCallback,
       capture: capture,
@@ -52,19 +58,23 @@ export abstract class EventTargetImpl implements EventTargetInternal {
     })
   }
 
-  /**
-   * Removes an event listener.
-   * 
-   * @param type - event type to listen for.
-   * @param callback - object to receive a notification when an event occurs.
-   * @param options - object that specifies event characteristics.
-   */
+  /** @inheritdoc */
   removeEventListener(type: string,
     callback: EventListener | null | ((event: Event) => void),
     options: EventListenerOptions | boolean = { capture: false }): void {
 
-    // flatten options
-    const capture = EventTargetImpl._flatten(options)
+    /**
+     * TODO:
+     * 1. If the context object’s relevant global object is a
+     * ServiceWorkerGlobalScope object and its associated service worker’s 
+     * script resource’s has ever been evaluated flag is set, then throw
+     * a TypeError. [SERVICE-WORKERS]
+     */
+
+    /**
+     * 2. Let capture be the result of flattening options.
+     */
+    const capture = this._algo.eventTarget.flatten(options)
 
     // convert callback function to EventListener, return if null
     let listenerCallback: EventListener
@@ -76,74 +86,50 @@ export abstract class EventTargetImpl implements EventTargetInternal {
       listenerCallback = { handleEvent: <((event: Event) => void)>callback }
     }
 
-    // check if the listener is defined
+    /**
+     * 3. If the context object’s event listener list contains an event listener 
+     * whose type is type, callback is callback, and capture is capture, then
+     * remove an event listener with the context object and that event listener.
+     */
     let i = 0
-    let index = -1
     for (const entry of this._eventListenerList) {
       if (entry.type === type && entry.callback === listenerCallback
         && entry.capture === capture) {
-        index = i
-        EventTargetImpl._removeEventListener(this, entry, index)
+        this._algo.eventTarget.removeEventListener(this, entry, i)
         break
       }
       i++
     }
   }
 
-  /**
-   * Dispatches an event to this event target.
-   * 
-   * @param event - the event to dispatch.
-   */
+  /** @inheritdoc */
   dispatchEvent(event: EventInternal): boolean {
+    /**
+     * 1. If event’s dispatch flag is set, or if its initialized flag is not
+     * set, then throw an "InvalidStateError" DOMException.
+     * 2. Initialize event’s isTrusted attribute to false.
+     * 3. Return the result of dispatching event to the context object.
+     */
     if (event._dispatchFlag || !event._initializedFlag) {
       throw DOMException.InvalidStateError
     }
     event._isTrustedFlag = false
 
-    return EventTargetImpl._dispatchEvent(event, this)
+    return this._algo.event.dispatch(event, this)
   }
 
-  /**
-   * Gets the parent event target for the given event.
-   * 
-   * @param event - an event
-   */
+  /** @inheritdoc */
   _getTheParent(event: Event): EventTarget | null {
     return null
   }
 
-  /**
-   * Defines optional activation behavior for the given event.
-   * 
-   * _Note:_ This exists because user agents perform certain actions for certain
-   * EventTarget objects, e.g., the area element, in response to synthetic
-   * MouseEvent events whose type attribute is click. Web compatibility
-   * prevented it from being removed and it is now the enshrined way of
-   * defining an activation of something.
-   * 
-   * @param event - an event
-   */
+  /** @inheritdoc */
   _activationBehavior?(event: Event): void
 
-  /**
-   * Defines optional legacy pre-activation behavior for the given event.
-   *
-   * _Note:_ These algorithms only exist for checkbox and radio input elements
-   * and are not to be used for anything else.
-   * 
-   * @param event - an event
-   */
+  /** @inheritdoc */
   _legacyPreActivationBehavior?(event: Event): void
 
-  /**
-   * Defines optional legacy canceled activation behavior for the given event.
-   *
-   * _Note:_ These algorithms only exist for checkbox and radio input elements
-   * and are not to be used for anything else.
-   * 
-   * @param event - an event
-   */
+  /** @inheritdoc */
   _legacyCanceledActivationBehavior?(event: Event): void
 
 }

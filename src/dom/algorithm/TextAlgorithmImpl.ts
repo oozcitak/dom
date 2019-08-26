@@ -96,7 +96,7 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
      */
     const count = length - offset
     const newData = this.dom.characterData.substringData(node, offset, count)
-    const newNode = this.dom.create.text(newData)
+    const newNode = this.dom.create.text(node._nodeDocument, newData)
     const parent = node.parentNode
     if (parent !== null) {
       /**
