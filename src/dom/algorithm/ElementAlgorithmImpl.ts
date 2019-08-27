@@ -3,8 +3,9 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   AttrInternal, ElementInternal, DocumentInternal, NamedNodeMapInternal, NodeInternal
 } from '../interfacesInternal'
-import { Namespace, HTMLSpec } from '../spec'
+import { HTMLSpec } from '../spec'
 import { DOMException } from '..'
+import { infra } from '../../infra'
 
 /**
  * Contains element algorithms.
@@ -87,7 +88,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 4. Append attribute to element’s attribute list.
      * 5. Set attribute’s element to element.
      */
-    this.dom.list.append(
+    infra.list.append(
       (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
     attribute._element = element
   }
@@ -120,7 +121,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 3. Remove attribute from element’s attribute list.
      * 5. Set attribute’s element to null.
      */
-    this.dom.list.remove(
+    infra.list.remove(
       (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
     attribute._element = null
   }
@@ -155,7 +156,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 5. Set oldAttr’s element to null.
      * 6. Set newAttr’s element to element.
      */
-    this.dom.list.replace(
+    infra.list.replace(
       (element._attributeList as NamedNodeMapInternal)._attributeList,
       oldAttr, newAttr)
     oldAttr._element = null
@@ -171,7 +172,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 2. Return the first attribute in element’s attribute list whose qualified
      * name is qualifiedName, and null otherwise.
      */
-    if (element._namespace === Namespace.HTML && element._nodeDocument._type === "html") {
+    if (element._namespace === infra.namespace.HTML && element._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -399,7 +400,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * valid custom element name or is is non-null, then set result’s 
      * custom element state to "undefined".
      */
-    if (namespace === Namespace.HTML && (is !== null ||
+    if (namespace === infra.namespace.HTML && (is !== null ||
       HTMLSpec.isValidCustomElementName(localName))) {
       result._customElementState = "undefined"
     }

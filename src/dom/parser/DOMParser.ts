@@ -6,9 +6,9 @@ import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
-import { Namespace } from "../spec"
 import { globalStore } from "../../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
+import { infra } from "../../infra"
 
 /**
  * Represents a parser for XML and HTML content.
@@ -98,7 +98,7 @@ export class DOMParser {
               const [attPrefix, attLocalName] = algo.namespace.extractQName(attName)
               if (attPrefix === "xmlns") {
                 // prefixed namespace declaration attribute
-                elementNode.setAttributeNS(Namespace.XMLNS, attName, attValue)
+                elementNode.setAttributeNS(infra.namespace.XMLNS, attName, attValue)
               } else {
                 const attNamespace = elementNode.lookupNamespaceURI(attPrefix)
                 if (attNamespace !== null && !elementNode.isDefaultNamespace(attNamespace)) {

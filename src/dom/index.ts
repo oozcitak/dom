@@ -69,14 +69,14 @@ export {
   CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl,
   DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl,
   ElementImpl, EventImpl, EventTargetImpl, HTMLCollectionImpl,
-  MutationObserverImpl, MutationRecordImpl, NamedNodeMapImpl, NodeFilterImpl, 
-  NodeImpl, NodeIteratorImpl, NodeListImpl, NodeListStaticImpl, 
-  ProcessingInstructionImpl, RangeImpl, ShadowRootImpl, StaticRangeImpl, 
+  MutationObserverImpl, MutationRecordImpl, NamedNodeMapImpl, NodeFilterImpl,
+  NodeImpl, NodeIteratorImpl, NodeListImpl, NodeListStaticImpl,
+  ProcessingInstructionImpl, RangeImpl, ShadowRootImpl, StaticRangeImpl,
   TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl, XMLDocumentImpl
 }
 export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'
-export { Namespace, HTMLSpec, XMLSpec } from './spec'
+export { HTMLSpec, XMLSpec } from './spec'
 
 // Export interfaces
 import * as Interfaces from './interfaces'

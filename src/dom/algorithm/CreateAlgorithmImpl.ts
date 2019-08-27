@@ -151,7 +151,7 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   }
 
   /** @inheritdoc */
-  domTokenList(element: ElementInternal, localName: string): DOMTokenListInternal {
-    return DOMTokenListImpl._create(element, localName)
+  domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
+    return DOMTokenListImpl._create(element, attribute)
   }
 }

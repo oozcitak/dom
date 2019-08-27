@@ -1,9 +1,9 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { HTMLCollectionInternal, ElementInternal, AttrInternal, NodeInternal } from "./interfacesInternal"
 import { Guard } from "./util"
-import { Namespace } from "./spec"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "./algorithm/interfaces"
+import { infra } from "../infra"
 
 /**
  * Represents a collection of elements.
@@ -77,7 +77,7 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
       if (Guard.isElementNode(node)) {
         if (node._uniqueIdentifier === key) {
           return node
-        } else if (node._namespace === Namespace.HTML) {
+        } else if (node._namespace === infra.namespace.HTML) {
           for (const attr of node._attributeList) {
             const attrInt = attr as AttrInternal
             if (attrInt._localName === key && attrInt._namespace === null &&

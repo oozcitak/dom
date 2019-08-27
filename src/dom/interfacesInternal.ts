@@ -10,6 +10,7 @@ import {
   ChildNode, NonDocumentTypeChildNode, ParentNode, DocumentOrShadowRoot,
   NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType
 } from "./interfaces"
+import { AttributeChangeStep } from "./algorithm/interfaces"
 
 /**
  * Represents a window containing a DOM document.
@@ -251,6 +252,8 @@ export interface ElementInternal extends NodeInternal, Element {
   _attributeList: NamedNodeMap
 
   _uniqueIdentifier?: string
+
+  _attributeChangeSteps: AttributeChangeStep[]
 }
 
 /**
@@ -381,7 +384,7 @@ export interface NodeFilterInternal extends NodeFilter {
 export interface DOMTokenListInternal extends DOMTokenList {
   _tokenSet: Set<string>
   _element: Element
-  _localName: string
+  _attribute: AttrInternal
 }
 
 /**

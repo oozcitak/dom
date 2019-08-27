@@ -1,6 +1,10 @@
-import { Convert } from "./util/Convert"
 import { DOMException } from "./DOMException"
-import { DOMTokenListInternal, ElementInternal } from "./interfacesInternal"
+import {
+  DOMTokenListInternal, ElementInternal, AttrInternal
+} from "./interfacesInternal"
+import { DOMAlgorithm } from "./algorithm/interfaces"
+import { globalStore } from "../util"
+import { infra } from "../infra"
 
 /**
  * Represents a token set.
@@ -8,180 +12,254 @@ import { DOMTokenListInternal, ElementInternal } from "./interfacesInternal"
 export class DOMTokenListImpl implements DOMTokenListInternal {
 
   _element: ElementInternal
-  _localName: string
+  _attribute: AttrInternal
+  _tokenSet: Set<string>
 
-  get _tokenSet(): Set<string> { return Convert.attValueToSet(this._element, this._localName) }
+  protected _algo: DOMAlgorithm
 
   /**
    * Initializes a new instance of `DOMTokenList`.
    *
-   * @param ownerElement - the owner element
-   * @param localName - the local name of the associated attribute
+   * @param element - associated element
+   * @param attribute - associated attribute
    */
-  private constructor(ownerElement: ElementInternal, localName: string) {
-    this._element = ownerElement
-    this._localName = localName
+  private constructor(element: ElementInternal, attribute: AttrInternal) {
+
+    this._algo = globalStore.algorithm as DOMAlgorithm
+
+    /**
+     * 1. Let element be associated element.
+     * 2. Let localName be associated attribute’s local name.
+     * 3. Let value be the result of getting an attribute value given element 
+     * and localName.
+     * 4. Run the attribute change steps for element, localName, value, value, 
+     * and null.
+     */
+    this._element = element
+    this._attribute = attribute
+    this._tokenSet = new Set()
+
+    const localName = attribute._localName
+    const value = this._algo.element.getAnAttributeValue(element, localName)
+    this._element._attributeChangeSteps.push(this._updateTokenSet)
+    this._algo.runAttributeChangeSteps(element, localName, value, value, null)
   }
 
-  /**
-   * Returns the number of tokens.
-   */
-  get length(): number { 
-    return Convert.attValueToSet(this._element, this._localName).size 
+  /** @inheritdoc */
+  get length(): number {
+    /**
+     * The length attribute' getter must return context object’s token set’s 
+     * size.
+     */
+    return this._tokenSet.size
   }
 
-  /**
-   * Returns the token at the given index.
-   * 
-   * @param index - the index to of the token
-   */
+  /** @inheritdoc */
   item(index: number): string | null {
-    const set = Convert.attValueToSet(this._element, this._localName)
+    /**
+     * 1. If index is equal to or greater than context object’s token set’s 
+     * size, then return null.
+     * 2. Return context object’s token set[index].
+     */
     let i = 0
-    for (const token of set) {
+    for (const token of this._tokenSet) {
       if (i === index) return token
       i++
     }
     return null
   }
 
-  /**
-   * Returns true if the set contains the given token.
-   * 
-   * @param tokens - the token to check
-   */
+  /** @inheritdoc */
   contains(token: string): boolean {
-    return Convert.attValueToSet(this._element, this._localName).has(token)
+    /**
+     * The contains(token) method, when invoked, must return true if context 
+     * object’s token set[token] exists, and false otherwise.
+     */
+    return this._tokenSet.has(token)
   }
 
-  /**
-   * Adds the given tokens to the set.
-   * 
-   * @param tokens - the list of tokens to add
-   */
+  /** @inheritdoc */
   add(...tokens: string[]): void {
-    const set = Convert.attValueToSet(this._element, this._localName)
+    /**
+     * 1. For each token in tokens:
+     * 1.1. If token is the empty string, then throw a "SyntaxError" 
+     * DOMException.
+     * 1.2. If token contains any ASCII whitespace, then throw an 
+     * "InvalidCharacterError" DOMException.
+     * 2. For each token in tokens, append token to context object’s token set.
+     * 3. Run the update steps.
+     */
     for (const token of tokens) {
-      set.add(token)
-    }
-    Convert.setToAttValue(this._element, this._localName, set)
-  }
-
-  /**
-   * Removes the given tokens from the set.
-   * 
-   * @param tokens - the list of tokens to remove
-   */
-  remove(...tokens: string[]): void {
-    const set = Convert.attValueToSet(this._element, this._localName)
-    for (const token of tokens) {
-      if (!token)
-        throw DOMException.SyntaxError
-      else if (token.match(OrderedSet.WhiteSpace))
+      if (token === '') {
+        throw new SyntaxError("Cannot add an empty token.")
+      } else if (infra.string.ASCIIWhiteSpace.test(token)) {
         throw DOMException.InvalidCharacterError
-      else
-        set.delete(token)
-    }
-    Convert.setToAttValue(this._element, this._localName, set)
-  }
-
-  /**
-   * Removes a given token from the set and returns `false` if it exists,
-   * otherwise adds the token and returns `true`.
-   * 
-   * @param token - the token to toggle
-   * @param force - if `false` the token will only be removed but not
-   * added again. Otherwise, if `true` the token will only be added but
-   * not removed again.
-   * 
-   * @returns `false` if the token is not in the list after the call, 
-   * or `true` if the token is in the list after the call.
-   */
-  toggle(token: string, force: boolean | undefined = undefined): boolean {
-    if (force === undefined) {
-      const set = Convert.attValueToSet(this._element, this._localName)
-      if (set.has(token)) {
-        this.remove(token)
-        return false
       } else {
-        this.add(token)
-        return true
+        this._tokenSet.add(token)
       }
-    } else if (!force) {
-      this.remove(token)
-      return false
-    } else {
-      this.add(token)
-      return true
     }
+    this._algo.tokenList.updateSteps(this)
   }
 
-  /**
-   * Replaces the given token with a new token.
-   * 
-   * @param token - the token to replace
-   * @param newToken - the new token
-   * 
-   * @returns `true` if `token` was replaced with `newToken`,
-   * and `false` otherwise.
-   */
-  replace(token: string, newToken: string): boolean {
-    if (!token || !newToken)
-      throw DOMException.SyntaxError
-    else if (token.match(OrderedSet.WhiteSpace) ||
-      newToken.match(OrderedSet.WhiteSpace))
+  /** @inheritdoc */
+  remove(...tokens: string[]): void {
+    /**
+     * 1. For each token in tokens:
+     * 1.1. If token is the empty string, then throw a "SyntaxError" 
+     * DOMException.
+     * 1.2. If token contains any ASCII whitespace, then throw an 
+     * "InvalidCharacterError" DOMException.
+     * 2. For each token in tokens, remove token from context object’s token set.
+     * 3. Run the update steps.
+     */
+    for (const token of tokens) {
+      if (token === '') {
+        throw new SyntaxError("Cannot remove an empty token.")
+      } else if (infra.string.ASCIIWhiteSpace.test(token)) {
+        throw DOMException.InvalidCharacterError
+      } else {
+        this._tokenSet.delete(token)
+      }
+    }
+    this._algo.tokenList.updateSteps(this)
+  }
+
+  /** @inheritdoc */
+  toggle(token: string, force: boolean | undefined = undefined): boolean {
+    /**
+     * 1. If token is the empty string, then throw a "SyntaxError" DOMException.
+     * 2. If token contains any ASCII whitespace, then throw an 
+     * "InvalidCharacterError" DOMException.
+     */
+    if (token === '') {
+      throw new SyntaxError("Cannot remove an empty token.")
+    } else if (infra.string.ASCIIWhiteSpace.test(token)) {
       throw DOMException.InvalidCharacterError
+    }
 
-    const set = Convert.attValueToSet(this._element, this._localName)
-    if (!set.has(token)) {
-      return false
-    } else {
-      set.delete(token)
-      set.add(newToken)
-      Convert.setToAttValue(this._element, this._localName, set)
+    /**
+     * 3. If context object’s token set[token] exists, then:
+     */
+    if (this._tokenSet.has(token)) {
+      /**
+       * 3.1. If force is either not given or is false, then remove token from 
+       * context object’s token set, run the update steps and return false.
+       * 3.2. Return true.
+       */
+      if (force === undefined || force === false) {
+        this._tokenSet.delete(token)
+        this._algo.tokenList.updateSteps(this)
+        return false
+      }
+
       return true
     }
+
+    /**
+     * 4. Otherwise, if force not given or is true, append token to context 
+     * object’s token set, run the update steps, and return true.
+     */
+    if (force === undefined || force === true) {
+      this._tokenSet.add(token)
+      this._algo.tokenList.updateSteps(this)
+      return true
+    }
+
+    /**
+     * 5. Return false.
+     */
+    return false
   }
 
-  /**
-   * Determines if a given token is in the associated attribute's
-   * supported tokens.
-   * 
-   * @param token - the token to check
-   */
+  /** @inheritdoc */
+  replace(token: string, newToken: string): boolean {
+    /**
+     * 1. If either token or newToken is the empty string, then throw a 
+     * "SyntaxError" DOMException.
+     * 2. If either token or newToken contains any ASCII whitespace, then throw
+     * an "InvalidCharacterError" DOMException.
+     */
+    if (token === '' || newToken === '') {
+      throw new SyntaxError("Cannot remove an empty token.")
+    } else if (infra.string.ASCIIWhiteSpace.test(token) || infra.string.ASCIIWhiteSpace.test(newToken)) {
+      throw DOMException.InvalidCharacterError
+    }
+
+    /**
+     * 3. If context object’s token set does not contain token, then return 
+     * false.
+     */
+    if (!this._tokenSet.has(token)) return false
+
+    /**
+     * 4. Replace token in context object’s token set with newToken.
+     * 5. Run the update steps.
+     * 6. Return true.
+     */
+    infra.set.replace(this._tokenSet, token, newToken)
+    this._algo.tokenList.updateSteps(this)
+    return true
+  }
+
+  /** @inheritdoc */
   supports(token: string): boolean {
-    throw new TypeError('DOMTokenList has no supported tokens.')
+    /**
+     * 1. Let result be the return value of validation steps called with token.
+     * 2. Return result.
+     */
+    return this._algo.tokenList.validationSteps(this, token)
   }
 
-  /**
-   * Gets the value of the token list as a string, or sets the token
-   * list to the given value.
-   */
+  /** @inheritdoc */
   get value(): string {
-    return OrderedSet.serialize(
-      Convert.attValueToSet(this._element, this._localName))
+    /**
+     * The value attribute must return the result of running context object’s 
+     * serialize steps.
+     */
+    return this._algo.tokenList.serializeSteps(this)
   }
   set value(value: string) {
-    Convert.setToAttValue(this._element, this._localName,
-      OrderedSet.parse(value))
+    /**
+     * Setting the value attribute must set an attribute value for the
+     * associated element using associated attribute’s local name and the given
+     * value.
+     */
+    this._algo.element.setAnAttributeValue(this._element,
+      this._attribute.localName, value)
+  }
+
+  /** @inheritdoc */
+  *[Symbol.iterator](): IterableIterator<string> {
+    yield* this._tokenSet
   }
 
   /**
-   * Returns an iterator for tokens.
+   * Defines attribute change steps to update a token set.
    */
-  *[Symbol.iterator](): IterableIterator<string> {
-    const set = Convert.attValueToSet(this._element, this._localName)
-    yield* set
+  private _updateTokenSet(element: ElementInternal, localName: string,
+    oldValue: string | null, value: string | null, namespace: string | null): void {
+    /**
+     * 1. If localName is associated attribute’s local name, namespace is null,
+     * and value is null, then empty token set.
+     * 2. Otherwise, if localName is associated attribute’s local name,
+     * namespace is null, then set token set to value, parsed.
+     */
+    if (localName === this._attribute.localName && namespace === null) {
+      if (!value)
+        this._tokenSet.clear()
+      else
+        this._tokenSet = this._algo.orderedSet.parse(value)
+    }
   }
 
   /**
    * Creates a new `DOMTokenList`.
    *
-   * @param ownerElement - the owner element
-   * @param localName - the local name of the associated attribute
+   * @param element - associated element
+   * @param attribute - associated attribute
    */
-  static _create(ownerElement: ElementInternal, localName: string): DOMTokenListInternal {
-    return new DOMTokenListImpl(ownerElement, localName)
+  static _create(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
+    return new DOMTokenListImpl(element, attribute)
   }
 
 }

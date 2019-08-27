@@ -2,11 +2,12 @@ import {
   Node, Element, NodeType, Document, Comment, Text, DocumentFragment,
   DocumentType, ProcessingInstruction, CDATASection
 } from "../../dom/interfaces"
-import { Namespace, XMLSpec } from "../../dom/spec"
+import { XMLSpec } from "../../dom/spec"
 import { TupleSet } from "./TupleSet"
 import { NamespacePrefixMap } from './NamespacePrefixMap'
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
 import { DOMException } from ".."
+import { infra } from "../../infra"
 
 /**
  * Stores the last generated prefix. An object is used instead of a number so
@@ -59,7 +60,7 @@ export class PreSerializer {
      * attributes). See the generate a prefix algorithm.
      */
     const namespace: string | null = null
-    const prefixMap = new NamespacePrefixMap([["xml", Namespace.XML]])
+    const prefixMap = new NamespacePrefixMap([["xml", infra.namespace.XML]])
     const prefixIndex: PrefixIndex = { value: 1 }
 
     /**
@@ -202,7 +203,7 @@ export class PreSerializer {
        * 11.3. Otherwise, append to qualified name the value of node's 
        * localName. The node's prefix if it exists, is dropped.
        */
-      if (ns === Namespace.XML) {
+      if (ns === infra.namespace.XML) {
         qualifiedName = `xml:${node.localName}`
       } else {
         qualifiedName = node.localName
@@ -269,7 +270,7 @@ export class PreSerializer {
          * attributes.
          */
         qualifiedName = `${candidatePrefix}:${node.localName}`
-        if (localDefaultNamespace !== null && localDefaultNamespace !== Namespace.XML) {
+        if (localDefaultNamespace !== null && localDefaultNamespace !== infra.namespace.XML) {
           inheritedNS = localDefaultNamespace || null
         }
 
@@ -825,7 +826,7 @@ export class PreSerializer {
          * 3.5.2. If the value of attribute namespace is the XMLNS namespace, 
          * then run these steps:
          */
-        if (attributeNamespace === Namespace.XMLNS) {
+        if (attributeNamespace === infra.namespace.XMLNS) {
           /** 
            * 3.5.2.1. If any of the following are true, then stop running these 
            * steps and goto Loop to visit the next attribute: 
@@ -849,7 +850,7 @@ export class PreSerializer {
            * exactly defined previously--on an ancestor element not the current
            * element whose attributes are being processed).
            */
-          if (attr.value === Namespace.XML ||
+          if (attr.value === infra.namespace.XML ||
             (attr.prefix === null && ignoreNamespaceDefinitionAttribute) ||
             (attr.prefix !== null && (!localPrefixesMap.has(attr.localName) ||
               localPrefixesMap.get(attr.localName) !== attr.value) &&
@@ -867,7 +868,7 @@ export class PreSerializer {
            * _Note:_ DOM APIs do allow creation of elements in the XMLNS
            * namespace but with strict qualifications.
            */
-          if (requireWellFormed && attr.value === Namespace.XMLNS) {
+          if (requireWellFormed && attr.value === infra.namespace.XMLNS) {
             throw new Error("XMLNS namespace is reserved (well-formed required).")
           }
 
@@ -1007,7 +1008,7 @@ export class PreSerializer {
       let attributePrefix = attr.prefix
 
       /** 2.3. If the attribute namespace is the XMLNS namespace, then: */
-      if (attributeNamespace === Namespace.XMLNS) {
+      if (attributeNamespace === infra.namespace.XMLNS) {
         /** 
          * 2.3.1. If attribute prefix is null, then attr is a default namespace 
          * declaration. Set the default namespace attr value to attr's value and 
@@ -1039,7 +1040,7 @@ export class PreSerializer {
            * uniformly by prefixing (and overriding if necessary) the element's 
            * localname with the reserved "xml" prefix.
            */
-          if (namespaceDefinition === Namespace.XML) {
+          if (namespaceDefinition === infra.namespace.XML) {
             continue
           }
 

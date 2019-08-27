@@ -110,11 +110,6 @@ export interface DOMAlgorithm {
   readonly document: DocumentAlgorithm
 
   /**
-   * Contains algorithms for manipulating lists.
-   */
-  readonly list: ListAlgorithm
-
-  /**
    * Contains algorithms for boundary points.
    */
   readonly boundaryPoint: BoundaryPointAlgorithm
@@ -138,6 +133,11 @@ export interface DOMAlgorithm {
    * Contains algorithms for tree walkers.
    */
   readonly treeWalker: TreeWalkerAlgorithm
+
+  /**
+   * Contains DOM token list algorithms.
+   */
+  readonly tokenList: DOMTokenListAlgorithm
 
   /**
    * Runs removing steps for node.
@@ -192,6 +192,20 @@ export interface DOMAlgorithm {
    */
   runInsertionSteps(insertedNode: NodeInternal): void
 
+  /**
+   * Determines if there are any supported tokens defined for the given 
+   * attribute name.
+   * 
+   * @param attributeName - an attribute name
+   */
+  hasSupportedTokens(attributeName: string): boolean
+
+  /**
+   * Returns the set of supported tokens defined for the given attribute name.
+   * 
+   * @param attributeName - an attribute name
+   */
+  getSupportedTokens(attributeName: string): Set<string>
 }
 
 /**
@@ -1507,10 +1521,10 @@ export interface CreateAlgorithm extends SubAlgorithm {
   /**
    * Creates a new `DOMTokenList`.
    * 
-   * @param element - owner element
-   * @param localName - associated attribute's local name
+   * @param element - associated element
+   * @param attribute - associated attribute
    */
-  domTokenList(element: ElementInternal, localName: string): DOMTokenListInternal
+  domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal
 
 }
 
@@ -1710,173 +1724,32 @@ export interface TreeWalkerAlgorithm extends SubAlgorithm {
 }
 
 /**
- * Contains algorithms for manipulating lists.
- * See: https://infra.spec.whatwg.org/#list
+ * Contains DOM token list algorithms.
  */
-export interface ListAlgorithm extends SubAlgorithm {
+export interface DOMTokenListAlgorithm extends SubAlgorithm {
 
   /**
-   * Adds the given item to the end of the list.
+   * Validates a given token against the supported tokens defined for the given
+   * token lists' associated attribute.
    * 
-   * @param list - a list
-   * @param item - an item
+   * @param tokenList - a token list
+   * @param token - a token
    */
-  append<T>(list: Array<T>, item: T): void
+  validationSteps(tokenList: DOMTokenListInternal, token: string): boolean
 
   /**
-   * Extends a list by appending all items from another list.
+   * Updates the value of the token lists' associated attribute.
    * 
-   * @param listA - a list to extend
-   * @param listB - a list containing items to append to `listA`
+   * @param tokenList - a token list
    */
-  extend<T>(listA: Array<T>, listB: Array<T>): void
+  updateSteps(tokenList: DOMTokenListInternal): void
 
   /**
-   * Inserts the given item to the start the list.
+   * Gets the value of the token lists' associated attribute.
    * 
-   * @param list - a list
-   * @param item - an item
+   * @param tokenList - a token list
    */
-  prepend<T>(list: Array<T>, item: T): void
-
-  /**
-   * Replaces the given item or all items matching condition with a new item.
-   * 
-   * @param list - a list
-   * @param conditionOrItem - an item to replace or a condition matching items
-   * to replace
-   * @param item - an item
-   */
-  replace<T>(list: Array<T>, conditionOrItem: T | ((item: T) => boolean), newItem: T): void
-
-  /**
-   * Replaces all items matching condition with a new item.
-   * 
-   * @param list - a list
-   * @param condition - a condition matching items to replace
-   * @param item - an item
-   */
-  replace<T>(list: Array<T>, condition: ((item: T) => boolean), newItem: T): void
-
-  /**
-   * Replaces the given item with a new item.
-   * 
-   * @param list - a list
-   * @param oldItem - an item to replace
-   * @param item - an item
-   */
-  replace<T>(list: Array<T>, oldItem: T, newItem: T): void
-
-  /**
-   * Inserts the given item before the given index.
-   * 
-   * @param list - a list
-   * @param item - an item
-   */
-  insert<T>(list: Array<T>, item: T, index: number): void
-
-  /**
-   * Removes the given item or all items matching condition.
-   * 
-   * @param list - a list
-   * @param conditionOrItem - an item to remove or a condition matching items
-   * to remove
-   */
-  remove<T>(list: Array<T>, conditionOrItem: T | ((item: T) => boolean)): void
-  /**
-   * Removes all items matching condition.
-   * 
-   * @param list - a list
-   * @param condition - a condition matching items to remove
-   */
-  remove<T>(list: Array<T>, condition: ((item: T) => boolean)): void
-  /**
-   * Removes the given.
-   * 
-   * @param list - a list
-   * @param item - an item to remove
-   */
-  remove<T>(list: Array<T>, item: T): void
-
-  /**
-   * Removes all items from the list.
-   */
-  empty<T>(list: Array<T>): void
-
-  /**
-   * Determines if the list contains the given item or any items matching 
-   * condition.
-   * 
-   * @param list - a list
-   * @param conditionOrItem - an item to a condition to match
-   */
-  contains<T>(list: Array<T>, conditionOrItem: T | ((item: T) => boolean)): boolean
-
-  /**
-   * Determines if the list contains any items matching condition.
-   * 
-   * @param list - a list
-   * @param condition - a condition to match
-   */
-  contains<T>(list: Array<T>, condition: ((item: T) => boolean)): boolean
-
-  /**
-   * Determines if the list contains the given item.
-   * 
-   * @param list - a list
-   * @param item - an item to match
-   */
-  contains<T>(list: Array<T>, item: T): boolean
-
-  /**
-   * Returns the count of items in the list.
-   * 
-   * @param list - a list
-   */
-  size<T>(list: Array<T>): number
-
-  /**
-   * Determines if the list is empty.
-   * 
-   * @param list - a list
-   */
-  isEmpty<T>(list: Array<T>): boolean
-
-  /**
-   * Returns an iterator for the items o the list.
-   * 
-   * @param list - a list
-   */
-  forEach<T>(list: Array<T>): IterableIterator<T>
-
-  /**
-   * Creates and returns a shallow clone of list.
-   * 
-   * @param list - a list
-   */
-  clone<T>(list: Array<T>): Array<T>
-
-  /**
-   * Returns a new list containing items from the list sorted in ascending 
-   * order.
-   * 
-   * @param list - a list
-   * @param lessThanAlgo - a function that returns `true` if its first argument
-   * is less than its second argument, and `false` otherwise.
-   */
-  sortInAscendingOrder<T>(list: Array<T>,
-    lessThanAlgo: ((itemA: T, itemB: T) => boolean)): Array<T>
-
-  /**
-   * Returns a new list containing items from the list sorted in descending 
-   * order.
-   * 
-   * @param list - a list
-   * @param lessThanAlgo - a function that returns `true` if its first argument
-   * is less than its second argument, and `false` otherwise.
-   */
-  sortInDescendingOrder<T>(list: Array<T>,
-    lessThanAlgo: ((itemA: T, itemB: T) => boolean)): Array<T>
+  serializeSteps(tokenList: DOMTokenListInternal): string
 
 }
 

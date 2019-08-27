@@ -1,7 +1,8 @@
 /**
- * Includes namespaces.
+ * Defines namespaces.
+ * See: https://infra.spec.whatwg.org/#namespaces
  */
-export class Namespace {
+export class NamespaceImpl {
 
   static readonly HTML = "http://www.w3.org/1999/xhtml"
   static readonly XML = "http://www.w3.org/XML/1998/namespace"

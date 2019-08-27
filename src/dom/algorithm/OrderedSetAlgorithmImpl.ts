@@ -1,17 +1,11 @@
 import { DOMAlgorithm, OrderedSetAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
+import { infra } from '../../infra';
 
 /**
  * Contains ordered set manipulation algorithms.
  */
 export class OrderedSetAlgorithmImpl extends SubAlgorithmImpl implements OrderedSetAlgorithm {
-
-  /**
-   * RegExp to split attribute values at ASCII whitespace
-   * https://infra.spec.whatwg.org/#ascii-whitespace
-   * U+0009 TAB, U+000A LF, U+000C FF, U+000D CR, or U+0020 SPACE
-   */
-  private static readonly WhiteSpace = /[\t\n\f\r ]/
 
   /**
    * Initializes a new `OrderedSetAlgorithm`.
@@ -30,7 +24,7 @@ export class OrderedSetAlgorithmImpl extends SubAlgorithmImpl implements Ordered
      * 3. For each token in inputTokens, append token to tokens.
      * 4. Return tokens.
      */
-    const inputTokens = value.split(OrderedSetAlgorithmImpl.WhiteSpace)
+    const inputTokens = infra.string.splitAStringOnASCIIWhitespace(value)
     return new Set<string>(inputTokens)
   }
 

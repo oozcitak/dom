@@ -2,13 +2,16 @@ import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
   Element, HTMLCollection, NodeList, ShadowRootMode
 } from './interfaces'
-import { HTMLSpec, XMLSpec, Namespace } from './spec'
+import { HTMLSpec, XMLSpec } from './spec'
 import { NodeImpl } from './NodeImpl'
 import { DOMException } from './DOMException'
 import {
-  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal
+  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal, SlotInternal
 } from './interfacesInternal'
 import { HTMLSlotElement } from '../htmldom/interfaces'
+import { infra } from '../infra'
+import { AttributeChangeStep } from './algorithm/interfaces'
+import { Guard } from './util';
 
 /**
  * Represents an element node.
@@ -30,6 +33,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   _uniqueIdentifier?: string | undefined;
 
+  _attributeChangeSteps: AttributeChangeStep[] = []
+
   /**
    * Initializes a new instance of `Element`.
    * 
@@ -46,6 +51,10 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     this._namespace = namespace
     this._namespacePrefix = namespacePrefix
     this._attributeList = this._algo.create.namedNodeMap(this)
+
+    this._attributeChangeSteps.push(this._updateASlotablesName)
+    this._attributeChangeSteps.push(this._updateASlotsName)
+    this._attributeChangeSteps.push(this._updateAnElementID)
   }
 
   /** @inheritdoc */
@@ -78,7 +87,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   /** @inheritdoc */
   get classList(): DOMTokenList {
-    return this._algo.create.domTokenList(this, 'class')
+    let attr = this._algo.element.getAnAttributeByName("class", this)
+    if (attr === null) {
+      this._algo.element.setAnAttributeValue(this, "class", "")
+      attr = this._algo.element.getAnAttributeByName("class", this)
+    }
+    return this._algo.create.domTokenList(this, <AttrInternal>attr)
   }
 
   /** @inheritdoc */
@@ -91,7 +105,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   /** @inheritdoc */
   hasAttributes(): boolean {
-    return !this._algo.list.isEmpty(
+    return !infra.list.isEmpty(
       (this._attributeList as NamedNodeMapInternal)._attributeList)
   }
 
@@ -153,7 +167,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
      * lowercase.
      */
-    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -233,7 +247,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 2. Return true if the context object has an attribute whose qualified
      * name is qualifiedName, and false otherwise.
      */
-    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -261,7 +275,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
      * lowercase.
      */
-    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -391,7 +405,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 1. If context object’s namespace is not the HTML namespace, then throw a
      * "NotSupportedError" DOMException.
      */
-    if (this._namespace !== Namespace.HTML)
+    if (this._namespace !== infra.namespace.HTML)
       throw DOMException.NotSupportedError
 
     /**
@@ -555,7 +569,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3. Return qualifiedName.
      */
     let qualifiedName = this._qualifiedName
-    if (this._namespace === Namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toUpperCase()
     }
     return qualifiedName
@@ -598,6 +612,91 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   // MIXIN: Slotable
   /* istanbul ignore next */
   get assignedSlot(): HTMLSlotElement | null { throw new Error("Mixin: Slotable not implemented.") }
+
+  /**
+   * Defines attribute change steps to update a slot’s name.
+   */
+  private _updateASlotsName(element: ElementInternal, localName: string,
+    oldValue: string | null, value: string | null, namespace: string | null): void {
+    /**
+     * 1. If element is a slot, localName is name, and namespace is null, then:
+     * 1.1. If value is oldValue, then return.
+     * 1.2. If value is null and oldValue is the empty string, then return.
+     * 1.3. If value is the empty string and oldValue is null, then return.
+     * 1.4. If value is null or the empty string, then set element’s name to the
+     * empty string.
+     * 1.5. Otherwise, set element’s name to value.
+     * 1.6. Run assign slotables for a tree with element’s root.
+     */
+    if (Guard.isSlot(element) && localName === "name" && namespace === null) {
+      if (value === oldValue) return
+      if (value === null && oldValue === '') return
+      if (value === '' && oldValue === null) return
+
+      if ((value === null || value === '')) {
+        element._name = ''
+      } else {
+        element._name = value
+      }
+
+      this._algo.shadowTree.assignSlotablesForATree(this._algo.tree.rootNode(element))
+    }
+  }
+
+  /**
+   * Defines attribute change steps to update a slotable’s name.
+   */
+  private _updateASlotablesName(element: ElementInternal, localName: string,
+    oldValue: string | null, value: string | null, namespace: string | null): void {
+    /**
+     * 1. If localName is slot and namespace is null, then:
+     * 1.1. If value is oldValue, then return.
+     * 1.2. If value is null and oldValue is the empty string, then return.
+     * 1.3. If value is the empty string and oldValue is null, then return.
+     * 1.4. If value is null or the empty string, then set element’s name to 
+     * the empty string.
+     * 1.5. Otherwise, set element’s name to value.
+     * 1.6. If element is assigned, then run assign slotables for element’s 
+     * assigned slot.
+     * 1.7. Run assign a slot for element.
+     */
+    if (Guard.isSlotable(element) && localName === "slot" && namespace === null) {
+      if (value === oldValue) return
+      if (value === null && oldValue === '') return
+      if (value === '' && oldValue === null) return
+
+      if ((value === null || value === '')) {
+        element._name = ''
+      } else {
+        element._name = value
+      }
+
+      if (this._algo.shadowTree.isAssigned(element)) {
+        this._algo.shadowTree.assignSlotables(element._assignedSlot as SlotInternal)
+      }
+
+      this._algo.shadowTree.assignASlot(element)
+    }
+  }
+
+  /**
+   * Defines attribute change steps to update an element's ID.
+   */
+  private _updateAnElementID(element: ElementInternal, localName: string,
+    oldValue: string | null, value: string | null, namespace: string | null): void {
+    /**
+     * 1. If localName is id, namespace is null, and value is null or the empty
+     * string, then unset element’s ID.
+     * 2. Otherwise, if localName is id, namespace is null, then set element’s
+     * ID to value.
+     */
+    if (localName === "id" && namespace === null) {
+      if (!value)
+        element._uniqueIdentifier = undefined
+      else
+        element._uniqueIdentifier = value
+    }
+  }
 
   /**
    * Creates a new `Element`.

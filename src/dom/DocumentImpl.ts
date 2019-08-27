@@ -5,13 +5,13 @@ import {
   CDATASection, NodeIterator, TreeWalker, FilterResult, Range, Event,
   EventTarget
 } from './interfaces'
-import { DocumentInternal, NodeInternal, WindowInternal } from './interfacesInternal'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DocumentInternal, NodeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
-import { Namespace, XMLSpec } from './spec'
+import { XMLSpec } from './spec'
 import { Guard } from './util'
 import { globalStore, isFunction, isString } from '../util'
+import { infra } from '../infra'
 
 /**
  * Represents a document node.
@@ -202,7 +202,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
     const namespace =
       (this._type === "html" || this._contentType === "application/xhtml+xml") ?
-        Namespace.HTML : null
+        infra.namespace.HTML : null
 
     return this._algo.element.createAnElement(this, localName, namespace, null,
       is, true)
