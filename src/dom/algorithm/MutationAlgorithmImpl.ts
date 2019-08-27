@@ -3,7 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../DOMException'
 import { NodeInternal, RangeInternal, ElementInternal, SlotInternal } from '../interfacesInternal'
 import { NodeType } from '../interfaces'
-import { List, Guard } from '../util'
+import { Guard } from '../util'
 import { isEmpty } from '../../util'
 
 /**
@@ -260,10 +260,32 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * 7.2. Otherwise, insert node into parent’s children before child’s
        * index.
        */
-      if (!child)
-        List.append(node, parent)
-      else
-        List.insert(node, parent, child)
+      if(!parent._children.has(node)) {
+
+        node._parent = parent
+        parent._children.add(node)
+
+        // assign siblings and children for quick lookups
+        if (parent.firstChild === null) {
+          node._previousSibling = null
+          node._nextSibling = null
+    
+          parent._firstChild = node
+          parent._lastChild = node
+        } else {
+          const prev = (child ? child.previousSibling : parent.lastChild) as NodeInternal | null
+          const next = (child ? child : null)
+    
+          node._previousSibling = prev
+          node._nextSibling = next
+    
+          if (prev) prev._nextSibling = node
+          if (next) next._previousSibling = node
+    
+          if (!prev) parent._firstChild = node
+          if (!next) parent._lastChild = node
+        }
+      }
 
       /**
        * 7.3. If parent is a shadow host and node is a slotable, then 
@@ -657,7 +679,21 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     /**
      * 9. Remove node from its parent’s children.
      */
-    List.remove(node, parent)
+    node._parent = null
+    parent._children.delete(node)
+
+    // assign siblings and children for quick lookups
+    const prev = node.previousSibling as NodeInternal | null
+    const next = node.nextSibling as NodeInternal | null
+
+    node._previousSibling = null
+    node._nextSibling = null
+
+    if (prev) prev._nextSibling = next
+    if (next) next._previousSibling = prev
+
+    if (!prev) parent._firstChild = next
+    if (!next) parent._lastChild = prev
 
     /**
      * 10. If node is assigned, then run assign slotables for node’s assigned 

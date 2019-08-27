@@ -165,11 +165,12 @@ export interface NodeInternal extends EventTargetInternal, Node {
   _registeredObserverList: Array<RegisteredObserver | TransientRegisteredObserver>
 
   /**
-   * Used to keep track of parent-child relations in the tree. This is a 
-   * non-standard property.
+   * Used to keep track of parent-child relations in the tree. These are 
+   * non-standard properties.
    */
   _nodeType: NodeType
-  _parentNode: Node | null
+  _parent: Node | null
+  _children: Set<Node>
   _firstChild: Node | null
   _lastChild: Node | null
   _previousSibling: Node | null

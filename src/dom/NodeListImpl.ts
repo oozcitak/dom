@@ -1,5 +1,6 @@
 import { Node, NodeList } from "./interfaces"
-import { NodeListInternal } from "./interfacesInternal"
+import { NodeListInternal, NodeInternal } from "./interfacesInternal"
+import { infra } from "../infra";
 
 /**
  * Represents an ordered list of nodes.
@@ -7,7 +8,7 @@ import { NodeListInternal } from "./interfacesInternal"
 export class NodeListImpl implements NodeListInternal {
 
   _live: boolean = true
-  _root: Node
+  _root: NodeInternal
   _filter: ((node: Node) => any) = (() => true)
   _length = 0
 
@@ -16,7 +17,7 @@ export class NodeListImpl implements NodeListInternal {
    * 
    * @param root - root node
    */
-  private constructor(root: Node) {
+  private constructor(root: NodeInternal) {
     this._root = root
   }
 
@@ -26,7 +27,7 @@ export class NodeListImpl implements NodeListInternal {
      * The length attribute must return the number of nodes represented 
      * by the collection.
      */
-    return this._length
+    return infra.set.size(this._root._children)
   }
 
   /** @inheritdoc */
@@ -60,9 +61,8 @@ export class NodeListImpl implements NodeListInternal {
 
   /** @inheritdoc */
   *keys(): IterableIterator<number> {
-    let index = 0
-    for (const child of this) {
-      yield index++
+    for (let i = 0; i < this.length; i++) {
+      yield i
     }
   }
 
@@ -81,11 +81,7 @@ export class NodeListImpl implements NodeListInternal {
 
   /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<Node> {
-    let child = this._root.firstChild
-    while (child) {
-      yield child
-      child = child.nextSibling
-    }
+    yield* this._root._children
   }
 
   /** @inheritdoc */
@@ -101,7 +97,7 @@ export class NodeListImpl implements NodeListInternal {
    * 
    * @param root - root node
    */
-  static _create(root: Node): NodeListInternal {
+  static _create(root: NodeInternal): NodeListInternal {
     return new NodeListImpl(root)
   }
 }

@@ -44,7 +44,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
     Array<RegisteredObserver | TransientRegisteredObserver> = []
 
   abstract _nodeType: NodeType
-  _parentNode: Node | null = null
+  _parent: Node | null = null
+  _children: Set<Node> = new Set()
   _firstChild: Node | null = null
   _lastChild: Node | null = null
   _previousSibling: Node | null = null
@@ -160,7 +161,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
     if (this._nodeType === NodeType.Attribute) {
       return null
     } else {
-      return this._parentNode
+      return this._parent
     }
   }
 

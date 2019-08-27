@@ -1,6 +1,6 @@
 /**
- * Contains productions defined in the HTML standard
- * (https://html.spec.whatwg.org/).
+ * Contains productions defined in the 
+ * [HTML standard](https://html.spec.whatwg.org/).
  */
 export class HTMLSpec {
 

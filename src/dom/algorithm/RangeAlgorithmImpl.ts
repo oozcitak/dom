@@ -127,7 +127,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
      */
-    const parent = node._parentNode
+    const parent = node._parent
     if (parent === null)
       throw DOMException.InvalidNodeTypeError
 
@@ -271,11 +271,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * one plus reference node’s index.
        */
       let referenceNode = originalStartNode
-      while (referenceNode._parentNode !== null &&
-        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parentNode as NodeInternal)) {
-        referenceNode = referenceNode._parentNode as NodeInternal
+      while (referenceNode._parent !== null &&
+        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parent as NodeInternal)) {
+        referenceNode = referenceNode._parent as NodeInternal
       }
-      newNode = referenceNode._parentNode as NodeInternal
+      newNode = referenceNode._parent as NodeInternal
       newOffset = 1 + this.dom.tree.index(referenceNode)
     }
 
@@ -580,7 +580,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     if (Guard.isProcessingInstructionNode(range._startNode) ||
       Guard.isCommentNode(range._startNode) ||
-      (Guard.isTextNode(range._startNode) && range._startNode._parentNode === null) ||
+      (Guard.isTextNode(range._startNode) && range._startNode._parent === null) ||
       range._startNode === node) {
       throw DOMException.HierarchyRequestError
     }
@@ -614,10 +614,10 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     if (referenceNode === null) {
       parent = range._startNode
     } else {
-      if (referenceNode._parentNode === null) {
+      if (referenceNode._parent === null) {
         throw new Error("Parent node is null.")
       }
-      parent = referenceNode._parentNode as NodeInternal
+      parent = referenceNode._parent as NodeInternal
     }
 
     /**
@@ -643,8 +643,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     /**
      * 9. If node’s parent is not null, remove node from its parent.
      */
-    if (node._parentNode !== null) {
-      this.dom.mutation.remove(node, node._parentNode as NodeInternal)
+    if (node._parent !== null) {
+      this.dom.mutation.remove(node, node._parent as NodeInternal)
     }
 
     /**

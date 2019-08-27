@@ -1,7 +1,6 @@
 /**
  * Contains regex strings to match against productions defined in the 
- * XML specification 1.0 (http://www.w3.org/TR/xml/) and
- * XML specification 1.1 (http://www.w3.org/TR/xml11).
+ * [XML 1.0](http://www.w3.org/TR/xml/) and [XML 1.1](http://www.w3.org/TR/xml11).
  */
 export class XMLSpec {
 
