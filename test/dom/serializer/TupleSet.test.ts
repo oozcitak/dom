@@ -1,9 +1,9 @@
-import { TupleSet } from '../../../src/dom/serializer/TupleSet'
+import $$ from '../TestHelpers'
 
 describe('TupleSet', function () {
 
   test('size', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -13,7 +13,7 @@ describe('TupleSet', function () {
   })
 
   test('set()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -25,7 +25,7 @@ describe('TupleSet', function () {
   })
 
   test('clear()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -41,7 +41,7 @@ describe('TupleSet', function () {
   })
 
   test('delete()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -62,7 +62,7 @@ describe('TupleSet', function () {
   })
 
   test('entries()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -79,7 +79,7 @@ describe('TupleSet', function () {
   })
 
   test('values()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -96,7 +96,7 @@ describe('TupleSet', function () {
   })
 
   test('foreach()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -123,7 +123,7 @@ describe('TupleSet', function () {
   })
 
   test('has()', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])
@@ -143,7 +143,7 @@ describe('TupleSet', function () {
   })
 
   test('iterator', function () {
-    const set = new TupleSet<number, string>()
+    const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
     set.set([2, "b"])

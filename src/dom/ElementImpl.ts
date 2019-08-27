@@ -214,7 +214,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     const [ns, prefix, localName] =
       this._algo.namespace.validateAndExtract(namespace, qualifiedName)
     this._algo.element.setAnAttributeValue(this, localName, value,
-      prefix || '', ns || '')
+      prefix, ns)
   }
 
   /** @inheritdoc */

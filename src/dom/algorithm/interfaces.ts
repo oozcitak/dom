@@ -1090,7 +1090,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param namespace - an attribute namespace
    */
   setAnAttributeValue(element: ElementInternal, localName: string,
-    value: string, prefix?: string, namespace?: string): void
+    value: string, prefix?: string | null, namespace?: string | null): void
 
   /**
    * Removes an attribute with the given name from an element node.
