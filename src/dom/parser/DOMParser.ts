@@ -1,6 +1,5 @@
 import { XMLStringLexer } from "./XMLStringLexer"
 import { TokenType } from './interfaces'
-import { DocumentImpl } from '../DocumentImpl'
 import { Document, Node } from "../interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
@@ -30,7 +29,7 @@ export class DOMParser {
 
       lexer.skipWhitespaceOnlyText = true
 
-      const doc = new DocumentImpl()
+      const doc = algo.create.document()
       doc._contentType = mimeType
 
       let context: Node = doc

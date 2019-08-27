@@ -29,7 +29,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 2. Set the surrounding agent’s mutation observer microtask queued to true.
      * 3. Queue a microtask to notify mutation observers.
      */
-    throw DOMException.NotSupportedError
+    
   }
 
   /** @inheritdoc */
@@ -50,7 +50,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 6. For each slot of signalSet, fire an event named slotchange, with its 
      * bubbles attribute set to true, at slot.
      */
-    throw DOMException.NotSupportedError
+    
   }
 
   /** @inheritdoc */

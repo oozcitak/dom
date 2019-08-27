@@ -10,8 +10,6 @@ import {
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
 import { XMLSerializer } from '../../src/dom/serializer'
-import { XMLStringLexer } from '../../src/dom/parser/XMLStringLexer'
-import * as Token from '../../src/dom/parser/XMLToken'
 
 export default class TestHelpers extends TestHelpersRoot {
   static Attr = AttrImpl
@@ -39,9 +37,6 @@ export default class TestHelpers extends TestHelpersRoot {
   static DOMParser = DOMParser
   static MimeType = MimeType
   static XMLSerializer = XMLSerializer
-
-  static XMLStringLexer = XMLStringLexer
-  static Token = Token
   
   /**
    * Returns the window object.

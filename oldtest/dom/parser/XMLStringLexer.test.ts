@@ -1,4 +1,6 @@
 import $$ from '../TestHelpers'
+import { XMLStringLexer } from '../../../src/dom/parser/XMLStringLexer'
+import * as Token from '../../../src/dom/parser/XMLToken'
 
 describe('XMLStringLexer', function () {
 
@@ -17,32 +19,32 @@ describe('XMLStringLexer', function () {
       </root>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', '', ''),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, false),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CommentToken(' same node below '),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('kidding', 'itwas="different"'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('forreal', ''),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CDATAToken('here be dragons'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('text', { }, false),
-      new $$.Token.TextToken('alien\'s pinky toe'),
-      new $$.Token.ClosingTagToken('text'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ClosingTagToken('root')
+      new Token.DeclarationToken('1.0', '', ''),
+      new Token.TextToken('\n'), // lexer preserves whitespace
+      new Token.DocTypeToken('root', '', ''),
+      new Token.TextToken('\n'),
+      new Token.ElementToken('root', {}, false),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('node', { 'att': 'val' }, true),
+      new Token.TextToken('\n  '),
+      new Token.CommentToken(' same node below '),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
+      new Token.TextToken('\n  '),
+      new Token.PIToken('kidding', 'itwas="different"'),
+      new Token.TextToken('\n  '),
+      new Token.PIToken('forreal', ''),
+      new Token.TextToken('\n  '),
+      new Token.CDATAToken('here be dragons'),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('text', { }, false),
+      new Token.TextToken('alien\'s pinky toe'),
+      new Token.ClosingTagToken('text'),
+      new Token.TextToken('\n'),
+      new Token.ClosingTagToken('root')
     ]
     let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     for (const token of lexer) {
       expect(token).toEqual(tokens[i])
       i++
@@ -64,30 +66,30 @@ describe('XMLStringLexer', function () {
       </root>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', '', ''),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, false),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CommentToken(' same node below '),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('kidding', 'itwas="different"'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CDATAToken('here be dragons'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('text', { }, false),
-      new $$.Token.TextToken('alien\'s pinky toe'),
-      new $$.Token.ClosingTagToken('text'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ClosingTagToken('root')
+      new Token.DeclarationToken('1.0', '', ''),
+      new Token.TextToken('\n'), // lexer preserves whitespace
+      new Token.DocTypeToken('root', '', ''),
+      new Token.TextToken('\n'),
+      new Token.ElementToken('root', {}, false),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('node', { 'att': 'val' }, true),
+      new Token.TextToken('\n  '),
+      new Token.CommentToken(' same node below '),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
+      new Token.TextToken('\n  '),
+      new Token.PIToken('kidding', 'itwas="different"'),
+      new Token.TextToken('\n  '),
+      new Token.CDATAToken('here be dragons'),
+      new Token.TextToken('\n  '),
+      new Token.ElementToken('text', { }, false),
+      new Token.TextToken('alien\'s pinky toe'),
+      new Token.ClosingTagToken('text'),
+      new Token.TextToken('\n'),
+      new Token.ClosingTagToken('root')
     ]
     let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     for (const token of lexer) {
       expect(token).toEqual(tokens[i])
       i++
@@ -102,14 +104,14 @@ describe('XMLStringLexer', function () {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '-//W3C//DTD HTML 4.01//EN', 'http://www.w3.org/TR/html4/strict.dtd'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      new Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
+      new Token.TextToken('\n'), // lexer preserves whitespace
+      new Token.DocTypeToken('root', '-//W3C//DTD HTML 4.01//EN', 'http://www.w3.org/TR/html4/strict.dtd'),
+      new Token.TextToken('\n'),
+      new Token.ElementToken('root', {}, true)
     ]
     let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     for (const token of lexer) {
       expect(token).toEqual(tokens[i])
       i++
@@ -124,14 +126,14 @@ describe('XMLStringLexer', function () {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', 'http://www.w3.org/Math/DTD/mathml1/mathml.dtd'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      new Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
+      new Token.TextToken('\n'), // lexer preserves whitespace
+      new Token.DocTypeToken('root', '', 'http://www.w3.org/Math/DTD/mathml1/mathml.dtd'),
+      new Token.TextToken('\n'),
+      new Token.ElementToken('root', {}, true)
     ]
     let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     for (const token of lexer) {
       expect(token).toEqual(tokens[i])
       i++
@@ -146,14 +148,14 @@ describe('XMLStringLexer', function () {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      new Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
+      new Token.TextToken('\n'), // lexer preserves whitespace
+      new Token.DocTypeToken('root', '', ''),
+      new Token.TextToken('\n'),
+      new Token.ElementToken('root', {}, true)
     ]
     let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     for (const token of lexer) {
       expect(token).toEqual(tokens[i])
       i++
@@ -166,7 +168,7 @@ describe('XMLStringLexer', function () {
       <?xml version=1.0?>
       <root/>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -175,7 +177,7 @@ describe('XMLStringLexer', function () {
       <?xml version 1.0?>
       <root/>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -184,7 +186,7 @@ describe('XMLStringLexer', function () {
       <?xml venison='1.0'?>
       <root/>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -192,7 +194,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <?xml version='1.0'
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -200,7 +202,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <!DOCTYPE root PUBLIC pubId>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -208,7 +210,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <!DOCTYPE root PUBLIC 'pubId' sysId>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -216,7 +218,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <!DOCTYPE root SYSTEM sysId>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -224,7 +226,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <!DOCTYPE root
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -232,7 +234,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <?target name="content"
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -240,7 +242,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <!-- comment
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -248,7 +250,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <![CDATA[here
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -256,7 +258,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <root att=val/>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -264,7 +266,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <root att val/>
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -272,7 +274,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <root
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     expect(() => lexer.nextToken()).toThrow()
   })
 
@@ -280,7 +282,7 @@ describe('XMLStringLexer', function () {
     const xmlStr = $$.t`
       <root>hello</root
       `
-    const lexer = new $$.XMLStringLexer(xmlStr)
+    const lexer = new XMLStringLexer(xmlStr)
     lexer.nextToken() // <root>
     lexer.nextToken() // hello
     expect(() => lexer.nextToken()).toThrow()
