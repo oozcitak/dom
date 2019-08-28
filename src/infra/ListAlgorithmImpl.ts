@@ -83,10 +83,10 @@ export class ListAlgorithmImpl {
       const oldItem = list[i]
       if (isFunction(conditionOrItem)) {
         if (!!conditionOrItem.call(this, oldItem)) {
-          list.splice(i, 0)
+          list.splice(i, 1)
         }
       } else if (oldItem === conditionOrItem) {
-        list.splice(i, 0)
+        list.splice(i, 1)
         return
       }
     }
@@ -146,7 +146,7 @@ export class ListAlgorithmImpl {
    * @param list - a list
    */
   static isEmpty<T>(list: Array<T>): boolean {
-    return list.length !== 0
+    return list.length === 0
   }
 
   /**

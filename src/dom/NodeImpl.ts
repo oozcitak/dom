@@ -56,7 +56,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    */
   protected constructor() {
     super()
-    
+
     const window = globalStore.window
     this._nodeDocument = window.document as DocumentInternal
 
@@ -313,33 +313,33 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * descendant exclusive Text node node of context object:
      */
     const algo = this._algo
-    const exclusiveTextNodes: TextInternal[] = []
     for (const node of algo.tree.getDescendantNodes(this)) {
-      if (Guard.isExclusiveTextNode(node)) {
-        exclusiveTextNodes.push(node)
-      }
-    }
 
-    for (const node of exclusiveTextNodes) {
+      if (!Guard.isExclusiveTextNode(node)) continue
+
       /**
        * 1. Let length be node’s length.
        * 2. If length is zero, then remove node and continue with the next 
        * exclusive Text node, if any.
        */
       let length = algo.tree.nodeLength(node)
-      if (length === 0 && node.parentNode !== null) {
-        algo.mutation.remove(node, node.parentNode as NodeInternal)
+      if (length === 0) {
+        if (node._parent === null) {
+          throw new Error("Parent node is null.")
+        } else {
+          algo.mutation.remove(node, node._parent as NodeInternal)
+        }
         continue
       }
       /**
        * 3. Let data be the concatenation of the data of node’s contiguous 
        * exclusive Text nodes (excluding itself), in tree order.
        */
-      const childNodes: TextInternal[] = []
+      const textSiblings: TextInternal[] = []
       let data = ''
-      for (const childNode of algo.text.contiguousExclusiveTextNodes(node)) {
-        childNodes.push(childNode)
-        data += childNode._data
+      for (const sibling of algo.text.contiguousExclusiveTextNodes(node)) {
+        textSiblings.push(sibling)
+        data += sibling._data
       }
 
       /**
@@ -398,10 +398,15 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        * 7. Remove node’s contiguous exclusive Text nodes (excluding itself), 
        * in tree order.
        */
-      for (const childNode of childNodes) {
-        algo.mutation.remove(childNode, node)
+      for (const sibling of textSiblings) {
+        if (sibling._parent === null) {
+          throw new Error("Parent node is null.")
+        } else {
+          algo.mutation.remove(sibling, sibling._parent as NodeInternal)
+        }
       }
     }
+    const a = this.childNodes
   }
 
   /**

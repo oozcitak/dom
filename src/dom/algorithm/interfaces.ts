@@ -146,7 +146,7 @@ export interface DOMAlgorithm {
    * @param removedNode - removed node
    * @param oldParent - old parent node
    */
-  runRemovingSteps(thisObj: any, removedNode: NodeInternal, 
+  runRemovingSteps(thisObj: any, removedNode: NodeInternal,
     oldParent?: NodeInternal | null): void
 
   /**
@@ -168,7 +168,7 @@ export interface DOMAlgorithm {
    * @param node - node
    * @param oldDocument - old document
    */
-  runAdoptingSteps(thisObj: any, node: NodeInternal, 
+  runAdoptingSteps(thisObj: any, node: NodeInternal,
     oldDocument: DocumentInternal): void
 
   /**
@@ -189,8 +189,8 @@ export interface DOMAlgorithm {
    * @param value - attribute's new value
    * @param namespace - attribute's namespace
    */
-  runAttributeChangeSteps(thisObj: any, element: ElementInternal, 
-    localName: string, oldValue: string | null, value: string | null, 
+  runAttributeChangeSteps(thisObj: any, element: ElementInternal,
+    localName: string, oldValue: string | null, value: string | null,
     namespace: string | null): void
 
   /**
@@ -1801,7 +1801,7 @@ export type InsertionStep = ((insertedNode: NodeInternal) => any)
 /**
  * Defines a pre-removal step for a node iterator.
  */
-export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal, 
+export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal,
   toBeRemovedNode: NodeInternal) => any)
 
 /**

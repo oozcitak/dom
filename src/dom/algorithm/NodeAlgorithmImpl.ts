@@ -197,7 +197,10 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
     if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
       // TODO: Check equal attributes with different order
       for (let i = 0; i < a._attributeList.length; i++) {
-        if (a._attributeList.item(i) !== b._attributeList.item(i)) return false
+        const attra = a._attributeList.item(i) as NodeInternal | null
+        const attrb = b._attributeList.item(i) as NodeInternal | null
+        if (attra === null || attrb === null) return false
+        if (!this.equals(attra, attrb)) return false
       }
     }
 
@@ -355,7 +358,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * running locate a namespace prefix on that element using namespace.
      */
     if (element.parentElement) {
-      this.locateANamespacePrefix(element.parentElement as ElementInternal,
+      return this.locateANamespacePrefix(element.parentElement as ElementInternal,
         namespace)
     }
 
