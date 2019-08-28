@@ -155,7 +155,7 @@ export class ListAlgorithmImpl {
    * @param list - a list
    * @param condition - an optional condition to match
    */
-  static *forEach<T>(list: Array<T>, condition?: ((item: T) => boolean)): IterableIterator<T> {
+  static *forEach<T>(list: Array<T>, condition?: ((item: T) => any)): IterableIterator<T> {
     if (condition === undefined) {
       yield* list
     } else {
