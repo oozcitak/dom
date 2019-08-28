@@ -1,11 +1,11 @@
 import TestHelpersRoot from "../TestHelpers"
 import { window } from '../../src/index'
-import { 
-  DOMImplementationImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl, 
-  CommentImpl, DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl, 
-  DOMException, DOMTokenListImpl, ElementImpl, 
-  HTMLCollectionImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl, 
-  ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl, 
+import {
+  DOMImplementationImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
+  CommentImpl, DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl,
+  DOMException, DOMTokenListImpl, ElementImpl,
+  HTMLCollectionImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
+  ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
   XMLDocumentImpl
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
@@ -14,6 +14,7 @@ import { XMLStringLexer } from '../../src/dom/parser/XMLStringLexer'
 import * as Token from '../../src/dom/parser/XMLToken'
 import { TupleSet } from '../../src/dom/serializer/TupleSet'
 import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
+import { XMLSpec } from '../../src/dom/spec/XMLSpec'
 
 export default class TestHelpers extends TestHelpersRoot {
   static Attr = AttrImpl
@@ -38,6 +39,8 @@ export default class TestHelpers extends TestHelpersRoot {
   static Text = TextImpl
   static XMLDocument = XMLDocumentImpl
 
+  static XMLSpec = XMLSpec
+
   static DOMParser = DOMParser
   static MimeType = MimeType
   static XMLSerializer = XMLSerializer
@@ -46,10 +49,10 @@ export default class TestHelpers extends TestHelpersRoot {
   static Token = Token
 
   static TupleSet = TupleSet
-  
-  static  WhatToShow = WhatToShow
+
+  static WhatToShow = WhatToShow
   static FilterResult = FilterResult
-    
+
   /**
    * Returns the window object.
    */
