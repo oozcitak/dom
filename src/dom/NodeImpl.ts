@@ -431,7 +431,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * 
    * @param node - the node to compare with
    */
-  isEqualNode(node: Node | null): boolean {
+  isEqualNode(node: Node | null = null): boolean {
     /**
      * The isEqualNode(otherNode) method, when invoked, must return true if
      * otherNode is non-null and context object equals otherNode, and false 
@@ -445,7 +445,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    * 
    * @param node - the node to compare with
    */
-  isSameNode(node: Node | null): boolean {
+  isSameNode(node: Node | null = null): boolean {
     /**
      * The isSameNode(otherNode) method, when invoked, must return true if 
      * otherNode is context object, and false otherwise.

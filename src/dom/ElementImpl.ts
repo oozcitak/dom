@@ -343,12 +343,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   }
 
   /** @inheritdoc */
-  getAttributeNode(name: string): Attr | null {
+  getAttributeNode(qualifiedName: string): Attr | null {
     /**
      * The getAttributeNode(qualifiedName) method, when invoked, must return the
      * result of getting an attribute given qualifiedName and context object.
      */
-    return this._algo.element.getAnAttributeByName(this._qualifiedName, this)
+    return this._algo.element.getAnAttributeByName(qualifiedName, this)
   }
 
   /** @inheritdoc */

@@ -71,14 +71,14 @@ describe('Attr', function () {
   test('lookupPrefix()', function () {
     expect(attr.lookupPrefix('myns')).toBe('n')
     expect(attr.lookupPrefix(null)).toBeNull()
-    const cloned = <any>(attr.cloneNode())
+    const cloned = attr.cloneNode() as any
     expect(cloned.lookupPrefix('none')).toBeNull()
   })
 
   test('lookupNamespaceURI()', function () {
     expect(attr.lookupNamespaceURI('n')).toBe('myns')
     expect(attr.lookupNamespaceURI(null)).toBe('mydefaultns')
-    const cloned = <any>(attr.cloneNode())
+    const cloned = attr.cloneNode() as any
     expect(cloned.lookupNamespaceURI('none')).toBeNull()
   })
 
