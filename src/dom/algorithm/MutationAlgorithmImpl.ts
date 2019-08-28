@@ -307,7 +307,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * steps for parent.
        */
       if (Guard.isTextNode(node)) {
-        this.dom.runChildTextContentChangeSteps(this, parent)
+        this.dom.runChildTextContentChangeSteps(parent)
       }
 
       /**
@@ -334,7 +334,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
         /**
          * 7.7.1. Run the insertion steps with inclusiveDescendant.
          */
-        this.dom.runInsertionSteps(this, inclusiveDescendant)
+        this.dom.runInsertionSteps(inclusiveDescendant)
 
         /**
          * 7.7.2. If inclusiveDescendant is connected, then:
@@ -757,7 +757,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       /**
        * 15.1. Run the removing steps with descendant.
        */
-      this.dom.runRemovingSteps(this, descendant)
+      this.dom.runRemovingSteps(descendant)
 
       /**
        * TODO:
@@ -803,7 +803,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * for parent.
      */
     if (Guard.isTextNode(node)) {
-      this.dom.runChildTextContentChangeSteps(this, parent)
+      this.dom.runChildTextContentChangeSteps(parent)
     }
   }
 

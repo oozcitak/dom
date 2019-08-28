@@ -41,9 +41,28 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
 
     const localName = attribute._localName
     const value = this._algo.element.getAnAttributeValue(element, localName)
-    this._element._attributeChangeSteps.push(this._updateTokenSet)
-    this._algo.runAttributeChangeSteps(this, element, localName, value,
-      value, null)
+
+    // define a closure to be called when the associated attribute's value changes
+    const thisObj = this
+    function updateTokenSet(element: ElementInternal, localName: string,
+      oldValue: string | null, value: string | null, namespace: string | null): void {
+      /**
+       * 1. If localName is associated attribute’s local name, namespace is null,
+       * and value is null, then empty token set.
+       * 2. Otherwise, if localName is associated attribute’s local name,
+       * namespace is null, then set token set to value, parsed.
+       */
+      if (localName === thisObj._attribute.localName && namespace === null) {
+        if (!value)
+          thisObj._tokenSet.clear()
+        else
+          thisObj._tokenSet = thisObj._algo.orderedSet.parse(value)
+      }
+    }
+    // add the closure to the associated element's attribute change steps
+    this._element._attributeChangeSteps.push(updateTokenSet)
+
+    this._algo.runAttributeChangeSteps(element, localName, value, value, null)
   }
 
   /** @inheritdoc */
@@ -232,25 +251,6 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
   /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<string> {
     yield* this._tokenSet
-  }
-
-  /**
-   * Defines attribute change steps to update a token set.
-   */
-  private _updateTokenSet(element: ElementInternal, localName: string,
-    oldValue: string | null, value: string | null, namespace: string | null): void {
-    /**
-     * 1. If localName is associated attribute’s local name, namespace is null,
-     * and value is null, then empty token set.
-     * 2. Otherwise, if localName is associated attribute’s local name,
-     * namespace is null, then set token set to value, parsed.
-     */
-    if (localName === this._attribute.localName && namespace === null) {
-      if (!value)
-        this._tokenSet.clear()
-      else
-        this._tokenSet = this._algo.orderedSet.parse(value)
-    }
   }
 
   /**

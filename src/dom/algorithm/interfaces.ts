@@ -142,64 +142,57 @@ export interface DOMAlgorithm {
   /**
    * Runs removing steps for node.
    * 
-   * @param thisObj - the value of this in the function
    * @param removedNode - removed node
    * @param oldParent - old parent node
    */
-  runRemovingSteps(thisObj: any, removedNode: NodeInternal,
+  runRemovingSteps(removedNode: NodeInternal,
     oldParent?: NodeInternal | null): void
 
   /**
    * Runs cloning steps for node.
    * 
-   * @param thisObj - the value of this in the function
    * @param copy - node clone
    * @param node - node
    * @param document - document to own the cloned node
    * @param cloneChildrenFlag - whether child nodes are cloned
    */
-  runCloningSteps(thisObj: any, copy: NodeInternal, node: NodeInternal, document:
-    DocumentInternal, cloneChildrenFlag?: boolean): void
+  runCloningSteps(copy: NodeInternal, node: NodeInternal, 
+    document: DocumentInternal, cloneChildrenFlag?: boolean): void
 
   /**
    * Runs adopting steps for node.
    * 
-   * @param thisObj - the value of this in the function
    * @param node - node
    * @param oldDocument - old document
    */
-  runAdoptingSteps(thisObj: any, node: NodeInternal,
-    oldDocument: DocumentInternal): void
+  runAdoptingSteps(node: NodeInternal, oldDocument: DocumentInternal): void
 
   /**
    * Runs child text content change steps for a parent node.
    * 
-   * @param thisObj - the value of this in the function
    * @param parent - parent node with text node child nodes
    */
-  runChildTextContentChangeSteps(thisObj: any, parent: NodeInternal): void
+  runChildTextContentChangeSteps(parent: NodeInternal): void
 
   /**
    * Runs attribute change steps for an element node.
    * 
-   * @param thisObj - the value of this in the function
    * @param element - element node owning the attribute
    * @param localName - attribute's local name
    * @param oldValue - attribute's old value
    * @param value - attribute's new value
    * @param namespace - attribute's namespace
    */
-  runAttributeChangeSteps(thisObj: any, element: ElementInternal,
+  runAttributeChangeSteps(element: ElementInternal,
     localName: string, oldValue: string | null, value: string | null,
     namespace: string | null): void
 
   /**
    * Runs insertion steps for a node.
    * 
-   * @param thisObj - the value of this in the function
    * @param insertedNode - inserted node
    */
-  runInsertionSteps(thisObj: any, insertedNode: NodeInternal): void
+  runInsertionSteps(insertedNode: NodeInternal): void
 
   /**
    * Determines if there are any supported tokens defined for the given 

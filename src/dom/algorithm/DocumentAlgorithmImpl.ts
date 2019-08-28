@@ -98,7 +98,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
          * inclusive descendants, in shadow-including tree order, run the 
          * adopting steps with inclusiveDescendant and oldDocument.
          */
-        this.dom.runAdoptingSteps(this, inclusiveDescendant, oldDocument)
+        this.dom.runAdoptingSteps(inclusiveDescendant, oldDocument)
       }
     }
   }

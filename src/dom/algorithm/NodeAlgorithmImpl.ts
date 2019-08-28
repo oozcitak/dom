@@ -133,7 +133,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * specifications and pass copy, node, document and the clone children flag
      * if set, as parameters.
      */
-    this.dom.runCloningSteps(this, copy, node, document, cloneChildrenFlag)
+    this.dom.runCloningSteps(copy, node, document, cloneChildrenFlag)
 
     /**
      * 6. If the clone children flag is set, clone all the children of node and
