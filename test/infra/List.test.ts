@@ -144,6 +144,15 @@ describe('List', function () {
     expect(newList[2]).toBe('c')
   })
 
+  test('sortInAscendingOrder() reverse', function () {
+    const list = ['c', 'b', 'a']
+    const newList = $$.infra.list.sortInAscendingOrder(list, (a, b) => a > b)
+    expect(newList.length).toBe(3)
+    expect(newList[0]).toBe('c')
+    expect(newList[1]).toBe('b')
+    expect(newList[2]).toBe('a')
+  })
+
   test('sortInDescendingOrder()', function () {
     const list = ['c', 'b', 'a']
     const newList = $$.infra.list.sortInDescendingOrder(list, (a, b) => a < b)
@@ -151,6 +160,15 @@ describe('List', function () {
     expect(newList[0]).toBe('c')
     expect(newList[1]).toBe('b')
     expect(newList[2]).toBe('a')
+  })
+
+  test('sortInDescendingOrder() reverse', function () {
+    const list = ['c', 'b', 'a']
+    const newList = $$.infra.list.sortInDescendingOrder(list, (a, b) => a > b)
+    expect(newList.length).toBe(3)
+    expect(newList[0]).toBe('a')
+    expect(newList[1]).toBe('b')
+    expect(newList[2]).toBe('c')
   })
 
 })
