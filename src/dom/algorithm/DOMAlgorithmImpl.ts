@@ -183,54 +183,55 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   get tokenList(): DOMTokenListAlgorithm { return this._tokenList }
 
   /** @inheritdoc */
-  runRemovingSteps(removedNode: NodeInternal, oldParent: NodeInternal | null = null): void {
+  runRemovingSteps(thisObj: any, removedNode: NodeInternal, 
+    oldParent: NodeInternal | null = null): void {
     for (const removingStep of this.removingSteps) {
-      removingStep.call(this, removedNode, oldParent)
+      removingStep.call(thisObj, removedNode, oldParent)
     }
   }
 
   /** @inheritdoc */
-  runCloningSteps(copy: NodeInternal, node: NodeInternal, document:
+  runCloningSteps(thisObj: any, copy: NodeInternal, node: NodeInternal, document:
     DocumentInternal, cloneChildrenFlag?: boolean): void {
     for (const cloningStep of this.cloningSteps) {
-      cloningStep.call(this, copy, node, document, cloneChildrenFlag)
+      cloningStep.call(thisObj, copy, node, document, cloneChildrenFlag)
     }
   }
 
   /** @inheritdoc */
-  runAdoptingSteps(node: NodeInternal, oldDocument: DocumentInternal): void {
+  runAdoptingSteps(thisObj: any, node: NodeInternal, oldDocument: DocumentInternal): void {
     for (const adoptingStep of this.adoptingSteps) {
-      adoptingStep.call(this, node, oldDocument)
+      adoptingStep.call(thisObj, node, oldDocument)
     }
   }
 
   /** @inheritdoc */
-  runChildTextContentChangeSteps(parent: NodeInternal): void {
+  runChildTextContentChangeSteps(thisObj: any, parent: NodeInternal): void {
     for (const textChangeStep of this.childTextContentChangeSteps) {
-      textChangeStep.call(this, parent)
+      textChangeStep.call(thisObj, parent)
     }
   }
 
   /** @inheritdoc */
-  runAttributeChangeSteps(element: ElementInternal, localName: string,
+  runAttributeChangeSteps(thisObj: any, element: ElementInternal, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     for (const attributeChangeStep of element._attributeChangeSteps) {
-      attributeChangeStep.call(this, element, localName, oldValue, value, namespace)
+      attributeChangeStep.call(thisObj, element, localName, oldValue, value, namespace)
     }
   }
 
   /** @inheritdoc */
-  runInsertionSteps(insertedNode: NodeInternal): void {
+  runInsertionSteps(thisObj: any, insertedNode: NodeInternal): void {
     for (const insertionStep of this.insertionSteps) {
-      insertionStep.call(this, insertedNode)
+      insertionStep.call(thisObj, insertedNode)
     }
   }
 
   /** @inheritdoc */
-  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIteratorInternal,
+  runNodeIteratorPreRemovingSteps(thisObj: any, nodeIterator: NodeIteratorInternal,
     toBeRemovedNode: NodeInternal): void {
     for (const removingStep of this.nodeIteratorPreRemovingSteps) {
-      removingStep.call(this, nodeIterator, toBeRemovedNode)
+      removingStep.call(thisObj, nodeIterator, toBeRemovedNode)
     }
   }
 

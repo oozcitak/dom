@@ -142,55 +142,64 @@ export interface DOMAlgorithm {
   /**
    * Runs removing steps for node.
    * 
+   * @param thisObj - the value of this in the function
    * @param removedNode - removed node
    * @param oldParent - old parent node
    */
-  runRemovingSteps(removedNode: NodeInternal, oldParent?: NodeInternal | null): void
+  runRemovingSteps(thisObj: any, removedNode: NodeInternal, 
+    oldParent?: NodeInternal | null): void
 
   /**
    * Runs cloning steps for node.
    * 
+   * @param thisObj - the value of this in the function
    * @param copy - node clone
    * @param node - node
    * @param document - document to own the cloned node
    * @param cloneChildrenFlag - whether child nodes are cloned
    */
-  runCloningSteps(copy: NodeInternal, node: NodeInternal, document:
+  runCloningSteps(thisObj: any, copy: NodeInternal, node: NodeInternal, document:
     DocumentInternal, cloneChildrenFlag?: boolean): void
 
   /**
    * Runs adopting steps for node.
    * 
+   * @param thisObj - the value of this in the function
    * @param node - node
    * @param oldDocument - old document
    */
-  runAdoptingSteps(node: NodeInternal, oldDocument: DocumentInternal): void
+  runAdoptingSteps(thisObj: any, node: NodeInternal, 
+    oldDocument: DocumentInternal): void
 
   /**
    * Runs child text content change steps for a parent node.
    * 
+   * @param thisObj - the value of this in the function
    * @param parent - parent node with text node child nodes
    */
-  runChildTextContentChangeSteps(parent: NodeInternal): void
+  runChildTextContentChangeSteps(thisObj: any, parent: NodeInternal): void
 
   /**
    * Runs attribute change steps for an element node.
    * 
+   * @param thisObj - the value of this in the function
    * @param element - element node owning the attribute
    * @param localName - attribute's local name
    * @param oldValue - attribute's old value
    * @param value - attribute's new value
    * @param namespace - attribute's namespace
    */
-  runAttributeChangeSteps(element: ElementInternal, localName: string,
-    oldValue: string | null, value: string | null, namespace: string | null): void
+  runAttributeChangeSteps(thisObj: any, element: ElementInternal, 
+    localName: string, oldValue: string | null, value: string | null, 
+    namespace: string | null): void
 
   /**
    * Runs insertion steps for a node.
    * 
+   * @param thisObj - the value of this in the function
    * @param insertedNode - inserted node
    */
-  runInsertionSteps(insertedNode: NodeInternal): void
+  runInsertionSteps(thisObj: any, insertedNode: NodeInternal): void
 
   /**
    * Determines if there are any supported tokens defined for the given 
@@ -1756,18 +1765,21 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
 /**
  * Defines a removing step.
  */
-export type RemovingStep = ((removedNode: NodeInternal, oldParent: NodeInternal | null) => any)
+export type RemovingStep = ((removedNode: NodeInternal,
+  oldParent: NodeInternal | null) => any)
 
 /**
  * Defines a cloning step.
  */
-export type CloningStep = ((copy: NodeInternal, node: NodeInternal, document:
-  DocumentInternal, cloneChildrenFlag?: boolean) => any)
+export type CloningStep = ((copy: NodeInternal,
+  node: NodeInternal, document: DocumentInternal,
+  cloneChildrenFlag?: boolean) => any)
 
 /**
  * Defines an adopting step.
  */
-export type AdoptingStep = ((node: NodeInternal, oldDocument: DocumentInternal) => any)
+export type AdoptingStep = ((node: NodeInternal,
+  oldDocument: DocumentInternal) => any)
 
 /**
  * Defines a child text content change step.
@@ -1777,8 +1789,9 @@ export type ChildTextContentChangeStep = ((parent: NodeInternal) => any)
 /**
  * Defines an attribute change step.
  */
-export type AttributeChangeStep = ((element: ElementInternal, localName: string,
-  oldValue: string | null, value: string | null, namespace: string | null) => any)
+export type AttributeChangeStep = ((element: ElementInternal,
+  localName: string, oldValue: string | null, value: string | null,
+  namespace: string | null) => any)
 
 /**
  * Defines an insertion step.
@@ -1788,7 +1801,7 @@ export type InsertionStep = ((insertedNode: NodeInternal) => any)
 /**
  * Defines a pre-removal step for a node iterator.
  */
-export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal,
+export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal, 
   toBeRemovedNode: NodeInternal) => any)
 
 /**

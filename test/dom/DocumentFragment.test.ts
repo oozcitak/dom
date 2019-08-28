@@ -22,16 +22,13 @@ describe('DocumentFragment', function () {
 
   test('textContent', function () {
     expect(node.textContent).toBe('thisisatest')
+    node.textContent = null
+    expect(node.childNodes.length).toBe(0)
     node.textContent = 'or is it?'
     expect(node.childNodes.length).toBe(1)
     let text = <any>node.childNodes.item(0)
     expect(text.nodeType).toBe(3)
     expect(text.data).toBe('or is it?')
-    node.textContent = null
-    expect(node.childNodes.length).toBe(1)
-    text = <any>node.childNodes.item(0)
-    expect(text.nodeType).toBe(3)
-    expect(text.data).toBe('')
   })
 
   test('cloneNode()', function () {
@@ -47,7 +44,7 @@ describe('DocumentFragment', function () {
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(11)
     expect(clonedNode.nodeName).toBe('#document-fragment')
-    expect(clonedNode.childNodes.length).not.toBe(0)
+    expect(clonedNode.childNodes.length).toBe(1)
   })
 
   test('lookupPrefix()', function () {

@@ -110,6 +110,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       } else if (Guard.isProcessingInstructionNode(node)) {
         copy = this.dom.create.processingInstruction(document,
           node._target, node._data)
+      } else if (Guard.isDocumentFragmentNode(node)) {
+        copy = this.dom.create.documentFragment(document)
       } else {
         copy = Object.create(node)
       }
@@ -131,7 +133,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * specifications and pass copy, node, document and the clone children flag
      * if set, as parameters.
      */
-    this.dom.runCloningSteps(copy, node, document, cloneChildrenFlag)
+    this.dom.runCloningSteps(this, copy, node, document, cloneChildrenFlag)
 
     /**
      * 6. If the clone children flag is set, clone all the children of node and

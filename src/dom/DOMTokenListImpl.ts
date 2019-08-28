@@ -42,7 +42,8 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
     const localName = attribute._localName
     const value = this._algo.element.getAnAttributeValue(element, localName)
     this._element._attributeChangeSteps.push(this._updateTokenSet)
-    this._algo.runAttributeChangeSteps(element, localName, value, value, null)
+    this._algo.runAttributeChangeSteps(this, element, localName, value, 
+      value, null)
   }
 
   /** @inheritdoc */

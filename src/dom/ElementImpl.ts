@@ -89,10 +89,9 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   get classList(): DOMTokenList {
     let attr = this._algo.element.getAnAttributeByName("class", this)
     if (attr === null) {
-      this._algo.element.setAnAttributeValue(this, "class", "")
-      attr = this._algo.element.getAnAttributeByName("class", this)
+      attr = this._algo.create.attr(this._nodeDocument, "class")
     }
-    return this._algo.create.domTokenList(this, <AttrInternal>attr)
+    return this._algo.create.domTokenList(this, attr)
   }
 
   /** @inheritdoc */

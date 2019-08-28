@@ -54,7 +54,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * attribute’s value, value, and attribute’s namespace.
      * 4. Set attribute’s value to value.
      */
-    this.dom.runAttributeChangeSteps(element, attribute._localName,
+    this.dom.runAttributeChangeSteps(this, element, attribute._localName,
       attribute._value, value, attribute._namespace)
 
     attribute._value = value
@@ -81,7 +81,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 3. Run the attribute change steps with element, attribute’s local name,
      * null, attribute’s value, and attribute’s namespace.
      */
-    this.dom.runAttributeChangeSteps(element, attribute.localName, null,
+    this.dom.runAttributeChangeSteps(this, element, attribute.localName, null,
       attribute._value, attribute._namespace)
 
     /**
@@ -114,7 +114,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 3. Run the attribute change steps with element, attribute’s local name,
      * attribute’s value, null, and attribute’s namespace.
      */
-    this.dom.runAttributeChangeSteps(element, attribute.localName,
+    this.dom.runAttributeChangeSteps(this, element, attribute.localName,
       attribute._value, null, attribute._namespace)
 
     /**
@@ -148,7 +148,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 3. Run the attribute change steps with element, oldAttr’s local name, 
      * oldAttr’s value, newAttr’s value, and oldAttr’s namespace.
      */
-    this.dom.runAttributeChangeSteps(element, oldAttr.localName,
+    this.dom.runAttributeChangeSteps(this, element, oldAttr.localName,
       oldAttr._value, newAttr._value, oldAttr._namespace)
 
     /**
