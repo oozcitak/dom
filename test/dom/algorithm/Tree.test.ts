@@ -2,8 +2,6 @@ import $$ from './TestHelpers'
 
 describe('Tree', function () {
 
-  const algo = $$.algo
-
   test('getDescendantNodes()', function () {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
@@ -22,7 +20,7 @@ describe('Tree', function () {
     shadowRoot.appendChild(doc.createElement('sh2'))
 
     let str = ''
-    for (const childNode of algo.tree.getDescendantNodes(doc as any, true, true, (node) => { return (node.nodeType === 3) })) {
+    for (const childNode of $$.algo.tree.getDescendantNodes(doc as any, true, true, (node) => { return (node.nodeType === 3) })) {
         str += childNode.nodeValue + ' '
     }
     expect(str).toBe('text shtext ')
@@ -46,7 +44,7 @@ describe('Tree', function () {
     shadowRoot.appendChild(doc.createElement('sh2'))
 
     let str = ''
-    for (const childNode of algo.tree.getDescendantElements(doc as any, true, true, (node) => { return node.nodeName.startsWith('s') })) {
+    for (const childNode of $$.algo.tree.getDescendantElements(doc as any, true, true, (node) => { return node.nodeName.startsWith('s') })) {
         str += childNode.nodeName + ' '
     }
     expect(str).toBe('sele sh1 sh2 ')
@@ -67,17 +65,17 @@ describe('Tree', function () {
     de.append(...ele)
 
     let str = ''
-    for (const childNode of algo.tree.getSiblingNodes(txt1 as any, true, (node) => { return (node.nodeType === 3) })) {
+    for (const childNode of $$.algo.tree.getSiblingNodes(txt1 as any, true, (node) => { return (node.nodeType === 3) })) {
       str += childNode.nodeValue + ' '
     }
     expect(str).toBe('text1 text2 ')
     str = ''
-    for (const childNode of algo.tree.getSiblingNodes(txt1 as any, false, (node) => { return (node.nodeType === 3) })) {
+    for (const childNode of $$.algo.tree.getSiblingNodes(txt1 as any, false, (node) => { return (node.nodeType === 3) })) {
       str += childNode.nodeValue + ' '
     }
     expect(str).toBe('text2 ')
     let count = 0
-    for (const _ of algo.tree.getSiblingNodes(txt1 as any)) {
+    for (const _ of $$.algo.tree.getSiblingNodes(txt1 as any)) {
       count++
     }
     expect(count).toBe(3)
@@ -122,7 +120,7 @@ describe('Tree', function () {
       doc.createTextNode('text')
     )    
 
-    expect(algo.tree.isConstrained(doc as any)).toBeTruthy()
+    expect($$.algo.tree.isConstrained(doc as any)).toBeTruthy()
   })
 
   test('isConstrained() - two doctypes', function () {
@@ -133,7 +131,7 @@ describe('Tree', function () {
     doc._children.add(doctype2)
     doctype1._parent = doc
     doctype2._parent = doc
-    expect(algo.tree.isConstrained(doc as any)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc as any)).toBeFalsy()
   })
 
   test('isConstrained() - doctype after element', function () {
@@ -144,7 +142,7 @@ describe('Tree', function () {
     doc._children.add(doctype)
     ele._parent = doc
     doctype._parent = doc
-    expect(algo.tree.isConstrained(doc)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc)).toBeFalsy()
   })
 
   test('isConstrained() - two document elements', function () {
@@ -155,7 +153,7 @@ describe('Tree', function () {
     doc._children.add(ele2)
     ele1._parent = doc
     ele2._parent = doc
-    expect(algo.tree.isConstrained(doc)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc)).toBeFalsy()
   })
 
   test('isConstrained() - text at root level', function () {
@@ -163,7 +161,7 @@ describe('Tree', function () {
     const node = doc.createTextNode('root') as any
     doc._children.add(node)
     node._parent = doc
-    expect(algo.tree.isConstrained(doc)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc)).toBeFalsy()
   })
 
   test('isConstrained() - CDATA at root level', function () {
@@ -171,7 +169,7 @@ describe('Tree', function () {
     const node = doc.createCDATASection('root') as any
     doc._children.add(node)
     node._parent = doc
-    expect(algo.tree.isConstrained(doc)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc)).toBeFalsy()
   })
 
   test('isConstrained() - doctype in fragment', function () {
@@ -180,7 +178,7 @@ describe('Tree', function () {
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     frag._children.add(doctype)
     doctype._parent = frag
-    expect(algo.tree.isConstrained(frag)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(frag)).toBeFalsy()
   })
 
   test('isConstrained() - doctype inside element node', function () {
@@ -192,7 +190,7 @@ describe('Tree', function () {
     de.appendChild(ele)
     de._children.add(doctype)
     doctype._parent = ele
-    expect(algo.tree.isConstrained(doc)).toBeFalsy()
+    expect($$.algo.tree.isConstrained(doc)).toBeFalsy()
   })
 
   test('nodeLength()', function () {
@@ -206,9 +204,9 @@ describe('Tree', function () {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(algo.tree.nodeLength(doctype as any)).toBe(0)
-    expect(algo.tree.nodeLength(de as any)).toBe(3)
-    expect(algo.tree.nodeLength(ele[1] as any)).toBe(4)
+    expect($$.algo.tree.nodeLength(doctype as any)).toBe(0)
+    expect($$.algo.tree.nodeLength(de as any)).toBe(3)
+    expect($$.algo.tree.nodeLength(ele[1] as any)).toBe(4)
   })
 
   test('isEmpty()', function () {
@@ -222,9 +220,9 @@ describe('Tree', function () {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(algo.tree.isEmpty(doctype as any)).toBeTruthy()
-    expect(algo.tree.isEmpty(de as any)).toBeFalsy()
-    expect(algo.tree.isEmpty(ele[1] as any)).toBeFalsy()
+    expect($$.algo.tree.isEmpty(doctype as any)).toBeTruthy()
+    expect($$.algo.tree.isEmpty(de as any)).toBeFalsy()
+    expect($$.algo.tree.isEmpty(ele[1] as any)).toBeFalsy()
   })
 
   test('rootNode()', function () {
@@ -238,7 +236,7 @@ describe('Tree', function () {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(algo.tree.rootNode(de as any)).toBe(doc)
+    expect($$.algo.tree.rootNode(de as any)).toBe(doc)
   })
 
   test('isDescendantOf()', function () {
@@ -259,11 +257,11 @@ describe('Tree', function () {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(algo.tree.isDescendantOf(de as any, de as any)).toBeFalsy()
-    expect(algo.tree.isDescendantOf(de as any, de as any, true)).toBeTruthy()
-    expect(algo.tree.isDescendantOf(de as any, ele[0] as any)).toBeTruthy()
-    expect(algo.tree.isDescendantOf(de as any, shtext as any)).toBeFalsy()
-    expect(algo.tree.isDescendantOf(de as any, shtext as any, false, true)).toBeTruthy()
+    expect($$.algo.tree.isDescendantOf(de as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isDescendantOf(de as any, de as any, true)).toBeTruthy()
+    expect($$.algo.tree.isDescendantOf(de as any, ele[0] as any)).toBeTruthy()
+    expect($$.algo.tree.isDescendantOf(de as any, shtext as any)).toBeFalsy()
+    expect($$.algo.tree.isDescendantOf(de as any, shtext as any, false, true)).toBeTruthy()
   })
 
   test('isAncestorOf()', function () {
@@ -284,11 +282,11 @@ describe('Tree', function () {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(algo.tree.isAncestorOf(de as any, de as any)).toBeFalsy()
-    expect(algo.tree.isAncestorOf(de as any, de as any, true)).toBeTruthy()
-    expect(algo.tree.isAncestorOf(ele[0] as any, de as any)).toBeTruthy()
-    expect(algo.tree.isAncestorOf(shtext as any, de as any)).toBeFalsy()
-    expect(algo.tree.isAncestorOf(shtext as any, de as any, false, true)).toBeTruthy()
+    expect($$.algo.tree.isAncestorOf(de as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isAncestorOf(de as any, de as any, true)).toBeTruthy()
+    expect($$.algo.tree.isAncestorOf(ele[0] as any, de as any)).toBeTruthy()
+    expect($$.algo.tree.isAncestorOf(shtext as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isAncestorOf(shtext as any, de as any, false, true)).toBeTruthy()
   })
 
   test('isSiblingOf()', function () {
@@ -310,11 +308,11 @@ describe('Tree', function () {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(algo.tree.isSiblingOf(de as any, de as any)).toBeFalsy()
-    expect(algo.tree.isSiblingOf(de as any, de as any, true)).toBeTruthy()
-    expect(algo.tree.isSiblingOf(ele[0] as any, de as any)).toBeFalsy()
-    expect(algo.tree.isSiblingOf(ele[0] as any, ele[1] as any)).toBeTruthy()
-    expect(algo.tree.isSiblingOf(shtext as any, shele as any)).toBeTruthy()
+    expect($$.algo.tree.isSiblingOf(de as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isSiblingOf(de as any, de as any, true)).toBeTruthy()
+    expect($$.algo.tree.isSiblingOf(ele[0] as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isSiblingOf(ele[0] as any, ele[1] as any)).toBeTruthy()
+    expect($$.algo.tree.isSiblingOf(shtext as any, shele as any)).toBeTruthy()
   })
 
   test('isPreceding()', function () {
@@ -330,19 +328,19 @@ describe('Tree', function () {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(algo.tree.isPreceding(de as any, de as any)).toBeFalsy()
-    expect(algo.tree.isPreceding(ele[0] as any, de as any)).toBeTruthy()
-    expect(algo.tree.isPreceding(de as any, ele[0] as any)).toBeFalsy()
-    expect(algo.tree.isPreceding(ele[1] as any, ele[0] as any)).toBeTruthy()
+    expect($$.algo.tree.isPreceding(de as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isPreceding(ele[0] as any, de as any)).toBeTruthy()
+    expect($$.algo.tree.isPreceding(de as any, ele[0] as any)).toBeFalsy()
+    expect($$.algo.tree.isPreceding(ele[1] as any, ele[0] as any)).toBeTruthy()
     // free node
     const freeEle = doc.createElement('free')
-    expect(algo.tree.isPreceding(de as any, freeEle as any)).toBeFalsy()
+    expect($$.algo.tree.isPreceding(de as any, freeEle as any)).toBeFalsy()
     // from another doc
     const doc2 = $$.dom.createDocument('my ns', 'root2')
     if (!doc2.documentElement)
       throw new Error("documentElement is null")
     const de2 = doc2.documentElement
-    expect(algo.tree.isPreceding(de as any, de2 as any)).toBeFalsy()
+    expect($$.algo.tree.isPreceding(de as any, de2 as any)).toBeFalsy()
   })
 
   test('isFollowing()', function () {
@@ -358,19 +356,19 @@ describe('Tree', function () {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(algo.tree.isFollowing(de as any, de as any)).toBeFalsy()
-    expect(algo.tree.isFollowing(ele[0] as any, de as any)).toBeFalsy()
-    expect(algo.tree.isFollowing(de as any, ele[0] as any)).toBeTruthy()
-    expect(algo.tree.isFollowing(ele[0] as any, ele[1] as any)).toBeTruthy()
+    expect($$.algo.tree.isFollowing(de as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isFollowing(ele[0] as any, de as any)).toBeFalsy()
+    expect($$.algo.tree.isFollowing(de as any, ele[0] as any)).toBeTruthy()
+    expect($$.algo.tree.isFollowing(ele[0] as any, ele[1] as any)).toBeTruthy()
     // free node
     const freeEle = doc.createElement('free')
-    expect(algo.tree.isFollowing(de as any, freeEle as any)).toBeFalsy()
+    expect($$.algo.tree.isFollowing(de as any, freeEle as any)).toBeFalsy()
     // from another doc
     const doc2 = $$.dom.createDocument('my ns', 'root2')
     if (!doc2.documentElement)
       throw new Error("documentElement is null")
     const de2 = doc2.documentElement
-    expect(algo.tree.isFollowing(de as any, de2 as any)).toBeFalsy()
+    expect($$.algo.tree.isFollowing(de as any, de2 as any)).toBeFalsy()
   })
 
   test('firstChild()', function () {
@@ -392,8 +390,8 @@ describe('Tree', function () {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(algo.tree.firstChild(de as any)).toBe(ele[0])
-    expect(algo.tree.firstChild(shadowRoot as any)).toBe(shele)
+    expect($$.algo.tree.firstChild(de as any)).toBe(ele[0])
+    expect($$.algo.tree.firstChild(shadowRoot as any)).toBe(shele)
   })
 
   test('lastChild()', function () {
@@ -414,8 +412,8 @@ describe('Tree', function () {
     shadowRoot.appendChild(shele)
     shadowRoot.appendChild(shtext)
 
-    expect(algo.tree.lastChild(de as any)).toBe(ele[3])
-    expect(algo.tree.lastChild(shadowRoot as any)).toBe(shtext)
+    expect($$.algo.tree.lastChild(de as any)).toBe(ele[3])
+    expect($$.algo.tree.lastChild(shadowRoot as any)).toBe(shtext)
   })
 
 })
