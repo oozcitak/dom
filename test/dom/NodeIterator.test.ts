@@ -1,5 +1,4 @@
 import $$ from './TestHelpers'
-import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
 
 describe('NodeIterator', function () {
 
@@ -50,7 +49,7 @@ describe('NodeIterator', function () {
   })
 
   test('nextNode() with type filter', function () {
-    const iter = doc.createNodeIterator(node1, WhatToShow.Element)
+    const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
     while(node) {
@@ -61,9 +60,10 @@ describe('NodeIterator', function () {
   })
 
   test('nextNode() with user filter', function () {
-    const iter = doc.createNodeIterator(node1, WhatToShow.Element, function(node): FilterResult {
-      return node.nodeName.startsWith('c') ? FilterResult.Accept : FilterResult.Reject
-    })
+    const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element, (node) =>
+      node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Reject
+    )
+    
 
     let str = ''
     let node = iter.nextNode()

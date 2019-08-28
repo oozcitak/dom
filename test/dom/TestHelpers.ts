@@ -13,6 +13,7 @@ import { XMLSerializer } from '../../src/dom/serializer'
 import { XMLStringLexer } from '../../src/dom/parser/XMLStringLexer'
 import * as Token from '../../src/dom/parser/XMLToken'
 import { TupleSet } from '../../src/dom/serializer/TupleSet'
+import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
 
 export default class TestHelpers extends TestHelpersRoot {
   static Attr = AttrImpl
@@ -46,6 +47,9 @@ export default class TestHelpers extends TestHelpersRoot {
 
   static TupleSet = TupleSet
   
+  static  WhatToShow = WhatToShow
+  static FilterResult = FilterResult
+    
   /**
    * Returns the window object.
    */
