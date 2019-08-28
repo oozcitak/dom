@@ -77,6 +77,7 @@ export class SetAlgorithmImpl {
     for (const oldItem of set) {
       if (i === index) newSet.add(item)
       newSet.add(oldItem)
+      i++
     }
     set.clear()
     newSet.forEach(set.add, set)

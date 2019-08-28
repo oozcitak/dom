@@ -5,6 +5,7 @@ import { NodeInternal, RangeInternal, ElementInternal, SlotInternal } from '../i
 import { NodeType } from '../interfaces'
 import { Guard } from '../util'
 import { isEmpty } from '../../util'
+import { infra } from '../../infra';
 
 /**
  * Contains mutation algorithms.
@@ -251,6 +252,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     const previousSibling = (child ? child.previousSibling : parent.lastChild) as NodeInternal | null
 
+    let index = child === null ? -1 : this.dom.tree.index(child)
     /**
      * 7. For each node in nodes, in tree order:
      */
@@ -260,28 +262,33 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * 7.2. Otherwise, insert node into parent’s children before child’s
        * index.
        */
-      if(!parent._children.has(node)) {
+      if (!parent._children.has(node)) {
 
         node._parent = parent
-        parent._children.add(node)
+        if (child === null) {
+          infra.set.append(parent._children, node)
+        } else {
+          infra.set.insert(parent._children, node, index)
+          index++
+        }
 
         // assign siblings and children for quick lookups
         if (parent.firstChild === null) {
           node._previousSibling = null
           node._nextSibling = null
-    
+
           parent._firstChild = node
           parent._lastChild = node
         } else {
           const prev = (child ? child.previousSibling : parent.lastChild) as NodeInternal | null
           const next = (child ? child : null)
-    
+
           node._previousSibling = prev
           node._nextSibling = next
-    
+
           if (prev) prev._nextSibling = node
           if (next) next._previousSibling = node
-    
+
           if (!prev) parent._firstChild = node
           if (!next) parent._lastChild = node
         }

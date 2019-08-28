@@ -27,19 +27,27 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
      * sibling Text node, if any, and its contiguous Text nodes, avoiding any
      * duplicates.
      */
-    if (self) yield node
-    if (node.previousSibling !== null && Guard.isTextNode(node.previousSibling)) {
-      yield node.previousSibling
-      yield *this.contiguousTextNodes(node.previousSibling)
+    let sibling = node
+    while (sibling._previousSibling !== null && Guard.isTextNode(sibling._previousSibling)) {
+      sibling = sibling._previousSibling
     }
-    if (node.nextSibling !== null && Guard.isTextNode(node.nextSibling)) {
-      yield node.nextSibling
-      yield *this.contiguousTextNodes(node.nextSibling)
+    while (true) {
+      if (sibling === node) {
+        if (self) yield sibling
+      } else {
+        yield sibling
+      }
+
+      if (sibling._nextSibling !== null && Guard.isTextNode(sibling._nextSibling)) {
+        sibling = sibling._nextSibling
+      } else {
+        break
+      }
     }
   }
 
   /** @inheritdoc */
-  *contiguousExclusiveTextNodes(node: TextInternal, self: boolean = false):
+  * contiguousExclusiveTextNodes(node: TextInternal, self: boolean = false):
     IterableIterator<TextInternal> {
     /**
      * The contiguous exclusive Text nodes of a node node are node, node’s 
@@ -47,14 +55,22 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
      * exclusive Text nodes, and node’s next sibling exclusive Text node, 
      * if any, and its contiguous exclusive Text nodes, avoiding any duplicates.
      */
-    if (self && Guard.isExclusiveTextNode(node)) yield node
-    if (node.previousSibling !== null && Guard.isExclusiveTextNode(node.previousSibling)) {
-      yield node.previousSibling
-      yield *this.contiguousExclusiveTextNodes(node.previousSibling)
+    let sibling = node
+    while (sibling._previousSibling !== null && Guard.isExclusiveTextNode(sibling._previousSibling)) {
+      sibling = sibling._previousSibling
     }
-    if (node.nextSibling !== null && Guard.isExclusiveTextNode(node.nextSibling)) {
-      yield node.nextSibling
-      yield *this.contiguousExclusiveTextNodes(node.nextSibling)
+    while (true) {
+      if (sibling === node) {
+        if (self) yield sibling
+      } else {
+        yield sibling
+      }
+
+      if (sibling._nextSibling !== null && Guard.isExclusiveTextNode(sibling._nextSibling)) {
+        sibling = sibling._nextSibling
+      } else {
+        break
+      }
     }
   }
 
