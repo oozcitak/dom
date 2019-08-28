@@ -33,25 +33,25 @@ describe('DOMImplementation', function () {
 
   test('createHTMLDocument()', function () {
     const doc = $$.dom.createHTMLDocument('htmldoc')
-    expect(doc.contentType).toBe('application/xhtml+xml')
+    expect(doc.contentType).toBe('text/html')
     expect($$.printTree(doc)).toBe($$.t`
       !DOCTYPE html
-      html (ns:http://www.w3.org/1999/xhtml)
-        head (ns:http://www.w3.org/1999/xhtml)
-          title (ns:http://www.w3.org/1999/xhtml)
+      HTML (ns:http://www.w3.org/1999/xhtml)
+        HEAD (ns:http://www.w3.org/1999/xhtml)
+          TITLE (ns:http://www.w3.org/1999/xhtml)
             # htmldoc
-        body (ns:http://www.w3.org/1999/xhtml)
+        BODY (ns:http://www.w3.org/1999/xhtml)
       `)
   })
 
   test('createHTMLDocument() without title', function () {
     const doc = $$.dom.createHTMLDocument()
-    expect(doc.contentType).toBe('application/xhtml+xml')
+    expect(doc.contentType).toBe('text/html')
     expect($$.printTree(doc)).toBe($$.t`
       !DOCTYPE html
-      html (ns:http://www.w3.org/1999/xhtml)
-        head (ns:http://www.w3.org/1999/xhtml)
-        body (ns:http://www.w3.org/1999/xhtml)
+      HTML (ns:http://www.w3.org/1999/xhtml)
+        HEAD (ns:http://www.w3.org/1999/xhtml)
+        BODY (ns:http://www.w3.org/1999/xhtml)
       `)
   })
 
