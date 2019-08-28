@@ -22,7 +22,7 @@ export class StringAlgorithmImpl {
    * @param str - a string
    */
   static splitAStringOnASCIIWhitespace(str: string): Array<string> {
-    return str.split(StringAlgorithmImpl.ASCIIWhiteSpace)    
+    return str.split(StringAlgorithmImpl.ASCIIWhiteSpace).filter(token => token)
   }
 
 }

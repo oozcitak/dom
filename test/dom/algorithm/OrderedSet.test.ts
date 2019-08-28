@@ -1,9 +1,9 @@
-import { OrderedSet } from '../../../src/dom/util/OrderedSet'
+import $$ from './TestHelpers'
 
 describe('OrderedSet', function () {
 
   test('parse()', function () {
-    const set = OrderedSet.parse('a b c a')
+    const set = $$.algo.orderedSet.parse('a b c a')
     expect(set.size).toBe(3)
     const vals = ['a', 'b', 'c']
     let i = 0
@@ -15,11 +15,11 @@ describe('OrderedSet', function () {
 
   test('serialize()', function () {
     const set = new Set(['a', 'b', 'c', 'a'])
-    expect(OrderedSet.serialize(set)).toBe('a b c')
+    expect($$.algo.orderedSet.serialize(set)).toBe('a b c')
   })
 
   test('sanitize()', function () {
-    expect(OrderedSet.sanitize('a  b   c   a')).toBe('a b c')
+    expect($$.algo.orderedSet.sanitize('a  b   c   a')).toBe('a b c')
   })
 
 })
