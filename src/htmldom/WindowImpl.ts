@@ -1,7 +1,6 @@
 import { WindowImpl as DOMWindowImpl } from '../dom/WindowImpl'
 import { WindowInternal, DocumentInternal } from './interfacesInternal'
 import { globalStore } from '../util'
-import { Event } from '../dom/interfaces'
 import { Window, Document } from './interfaces'
 import { DOMAlgorithmImpl } from '../dom/algorithm'
 
@@ -21,11 +20,6 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
     super()
 
     this._associatedDocument = undefined as unknown as DocumentInternal
-  }
-
-  /** @inheritdoc */
-  get event(): Event | undefined {
-    return this._currentEvent
   }
 
   /** @inheritdoc */
