@@ -54,6 +54,8 @@ export class SetAlgorithmImpl {
       if (isFunction(conditionOrItem)) {
         if (!!conditionOrItem.call(this, oldItem)) {
           newSet.add(newItem)
+        } else {
+          newSet.add(oldItem)
         }
       } else if (oldItem === conditionOrItem) {
         newSet.add(newItem)
@@ -94,15 +96,14 @@ export class SetAlgorithmImpl {
     if (!isFunction(conditionOrItem)) {
       set.delete(conditionOrItem)
     } else {
-      const newSet = new Set<T>()
-      for (const oldItem of set) {
-        if (!!conditionOrItem.call(this, oldItem)) {
-          continue
-        } else {
-          newSet.add(oldItem)
+      const toRemove: Array<T> = []
+      for (const item of set) {
+        if (!!conditionOrItem.call(this, item)) {
+          toRemove.push(item)
         }
-        set.clear()
-        newSet.forEach(set.add, set)
+      }
+      for(const oldItem of toRemove) {
+        set.delete(oldItem)
       }
     }
   }
@@ -161,7 +162,7 @@ export class SetAlgorithmImpl {
    * @param set - a set
    */
   static isEmpty<T>(set: Set<T>): boolean {
-    return set.size !== 0
+    return set.size === 0
   }
 
   /**

@@ -14,7 +14,8 @@ import { XMLStringLexer } from '../../src/dom/parser/XMLStringLexer'
 import * as Token from '../../src/dom/parser/XMLToken'
 import { TupleSet } from '../../src/dom/serializer/TupleSet'
 import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
-import { XMLSpec } from '../../src/dom/spec/XMLSpec'
+import { XMLSpec, HTMLSpec } from '../../src/dom/spec'
+import { DOMAlgorithmImpl } from '../../src/dom/algorithm/DOMAlgorithmImpl'
 
 export default class TestHelpers extends TestHelpersRoot {
   static Attr = AttrImpl
@@ -40,6 +41,7 @@ export default class TestHelpers extends TestHelpersRoot {
   static XMLDocument = XMLDocumentImpl
 
   static XMLSpec = XMLSpec
+  static HTMLSpec = HTMLSpec
 
   static DOMParser = DOMParser
   static MimeType = MimeType
@@ -54,6 +56,10 @@ export default class TestHelpers extends TestHelpersRoot {
   static FilterResult = FilterResult
 
   /**
+   * Returns the algorithm object.
+   */
+  static algo = new DOMAlgorithmImpl()
+  /**
    * Returns the window object.
    */
   static window = window
@@ -61,4 +67,4 @@ export default class TestHelpers extends TestHelpersRoot {
    * Returns the DOM implementation object.
    */
   static dom = window.document.implementation
-}
+} 
