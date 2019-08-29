@@ -83,48 +83,17 @@ describe('util', function () {
     expect($$.util.isEmpty(["x"])).toBeFalsy()
     expect($$.util.isEmpty({ x: "x" })).toBeFalsy()
 
+    expect($$.util.isEmpty(123)).toBeFalsy()
+    expect($$.util.isEmpty(0)).toBeFalsy()
+    expect($$.util.isEmpty(true)).toBeFalsy()
+    expect($$.util.isEmpty(false)).toBeFalsy()
+    expect($$.util.isEmpty("nope")).toBeFalsy()
+    expect($$.util.isEmpty("")).toBeFalsy()
+
     class Obj { }
     const emptyObj = new Obj()
     Reflect.setPrototypeOf(emptyObj, { id: 42 })
     expect($$.util.isEmpty(emptyObj)).toBeTruthy()
-  })
-
-  test('isPlainObject', function () {
-    expect($$.util.isPlainObject({ x: "x" })).toBeTruthy()
-    expect($$.util.isPlainObject(new Number(1))).toBeFalsy()
-    expect($$.util.isPlainObject(["x"])).toBeFalsy()
-    expect($$.util.isPlainObject(() => { })).toBeFalsy()
-    expect($$.util.isPlainObject("0")).toBeFalsy()
-    expect($$.util.isPlainObject(1)).toBeFalsy()
-  })
-
-  test('isIterable', function () {
-    expect($$.util.isIterable(["x"])).toBeTruthy()
-    expect($$.util.isIterable(new Map<string, number>([["a", 1]]))).toBeTruthy()
-    expect($$.util.isIterable("0")).toBeTruthy()
-    expect($$.util.isIterable({ x: "x" })).toBeFalsy()
-    expect($$.util.isIterable(() => { })).toBeFalsy()
-    expect($$.util.isIterable(1)).toBeFalsy()
-  })
-
-  test('isMap', function () {
-    expect($$.util.isMap(new Map<string, number>([["a", 1]]))).toBeTruthy()
-    expect($$.util.isMap({ x: "x" })).toBeFalsy()
-    expect($$.util.isMap(["x"])).toBeFalsy()
-    expect($$.util.isMap(() => { })).toBeFalsy()
-    expect($$.util.isMap("0")).toBeFalsy()
-    expect($$.util.isMap(1)).toBeFalsy()
-  })
-
-  test('getValue', function () {
-    expect($$.util.getValue(new Number(1))).toBe(1)
-    expect($$.util.getValue(new String("x"))).toBe("x")
-    expect($$.util.getValue({ x: "x" })).toEqual({ x: "x" })
-    expect($$.util.getValue(["x"])).toEqual(["x"])
-    const withValueOf = new Number(1)
-    const withoutValueOf = withValueOf as any
-    withoutValueOf.valueOf = undefined
-    expect($$.util.getValue(withoutValueOf).toString()).toBe("1")
   })
 
 })

@@ -9,36 +9,36 @@ import { NamespaceImpl } from './NamespaceImpl'
  * Contains algorithms as defined by the
  * [Infra Standard](https://infra.spec.whatwg.org).
  */
-export class infra {
+export const infra = {
 
   /**
    * Contains algorithms for manipulating lists.
    */
-  static list = ListAlgorithmImpl
+  list: ListAlgorithmImpl,
 
   /**
    * Contains algorithms for manipulating stacks.
    */
-  static stack = StackAlgorithmImpl
+  stack: StackAlgorithmImpl,
 
   /**
    * Contains algorithms for manipulating queues.
    */
-  static queue = QueueAlgorithmImpl
+  queue: QueueAlgorithmImpl,
 
   /**
    * Contains algorithms for manipulating sets.
    */
-  static set = SetAlgorithmImpl
+  set: SetAlgorithmImpl,
 
   /**
    * Contains algorithms for manipulating strings.
    */
-  static string = StringAlgorithmImpl
+  string: StringAlgorithmImpl,
 
   /**
    * Defines namespaces.
    */
-  static namespace = NamespaceImpl
+  namespace: NamespaceImpl,
 
 }
