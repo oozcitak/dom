@@ -1,6 +1,5 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { HTMLCollectionInternal, ElementInternal, AttrInternal, NodeInternal } from "./interfacesInternal"
-import { Guard } from "./util"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "./algorithm/interfaces"
 import { infra } from "../infra"
@@ -12,7 +11,7 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
 
   _live: boolean = true
   _root: Node
-  _filter: ((element: ElementInternal) => any) = (() => true)
+  _filter: ((element: ElementInternal) => any)
 
   protected static reservedNames = ['_root', '_live', '_filter', 'length',
     'item', 'namedItem', 'get']
@@ -73,22 +72,19 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
      */
     if (key === '') return null
 
-    for (const node of this) {
-      if (Guard.isElementNode(node)) {
-        if (node._uniqueIdentifier === key) {
-          return node
-        } else if (node._namespace === infra.namespace.HTML) {
-          for (const attr of node._attributeList) {
-            const attrInt = attr as AttrInternal
-            if (attrInt._localName === key && attrInt._namespace === null &&
-              attrInt._namespacePrefix === null)
-              return node
-          }
-
+    for (const ele of this) {
+      const eleInt = ele as ElementInternal
+      if (eleInt._uniqueIdentifier === key) {
+        return eleInt
+      } else if (eleInt._namespace === infra.namespace.HTML) {
+        for (const attr of eleInt._attributeList) {
+          const attrInt = attr as AttrInternal
+          if (attrInt._localName === "name" && attrInt._namespace === null &&
+            attrInt._namespacePrefix === null && attrInt._value === key)
+            return eleInt
         }
       }
     }
-
 
     return null
   }
