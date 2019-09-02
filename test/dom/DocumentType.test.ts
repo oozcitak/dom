@@ -39,4 +39,16 @@ describe('DocumentType', function () {
     expect(clonedNode.systemId).toBe('sysid')
   })
 
+  test('_create()', function () {
+    const doc = $$.dom.createDocument('ns', 'qname')
+    const node1 = $$.DocumentType._create(doc as any, 'name', 'pub', 'sys')
+    expect(node1.name).toBe('name')
+    expect(node1.publicId).toBe('pubid')
+    expect(node1.systemId).toBe('sysid')
+    const node2 = $$.DocumentType._create(doc as any, 'name')
+    expect(node2.name).toBe('name')
+    expect(node2.publicId).toBe('')
+    expect(node2.systemId).toBe('')
+  })
+
 })

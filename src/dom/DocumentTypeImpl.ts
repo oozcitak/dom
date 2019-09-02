@@ -21,8 +21,7 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
    * @param publicId - `PUBLIC` identifier
    * @param systemId - `SYSTEM` identifier
    */
-  private constructor(name: string, publicId: string = '',
-    systemId: string = '') {
+  private constructor(name: string, publicId: string, systemId: string) {
     super()
 
     this._name = name
