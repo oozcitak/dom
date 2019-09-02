@@ -29,6 +29,11 @@ describe('Document', function () {
   sroot.appendChild(custom)
   const shadow = custom.attachShadow({ mode: 'open' })
 
+  const htmlDoc = $$.dom.createHTMLDocument('my title')
+
+  if (!htmlDoc.documentElement)
+    throw new Error("documentElement is null")
+
   test('constructor()', function () {
     expect($$.printTree(doc)).toBe($$.t`
       !DOCTYPE qname PUBLIC pubid sysid
@@ -127,6 +132,7 @@ describe('Document', function () {
     expect(ele.nodeType).toBe(4)
     expect(ele.nodeName).toBe('#cdata-section')
     expect(ele.data).toBe('contents')
+    expect(() => htmlDoc.createCDATASection('data')).toThrow()
   })
 
   test('createComment()', function () {
@@ -149,6 +155,8 @@ describe('Document', function () {
     expect(() => { doc.createAttribute('invalid name') }).toThrow()
     const ele = doc.createAttribute('attr')
     expect(ele.name).toBe('attr')
+    const att1 = htmlDoc.createAttribute('ATTR')
+    expect(att1.name).toBe('attr')
   })
 
   test('createAttributeNS()', function () {
@@ -263,6 +271,21 @@ describe('Document', function () {
   test('implementation', function () {
     const impl = doc.implementation
     expect(impl.createDocument).toBeTruthy()
+  })
+
+  test('quirks mode', function () {
+    const docImpl = doc as any
+    docImpl._mode = "quirks"
+    expect(doc.compatMode).toBe('BackCompat')
+  })
+
+  test('createElement - HTML', function () {
+    const ele = htmlDoc.createElement('H1')
+    expect(ele.localName).toBe('h1')
+    const customEle1 = htmlDoc.createElement('BUTTON', 'custom-button')
+    expect(customEle1.localName).toBe('button')
+    const customEle2 = htmlDoc.createElement('BUTTON', { is: 'custom-button' })
+    expect(customEle2.localName).toBe('button')
   })
 
 })
