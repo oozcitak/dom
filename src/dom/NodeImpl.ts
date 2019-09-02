@@ -88,7 +88,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
       return this._name
     } else if (Guard.isDocumentFragmentNode(this)) {
       return "#document-fragment"
-      /* istanbul ignore next */
+      /* istanbul ignore else */
     } else {
       return ""
     }

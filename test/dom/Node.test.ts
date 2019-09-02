@@ -11,9 +11,9 @@ describe('Node', function () {
   const de = doc.documentElement
 
   const ele1 = doc.createElement('ele')
-  const anyEle = <any>ele1
-  anyEle._baseURI = 'http://www.example.com'
   de.appendChild(ele1)
+  const attr = doc.createAttribute('att')
+  ele1.setAttributeNode(attr)
   const child1 = doc.createElement('child1')
   const child2 = doc.createElement('child2')
   const child3 = doc.createElement('child3')
@@ -70,6 +70,7 @@ describe('Node', function () {
   test('parentNode', function () {
     expect(ele1.parentNode).toBe(de)
     expect(doc.parentElement).toBeNull()
+    expect(attr.parentNode).toBeNull()
   })
 
   test('parentElement', function () {
