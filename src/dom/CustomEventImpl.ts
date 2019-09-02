@@ -22,7 +22,7 @@ export class CustomEventImpl extends EventImpl implements CustomEventInternal {
   get detail(): any { return this._detail }
 
   /** @inheritdoc */
-  initCustomEvent(type: string, bubbles = false, cancelable = false, detail = null): void {
+  initCustomEvent(type: string, bubbles = false, cancelable = false, detail: any = null): void {
     /**
      * 1. If the context object’s dispatch flag is set, then return.
      */
