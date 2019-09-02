@@ -41,6 +41,15 @@ describe('Element', function () {
   ele6.appendChild(doc.createTextNode('has'))
   ele6.appendChild(doc.createTextNode('text'))
   ele6.appendChild(doc.createProcessingInstruction('this', 'one'))
+  const ele7 = doc.createElement('tag')
+  de.appendChild(ele7)
+
+  const htmlDoc = $$.dom.createHTMLDocument('title')
+
+  if (!htmlDoc.documentElement)
+    throw new Error("documentElement is null")
+  const htmlEle7 = htmlDoc.createElement('ele')
+  htmlDoc.documentElement.appendChild(htmlEle7)
 
   test('constructor()', function () {
     expect(ele1.nodeType).toBe(1)
@@ -52,9 +61,12 @@ describe('Element', function () {
   })
 
   test('id', function () {
-    expect(ele1.id).toBe('uniq')
-    ele1.id = 'N0M'
-    expect(ele1.id).toBe('N0M')
+    const uniqEle = doc.createElement('tag')
+    de.appendChild(uniqEle)
+    uniqEle.setAttribute('id', 'uniq1')
+    expect(uniqEle.id).toBe('uniq1')
+    uniqEle.removeAttribute('id')
+    expect(uniqEle.id).toBe('')
   })
 
   test('className', function () {
@@ -84,12 +96,39 @@ describe('Element', function () {
     expect(ele4.hasAttributes()).toBeFalsy()
   })
 
+  test('toggleAttribute()', function () {
+    expect(() => ele7.toggleAttribute('invalid name')).toThrow()
+    ele7.setAttribute('someAtt1', 'val1')
+    ele7.setAttribute('someAtt2', 'val2')
+    ele7.setAttribute('toggleAtt', '')
+    ele7.toggleAttribute('toggleAtt')
+    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    ele7.toggleAttribute('toggleAtt')
+    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+    ele7.toggleAttribute('toggleAtt', true)
+    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+    ele7.toggleAttribute('toggleAtt', false)
+    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    ele7.toggleAttribute('toggleAtt', false)
+    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    ele7.toggleAttribute('toggleAtt', true)
+    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+
+    // HTML
+    htmlEle7.setAttribute('toggleAtt', '')
+    htmlEle7.toggleAttribute('toggleAtt')
+    expect(htmlEle7.hasAttribute('toggleAtt')).toBeFalsy()
+    htmlEle7.toggleAttribute('toggleAtt')
+    expect(htmlEle7.hasAttribute('toggleAtt')).toBeTruthy()
+  })
+
   test('getAttributeNames()', function () {
     expect(ele1.getAttributeNames()).toEqual(['id', 'att1', 'att2', 'ns:name'])
   })
 
   test('getAttribute()', function () {
     expect(ele1.getAttribute('att1')).toBe('value1')
+    expect(ele1.getAttribute('non-existing')).toBeNull()
   })
 
   test('getAttributeNS()', function () {
@@ -103,6 +142,10 @@ describe('Element', function () {
     ele1.setAttribute('att100', 'newvalue100')
     expect(ele1.attributes.length).toBe(5)
     expect(ele1.getAttribute('att100')).toBe('newvalue100')
+    expect(() => ele1.setAttribute('invalid name', 'val')).toThrow()
+
+    htmlEle7.setAttribute('NAME', 'val')
+    expect(htmlEle7.getAttribute('name')).toBe('val')
   })
 
   test('setAttributeNS()', function () {
@@ -126,11 +169,15 @@ describe('Element', function () {
   test('hasAttribute()', function () {
     expect(ele1.hasAttribute('att1')).toBeTruthy()
     expect(ele1.hasAttribute('nope')).toBeFalsy()
+
+    htmlEle7.setAttribute('NAME', 'val')
+    expect(htmlEle7.hasAttribute('name')).toBeTruthy()
   })
 
   test('hasAttributeNS()', function () {
     expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBeTruthy()
     expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'nope')).toBeFalsy()
+    expect(ele1.hasAttributeNS('', 'name')).toBeFalsy()
   })
 
   test('getAttributeNode()', function () {
@@ -186,6 +233,9 @@ describe('Element', function () {
       ele1.removeAttributeNode(newAttr2)
     }
     expect(ele1.attributes.length).toBe(4)
+
+    const nonAttr = doc.createAttribute('attr')
+    expect(() => ele1.removeAttributeNode(nonAttr)).toThrow()
   })
 
   test('textContent', function () {
@@ -452,6 +502,17 @@ describe('Element', function () {
       throw new Error("shadow root is null")
     expect(shadow.mode).toBe('open')
     expect(shadow.host).toBe(custom)
+  })
+
+  test('_create', function () {
+    const ele1 = $$.Element._create(doc as any, 'tag', 'ns', 'prefix')
+    expect(ele1.localName).toBe('tag')
+    expect(ele1.namespaceURI).toBe('ns')
+    expect(ele1.prefix).toBe('prefix')
+    const ele2 = $$.Element._create(doc as any, 'tag')
+    expect(ele2.localName).toBe('tag')
+    expect(ele2.namespaceURI).toBeNull()
+    expect(ele2.prefix).toBeNull()
   })
 
 })

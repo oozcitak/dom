@@ -43,8 +43,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * @param namespace - namespace
    * @param prefix - namespace prefix
    */
-  private constructor(localName: string, namespace: string | null = null,
-    namespacePrefix: string | null = null) {
+  private constructor(localName: string, namespace: string | null,
+    namespacePrefix: string | null) {
     super()
 
     this._localName = localName
