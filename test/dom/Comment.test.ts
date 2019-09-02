@@ -24,4 +24,13 @@ describe('Comment', function () {
     expect(clonedNode.data).toBe('data')
   })
 
+  test('_create()', function () {
+    const node1 = $$.Comment._create(doc as any, 'data')
+    expect(node1.nodeType).toBe(8)
+    expect(node1.nodeName).toBe('#comment')
+    expect(node1.data).toBe('data')
+    const node2 = $$.Comment._create(doc as any)
+    expect(node2.data).toBe('')
+  })
+
 })

@@ -14,7 +14,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
    *
    * @param data - the text content
    */
-  protected constructor(data: string = '') {
+  protected constructor(data: string) {
     super()
 
     this._data = data

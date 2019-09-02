@@ -32,4 +32,11 @@ describe('ProcessingInstruction', function () {
     expect(node.isEqualNode()).toBeFalsy()
   })
 
+  test('_create()', function () {
+    const node1 = $$.ProcessingInstruction._create(doc as any, 'target', 'data')
+    expect(node1.nodeType).toBe(7)
+    expect(node1.nodeName).toBe('target')
+    expect(node1.data).toBe('data')
+  })
+
 })

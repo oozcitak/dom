@@ -64,4 +64,13 @@ describe('Text', function () {
     expect(clonedNode.data).toBe('peace')
   })
 
+  test('_create()', function () {
+    const node1 = $$.Text._create(doc as any, 'data')
+    expect(node1.nodeType).toBe(3)
+    expect(node1.nodeName).toBe('#text')
+    expect(node1.data).toBe('data')
+    const node2 = $$.Text._create(doc as any)
+    expect(node2.data).toBe('')
+  })
+
 })

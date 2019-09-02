@@ -14,7 +14,7 @@ export class CDATASectionImpl extends TextImpl implements CDATASectionInternal {
    * 
    * @param data - node contents   
    */
-  private constructor(data: string = '') {
+  private constructor(data: string) {
     super(data)
   }
 
