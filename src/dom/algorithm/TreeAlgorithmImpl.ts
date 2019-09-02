@@ -459,7 +459,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
      */
 
     while (true) {
-      if (!Guard.isNode(a)) {
+      if (!a || !Guard.isNode(a)) {
         return a
       }
 
@@ -468,7 +468,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
         return a
       }
 
-      if (Guard.isNode(b) && this.isAncestorOf(rootOfA, b, true, true)) {
+      if (b && Guard.isNode(b) && this.isAncestorOf(rootOfA, b, true, true)) {
         return a
       }
 

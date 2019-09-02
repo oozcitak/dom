@@ -3,10 +3,10 @@ import { window } from '../../src/index'
 import {
   DOMImplementationImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
   CommentImpl, DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl,
-  DOMException, DOMTokenListImpl, ElementImpl,
+  DOMException, DOMTokenListImpl, ElementImpl, CustomEventImpl,
   HTMLCollectionImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
-  XMLDocumentImpl
+  XMLDocumentImpl, AbortControllerImpl, AbortSignalImpl
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
 import { XMLSerializer } from '../../src/dom/serializer'
@@ -18,10 +18,13 @@ import { XMLSpec, HTMLSpec } from '../../src/dom/spec'
 import { DOMAlgorithmImpl } from '../../src/dom/algorithm/DOMAlgorithmImpl'
 
 export default class TestHelpers extends TestHelpersRoot {
+  static AbortController = AbortControllerImpl
+  static AbortSignal = AbortSignalImpl
   static Attr = AttrImpl
   static CDATASection = CDATASectionImpl
   static CharacterData = CharacterDataImpl
   static Comment = CommentImpl
+  static CustomEvent = CustomEventImpl
   static DocumentFragment = DocumentFragmentImpl
   static Document = DocumentImpl
   static DocumentType = DocumentTypeImpl

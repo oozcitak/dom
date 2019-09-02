@@ -35,7 +35,7 @@ export class EventImpl implements EventInternal {
   _type: string
   _bubbles: boolean = false
   _cancelable: boolean = false
-  protected _timeStamp: number
+  _timeStamp: number
 
   protected _algo: DOMAlgorithm
 

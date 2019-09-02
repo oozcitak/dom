@@ -6,11 +6,12 @@ import {
   InsertionStep, ParentNodeAlgorithm, CreateAlgorithm, MutationObserverAlgorithm,
   AttrAlgorithm, ElementAlgorithm, CharacterDataAlgorithm, TextAlgorithm,
   NodeAlgorithm, DocumentAlgorithm, BoundaryPointAlgorithm, RangeAlgorithm,
-  TraversalAlgorithm, NodeIteratorAlgorithm, TreeWalkerAlgorithm, 
-  NodeIteratorPreRemovingSteps, DOMTokenListAlgorithm
+  TraversalAlgorithm, NodeIteratorAlgorithm, TreeWalkerAlgorithm,
+  NodeIteratorPreRemovingStep, DOMTokenListAlgorithm,
+  EventConstructingStep
 } from './interfaces'
 import {
-  DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal
+  DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal, EventInternal
 } from '../interfacesInternal'
 import { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
 import { OrderedSetAlgorithmImpl } from './OrderedSetAlgorithmImpl'
@@ -73,7 +74,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   protected adoptingSteps: AdoptingStep[] = []
   protected childTextContentChangeSteps: ChildTextContentChangeStep[] = []
   protected insertionSteps: InsertionStep[] = []
-  protected nodeIteratorPreRemovingSteps: NodeIteratorPreRemovingSteps[] = []
+  protected nodeIteratorPreRemovingSteps: NodeIteratorPreRemovingStep[] = []
+  protected eventConstructingSteps: EventConstructingStep[] = []
+
   protected supportedTokens: Map<string, Set<string>>
 
   /**
@@ -183,7 +186,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   get tokenList(): DOMTokenListAlgorithm { return this._tokenList }
 
   /** @inheritdoc */
-  runRemovingSteps(thisObj: any, removedNode: NodeInternal, 
+  runRemovingSteps(thisObj: any, removedNode: NodeInternal,
     oldParent: NodeInternal | null = null): void {
     for (const removingStep of this.removingSteps) {
       removingStep.call(thisObj, removedNode, oldParent)
@@ -232,6 +235,13 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     toBeRemovedNode: NodeInternal): void {
     for (const removingStep of this.nodeIteratorPreRemovingSteps) {
       removingStep.call(this, nodeIterator, toBeRemovedNode)
+    }
+  }
+
+  /** @inheritdoc */
+  runEventConstructingSteps(event: EventInternal): void {
+    for (const constructionStep of this.eventConstructingSteps) {
+      constructionStep.call(this, event)
     }
   }
 

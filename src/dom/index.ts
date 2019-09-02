@@ -1,6 +1,8 @@
 import { applyMixin } from '../util'
 
 // Import implementation classes
+import { AbortControllerImpl } from './AbortControllerImpl'
+import { AbortSignalImpl } from './AbortSignalImpl'
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { AttrImpl } from './AttrImpl'
 import { CDATASectionImpl } from './CDATASectionImpl'
@@ -65,6 +67,7 @@ applyMixin(ElementImpl, SlotableImpl)
 
 // Export classes
 export {
+  AbortControllerImpl, AbortSignalImpl,
   AbstractRangeImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
   CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl,
   DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl,

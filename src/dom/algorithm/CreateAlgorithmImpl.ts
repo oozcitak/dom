@@ -7,7 +7,7 @@ import {
   DocumentTypeInternal, RangeInternal, NodeListInternal, NamedNodeMapInternal,
   NodeIteratorInternal, TreeWalkerInternal, NodeFilterInternal,
   MutationRecordInternal, XMLDocumentInternal, DOMTokenListInternal,
-  ShadowRootInternal
+  ShadowRootInternal, AbortControllerInternal, AbortSignalInternal
 } from '../interfacesInternal'
 import {
   TextImpl, CDATASectionImpl, ProcessingInstructionImpl, DOMImplementationImpl,
@@ -15,7 +15,7 @@ import {
   NamedNodeMapImpl, ElementImpl, DocumentTypeImpl, AttrImpl, NodeListImpl,
   NodeListStaticImpl, RangeImpl, NodeIteratorImpl, TreeWalkerImpl,
   NodeFilterImpl, MutationRecordImpl, XMLDocumentImpl, DOMTokenListImpl, 
-  ShadowRootImpl
+  ShadowRootImpl, AbortControllerImpl, AbortSignalImpl
 } from '..'
 import { BoundaryPoint } from '../interfaces'
 
@@ -46,6 +46,16 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   /** @inheritdoc */
   document(): DocumentInternal {
     return new DocumentImpl()
+  }
+
+  /** @inheritdoc */
+  abortController(): AbortControllerInternal {
+    return new AbortControllerImpl()
+  }
+
+  /** @inheritdoc */
+  abortSignal(): AbortSignalInternal {
+    return AbortSignalImpl._create()
   }
 
   /** @inheritdoc */

@@ -6,12 +6,14 @@ import {
   NamedNodeMapInternal, RangeInternal, NodeIteratorInternal,
   TreeWalkerInternal, NodeFilterInternal, EventInternal, EventTargetInternal,
   AbortSignalInternal, SlotableInternal, SlotInternal, MutationRecordInternal,
-  CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, ShadowRootInternal, AbstractRangeInternal
+  CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, 
+  ShadowRootInternal, AbstractRangeInternal, AbortControllerInternal
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
   PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult
 } from "../interfaces"
+import { EventImpl } from "../EventImpl"
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -156,7 +158,7 @@ export interface DOMAlgorithm {
    * @param document - document to own the cloned node
    * @param cloneChildrenFlag - whether child nodes are cloned
    */
-  runCloningSteps(copy: NodeInternal, node: NodeInternal, 
+  runCloningSteps(copy: NodeInternal, node: NodeInternal,
     document: DocumentInternal, cloneChildrenFlag?: boolean): void
 
   /**
@@ -193,6 +195,13 @@ export interface DOMAlgorithm {
    * @param insertedNode - inserted node
    */
   runInsertionSteps(insertedNode: NodeInternal): void
+
+  /**
+   * Runs event construction steps.
+   * 
+   * @param event - an event
+   */
+  runEventConstructingSteps(event: EventInternal): void
 
   /**
    * Determines if there are any supported tokens defined for the given 
@@ -589,7 +598,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventInterface - event interface
    * @param realm - realm
    */
-  createAnEvent(eventInterface: EventInternal, realm: any): EventInternal
+  createAnEvent(eventInterface: typeof EventImpl, realm?: any): EventInternal
 
   /**
    * Performs event creation steps.
@@ -600,7 +609,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param dictionary - event attributes
    * 
    */
-  innerEventCreationSteps(eventInterface: EventInternal, realm: any,
+  innerEventCreationSteps(eventInterface: typeof EventImpl, realm: any,
     time: Date, dictionary: { [key: string]: any }): EventInternal
 
   /**
@@ -665,7 +674,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * IDL attributes are to be initialized
    * @param legacyTargetOverrideFlag - legacy target override flag
    */
-  fireAnEvent(e: string, target: EventTargetInternal, eventConstructor?: any,
+  fireAnEvent(e: string, target: EventTargetInternal, eventConstructor?: typeof EventImpl,
     legacyTargetOverrideFlag?: boolean): boolean
 }
 
@@ -1353,6 +1362,16 @@ export interface CreateAlgorithm extends SubAlgorithm {
   xmlDocument(): XMLDocumentInternal
 
   /** 
+   * Creates an `AbortController`.
+   */
+  abortController(): AbortControllerInternal
+
+  /** 
+   * Creates an `AbortSignal`.
+   */
+  abortSignal(): AbortSignalInternal
+
+  /** 
    * Creates a `DocumentType` node.
    * 
    * @param document - owner document
@@ -1794,8 +1813,13 @@ export type InsertionStep = ((insertedNode: NodeInternal) => any)
 /**
  * Defines a pre-removal step for a node iterator.
  */
-export type NodeIteratorPreRemovingSteps = ((nodeIterator: NodeIteratorInternal,
+export type NodeIteratorPreRemovingStep = ((nodeIterator: NodeIteratorInternal,
   toBeRemovedNode: NodeInternal) => any)
+
+/**
+ * Defines an event construction step.
+ */
+export type EventConstructingStep = ((event: EventInternal) => any)
 
 /**
  * Defines a boolean out variable of a function.

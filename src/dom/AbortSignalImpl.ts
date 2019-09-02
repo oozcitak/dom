@@ -1,6 +1,6 @@
 import { Event } from "./interfaces"
 import { AbortSignalInternal } from "./interfacesInternal"
-import { EventTargetImpl } from "."
+import { EventTargetImpl } from './EventTargetImpl'
 
 /**
  * Represents a signal object that communicates with a DOM request and abort
@@ -22,7 +22,7 @@ export class AbortSignalImpl extends EventTargetImpl implements AbortSignalInter
   get aborted(): boolean { return this._abortedFlag }
 
   /** @inheritdoc */
-  onabort(event: Event): void { }
+  onabort(event: Event): any { }
 
   /**
    * Creates a new `AbortSignal`.

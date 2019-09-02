@@ -292,7 +292,7 @@ export interface AbortSignal extends EventTarget {
   /**
    * Raises an event when the controller has aborted.
    */
-  onabort: (event: Event) => void
+  onabort: (event: Event) => any
 }
 
 /**

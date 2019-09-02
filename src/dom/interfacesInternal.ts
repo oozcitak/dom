@@ -44,6 +44,7 @@ export interface EventInternal extends Event {
   _type: string
   _bubbles: boolean
   _cancelable: boolean
+  _timeStamp: number
 }
 
 /**

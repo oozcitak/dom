@@ -1,5 +1,5 @@
 import {
-  Node, NodeList, Element, Attr, Text, Document, NodeType,
+  Node, NodeList, Element, Document, NodeType,
   Position, GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
   Event, EventTarget
 } from './interfaces'

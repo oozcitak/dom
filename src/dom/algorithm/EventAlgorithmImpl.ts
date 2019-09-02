@@ -6,6 +6,7 @@ import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry
 } from '../interfaces'
 import { Guard } from '../util'
+import { EventImpl } from '../EventImpl'
 
 /**
  * Contains event algorithms.
@@ -43,9 +44,8 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  createAnEvent(eventInterface: EventInternal, realm: any): EventInternal {
+  createAnEvent(eventInterface: typeof EventImpl, realm: any | undefined = undefined): EventInternal {
     /**
-     * TODO:
      * 1. If realm is not given, then set it to null.
      * 2. Let dictionary be the result of converting the JavaScript value 
      * undefined to the dictionary type accepted by eventInterface’s
@@ -57,17 +57,27 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 4. Initialize event’s isTrusted attribute to true.
      * 5. Return event.
      */
-    throw DOMException.NotSupportedError
+    if (realm === undefined) realm = null
+    const dictionary = {}
+    const event = this.innerEventCreationSteps(eventInterface, realm,
+      new Date(), dictionary)
+    event._isTrustedFlag = true
+
+    return event
   }
 
   /** @inheritdoc */
-  innerEventCreationSteps(eventInterface: EventInternal, realm: any,
+  innerEventCreationSteps(eventInterface: typeof EventImpl, realm: any,
     time: Date, dictionary: { [key: string]: any }): EventInternal {
     /**
-     * TODO:
      * 1. Let event be the result of creating a new object using eventInterface. 
+     * TODO:
      * If realm is non-null, then use that Realm; otherwise, use the default 
      * behavior defined in Web IDL.
+     */
+    const event = new eventInterface("")
+
+    /**
      * 2. Set event’s initialized flag.
      * 3. Initialize event’s timeStamp attribute to a DOMHighResTimeStamp 
      * representing the high resolution time from the time origin to time.
@@ -76,7 +86,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 5. Run the event constructing steps with event.
      * 6. Return event.
      */
-    throw DOMException.NotSupportedError
+    event._initializedFlag = true
+    event._timeStamp = time.getTime()
+    Object.assign(event, dictionary)
+    this.dom.runEventConstructingSteps(event)
+
+    return event
   }
 
   /**
@@ -678,20 +693,39 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  fireAnEvent(e: string, target: EventTargetInternal, eventConstructor?: any,
+  fireAnEvent(e: string, target: EventTargetInternal,
+    eventConstructor?: typeof EventImpl,
     legacyTargetOverrideFlag?: boolean): boolean {
     /**
-     * TODO:
      * 1. If eventConstructor is not given, then let eventConstructor be Event.
+     */
+    if (eventConstructor == undefined) {
+      eventConstructor = EventImpl
+    }
+
+    /**
+     * TODO:
      * 2. Let event be the result of creating an event given eventConstructor, 
      * in the relevant Realm of target.
+     */
+    const event = this.createAnEvent(eventConstructor)
+
+    /**
      * 3. Initialize event’s type attribute to e.
+     */
+    event._type = e
+
+    /**
+     * TODO:
      * 4. Initialize any other IDL attributes of event as described in the 
      * invocation of this algorithm.
      * _Note:_ This also allows for the isTrusted attribute to be set to false.
+     */
+
+    /**
      * 5. Return the result of dispatching event at target, with legacy target 
      * override flag set if set.
      */
-    throw DOMException.NotSupportedError
+    return this.dispatch(event, target, legacyTargetOverrideFlag)
   }
 }
