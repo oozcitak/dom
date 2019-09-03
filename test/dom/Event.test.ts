@@ -8,11 +8,10 @@ describe('Event', function () {
     throw new Error("documentElement is null")
 
   const de = doc.documentElement
+  const ele = doc.createElement('ele')
+  de.appendChild(ele)
 
   test('properties', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
-
     const event = new $$.Event('custom', {})
     expect(event.target).toBeNull()
     expect(event.composedPath()).toEqual([])
@@ -41,9 +40,6 @@ describe('Event', function () {
   })
 
   test('initEvent()', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
-
     const event = doc.createEvent('Event')
     event.initEvent('custom', true, true)
 
@@ -58,8 +54,6 @@ describe('Event', function () {
   })
 
   test('propagation', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -73,8 +67,6 @@ describe('Event', function () {
   })
 
   test('stopPropagation()', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -92,8 +84,6 @@ describe('Event', function () {
   })
 
   test('cancelBubble()', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -111,9 +101,6 @@ describe('Event', function () {
   })
 
   test('immediate propagation', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
-
     let propagated = 0
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {
@@ -128,9 +115,6 @@ describe('Event', function () {
   })
 
   test('stopImmediatePropagation()', function () {
-    const ele = doc.createElement('ele')
-    de.appendChild(ele)
-
     let propagated = false
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {

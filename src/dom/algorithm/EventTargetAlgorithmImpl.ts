@@ -80,7 +80,7 @@ export class EventTargetAlgorithmImpl extends SubAlgorithmImpl implements EventT
 
     // remove from list
     if (index !== -1) {
-      eventTarget._eventListenerList.slice(index, 1)
+      eventTarget._eventListenerList.splice(index, 1)
     }
   }
 

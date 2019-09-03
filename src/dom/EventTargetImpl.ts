@@ -6,6 +6,7 @@ import { DOMException } from './DOMException'
 import { EventTargetInternal, EventInternal } from './interfacesInternal'
 import { DOMAlgorithm } from './algorithm/interfaces'
 import { globalStore } from '../util'
+import { Guard } from './util'
 
 /**
  * Represents a target to which an event can be dispatched.
@@ -19,7 +20,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
   /**
    * Initializes a new instance of `EventTarget`.
    */
-  public constructor() { 
+  public constructor() {
     this._algo = globalStore.algorithm as DOMAlgorithm
   }
 
@@ -37,8 +38,8 @@ export abstract class EventTargetImpl implements EventTargetInternal {
     let listenerCallback: EventListener
     if (!callback) {
       return
-    } else if ((<EventListener>callback).handleEvent) {
-      listenerCallback = <EventListener>callback
+    } else if (Guard.isEventListener(callback)) {
+      listenerCallback = callback
     } else {
       listenerCallback = { handleEvent: <((event: Event) => void)>callback }
     }
@@ -76,15 +77,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
      */
     const capture = this._algo.eventTarget.flatten(options)
 
-    // convert callback function to EventListener, return if null
-    let listenerCallback: EventListener
-    if (!callback) {
-      return
-    } else if ((<EventListener>callback).handleEvent) {
-      listenerCallback = <EventListener>callback
-    } else {
-      listenerCallback = { handleEvent: <((event: Event) => void)>callback }
-    }
+    if (!callback) return
 
     /**
      * 3. If the context object’s event listener list contains an event listener 
@@ -93,8 +86,11 @@ export abstract class EventTargetImpl implements EventTargetInternal {
      */
     let i = 0
     for (const entry of this._eventListenerList) {
-      if (entry.type === type && entry.callback === listenerCallback
-        && entry.capture === capture) {
+      if (entry.type !== type || entry.capture !== capture) continue
+      if (Guard.isEventListener(callback) && entry.callback === callback) {
+        this._algo.eventTarget.removeEventListener(this, entry, i)
+        break
+      } else if (callback && entry.callback.handleEvent === callback) {
         this._algo.eventTarget.removeEventListener(this, entry, i)
         break
       }

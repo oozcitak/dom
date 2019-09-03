@@ -1,5 +1,5 @@
 import {
-  NodeType, RegisteredObserver, TransientRegisteredObserver
+  NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener
 } from '../interfaces'
 import {
   SlotableInternal, NodeInternal, TextInternal, ElementInternal,
@@ -173,7 +173,6 @@ export class Guard {
       Guard.isElementNode(a))
   }
 
-
   /**
    * Determines if the given object is a `Window`.
    * 
@@ -181,6 +180,15 @@ export class Guard {
    */
   static isWindow(a: any): a is WindowInternal {
     return (a && a.navigator !== undefined)
+  }
+
+  /**
+   * Determines if the given object is an `EventListener`.
+   * 
+   * @param a - the object to check
+   */
+  static isEventListener(a: any): a is EventListener {
+    return (a && a.handleEvent !== undefined)
   }
 
   /**
