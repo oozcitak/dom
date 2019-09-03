@@ -36,7 +36,7 @@ export interface EventInternal extends Event {
   _initializedFlag: boolean
   _dispatchFlag: boolean
 
-  _isTrustedFlag: boolean
+  _isTrusted: boolean
 
   _currentTarget: PotentialEventTarget
   _eventPhase: EventPhase

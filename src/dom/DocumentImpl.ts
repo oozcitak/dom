@@ -362,12 +362,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
   }
 
   /** @inheritdoc */
-  createEvent(eventInterface: string): never {
-    /**
-     * TODO: Implementation
-     * https://dom.spec.whatwg.org/#dom-document-createevent
-     */
-    throw DOMException.NotSupportedError
+  createEvent(eventInterface: string): Event {
+    return this._algo.event.createLegacyEvent(eventInterface)
   }
 
   /** @inheritdoc */

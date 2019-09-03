@@ -30,7 +30,7 @@ export class EventImpl implements EventInternal {
   _initializedFlag: boolean = false
   _dispatchFlag: boolean = false
 
-  _isTrustedFlag: boolean = false
+  _isTrusted: boolean = false
 
   _type: string
   _bubbles: boolean = false
@@ -278,7 +278,7 @@ export class EventImpl implements EventInternal {
   get composed(): boolean { return this._composedFlag }
 
   /** @inheritdoc */
-  get isTrusted(): boolean { return this._isTrustedFlag }
+  get isTrusted(): boolean { return this._isTrusted }
 
   /** @inheritdoc */
   get timeStamp(): number { return this._timeStamp }

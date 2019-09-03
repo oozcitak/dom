@@ -1,12 +1,11 @@
 import { EventAlgorithm, DOMAlgorithm, OutputFlag } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { EventInternal, EventTargetInternal } from '../interfacesInternal'
-import { DOMException } from '../DOMException'
 import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry
 } from '../interfaces'
 import { Guard } from '../util'
-import { EventImpl } from '../EventImpl'
+import { CustomEventImpl, EventImpl, DOMException } from '..'
 
 /**
  * Contains event algorithms.
@@ -35,7 +34,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     event._stopPropagationFlag = false
     event._stopImmediatePropagationFlag = false
     event._canceledFlag = false
-    event._isTrustedFlag = false
+    event._isTrusted = false
     event._target = null
 
     event._type = type
@@ -61,7 +60,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     const dictionary = {}
     const event = this.innerEventCreationSteps(eventInterface, realm,
       new Date(), dictionary)
-    event._isTrustedFlag = true
+    event._isTrusted = true
 
     return event
   }
@@ -157,6 +156,9 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
       for (const touchTarget of event._touchTargetList) {
         touchTargets.push(this.dom.tree.retarget(touchTarget, target))
       }
+
+      this.appendToAnEventPath(event, target, targetOverride, relatedTarget,
+        touchTargets, false)
 
       const isActivationEvent = (Guard.isMouseEvent(event) && event.type === "click")
       if (isActivationEvent && target._activationBehavior !== undefined) {
@@ -462,8 +464,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * touch target list is touchTargets, root-of-closed-tree is
      * root-of-closed-tree, and slot-in-closed-tree is slot-in-closed-tree.
      */
-    const path: EventPathItem[] = event._path
-    path.push({
+    event._path.push({
       invocationTarget: invocationTarget,
       invocationTargetInShadowTree: invocationTargetInShadowTree,
       shadowAdjustedTarget: shadowAdjustedTarget,
@@ -728,4 +729,121 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      */
     return this.dispatch(event, target, legacyTargetOverrideFlag)
   }
+
+  /** @inheritdoc */
+  createLegacyEvent(eventInterface: string): EventInternal {
+    /**
+     * 1. Let constructor be null.
+     */
+    let constructor: typeof EventImpl | null = null
+
+    /**
+     * TODO:
+     * 2. If interface is an ASCII case-insensitive match for any of the strings
+     * in the first column in the following table, then set constructor to the
+     * interface in the second column on the same row as the matching string:
+     * 
+     * String | Interface
+     * -------|----------
+     * "beforeunloadevent" | BeforeUnloadEvent
+     * "compositionevent" | CompositionEvent
+     * "customevent" | CustomEvent
+     * "devicemotionevent" | DeviceMotionEvent
+     * "deviceorientationevent" | DeviceOrientationEvent
+     * "dragevent" | DragEvent
+     * "event" | Event
+     * "events" | Event
+     * "focusevent" | FocusEvent
+     * "hashchangeevent" | HashChangeEvent
+     * "htmlevents" | Event
+     * "keyboardevent" | KeyboardEvent
+     * "messageevent" | MessageEvent
+     * "mouseevent" | MouseEvent
+     * "mouseevents" | 
+     * "storageevent" | StorageEvent
+     * "svgevents" | Event
+     * "textevent" | CompositionEvent
+     * "touchevent" | TouchEvent
+     * "uievent" | UIEvent
+     * "uievents" | UIEvent
+     */
+    switch(eventInterface.toLowerCase()) {
+      case "beforeunloadevent":
+        break
+      case "compositionevent":
+        break
+      case "customevent":
+          constructor = CustomEventImpl
+        break
+      case "devicemotionevent":
+        break
+      case "deviceorientationevent":
+        break
+      case "dragevent":
+        break
+      case "event":
+      case "events":
+          constructor = EventImpl
+          break
+      case "focusevent":
+        break
+      case "hashchangeevent":
+        break
+      case "htmlevents":
+        break
+      case "keyboardevent":
+        break
+      case "messageevent":
+        break
+      case "mouseevent":
+        break
+      case "mouseevents":
+        break
+      case "storageevent":
+        break
+      case "svgevents":
+        break
+      case "textevent":
+        break
+      case "touchevent":
+        break
+      case "uievent":
+        break
+      case "uievents":
+        break
+    }
+
+    /**
+     * 3. If constructor is null, then throw a "NotSupportedError" DOMException.
+     * 4. If the interface indicated by constructor is not exposed on the
+     * relevant global object of the context object, then throw a
+     * "NotSupportedError" DOMException.
+     * _Note:_ Typically user agents disable support for touch events in some 
+     * configurations, in which case this clause would be triggered for the
+     * interface TouchEvent.
+     */
+    if(constructor === null) {
+      throw DOMException.NotSupportedError
+    }
+
+    /**
+     * 5. Let event be the result of creating an event given constructor.
+     * 6. Initialize event’s type attribute to the empty string.
+     * 7. Initialize event’s timeStamp attribute to a DOMHighResTimeStamp 
+     * representing the high resolution time from the time origin to now.
+     * 8. Initialize event’s isTrusted attribute to false.
+     * 9. Unset event’s initialized flag.
+     */
+    const event = new constructor("")
+    event._type = ""
+    event._timeStamp = new Date().getTime()
+    event._isTrusted = false
+    event._initializedFlag = false
+
+    /**
+     * 10. Return event.
+     */
+    return event
+  }
+
 }

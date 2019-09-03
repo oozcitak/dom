@@ -676,6 +676,13 @@ export interface EventAlgorithm extends SubAlgorithm {
    */
   fireAnEvent(e: string, target: EventTargetInternal, eventConstructor?: typeof EventImpl,
     legacyTargetOverrideFlag?: boolean): boolean
+
+  /**
+   * Creates an event.
+   * 
+   * @param eventInterface - the name of the event interface
+   */
+  createLegacyEvent(eventInterface: string): EventInternal
 }
 
 /**

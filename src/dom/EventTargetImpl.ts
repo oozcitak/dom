@@ -113,7 +113,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
     if (event._dispatchFlag || !event._initializedFlag) {
       throw DOMException.InvalidStateError
     }
-    event._isTrustedFlag = false
+    event._isTrusted = false
 
     return this._algo.event.dispatch(event, this)
   }

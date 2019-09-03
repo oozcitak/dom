@@ -67,15 +67,15 @@ applyMixin(ElementImpl, SlotableImpl)
 
 // Export classes
 export {
-  AbortControllerImpl, AbortSignalImpl,
-  AbstractRangeImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
-  CommentImpl, CustomEventImpl, DocumentFragmentImpl, DocumentImpl,
-  DocumentTypeImpl, DOMException, DOMImplementationImpl, DOMTokenListImpl,
-  ElementImpl, EventImpl, EventTargetImpl, HTMLCollectionImpl,
-  MutationObserverImpl, MutationRecordImpl, NamedNodeMapImpl, NodeFilterImpl,
-  NodeImpl, NodeIteratorImpl, NodeListImpl, NodeListStaticImpl,
-  ProcessingInstructionImpl, RangeImpl, ShadowRootImpl, StaticRangeImpl,
-  TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl, XMLDocumentImpl
+  AbortControllerImpl, AbortSignalImpl, AbstractRangeImpl, AttrImpl,
+  CDATASectionImpl, CharacterDataImpl, CommentImpl, CustomEventImpl,
+  DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl, DOMException,
+  DOMImplementationImpl, DOMTokenListImpl, ElementImpl, EventImpl,
+  EventTargetImpl, HTMLCollectionImpl, MutationObserverImpl, MutationRecordImpl,
+  NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeIteratorImpl, NodeListImpl,
+  NodeListStaticImpl, ProcessingInstructionImpl, RangeImpl, ShadowRootImpl,
+  StaticRangeImpl, TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl,
+  XMLDocumentImpl
 }
 export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'

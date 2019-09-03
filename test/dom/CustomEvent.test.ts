@@ -7,17 +7,37 @@ describe('CustomEvent', function () {
   if (!doc.documentElement)
     throw new Error("documentElement is null")
 
+  const de = doc.documentElement
+
   test('constructor()', function () {
-    const event = new $$.CustomEvent("custom", { 
+    const event = new $$.CustomEvent("custom", {
       cancelable: true,
       bubbles: true,
       composed: true,
-      detail: "some data" })
+      detail: "some data"
+    })
     expect(event.type).toBe("custom")
     expect(event.bubbles).toBeTruthy()
     expect(event.cancelable).toBeTruthy()
     expect(event.composed).toBeTruthy()
     expect(event.detail).toBe("some data")
+  })
+
+  test('dispatch()', function () {
+    const ele = doc.createElement('ele')
+    de.appendChild(ele)
+
+    const event = new $$.CustomEvent('custom', { detail: "data" })
+
+    ele.addEventListener('custom', function (e) {
+      const ce = e as any
+      // cannot init a dispatched event
+      ce.initCustomEvent("something-else")
+      expect(ce.type).toBe("custom")
+      expect(ce.detail).toBe("data")
+    }, false)
+
+    ele.dispatchEvent(event)
   })
 
   test('initCustomEvent()', function () {

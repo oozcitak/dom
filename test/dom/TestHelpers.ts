@@ -1,12 +1,13 @@
 import TestHelpersRoot from "../TestHelpers"
 import { window } from '../../src/index'
 import {
-  DOMImplementationImpl, AttrImpl, CDATASectionImpl, CharacterDataImpl,
-  CommentImpl, DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl,
-  DOMException, DOMTokenListImpl, ElementImpl, CustomEventImpl,
-  HTMLCollectionImpl, NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
+  AbortControllerImpl, AbortSignalImpl, AttrImpl, CDATASectionImpl, 
+  CharacterDataImpl, CommentImpl, CustomEventImpl, DocumentFragmentImpl,
+  DocumentImpl, DocumentTypeImpl, DOMException, DOMImplementationImpl,
+  DOMTokenListImpl, ElementImpl, EventImpl, HTMLCollectionImpl, 
+  NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
-  XMLDocumentImpl, AbortControllerImpl, AbortSignalImpl
+  XMLDocumentImpl
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
 import { XMLSerializer } from '../../src/dom/serializer'
@@ -32,6 +33,7 @@ export default class TestHelpers extends TestHelpersRoot {
   static DOMImplementation = DOMImplementationImpl
   static DOMTokenList = DOMTokenListImpl
   static Element = ElementImpl
+  static Event = EventImpl
   static HTMLCollection = HTMLCollectionImpl
   static NamedNodeMap = NamedNodeMapImpl
   static NodeFilter = NodeFilterImpl

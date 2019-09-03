@@ -851,7 +851,7 @@ export interface Document extends Node, NonElementParentNode,
    * @param eventInterface - a string representing the type of event 
    * to be created
    */
-  createEvent(eventInterface: string): never
+  createEvent(eventInterface: string): Event
 
   /**
    * Creates a new Range object.
