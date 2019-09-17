@@ -6,7 +6,6 @@ import {
 } from '../interfacesInternal'
 import { Cast, Guard } from '../util'
 import { isEmpty } from '../../util'
-import { DOMException } from '..'
 
 /**
  * Contains shadow tree algorithms.
@@ -26,7 +25,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   isConnected(element: ElementInternal): boolean {
     /**
      * An element is connected if its shadow-including root is a document.
-     */    
+     */
     return Guard.isDocumentNode(this.dom.tree.rootNode(element, true))
   }
 
@@ -51,11 +50,11 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * is slotable’s name, if any, and null otherwise.
      */
     const node = Cast.asNode(slotable)
-    const parent = node.parentNode as ElementInternal
+    const parent = node._parent as ElementInternal | null
     if (parent === null) return null
     const shadow = parent._shadowRoot as ShadowRootInternal | null
     if (shadow === null) return null
-    if (openFlag && shadow.mode !== "open") return null
+    if (openFlag && shadow._mode !== "open") return null
 
     for (const child of this.dom.tree.getDescendantElements(shadow, false, true)) {
       if (Guard.isSlot(child)) {
@@ -160,9 +159,9 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * signal a slot change for slot.
      */
     const slotables = this.findSlotables(slot)
-    if(slotables.length === slot._assignedNodes.length) {
+    if (slotables.length === slot._assignedNodes.length) {
       let nodesIdentical = true
-      for (let i = 0; i< slotables.length; i++) {
+      for (let i = 0; i < slotables.length; i++) {
         if (slotables[i] !== slot._assignedNodes[i]) {
           nodesIdentical = false
           break
@@ -215,7 +214,6 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * 1. Append slot to slot’s relevant agent’s signal slots.
      * 2. Queue a mutation observer microtask.
      */
-    throw DOMException.NotSupportedError
   }
 
 }

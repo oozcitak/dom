@@ -7,7 +7,7 @@ describe('AbortController', () => {
 
   function doWork(signal: any) {
     if (signal.aborted) {
-      return Promise.reject(new $$.DOMException('Aborted', 'AbortError'));
+      return Promise.reject(new $$.DOMException('Aborted', 'AbortError'))
     }
   
     return new Promise((resolve, reject) => {

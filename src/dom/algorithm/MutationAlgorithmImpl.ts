@@ -5,7 +5,7 @@ import { NodeInternal, RangeInternal, ElementInternal, SlotInternal } from '../i
 import { NodeType } from '../interfaces'
 import { Guard } from '../util'
 import { isEmpty } from '../../util'
-import { infra } from '../../infra';
+import { infra } from '../../infra'
 
 /**
  * Contains mutation algorithms.
@@ -177,7 +177,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
 
     let referenceChild = child
     if (referenceChild === node)
-      referenceChild = node.nextSibling as NodeInternal
+      referenceChild = node.nextSibling as NodeInternal | null
 
     this.dom.document.adopt(node, parent._nodeDocument)
     this.insert(node, parent, referenceChild)

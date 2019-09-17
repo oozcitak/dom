@@ -110,7 +110,7 @@ export interface HTMLElement extends Element {
    * twice on the same element.
    */
   attachInternals(): ElementInternals
-};
+}
 
 /**
  * Represents a `<slot>` element.

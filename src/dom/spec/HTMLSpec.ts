@@ -18,6 +18,10 @@ export class HTMLSpec {
     'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'img', 'input', 'keygen',
     'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr']
 
+  static readonly ShadowHostNames = ['article', 'aside', 'blockquote', 'body',
+    'div', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'main',
+    'nav', 'p', 'section', 'span']
+
   /**
    * Determines if the given string is a valid custom element name.
    * 
@@ -50,4 +54,14 @@ export class HTMLSpec {
   static isVoidElementName(name: string): boolean {
     return (HTMLSpec.VoidElementNames.includes(name))
   }
+
+  /**
+   * Determines if the given string is a valid shadow host element name.
+   * 
+   * @param name - a name string
+   */
+  static isValidShadowHostName(name: string): boolean {
+    return (HTMLSpec.ShadowHostNames.includes(name))
+  }
+
 }

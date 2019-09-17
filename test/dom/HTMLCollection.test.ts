@@ -1,5 +1,5 @@
 import $$ from './TestHelpers'
-import { HTMLCollectionImpl } from '../../src/dom';
+import { HTMLCollectionImpl } from '../../src/dom'
 
 describe('HTMLCollection', function () {
 

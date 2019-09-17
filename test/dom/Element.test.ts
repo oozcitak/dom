@@ -504,6 +504,34 @@ describe('Element', function () {
     expect(shadow.host).toBe(custom)
   })
 
+  test('update slot name', function () {
+    const doc = $$.dom.createHTMLDocument('my doc')
+    const body = doc.getElementsByTagName('body')[0]
+    if (!body)
+      throw new Error("body element is null")
+    const custom = doc.createElementNS('http://www.w3.org/1999/xhtml', 'my-custom-element')
+    body.appendChild(custom)
+    custom.attachShadow({ mode: 'open' })
+    const shadow = custom.shadowRoot
+    if (!shadow)
+      throw new Error("shadow root is null")
+    const slotEle = doc.createElementNS('http://www.w3.org/1999/xhtml', 'slot')
+    const htmlSlotEle = slotEle as any
+    htmlSlotEle._name = "slot"
+    htmlSlotEle._assignedNodes = []
+    shadow.appendChild(slotEle)
+    slotEle.setAttribute("name", "new name")
+    expect(htmlSlotEle._name).toBe("new name")
+    slotEle.setAttribute("name", "new name")
+    expect(htmlSlotEle._name).toBe("new name")
+    slotEle.setAttribute("name", "")
+    expect(htmlSlotEle._name).toBe("")
+    slotEle.removeAttribute("name")
+    expect(htmlSlotEle._name).toBe("")
+    slotEle.setAttribute("name", "")
+    expect(htmlSlotEle._name).toBe("")
+  })
+
   test('_create', function () {
     const ele1 = $$.Element._create(doc as any, 'tag', 'ns', 'prefix')
     expect(ele1.localName).toBe('tag')

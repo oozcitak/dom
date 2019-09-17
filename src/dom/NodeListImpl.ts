@@ -1,6 +1,6 @@
 import { Node, NodeList } from "./interfaces"
 import { NodeListInternal, NodeInternal } from "./interfacesInternal"
-import { infra } from "../infra";
+import { infra } from "../infra"
 
 /**
  * Represents an ordered list of nodes.

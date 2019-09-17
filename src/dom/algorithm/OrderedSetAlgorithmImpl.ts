@@ -1,6 +1,6 @@
 import { DOMAlgorithm, OrderedSetAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { infra } from '../../infra';
+import { infra } from '../../infra'
 
 /**
  * Contains ordered set manipulation algorithms.
