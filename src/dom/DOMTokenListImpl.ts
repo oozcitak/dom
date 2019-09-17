@@ -152,7 +152,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
      * "InvalidCharacterError" DOMException.
      */
     if (token === '') {
-      throw new SyntaxError("Cannot remove an empty token.")
+      throw new SyntaxError("Cannot toggle an empty token.")
     } else if (infra.string.ASCIIWhiteSpace.test(token)) {
       throw DOMException.InvalidCharacterError
     }
@@ -200,7 +200,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
      * an "InvalidCharacterError" DOMException.
      */
     if (token === '' || newToken === '') {
-      throw new SyntaxError("Cannot remove an empty token.")
+      throw new SyntaxError("Cannot replace an empty token.")
     } else if (infra.string.ASCIIWhiteSpace.test(token) || infra.string.ASCIIWhiteSpace.test(newToken)) {
       throw DOMException.InvalidCharacterError
     }
