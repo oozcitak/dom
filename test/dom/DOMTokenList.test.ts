@@ -18,7 +18,7 @@ describe('DOMTokenList', function () {
   test('length', function () {
     expect(list.length).toBe(3)
   })
-
+    
   test('item()', function () {
     expect(list.item(0)).toBe('one')
     expect(list.item(1)).toBe('two')
@@ -37,6 +37,8 @@ describe('DOMTokenList', function () {
   test('add()', function () {
     list.add('four', 'five')
     expect(list.length).toBe(5)
+    expect(() => list.add('')).toThrow()
+    expect(() => list.add('one two')).toThrow()
   })
 
   test('remove()', function () {
@@ -57,6 +59,8 @@ describe('DOMTokenList', function () {
     expect(list.length).toBe(3)
     expect(list.toggle('one', true)).toBeTruthy()
     expect(list.length).toBe(3)
+    expect(() => list.toggle('')).toThrow()
+    expect(() => list.toggle('one two')).toThrow()
   })
 
   test('replace()', function () {
@@ -93,6 +97,21 @@ describe('DOMTokenList', function () {
   test('empty token list', function () {
     list2.value = ''
     expect(list2.length).toBe(0)
+  })
+
+  test('change attribute', function () {
+    ele.setAttribute('class', 'four five six seven')
+    let names = ''
+    for (const name of list) {
+      names += '_' + name
+    }
+    expect(names).toBe('_four_five_six_seven')
+    ele.setAttribute('x', 'four five six seven')
+    names = ''
+    for (const name of list) {
+      names += '_' + name
+    }
+    expect(names).toBe('_four_five_six_seven')
   })
 
 })
