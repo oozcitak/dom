@@ -35,7 +35,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   _uniqueIdentifier?: string | undefined
 
   _attributeChangeSteps: AttributeChangeStep[] = []
-
+    
   /**
    * Initializes a new instance of `Element`.
    * 

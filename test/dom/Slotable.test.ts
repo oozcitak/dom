@@ -39,4 +39,22 @@ describe('Slotable', function () {
     expect(childTextNode.assignedSlot).toBe(slot)
   })
 
+  test('assignedSlot in open closed tree', function () {
+    const doc = $$.dom.createHTMLDocument('doc')
+    const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
+    const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
+    shadowHost.appendChild(childElement)
+    const childTextNode = doc.createTextNode('')
+    shadowHost.appendChild(childTextNode)
+    var shadowRoot = shadowHost.attachShadow({mode: 'closed'})
+    var slot = doc.createElementNS('http://www.w3.org/1999/xhtml', 'slot')
+    const htmlSlot = slot as any
+    htmlSlot._name = ''
+    htmlSlot._assignedNodes = []
+    shadowRoot.appendChild(slot)
+
+    expect(childElement.assignedSlot).toBe(null)
+    expect(childTextNode.assignedSlot).toBe(null)
+  })
+
 })

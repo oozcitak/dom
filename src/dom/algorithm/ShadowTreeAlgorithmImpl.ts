@@ -52,7 +52,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
     const node = Cast.asNode(slotable)
     const parent = node._parent as ElementInternal | null
     if (parent === null) return null
-    const shadow = parent._shadowRoot as ShadowRootInternal | null
+    const shadow = (parent._shadowRoot as ShadowRootInternal | null) || null
     if (shadow === null) return null
     if (openFlag && shadow._mode !== "open") return null
 

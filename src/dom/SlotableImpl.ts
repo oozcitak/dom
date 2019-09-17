@@ -10,8 +10,14 @@ import { globalStore } from '../util'
  */
 export class SlotableImpl implements SlotableInternal {
 
-  _name: string = ''
-  _assignedSlot: SlotInternal | null = null
+  __name: string | undefined
+  __assignedSlot: SlotInternal | null | undefined
+
+  get _name(): string { return this.__name || '' }
+  set _name(val: string) { this.__name = val }
+
+  get _assignedSlot(): SlotInternal | null { return this.__assignedSlot || null }
+  set _assignedSlot(val: SlotInternal | null) { this.__assignedSlot = val }
 
   /** @inheritdoc */
   get assignedSlot(): HTMLSlotElement | null {

@@ -1,6 +1,6 @@
 import { NodeType, Text, HTMLSlotElement } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { TextInternal, DocumentInternal } from "./interfacesInternal"
+import { TextInternal, DocumentInternal, SlotInternal } from "./interfacesInternal"
 
 /**
  * Represents a text node.

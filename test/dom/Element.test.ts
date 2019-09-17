@@ -532,6 +532,31 @@ describe('Element', function () {
     expect(htmlSlotEle._name).toBe("")
   })
 
+  test('update slotable name', function () {
+    const doc = $$.dom.createHTMLDocument('doc')
+    const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
+    const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
+    shadowHost.appendChild(childElement)
+    const slotableEle = childElement as any
+    var shadowRoot = shadowHost.attachShadow({mode: 'open'})
+    var slot = doc.createElementNS('http://www.w3.org/1999/xhtml', 'slot')
+    const htmlSlot = slot as any
+    htmlSlot._name = ''
+    htmlSlot._assignedNodes = []
+    shadowRoot.appendChild(slot)
+
+    childElement.setAttribute("slot", "new name")
+    expect(slotableEle._name).toBe("new name")
+    childElement.setAttribute("slot", "new name")
+    expect(slotableEle._name).toBe("new name")
+    childElement.setAttribute("slot", "")
+    expect(slotableEle._name).toBe("")
+    childElement.removeAttribute("slot")
+    expect(slotableEle._name).toBe("")
+    childElement.setAttribute("slot", "")
+    expect(slotableEle._name).toBe("")
+  })
+
   test('_create', function () {
     const ele1 = $$.Element._create(doc as any, 'tag', 'ns', 'prefix')
     expect(ele1.localName).toBe('tag')
