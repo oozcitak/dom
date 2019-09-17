@@ -41,7 +41,7 @@ describe('TreeWalker', function () {
     const iter = doc.createTreeWalker(root)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -52,7 +52,7 @@ describe('TreeWalker', function () {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -66,7 +66,7 @@ describe('TreeWalker', function () {
 
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -82,11 +82,11 @@ describe('TreeWalker', function () {
     const iter = doc.createTreeWalker(root)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       node = iter.nextNode()
     }
     node = iter.currentNode
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.previousNode()
     }
@@ -97,11 +97,11 @@ describe('TreeWalker', function () {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       node = iter.nextNode()
     }
     node = iter.currentNode
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.previousNode()
     }
@@ -115,11 +115,11 @@ describe('TreeWalker', function () {
 
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       node = iter.nextNode()
     }
     node = iter.currentNode
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.previousNode()
     }
@@ -145,7 +145,7 @@ describe('TreeWalker', function () {
     const child2 = child1.nextElementSibling
     if (!child2)
       throw new Error("nextElementSibling is null")
-    
+
     iter.currentNode = child1
     iter.nextNode()
     expect(iter.currentNode).toBe(child2)
@@ -211,4 +211,5 @@ describe('TreeWalker', function () {
     iter.lastChild()
     expect(iter.previousSibling()).toBe(child1)
   })
+
 })
