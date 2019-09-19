@@ -47,6 +47,10 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
     const doc = algo.create.document()
     window._associatedDocument = doc
 
+    // Used to keep track of live ranges
+    // TODO: Limit the memory used by the range list
+    globalStore.rangeList = []
+
     return window
   }
 

@@ -88,7 +88,6 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
       return this._name
     } else if (Guard.isDocumentFragmentNode(this)) {
       return "#document-fragment"
-      /* istanbul ignore else */
     } else {
       return ""
     }
@@ -173,8 +172,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * The parentElement attribute’s getter must return the context object’s 
      * parent element.
      */
-    if (this.parentNode && Guard.isElementNode(this.parentNode)) {
-      return this.parentNode
+    if (this._parent && Guard.isElementNode(this._parent)) {
+      return this._parent
     } else {
       return null
     }
@@ -313,9 +312,15 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * descendant exclusive Text node node of context object:
      */
     const algo = this._algo
+    const descendantNodes: TextInternal[] = []
     for (const node of algo.tree.getDescendantNodes(this)) {
+      if (Guard.isExclusiveTextNode(node)) {
+        descendantNodes.push(node)
+      }
+    }
 
-      if (!Guard.isExclusiveTextNode(node)) continue
+    for (const node of descendantNodes) {
+      if (node._parent === null) continue
 
       /**
        * 1. Let length be node’s length.
@@ -324,11 +329,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        */
       let length = algo.tree.nodeLength(node)
       if (length === 0) {
-        if (node._parent === null) {
-          throw new Error("Parent node is null.")
-        } else {
-          algo.mutation.remove(node, node._parent as NodeInternal)
-        }
+        algo.mutation.remove(node, node._parent as NodeInternal)
         continue
       }
       /**
@@ -366,9 +367,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
          * end offset to length.
          */
         const index = algo.tree.index(currentNode)
-        const doc = node._nodeDocument
-        for (const item of doc._rangeList) {
-          const range = item as RangeInternal
+        const rangeList = globalStore.rangeList as RangeInternal[]
+        for (const range of rangeList) {
           if (range._start[0] === currentNode) {
             range._start[0] = node
             range._start[1] += length
@@ -377,11 +377,11 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
             range._end[0] = node
             range._end[1] += length
           }
-          if (range._start[0] === currentNode.parentNode && range._start[1] === index) {
+          if (range._start[0] === currentNode._parent && range._start[1] === index) {
             range._start[0] = node
             range._start[1] = length
           }
-          if (range._end[0] === currentNode.parentNode && range._end[1] === index) {
+          if (range._end[0] === currentNode._parent && range._end[1] === index) {
             range._end[0] = node
             range._end[1] = length
           }
@@ -399,14 +399,10 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        * in tree order.
        */
       for (const sibling of textSiblings) {
-        if (sibling._parent === null) {
-          throw new Error("Parent node is null.")
-        } else {
-          algo.mutation.remove(sibling, sibling._parent as NodeInternal)
-        }
+        if (sibling._parent === null) continue
+        algo.mutation.remove(sibling, sibling._parent as NodeInternal)
       }
     }
-    const a = this.childNodes
   }
 
   /**
@@ -778,7 +774,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
     if (Guard.isSlotable(this) && this._algo.shadowTree.isAssigned(this)) {
       return this._assignedSlot
     } else {
-      return this.parentNode
+      return this._parent
     }
   }
 

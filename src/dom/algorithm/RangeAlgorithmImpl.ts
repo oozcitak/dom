@@ -7,6 +7,7 @@ import {
 import { BoundaryPoint, BoundaryPosition } from '../interfaces'
 import { Guard } from '../util'
 import { DOMException } from '../DOMException'
+import { globalStore } from '../../util'
 
 /**
  * Contains range algorithms.
@@ -190,13 +191,12 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 6. While common ancestor is not an inclusive ancestor of original end
      * node, set common ancestor to its own parent.
      */
-    let commonAncestor = originalStartNode
-    while (!this.dom.tree.isAncestorOf(originalEndNode, commonAncestor, true)) {
-      if (commonAncestor.parentNode === null) {
-        throw new Error("Parent node is null.")
-      }
-      commonAncestor = commonAncestor.parentNode as NodeInternal
+    const commonAncestor = this.dom.tree.getCommonAncestor(originalStartNode, 
+      originalEndNode)
+    if (commonAncestor === null) {
+      throw new Error("Common ancestor is null.")
     }
+
 
     /**
      * 7. Let first partially contained child be null.
@@ -222,7 +222,6 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     let lastPartiallyContainedChild: NodeInternal | null = null
     if (!this.dom.tree.isAncestorOf(originalStartNode, originalEndNode, true)) {
-      let i = commonAncestor.childNodes.length - 1
       for (let i = commonAncestor.childNodes.length - 1; i > 0; i--) {
         const node = commonAncestor.childNodes.item(i)
         if (node === null) {
@@ -312,13 +311,13 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * 16.4. Let subfragment be the result of extracting subrange.
        * 16.5. Append subfragment to clone.
        */
-      const clone = this.dom.node.clone(originalStartNode)
+      const clone = this.dom.node.clone(firstPartiallyContainedChild)
       fragment.append(clone)
       const subrange = this.dom.create.range(
         [originalStartNode, originalStartOffset],
         [firstPartiallyContainedChild, this.dom.tree.nodeLength(firstPartiallyContainedChild)])
       const subfragment = this.extract(subrange)
-      clone.appendChild(subfragment)
+      this.dom.mutation.append(subfragment, clone)
     }
 
     /**
@@ -326,7 +325,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * child to fragment.
      */
     for (const child of containedChildren) {
-      fragment.appendChild(child)
+      this.dom.mutation.append(child, fragment)
     }
 
     if (lastPartiallyContainedChild !== null &&
@@ -364,7 +363,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
         [lastPartiallyContainedChild, 0],
         [originalEndNode, originalEndOffset])
       const subfragment = this.extract(subrange)
-      clone.appendChild(subfragment)
+      this.dom.mutation.append(subfragment, clone)
     }
 
     /**
@@ -413,7 +412,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       clone._data = this.dom.characterData.substringData(
         originalStartNode, originalStartOffset,
         originalEndOffset - originalStartOffset)
-      fragment.append(clone)
+      this.dom.mutation.append(clone, fragment)
     }
 
     /**
@@ -421,12 +420,10 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 6. While common ancestor is not an inclusive ancestor of original end
      * node, set common ancestor to its own parent.
      */
-    let commonAncestor = originalStartNode
-    while (!this.dom.tree.isAncestorOf(originalEndNode, commonAncestor, true)) {
-      if (commonAncestor.parentNode === null) {
-        throw new Error("Parent node is null.")
-      }
-      commonAncestor = commonAncestor.parentNode as NodeInternal
+    const commonAncestor = this.dom.tree.getCommonAncestor(originalStartNode, 
+      originalEndNode)
+    if (commonAncestor === null) {
+      throw new Error("Common ancestor is null.")
     }
 
     /**
@@ -497,7 +494,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       clone._data = this.dom.characterData.substringData(
         originalStartNode as CharacterDataInternal, originalStartOffset,
         this.dom.tree.nodeLength(originalStartNode) - originalStartOffset)
-      fragment.append(clone)
+      this.dom.mutation.append(clone, fragment)
     } else if (firstPartiallyContainedChild !== null) {
       /**
        * 14. Otherwise, if first partially contained child is not null:
@@ -510,13 +507,13 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * subrange.
        * 14.5. Append subfragment to clone.
        */
-      const clone = this.dom.node.clone(originalStartNode)
-      fragment.append(clone)
+      const clone = this.dom.node.clone(firstPartiallyContainedChild)
+      this.dom.mutation.append(clone, fragment)
       const subrange = this.dom.create.range(
         [originalStartNode, originalStartOffset],
         [firstPartiallyContainedChild, this.dom.tree.nodeLength(firstPartiallyContainedChild)])
       const subfragment = this.cloneTheContents(subrange)
-      clone.appendChild(subfragment)
+      this.dom.mutation.append(subfragment, clone)
     }
 
     /**
@@ -528,7 +525,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     for (const child of containedChildren) {
       const clone = this.dom.node.clone(child)
-      fragment.appendChild(clone)
+      this.dom.mutation.append(clone, fragment)
     }
 
     if (lastPartiallyContainedChild !== null &&
@@ -544,7 +541,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       const clone = this.dom.node.clone(originalEndNode) as CharacterDataInternal
       clone._data = this.dom.characterData.substringData(
         originalEndNode as CharacterDataInternal, 0, originalEndOffset)
-      fragment.append(clone)
+      this.dom.mutation.append(clone, fragment)
     } else if (lastPartiallyContainedChild !== null) {
       /**
        * 17. Otherwise, if last partially contained child is not null:
@@ -562,7 +559,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
         [lastPartiallyContainedChild, 0],
         [originalEndNode, originalEndOffset])
       const subfragment = this.extract(subrange)
-      clone.appendChild(subfragment)
+      this.dom.mutation.append(subfragment, clone)
     }
 
     /**
@@ -697,9 +694,10 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
 
   /** @inheritdoc */
   removeRange(range: RangeInternal, doc: DocumentInternal): void {
-    const index = doc._rangeList.indexOf(range)
+    const rangeList = globalStore.rangeList as RangeInternal[]
+    const index = rangeList.indexOf(range)
     if (index > -1) {
-      doc._rangeList.splice(index, 1)
+      rangeList.splice(index, 1)
     }
   }
 

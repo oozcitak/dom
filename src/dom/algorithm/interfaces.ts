@@ -307,6 +307,14 @@ export interface TreeAlgorithm extends SubAlgorithm {
     filter?: (ancestorNode: NodeInternal) => any): IterableIterator<NodeInternal>
 
   /**
+   * Returns the common ancestor of the given nodes.
+   * 
+   * @param nodeA - a node
+   * @param nodeB - a node
+   */
+  getCommonAncestor(nodeA: NodeInternal, nodeB: NodeInternal): NodeInternal | null
+
+  /**
    * Returns the node following `node` in depth-first preorder.
    * 
    * @param root - root of the subtree

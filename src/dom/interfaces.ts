@@ -1938,12 +1938,12 @@ export interface Range extends AbstractRange {
   deleteContents(): void
 
   /**
-   * Moves the contents of the to a document fragment.
+   * Moves the contents of the range to a document fragment.
    */
   extractContents(): DocumentFragment
 
   /**
-   * Copies the contents of the to a document fragment.
+   * Copies the contents of the range to a document fragment.
    */
   cloneContents(): DocumentFragment
 

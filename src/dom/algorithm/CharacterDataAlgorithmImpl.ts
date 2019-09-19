@@ -5,6 +5,7 @@ import {
 } from '../interfacesInternal'
 import { DOMException } from '../DOMException'
 import { Guard } from '../util'
+import { globalStore } from '../../util'
 
 /**
  * Contains character data algorithms.
@@ -72,9 +73,8 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * than offset plus count, increase its end offset by data’s length and 
      * decrease it by count.
      */
-    const doc = node._nodeDocument
-    for (const item of doc._rangeList) {
-      const range = item as RangeInternal
+    const rangeList = globalStore.rangeList as RangeInternal[]
+    for (const range of rangeList) {
       if (range._start[0] === node && range._start[1] > offset && range._start[1] <= offset + count) {
         range._start[1] += offset
       }

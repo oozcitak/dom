@@ -32,8 +32,6 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
-  _rangeList: Range[] = []
-
   protected _implementation: DOMImplementation
 
   /**

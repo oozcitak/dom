@@ -133,12 +133,13 @@ describe('Node', function () {
   test('normalize()', function () {
     const newEle = doc.createElement('child')
     de.appendChild(newEle)
+    newEle.appendChild(doc.createTextNode(''))
     newEle.appendChild(doc.createTextNode('part 1 '))
     newEle.appendChild(doc.createTextNode('part 2 '))
     newEle.appendChild(doc.createTextNode(''))
     newEle.appendChild(doc.createComment('separator'))
     newEle.appendChild(doc.createTextNode('part 3 '))
-    expect(newEle.childNodes.length).toBe(5)
+    expect(newEle.childNodes.length).toBe(6)
     newEle.normalize()
     expect(newEle.childNodes.length).toBe(3)
 
@@ -147,6 +148,76 @@ describe('Node', function () {
       throw new Error("charNode is null")
 
     expect(charNode.textContent).toBe('part 1 part 2 ')
+  })
+
+  test('normalize() text nodes updates live range', function () {
+    const newEle = doc.createElement('child')
+    de.appendChild(newEle)
+    const nodes = [
+      doc.createTextNode('AAA'),
+      doc.createTextNode('BBB'),
+      doc.createTextNode('CCC'),
+      doc.createTextNode('DDD'),
+      doc.createTextNode('EEE')
+    ]
+    newEle.append(...nodes)
+
+    const range1 = doc.createRange()
+    range1.setStart(nodes[0], 1)
+    range1.setEnd(nodes[4], 1)
+    const range2 = doc.createRange()
+    range2.setStart(nodes[1], 0)
+    range2.setEnd(nodes[3], 3)
+    const range3 = doc.createRange()
+    range3.setStart(nodes[2], 0)
+    range3.setEnd(nodes[2], 3)
+    const range4 = doc.createRange()
+    range4.setStart(nodes[2], 1)
+    range4.setEnd(nodes[2], 2)
+    const range5 = doc.createRange()
+    range5.setStart(nodes[2], 1)
+    range5.setEnd(nodes[2], 1)
+
+    newEle.normalize()
+
+    expect(range1.toString()).toBe('AABBBCCCDDDE')
+    expect(range2.toString()).toBe('BBBCCCDDD')
+    expect(range3.toString()).toBe('CCC')
+    expect(range4.toString()).toBe('C')
+    expect(range5.toString()).toBe('')
+  })
+
+  test('normalize() updates live range', function () {
+    const newEle = doc.createElement('child')
+    de.appendChild(newEle)
+    const nodes = [
+      doc.createTextNode('AAA'),
+      doc.createTextNode('BBB'),
+      doc.createTextNode('CCC'),
+      doc.createTextNode('DDD'),
+      doc.createTextNode('EEE')
+    ]
+    newEle.append(...nodes)
+
+    const range1 = doc.createRange()
+    range1.setStart(newEle, 0)
+    range1.setEnd(newEle, 5)
+    const range2 = doc.createRange()
+    range2.setStart(newEle, 1)
+    range2.setEnd(newEle, 4)
+    const range3 = doc.createRange()
+    range3.setStart(newEle, 2)
+    range3.setEnd(newEle, 3)
+    const range4 = doc.createRange()
+    range4.setStart(newEle, 2)
+    range4.setEnd(newEle, 2)
+
+    newEle.normalize()
+
+    expect(range1.toString()).toBe('AAABBBCCCDDDEEE')
+    expect(range2.toString()).toBe('BBBCCCDDD')
+    expect(range3.toString()).toBe('CCC')
+    expect(range4.toString()).toBe('')
   })
 
   test('isEqualNode()', function () {

@@ -3,6 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { NodeInternal, TextInternal, RangeInternal } from '../interfacesInternal'
 import { Guard } from '../util'
 import { DOMException } from '../DOMException'
+import { globalStore } from '../../util'
 
 /**
  * Contains text algorithms.
@@ -133,9 +134,8 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
        * 7.5. For each live range whose end node is parent and end offset is equal
        * to the index of node plus 1, increase its end offset by 1.
        */
-      const doc = node._nodeDocument
-      for (const item of doc._rangeList) {
-        const range = item as RangeInternal
+      const rangeList = globalStore.rangeList as RangeInternal[]
+      for (const range of rangeList) {
         if (range._start[0] === node && range._start[1] > offset) {
           range._start[0] = newNode
           range._start[1] -= offset

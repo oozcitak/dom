@@ -42,6 +42,9 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
     this._start = [doc, 0]
     this._end = [doc, 0]
+
+    const rangeList = globalStore.rangeList as RangeInternal[]
+    rangeList.push(this)
   }
 
   /** @inheritdoc */
@@ -52,13 +55,10 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * container be container’s parent.
      * 3. Return container.
      */
-    let container = this._startNode
-    while (!this._algo.tree.isAncestorOf(this._endNode, container, true)) {
-      if (container.parentNode === null) {
-        throw new Error("Container node has no parent node.")
-      } else {
-        container = container.parentNode as NodeInternal
-      }
+    let container = this._algo.tree.getCommonAncestor(
+      this._start[0] as NodeInternal, this._end[0] as NodeInternal)
+    if (container === null) {
+      throw new Error("Common ancestor container is null.")
     }
 
     return container

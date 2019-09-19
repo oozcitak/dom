@@ -7,7 +7,7 @@ import {
   DOMTokenListImpl, ElementImpl, EventImpl, HTMLCollectionImpl, 
   NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
-  XMLDocumentImpl
+  XMLDocumentImpl, RangeImpl
 } from '../../src/dom'
 import { DOMParser, MimeType } from '../../src/dom/parser'
 import { XMLSerializer } from '../../src/dom/serializer'
@@ -40,6 +40,7 @@ export default class TestHelpers extends TestHelpersRoot {
   static Node = NodeImpl
   static NodeList = NodeListImpl
   static ProcessingInstruction = ProcessingInstructionImpl
+  static Range = RangeImpl
   static ShadowRoot = ShadowRootImpl
   static StaticRange = StaticRangeImpl
   static Text = TextImpl

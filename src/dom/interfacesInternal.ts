@@ -188,12 +188,6 @@ export interface DocumentInternal extends NodeInternal, Document {
   _origin: string
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
-
-  /**
-   * Used to keep track of live ranges and clean up memory. This is a 
-   * non-standard property.
-   */
-  _rangeList: Range[]
 }
 
 /**

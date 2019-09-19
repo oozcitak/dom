@@ -4,7 +4,7 @@ import { DOMException } from '../DOMException'
 import { NodeInternal, RangeInternal, ElementInternal, SlotInternal } from '../interfacesInternal'
 import { NodeType } from '../interfaces'
 import { Guard } from '../util'
-import { isEmpty } from '../../util'
+import { isEmpty, globalStore } from '../../util'
 import { infra } from '../../infra'
 
 /**
@@ -208,10 +208,9 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * offset is greater than child's index, increase its end 
        * offset by count.
        */
-      const doc = parent._nodeDocument
+      const rangeList = globalStore.rangeList as RangeInternal[]
       const index = this.dom.tree.index(child)
-      for (const item of doc._rangeList) {
-        const range = item as RangeInternal
+      for (const range of rangeList) {
         if (range._start[0] === parent && range._start[1] > index) {
           range._start[1] += count
         }
@@ -636,9 +635,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. For each live range whose end node is an inclusive descendant of 
      * node, set its end to (parent, index).
      */
-    const doc = parent._nodeDocument
-    for (const item of doc._rangeList) {
-      const range = item as RangeInternal
+    const rangeList = globalStore.rangeList as RangeInternal[]
+    for (const range of rangeList) {
       if (this.dom.tree.isDescendantOf(node, range._start[0] as NodeInternal, true)) {
         range._start = [parent, index]
       }
@@ -659,8 +657,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. For each live range whose end node is parent and end offset is greater 
      * than index, decrease its end offset by 1.
      */
-    for (const item of doc._rangeList) {
-      const range = item as RangeInternal
+    for (const range of rangeList) {
       if (range._start[0] === parent && range._start[1] > index) {
         range._start[1] -= 1
       }
