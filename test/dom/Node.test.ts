@@ -220,6 +220,20 @@ describe('Node', function () {
     expect(range4.toString()).toBe('')
   })
 
+  test('cloneNode() shadow', function () {
+    const sdoc = $$.dom.createHTMLDocument('my doc')
+    const sbody = sdoc.getElementsByTagName('body')[0]
+    if (!sbody)
+      throw new Error("body element is null")  
+    const sele = sdoc.createElementNS('http://www.w3.org/1999/xhtml', 'my-custom-element')
+    sbody.appendChild(sele)
+    const shadowRoot = sele.attachShadow({mode: "open"})
+    const snode = doc.createElement('node')
+    shadowRoot.appendChild(snode)
+
+    expect(() => shadowRoot.cloneNode()).toThrow()
+  })
+
   test('isEqualNode()', function () {
     const newEle1 = doc.createElement('child')
     newEle1.setAttribute('att1', 'val1')
@@ -254,6 +268,7 @@ describe('Node', function () {
       throw new Error("charNode is null")
 
     expect(ele1.isSameNode(sameEle1)).toBeTruthy()
+    expect(ele1.isSameNode(null)).toBeFalsy()
   })
 
   test('compareDocumentPosition()', function () {
