@@ -1,9 +1,14 @@
 import { GlobalStore } from './GlobalStore'
+export { DOMObjectCacheImpl } from './DOMObjectCacheImpl'
+
+// Export interfaces
+import * as Interfaces from './interfaces'
+export { Interfaces }
 
 /**
  * Stores global variables.
  */
-export const globalStore: GlobalStore = GlobalStore.instance
+export const globalStore = GlobalStore.instance
 
 /**
  * Applies the mixin to a given class.

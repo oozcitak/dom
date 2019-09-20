@@ -694,11 +694,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
 
   /** @inheritdoc */
   removeRange(range: RangeInternal, doc: DocumentInternal): void {
-    const rangeList = globalStore.rangeList as RangeInternal[]
-    const index = rangeList.indexOf(range)
-    if (index > -1) {
-      rangeList.splice(index, 1)
-    }
+    doc._rangeList.remove(range)
   }
 
 }

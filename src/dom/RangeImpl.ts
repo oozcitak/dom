@@ -4,7 +4,7 @@ import {
 } from './interfaces'
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
-import { RangeInternal, NodeInternal } from './interfacesInternal'
+import { RangeInternal, NodeInternal, DocumentInternal } from './interfacesInternal'
 import { Guard } from './util/Guard'
 import { globalStore } from '../util'
 import { WindowInternal } from '../htmldom/interfacesInternal'
@@ -17,8 +17,27 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
   _algo: DOMAlgorithm
 
-  _start: BoundaryPoint
-  _end: BoundaryPoint
+  __start: BoundaryPoint
+  get _start(): BoundaryPoint { return this.__start }
+  set _start(val: BoundaryPoint) {
+    const oldRangeList = (this.__start[0] as NodeInternal)._nodeDocument._rangeList
+    oldRangeList.remove(this)
+
+    this.__start = val 
+    const newRangeList = (val[0] as NodeInternal)._nodeDocument._rangeList
+    newRangeList.add(this)
+  }
+
+  __end: BoundaryPoint
+  get _end(): BoundaryPoint { return this.__end }
+  set _end(val: BoundaryPoint) { 
+    const oldRangeList = (this.__end[0] as NodeInternal)._nodeDocument._rangeList
+    oldRangeList.remove(this)
+
+    this.__end = val
+    const newRangeList = (val[0] as NodeInternal)._nodeDocument._rangeList
+    newRangeList.add(this)
+  }
 
   static readonly START_TO_START: number = 0
   static readonly START_TO_END: number = 1
@@ -40,11 +59,14 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     const window = globalStore.window as WindowInternal
     const doc = window.document
 
+    this.__start = [doc, 0]
+    this.__end = [doc, 0]
+
     this._start = [doc, 0]
     this._end = [doc, 0]
 
-    const rangeList = globalStore.rangeList as RangeInternal[]
-    rangeList.push(this)
+    const rangeList = (doc as DocumentInternal)._rangeList
+    rangeList.add(this)
   }
 
   /** @inheritdoc */

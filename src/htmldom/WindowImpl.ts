@@ -2,7 +2,6 @@ import { WindowImpl as DOMWindowImpl } from '../dom/WindowImpl'
 import { WindowInternal, DocumentInternal } from './interfacesInternal'
 import { globalStore } from '../util'
 import { Window, Document } from './interfaces'
-import { DOMAlgorithmImpl } from '../dom/algorithm'
 
 /**
  * Represents a window containing a DOM document.
@@ -19,7 +18,8 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
   protected constructor() {
     super()
 
-    this._associatedDocument = undefined as unknown as DocumentInternal
+    const algo = globalStore.algorithm
+    this._associatedDocument = algo.create.document()
   }
 
   /** @inheritdoc */
@@ -37,21 +37,8 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
   /**
    * Creates a new window with a blank document.
    */
-  static _create(): Window {
-    const algo = new DOMAlgorithmImpl()
-    globalStore.algorithm = algo
-    
-    const window = new WindowImpl()
-    globalStore.window = window
-
-    const doc = algo.create.document()
-    window._associatedDocument = doc
-
-    // Used to keep track of live ranges
-    // TODO: Limit the memory used by the range list
-    globalStore.rangeList = []
-
-    return window
+  static _create(): Window {   
+    return new WindowImpl()
   }
 
 }

@@ -11,6 +11,7 @@ import {
   NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType
 } from "./interfaces"
 import { AttributeChangeStep } from "./algorithm/interfaces"
+import { DOMObjectCache } from "../util/interfaces"
 
 /**
  * Represents a window containing a DOM document.
@@ -188,6 +189,8 @@ export interface DocumentInternal extends NodeInternal, Document {
   _origin: string
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
+
+  _rangeList: DOMObjectCache<RangeInternal>
 }
 
 /**

@@ -5,13 +5,14 @@ import {
   CDATASection, NodeIterator, TreeWalker, FilterResult, Range, Event,
   EventTarget
 } from './interfaces'
-import { DocumentInternal, NodeInternal } from './interfacesInternal'
+import { DocumentInternal, NodeInternal, RangeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
 import { XMLSpec } from './spec'
 import { Guard } from './util'
-import { globalStore, isFunction, isString } from '../util'
+import { globalStore, isFunction, isString, DOMObjectCacheImpl } from '../util'
 import { infra } from '../infra'
+import { DOMObjectCache } from '../util/interfaces'
 
 /**
  * Represents a document node.
@@ -34,6 +35,11 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
   protected _implementation: DOMImplementation
 
+  _nodeDocumentOverwrite: DocumentInternal | null = null
+  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverwrite || this }
+  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverwrite = val }
+  _rangeList: DOMObjectCache<RangeInternal>
+
   /**
    * Initializes a new instance of `Document`.
    */
@@ -42,7 +48,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
     this._implementation = this._algo.create.domImplementation(this)
 
-    this._nodeDocument = this
+    this._rangeList = new DOMObjectCacheImpl<RangeInternal>()
 
     // TODO: return a new document whose origin is the origin of current global object’s associated Document.
   }

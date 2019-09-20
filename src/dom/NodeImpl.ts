@@ -5,12 +5,12 @@ import {
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
 import {
-  NodeInternal, DocumentInternal, TextInternal, RangeInternal, AttrInternal,
-  ElementInternal
+  NodeInternal, DocumentInternal, TextInternal, AttrInternal, ElementInternal
 } from './interfacesInternal'
 import { globalStore } from '../util'
 import { Guard } from './util'
 import { DOMException } from './DOMException'
+import { DocumentImpl } from './DocumentImpl'
 
 /**
  * Represents a generic XML node.
@@ -39,7 +39,9 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
 
   protected _childNodes: NodeList
 
-  _nodeDocument: DocumentInternal
+  _nodeDocumentOverwrite: DocumentInternal | null = null
+  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverwrite || globalStore.window.document as DocumentInternal }
+  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverwrite = val }
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
 
@@ -56,9 +58,6 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    */
   protected constructor() {
     super()
-
-    const window = globalStore.window
-    this._nodeDocument = window.document as DocumentInternal
 
     this._childNodes = this._algo.create.nodeList(this)
   }
@@ -367,8 +366,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
          * end offset to length.
          */
         const index = algo.tree.index(currentNode)
-        const rangeList = globalStore.rangeList as RangeInternal[]
-        for (const range of rangeList) {
+        const rangeList = this._nodeDocument._rangeList
+        for (const range of rangeList.entries()) {
           if (range._start[0] === currentNode) {
             range._start[0] = node
             range._start[1] += length
