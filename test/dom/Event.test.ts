@@ -21,13 +21,13 @@ describe('Event', function () {
       e.initEvent("something-else")
       expect(e.type).toBe("custom")
 
-      expect(e.bubbles).toBeFalsy()
-      expect(e.cancelable).toBeFalsy()
-      expect(e.cancelBubble).toBeFalsy()
-      expect(e.composed).toBeFalsy()
-      expect(e.defaultPrevented).toBeFalsy()
-      expect(e.isTrusted).toBeFalsy()
-      expect(e.returnValue).toBeTruthy()
+      expect(e.bubbles).toBe(false)
+      expect(e.cancelable).toBe(false)
+      expect(e.cancelBubble).toBe(false)
+      expect(e.composed).toBe(false)
+      expect(e.defaultPrevented).toBe(false)
+      expect(e.isTrusted).toBe(false)
+      expect(e.returnValue).toBe(true)
       expect(e.type).toBe("custom")
       expect(e.eventPhase).toBe($$.Event.AT_TARGET)
       expect(e.target).toBe(ele)
@@ -45,8 +45,8 @@ describe('Event', function () {
 
     ele.addEventListener('custom', function (e) {
       expect(e.type).toBe("custom")
-      expect(e.bubbles).toBeTruthy()
-      expect(e.cancelable).toBeTruthy()
+      expect(e.bubbles).toBe(true)
+      expect(e.cancelable).toBe(true)
       expect(e.target).toBe(ele)
     }, false)
 
@@ -63,7 +63,7 @@ describe('Event', function () {
       propagated = true
     }, false)
     childEle.dispatchEvent(event)
-    expect(propagated).toBeTruthy()
+    expect(propagated).toBe(true)
   })
 
   test('stopPropagation()', function () {
@@ -80,7 +80,7 @@ describe('Event', function () {
     }, false)
     childEle.dispatchEvent(event)
 
-    expect(propagated).toBeFalsy()
+    expect(propagated).toBe(false)
   })
 
   test('cancelBubble()', function () {
@@ -97,7 +97,7 @@ describe('Event', function () {
     }, false)
     childEle.dispatchEvent(event)
 
-    expect(propagated).toBeFalsy()
+    expect(propagated).toBe(false)
   })
 
   test('immediate propagation', function () {
@@ -125,7 +125,7 @@ describe('Event', function () {
     }, false)
     ele.dispatchEvent(event)
 
-    expect(propagated).toBeFalsy()
+    expect(propagated).toBe(false)
   })
 
 })

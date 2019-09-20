@@ -93,12 +93,12 @@ describe('Attr', function () {
     attr4.value = 'val'
     const attr5 = doc.createAttributeNS('my ns', 'att')
     attr5.value = 'other val'
-    expect(attr1.isEqualNode(attr2)).toBeTruthy()
-    expect(attr1.isEqualNode(attr3)).toBeFalsy()
-    expect(attr1.isEqualNode(attr4)).toBeFalsy()
-    expect(attr1.isEqualNode(attr5)).toBeFalsy()
-    expect(attr1.isEqualNode(null)).toBeFalsy()
-    expect(attr1.isEqualNode()).toBeFalsy()
+    expect(attr1.isEqualNode(attr2)).toBe(true)
+    expect(attr1.isEqualNode(attr3)).toBe(false)
+    expect(attr1.isEqualNode(attr4)).toBe(false)
+    expect(attr1.isEqualNode(attr5)).toBe(false)
+    expect(attr1.isEqualNode(null)).toBe(false)
+    expect(attr1.isEqualNode()).toBe(false)
   })
 
 })

@@ -59,7 +59,7 @@ describe('NodeIterator', function () {
 
     expect(node).toBeNull()
     expect(iter.referenceNode).toBe(root)
-    expect(iter.pointerBeforeReferenceNode).toBeTruthy()
+    expect(iter.pointerBeforeReferenceNode).toBe(true)
   })
 
 })

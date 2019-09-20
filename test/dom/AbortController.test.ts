@@ -22,10 +22,10 @@ describe('AbortController', () => {
   }
 
   test('abort()', () => {
-    expect(signal.aborted).toBeFalsy()
+    expect(signal.aborted).toBe(false)
     doWork(signal)
     controller.abort()
-    expect(signal.aborted).toBeTruthy()  
+    expect(signal.aborted).toBe(true)  
   })
 
 })

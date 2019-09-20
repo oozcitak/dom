@@ -10,7 +10,7 @@ describe('AbstractRange', function () {
     expect(range._startOffset).toBe(0)
     expect(range._endNode).toBe(doc)
     expect(range._endOffset).toBe(0)
-    expect(range._collapsed).toBeTruthy()
+    expect(range._collapsed).toBe(true)
   })
 
   test('startContainer, endContainer', function () {
@@ -19,7 +19,7 @@ describe('AbstractRange', function () {
     expect(range.startOffset).toBe(0)
     expect(range.endContainer).toBe(doc)
     expect(range.endOffset).toBe(0)
-    expect(range.collapsed).toBeTruthy()
+    expect(range.collapsed).toBe(true)
   })
 
 })

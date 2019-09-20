@@ -33,13 +33,13 @@ describe('Node', function () {
   })
 
   test('isConnected', function () {
-    expect(ele1.isConnected).toBeTruthy()
+    expect(ele1.isConnected).toBe(true)
     const newEle = doc.createElement('child4')
-    expect(newEle.isConnected).toBeFalsy()
+    expect(newEle.isConnected).toBe(false)
     de.appendChild(newEle)
-    expect(newEle.isConnected).toBeTruthy()
+    expect(newEle.isConnected).toBe(true)
     newEle.remove()
-    expect(newEle.isConnected).toBeFalsy()
+    expect(newEle.isConnected).toBe(false)
   })
 
   test('ownerDocument', function () {
@@ -79,7 +79,7 @@ describe('Node', function () {
   })
 
   test('hasChildNodes()', function () {
-    expect(ele1.hasChildNodes()).toBeTruthy()
+    expect(ele1.hasChildNodes()).toBe(true)
   })
 
   test('childNodes', function () {
@@ -256,10 +256,10 @@ describe('Node', function () {
     newEle3.appendChild(doc.createTextNode('part 1 '))
     newEle3.appendChild(doc.createTextNode('part 4 '))
 
-    expect(newEle1.isEqualNode(newEle2)).toBeTruthy()
-    expect(newEle1.isEqualNode(newEle3)).toBeFalsy()
+    expect(newEle1.isEqualNode(newEle2)).toBe(true)
+    expect(newEle1.isEqualNode(newEle3)).toBe(false)
 
-    expect(newEle1.isEqualNode()).toBeFalsy()
+    expect(newEle1.isEqualNode()).toBe(false)
   })
 
   test('isSameNode()', function () {
@@ -267,8 +267,9 @@ describe('Node', function () {
     if (!sameEle1)
       throw new Error("charNode is null")
 
-    expect(ele1.isSameNode(sameEle1)).toBeTruthy()
-    expect(ele1.isSameNode(null)).toBeFalsy()
+    expect(ele1.isSameNode(sameEle1)).toBe(true)
+    expect(ele1.isSameNode(null)).toBe(false)
+    expect(ele1.isSameNode()).toBe(false)
   })
 
   test('compareDocumentPosition()', function () {
@@ -310,8 +311,8 @@ describe('Node', function () {
   })
 
   test('contains()', function () {
-    expect(de.contains(child2)).toBeTruthy()
-    expect(de.contains(null)).toBeFalsy()
+    expect(de.contains(child2)).toBe(true)
+    expect(de.contains(null)).toBe(false)
   })
 
 
@@ -340,9 +341,9 @@ describe('Node', function () {
     const html = htmlDoc.documentElement
     const newText = htmlDoc.createTextNode('txt')
     html.appendChild(newText)
-    expect(newText.isDefaultNamespace('http://www.w3.org/1999/xhtml')).toBeTruthy()
-    expect(newText.isDefaultNamespace('none')).toBeFalsy()
-    expect(newText.isDefaultNamespace('')).toBeFalsy()
+    expect(newText.isDefaultNamespace('http://www.w3.org/1999/xhtml')).toBe(true)
+    expect(newText.isDefaultNamespace('none')).toBe(false)
+    expect(newText.isDefaultNamespace('')).toBe(false)
   })
 
   test('insertBefore()', function () {

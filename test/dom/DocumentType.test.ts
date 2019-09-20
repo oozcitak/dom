@@ -20,13 +20,13 @@ describe('DocumentType', function () {
     const node = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const otherNode = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     expect(node).not.toBe(otherNode)
-    expect(node.isEqualNode(otherNode)).toBeTruthy()
+    expect(node.isEqualNode(otherNode)).toBe(true)
 
     const anotherNode = $$.dom.createDocumentType('qname1', 'pubid1', 'sysid1')
-    expect(node.isEqualNode(anotherNode)).toBeFalsy()
+    expect(node.isEqualNode(anotherNode)).toBe(false)
 
-    expect(node.isEqualNode()).toBeFalsy()
-    expect(node.isEqualNode($$.dom.createDocument('ns', 'name'))).toBeFalsy()
+    expect(node.isEqualNode()).toBe(false)
+    expect(node.isEqualNode($$.dom.createDocument('ns', 'name'))).toBe(false)
   })
 
   test('cloneNode()', function () {

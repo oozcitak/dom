@@ -92,8 +92,8 @@ describe('Element', function () {
   })
 
   test('hasAttributes()', function () {
-    expect(ele1.hasAttributes()).toBeTruthy()
-    expect(ele4.hasAttributes()).toBeFalsy()
+    expect(ele1.hasAttributes()).toBe(true)
+    expect(ele4.hasAttributes()).toBe(false)
   })
 
   test('toggleAttribute()', function () {
@@ -102,24 +102,24 @@ describe('Element', function () {
     ele7.setAttribute('someAtt2', 'val2')
     ele7.setAttribute('toggleAtt', '')
     ele7.toggleAttribute('toggleAtt')
-    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(false)
     ele7.toggleAttribute('toggleAtt')
-    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(true)
     ele7.toggleAttribute('toggleAtt', true)
-    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(true)
     ele7.toggleAttribute('toggleAtt', false)
-    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(false)
     ele7.toggleAttribute('toggleAtt', false)
-    expect(ele7.hasAttribute('toggleAtt')).toBeFalsy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(false)
     ele7.toggleAttribute('toggleAtt', true)
-    expect(ele7.hasAttribute('toggleAtt')).toBeTruthy()
+    expect(ele7.hasAttribute('toggleAtt')).toBe(true)
 
     // HTML
     htmlEle7.setAttribute('toggleAtt', '')
     htmlEle7.toggleAttribute('toggleAtt')
-    expect(htmlEle7.hasAttribute('toggleAtt')).toBeFalsy()
+    expect(htmlEle7.hasAttribute('toggleAtt')).toBe(false)
     htmlEle7.toggleAttribute('toggleAtt')
-    expect(htmlEle7.hasAttribute('toggleAtt')).toBeTruthy()
+    expect(htmlEle7.hasAttribute('toggleAtt')).toBe(true)
   })
 
   test('getAttributeNames()', function () {
@@ -167,17 +167,17 @@ describe('Element', function () {
   })
 
   test('hasAttribute()', function () {
-    expect(ele1.hasAttribute('att1')).toBeTruthy()
-    expect(ele1.hasAttribute('nope')).toBeFalsy()
+    expect(ele1.hasAttribute('att1')).toBe(true)
+    expect(ele1.hasAttribute('nope')).toBe(false)
 
     htmlEle7.setAttribute('NAME', 'val')
-    expect(htmlEle7.hasAttribute('name')).toBeTruthy()
+    expect(htmlEle7.hasAttribute('name')).toBe(true)
   })
 
   test('hasAttributeNS()', function () {
-    expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBeTruthy()
-    expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'nope')).toBeFalsy()
-    expect(ele1.hasAttributeNS('', 'name')).toBeFalsy()
+    expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBe(true)
+    expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'nope')).toBe(false)
+    expect(ele1.hasAttributeNS('', 'name')).toBe(false)
   })
 
   test('getAttributeNode()', function () {
@@ -298,18 +298,18 @@ describe('Element', function () {
   })
 
   test('isEqualNode()', function () {
-    expect(ele5.isEqualNode(ele6)).toBeTruthy()
-    expect(ele5.isEqualNode(ele1)).toBeFalsy()
+    expect(ele5.isEqualNode(ele6)).toBe(true)
+    expect(ele5.isEqualNode(ele1)).toBe(false)
 
     const en_ele1 = doc.createElementNS('ns1', 'p1:name1')
     const en_ele2 = doc.createElementNS('ns2', 'p2:name2')
-    expect(en_ele1.isEqualNode(en_ele2)).toBeFalsy()
+    expect(en_ele1.isEqualNode(en_ele2)).toBe(false)
 
     const en_ele3 = doc.createElementNS('ns1', 'p1:name1')
     en_ele3.setAttributeNS('ns1', 'n1:name1', 'val1')
     const en_ele4 = doc.createElementNS('ns1', 'p1:name1')
     en_ele4.setAttributeNS('ns2', 'n2:name2', 'val2')
-    expect(en_ele3.isEqualNode(en_ele4)).toBeFalsy()
+    expect(en_ele3.isEqualNode(en_ele4)).toBe(false)
   })
 
   test('getElementsByTagName()', function () {

@@ -17,8 +17,8 @@ describe('CharacterData', function () {
   })
 
   test('isEqualNode()', function () {
-    expect(node1.isEqualNode(node2)).toBeTruthy()
-    expect(node1.isEqualNode()).toBeFalsy()
+    expect(node1.isEqualNode(node2)).toBe(true)
+    expect(node1.isEqualNode()).toBe(false)
   })
 
   test('nodeValue, textContent, data', function () {

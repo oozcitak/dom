@@ -28,8 +28,8 @@ describe('ProcessingInstruction', function () {
 
   test('isEqualNode()', function () {
     const node2 = doc.createProcessingInstruction('program', 'instruction')
-    expect(node.isEqualNode(node2)).toBeTruthy()
-    expect(node.isEqualNode()).toBeFalsy()
+    expect(node.isEqualNode(node2)).toBe(true)
+    expect(node.isEqualNode()).toBe(false)
   })
 
   test('_create()', function () {

@@ -28,10 +28,10 @@ describe('DOMTokenList', function () {
   })
 
   test('contains()', function () {
-    expect(list.contains('one')).toBeTruthy()
-    expect(list.contains('two')).toBeTruthy()
-    expect(list.contains('three')).toBeTruthy()
-    expect(list.contains('none')).toBeFalsy()
+    expect(list.contains('one')).toBe(true)
+    expect(list.contains('two')).toBe(true)
+    expect(list.contains('three')).toBe(true)
+    expect(list.contains('none')).toBe(false)
   })
 
   test('add()', function () {
@@ -49,15 +49,15 @@ describe('DOMTokenList', function () {
   })
 
   test('toggle()', function () {
-    expect(list.toggle('one')).toBeFalsy()
-    expect(list.toggle('one')).toBeTruthy()
-    expect(list.toggle('one', false)).toBeFalsy()
+    expect(list.toggle('one')).toBe(false)
+    expect(list.toggle('one')).toBe(true)
+    expect(list.toggle('one', false)).toBe(false)
     expect(list.length).toBe(2)
-    expect(list.toggle('one', false)).toBeFalsy()
+    expect(list.toggle('one', false)).toBe(false)
     expect(list.length).toBe(2)
-    expect(list.toggle('one', true)).toBeTruthy()
+    expect(list.toggle('one', true)).toBe(true)
     expect(list.length).toBe(3)
-    expect(list.toggle('one', true)).toBeTruthy()
+    expect(list.toggle('one', true)).toBe(true)
     expect(list.length).toBe(3)
     expect(() => list.toggle('')).toThrow()
     expect(() => list.toggle('one two')).toThrow()
@@ -68,8 +68,8 @@ describe('DOMTokenList', function () {
     expect(() => list.replace('one', '')).toThrow()
     expect(() => list.replace(' ', '1')).toThrow()
     expect(() => list.replace('one', ' ')).toThrow()
-    expect(list.replace('one', '1')).toBeTruthy()
-    expect(list.replace('one', '1')).toBeFalsy()
+    expect(list.replace('one', '1')).toBe(true)
+    expect(list.replace('one', '1')).toBe(false)
     expect(list.length).toBe(3)
   })
 

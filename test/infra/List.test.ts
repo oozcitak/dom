@@ -58,14 +58,14 @@ describe('List', function () {
 
   test('contains()', function () {
     const list = ['a', 'b', 'c']
-    expect($$.infra.list.contains(list, 'b')).toBeTruthy()
-    expect($$.infra.list.contains(list, 'd')).toBeFalsy()
+    expect($$.infra.list.contains(list, 'b')).toBe(true)
+    expect($$.infra.list.contains(list, 'd')).toBe(false)
   })
 
   test('remove() with condition', function () {
     const list = ['a', 'b1', 'b2', 'c']
-    expect($$.infra.list.contains(list, (item) => item.startsWith('b'))).toBeTruthy()
-    expect($$.infra.list.contains(list, (item) => item.startsWith('d'))).toBeFalsy()
+    expect($$.infra.list.contains(list, (item) => item.startsWith('b'))).toBe(true)
+    expect($$.infra.list.contains(list, (item) => item.startsWith('d'))).toBe(false)
   })
 
   test('size()', function () {
@@ -80,9 +80,9 @@ describe('List', function () {
 
   test('isEmpty()', function () {
     const list = ['a', 'b', 'c']
-    expect($$.infra.list.isEmpty(list)).toBeFalsy()
+    expect($$.infra.list.isEmpty(list)).toBe(false)
     list.length = 0
-    expect($$.infra.list.isEmpty(list)).toBeTruthy()
+    expect($$.infra.list.isEmpty(list)).toBe(true)
   })
 
   test('forEach()', function () {

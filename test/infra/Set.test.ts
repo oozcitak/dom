@@ -58,14 +58,14 @@ describe('Set', function () {
 
   test('contains()', function () {
     const set = new Set(['a', 'b', 'c'])
-    expect($$.infra.set.contains(set, 'b')).toBeTruthy()
-    expect($$.infra.set.contains(set, 'd')).toBeFalsy()
+    expect($$.infra.set.contains(set, 'b')).toBe(true)
+    expect($$.infra.set.contains(set, 'd')).toBe(false)
   })
 
   test('remove() with condition', function () {
     const set = new Set(['a', 'b1', 'b2', 'c'])
-    expect($$.infra.set.contains(set, (item) => item.startsWith('b'))).toBeTruthy()
-    expect($$.infra.set.contains(set, (item) => item.startsWith('d'))).toBeFalsy()
+    expect($$.infra.set.contains(set, (item) => item.startsWith('b'))).toBe(true)
+    expect($$.infra.set.contains(set, (item) => item.startsWith('d'))).toBe(false)
   })
 
   test('size()', function () {
@@ -80,9 +80,9 @@ describe('Set', function () {
 
   test('isEmpty()', function () {
     const set = new Set(['a', 'b', 'c'])
-    expect($$.infra.set.isEmpty(set)).toBeFalsy()
+    expect($$.infra.set.isEmpty(set)).toBe(false)
     set.clear()
-    expect($$.infra.set.isEmpty(set)).toBeTruthy()
+    expect($$.infra.set.isEmpty(set)).toBe(true)
   })
 
   test('forEach()', function () {
@@ -137,16 +137,16 @@ describe('Set', function () {
     const superset = new Set(['a', 'b', 'c', 'd'])
     const subset = new Set(['b', 'c'])
     const otherset = new Set(['1', '2'])
-    expect($$.infra.set.isSubsetOf(subset, superset)).toBeTruthy()
-    expect($$.infra.set.isSubsetOf(otherset, superset)).toBeFalsy()
+    expect($$.infra.set.isSubsetOf(subset, superset)).toBe(true)
+    expect($$.infra.set.isSubsetOf(otherset, superset)).toBe(false)
   })
 
   test('isSupersetOf()', function () {
     const superset = new Set(['a', 'b', 'c', 'd'])
     const subset = new Set(['b', 'c'])
     const otherset = new Set(['1', '2'])
-    expect($$.infra.set.isSupersetOf(superset, subset)).toBeTruthy()
-    expect($$.infra.set.isSupersetOf(superset, otherset)).toBeFalsy()
+    expect($$.infra.set.isSupersetOf(superset, subset)).toBe(true)
+    expect($$.infra.set.isSupersetOf(superset, otherset)).toBe(false)
   })
 
   test('intersection()', function () {

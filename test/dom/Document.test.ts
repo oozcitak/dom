@@ -270,7 +270,7 @@ describe('Document', function () {
 
   test('implementation', function () {
     const impl = doc.implementation
-    expect(impl.createDocument).toBeTruthy()
+    expect(impl.createDocument).not.toBeUndefined()
   })
 
   test('quirks mode', function () {

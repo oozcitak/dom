@@ -17,9 +17,9 @@ describe('CustomEvent', function () {
       detail: "some data"
     })
     expect(event.type).toBe("custom")
-    expect(event.bubbles).toBeTruthy()
-    expect(event.cancelable).toBeTruthy()
-    expect(event.composed).toBeTruthy()
+    expect(event.bubbles).toBe(true)
+    expect(event.cancelable).toBe(true)
+    expect(event.composed).toBe(true)
     expect(event.detail).toBe("some data")
   })
 
@@ -44,9 +44,9 @@ describe('CustomEvent', function () {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom", true, true, "some data")
     expect(event.type).toBe("custom")
-    expect(event.bubbles).toBeTruthy()
-    expect(event.cancelable).toBeTruthy()
-    expect(event.composed).toBeFalsy()
+    expect(event.bubbles).toBe(true)
+    expect(event.cancelable).toBe(true)
+    expect(event.composed).toBe(false)
     expect(event.detail).toBe("some data")
   })
 
@@ -54,9 +54,9 @@ describe('CustomEvent', function () {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom")
     expect(event.type).toBe("custom")
-    expect(event.bubbles).toBeFalsy()
-    expect(event.cancelable).toBeFalsy()
-    expect(event.composed).toBeFalsy()
+    expect(event.bubbles).toBe(false)
+    expect(event.cancelable).toBe(false)
+    expect(event.composed).toBe(false)
     expect(event.detail).toBeNull()
   })
 
