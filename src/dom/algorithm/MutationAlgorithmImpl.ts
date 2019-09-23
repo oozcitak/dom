@@ -243,7 +243,9 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. If node is a DocumentFragment node, then queue a tree mutation record 
      * for node with « », nodes, null, and null.
      */
-    this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
+    if (Guard.isDocumentFragmentNode(node)) {
+      this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
+    }
 
     /**
      * 6. Let previousSibling be child’s previous sibling or parent’s last 

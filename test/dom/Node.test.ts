@@ -279,6 +279,22 @@ describe('Node', function () {
     expect(child4.compareDocumentPosition(de)).toBe(0x08 + 0x02)
   })
 
+  test('compareDocumentPosition() null node', function () {
+    const attr1_1 = doc.createAttribute('attr') // null owner
+    const attr1_2 = doc.createAttribute('attr') // null owner
+    if (attr1_1.compareDocumentPosition(attr1_2) === 0x20 + 0x01 + 0x02)
+      expect(attr1_2.compareDocumentPosition(attr1_1)).toBe(0x20 + 0x01 + 0x04)
+    else
+      expect(attr1_2.compareDocumentPosition(attr1_1)).toBe(0x20 + 0x01 + 0x02)
+    const attr2_1 = doc.createAttribute('attr') // null owner
+    const attr2_2 = doc.createAttribute('attr') // non-null owner
+    ele1.setAttributeNode(attr2_2)
+    if(attr2_1.compareDocumentPosition(attr2_2) === 0x20 + 0x01 + 0x02)
+      expect(attr2_2.compareDocumentPosition(attr2_1)).toBe(0x20 + 0x01 + 0x04)
+    else
+      expect(attr2_2.compareDocumentPosition(attr2_1)).toBe(0x20 + 0x01 + 0x02)
+  })
+
   test('compareDocumentPosition() attribute', function () {
     const att11 = doc.createAttribute('att11')
     child1.setAttributeNode(att11)
@@ -302,12 +318,14 @@ describe('Node', function () {
     const otherele = otherdoc.createElement('otherele')
     otherde.appendChild(otherele)
 
-    // TODO: If one returns Position.Preceding the other should return 
-    // Position.Following for consistency
+    // disconnected nodes. If one returns Position.Preceding the other should
+    // return Position.Following for consistency
     const pos1 = child1.compareDocumentPosition(otherele)
     const pos2 = otherele.compareDocumentPosition(child1)
-    expect(pos1).toBe(0x20 + 0x01 + 0x02)
-    expect(pos2).toBe(0x20 + 0x01 + 0x02)
+    if (pos1 === 0x20 + 0x01 + 0x02)
+      expect(pos2).toBe(0x20 + 0x01 + 0x04)
+    else
+      expect(pos2).toBe(0x20 + 0x01 + 0x02)
   })
 
   test('contains()', function () {

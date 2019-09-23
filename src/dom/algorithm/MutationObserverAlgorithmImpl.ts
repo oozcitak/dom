@@ -1,9 +1,11 @@
 import { MutationObserverAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { DOMException } from '../DOMException'
 import {
-  NodeInternal, MutationRecordInternal, MutationObserverInternal
+  MutationRecordInternal, MutationObserverInternal, WindowInternal, NodeInternal, SlotInternal
 } from '../interfacesInternal'
+import { globalStore } from '../../util'
+import { infra } from '../../infra'
+import { Guard } from '../util'
 
 /**
  * Contains mutation observer algorithms.
@@ -23,34 +25,72 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
   /** @inheritdoc */
   queueAMutationObserverMicrotask(): void {
     /**
-     * TODO:
      * 1. If the surrounding agent’s mutation observer microtask queued is true,
      * then return.
      * 2. Set the surrounding agent’s mutation observer microtask queued to true.
      * 3. Queue a microtask to notify mutation observers.
      */
-    
+    const window = globalStore.window as unknown as WindowInternal
+
+    if (window._mutationObserverMicrotaskQueued) return
+    window._mutationObserverMicrotaskQueued = true
+    Promise.resolve().then(() => { this.notifyMutationObservers() })
   }
 
   /** @inheritdoc */
   notifyMutationObservers(): void {
     /**
-     * TODO:
      * 1. Set the surrounding agent’s mutation observer microtask queued to false.
      * 2. Let notifySet be a clone of the surrounding agent’s mutation observers.
      * 3. Let signalSet be a clone of the surrounding agent’s signal slots.
      * 4. Empty the surrounding agent’s signal slots.
+     */
+    const window = globalStore.window as unknown as WindowInternal
+
+    window._mutationObserverMicrotaskQueued = false
+    const notifySet = infra.set.clone(window._mutationObservers)
+    const signalSet = infra.set.clone(window._signalSlots)
+    infra.set.empty(window._signalSlots)
+    /**
      * 5. For each mo of notifySet:
-     * 5.1. Let records be a clone of mo’s record queue.
-     * 5.2. Empty mo’s record queue.
-     * 5.3. For each node of mo’s node list, remove all transient registered 
-     * observers whose observer is mo from node’s registered observer list.
-     * 5.4. If records is not empty, then invoke mo’s callback with « records, 
-     * mo », and mo. If this throws an exception, then report the exception.
+     */
+    for (const moItem of notifySet) {
+      const mo = moItem as MutationObserverInternal
+      /**
+       * 5.1. Let records be a clone of mo’s record queue.
+       * 5.2. Empty mo’s record queue.
+       */
+      const records = infra.list.clone(mo._recordQueue)
+      infra.list.empty(mo._recordQueue)
+      /**
+       * 5.3. For each node of mo’s node list, remove all transient registered 
+       * observers whose observer is mo from node’s registered observer list.
+       */
+      for (const nodeItem of mo._nodeList) {
+        const node = nodeItem as NodeInternal
+        infra.list.remove(node._registeredObserverList, (observer) => {
+          return Guard.isTransientRegisteredObserver(observer) && observer.observer === mo
+        })
+      }
+      /**
+       * 5.4. If records is not empty, then invoke mo’s callback with « records, 
+       * mo », and mo. If this throws an exception, then report the exception.
+       */
+      if(!infra.list.isEmpty(records)) {
+        try {
+          mo._callback.call(this, records, mo)
+        } catch (err) {
+          // TODO: report the exception
+        }
+      }
+    }
+    /**
      * 6. For each slot of signalSet, fire an event named slotchange, with its 
      * bubbles attribute set to true, at slot.
      */
-    
+    for (const slot of signalSet) {
+      this.dom.event.fireAnEvent("slotchange", slot as SlotInternal, undefined, { bubbles: true })
+    }
   }
 
   /** @inheritdoc */

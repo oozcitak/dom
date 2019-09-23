@@ -695,7 +695,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
 
   /** @inheritdoc */
   fireAnEvent(e: string, target: EventTargetInternal,
-    eventConstructor?: typeof EventImpl,
+    eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
     legacyTargetOverrideFlag?: boolean): boolean {
     /**
      * 1. If eventConstructor is not given, then let eventConstructor be Event.
@@ -717,11 +717,16 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     event._type = e
 
     /**
-     * TODO:
      * 4. Initialize any other IDL attributes of event as described in the 
      * invocation of this algorithm.
      * _Note:_ This also allows for the isTrusted attribute to be set to false.
      */
+    if (idlAttributes) {
+      for (const [key, value] of Object.entries(idlAttributes)) {
+        const idlObj = event as any
+        idlObj[key] = value
+      }
+    }
 
     /**
      * 5. Return the result of dispatching event at target, with legacy target 

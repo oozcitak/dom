@@ -2,10 +2,11 @@ import { DOMAlgorithm, ShadowTreeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   SlotableInternal, SlotInternal, ElementInternal, ShadowRootInternal,
-  NodeInternal
+  NodeInternal,
+  WindowInternal
 } from '../interfacesInternal'
 import { Cast, Guard } from '../util'
-import { isEmpty } from '../../util'
+import { isEmpty, globalStore } from '../../util'
 
 /**
  * Contains shadow tree algorithms.
@@ -210,10 +211,17 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   /** @inheritdoc */
   signalASlotChange(slot: SlotInternal): void {
     /**
-     * TODO:
      * 1. Append slot to slot’s relevant agent’s signal slots.
      * 2. Queue a mutation observer microtask.
      */
+    /**
+     * TODO:
+     * The relevant agent for a platform object platformObject is the agent
+     * whose set of realms contains platformObject's relevant Realm.
+     */
+    const window = globalStore.window as unknown as WindowInternal
+    window._signalSlots.add(slot)
+    this.dom.observer.queueAMutationObserverMicrotask()
   }
 
 }

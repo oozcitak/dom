@@ -680,9 +680,12 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param target - event target
    * @param eventConstructor - an event constructor, with a description of how
    * IDL attributes are to be initialized
+   * @param idlAttributes - a dictionary describing how IDL attributes are 
+   * to be initialized
    * @param legacyTargetOverrideFlag - legacy target override flag
    */
-  fireAnEvent(e: string, target: EventTargetInternal, eventConstructor?: typeof EventImpl,
+  fireAnEvent(e: string, target: EventTargetInternal, 
+    eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
     legacyTargetOverrideFlag?: boolean): boolean
 
   /**

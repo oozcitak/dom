@@ -18,6 +18,9 @@ import { DOMObjectCache } from "../util/interfaces"
  */
 export interface WindowInternal extends Window, EventTargetInternal {
   _currentEvent?: Event
+  _signalSlots: Set<Slot>
+  _mutationObserverMicrotaskQueued: boolean
+  _mutationObservers: Set<MutationObserver>
 }
 
 /**

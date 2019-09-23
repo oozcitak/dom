@@ -1,3 +1,5 @@
+import { NodeInternal } from "../dom/interfacesInternal"
+
 /**
  * Represents a cache for DOM objects.
  */

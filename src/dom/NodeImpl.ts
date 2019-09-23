@@ -11,6 +11,7 @@ import { globalStore } from '../util'
 import { Guard } from './util'
 import { DOMException } from './DOMException'
 import { DocumentImpl } from './DocumentImpl'
+import { NodeCompareCache } from './util/NodeCompareCache'
 
 /**
  * Represents a generic XML node.
@@ -475,22 +476,23 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
     let attr2: AttrInternal | null = null
 
     /**
-     * 4. If node1 is an attribute, then set attr1 to node1 and node1 to
+     * 4. If node1 is an attribute, then set attr1 to node1 and node1 to 
+     * attr1’s element.
      */
-    if (node1 && Guard.isAttrNode(node1)) {
+    if (Guard.isAttrNode(node1)) {
       attr1 = node1
-      node1 = attr1.ownerElement as ElementInternal | null
+      node1 = attr1._element as ElementInternal | null
     }
 
     /**
      * 5. If node2 is an attribute, then:
      */
-    if (node2 && Guard.isAttrNode(node2)) {
+    if (Guard.isAttrNode(node2)) {
       /**
        * 5.1. Set attr2 to node2 and node2 to attr2’s element.
        */
       attr2 = node2
-      node2 = attr2.ownerElement as ElementInternal | null
+      node2 = attr2._element as ElementInternal | null
 
       /**
        * 5.2. If attr1 and node1 are non-null, and node2 is node1, then:
@@ -524,22 +526,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * DOCUMENT_POSITION_PRECEDING or DOCUMENT_POSITION_FOLLOWING, 
      * with the constraint that this is to be consistent, together.
      */
-    if (node1 === null && node2 === null) {
-      return Position.Disconnected | Position.ImplementationSpecific |
-        Position.Preceding
-    } else if (node1 === null) {
-      return Position.Disconnected | Position.ImplementationSpecific |
-        Position.Preceding
-    } else if (node2 === null) {
-      return Position.Disconnected | Position.ImplementationSpecific |
-        Position.Following
-    }
-
-    if (algo.tree.rootNode(node1) !== algo.tree.rootNode(node2)) {
-      // TODO: nodes are disconnected
+    if (node1 === null || node2 === null ||  
+      algo.tree.rootNode(node1) !== algo.tree.rootNode(node2)) {
+      // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        Position.Preceding
+        (NodeCompareCache.instance.check(this, other as NodeInternal) ? Position.Preceding : Position.Following)
     }
 
     /**

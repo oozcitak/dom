@@ -2,8 +2,10 @@ import {
   Node, MutationObserverInit, MutationRecord,
   MutationCallback, RegisteredObserver, TransientRegisteredObserver
 } from "./interfaces"
-import { MutationObserverInternal, NodeInternal } from "./interfacesInternal"
+import { MutationObserverInternal, NodeInternal, WindowInternal } from "./interfacesInternal"
 import { Guard } from "./util"
+import { globalStore } from "../util"
+import { infra } from "../infra"
 
 /**
  * Represents an object that can be used to observe mutations to the tree of
@@ -23,11 +25,12 @@ export class MutationObserverImpl implements MutationObserverInternal {
   public constructor(callback: MutationCallback) {
     /**
      * 1. Let mo be a new MutationObserver object whose callback is callback.
-     * TODO:
      * 2. Append mo to mo’s relevant agent’s mutation observers.
      * 3. Return mo.
      */
     this._callback = callback
+    const window = globalStore.window as unknown as WindowInternal
+    infra.set.append(window._mutationObservers, this)
   }
 
   /** @inheritdoc */

@@ -2127,10 +2127,10 @@ export interface AddEventListenerOptions extends EventListenerOptions {
  * Defines the criteria for the mutations to observe.
  */
 export interface MutationObserverInit {
-  childList: boolean
+  childList?: boolean
   attributes?: boolean
   characterData?: boolean
-  subtree: boolean
+  subtree?: boolean
   attributeOldValue?: boolean
   characterDataOldValue?: boolean
   attributeFilter?: string[]

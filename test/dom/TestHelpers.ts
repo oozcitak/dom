@@ -5,6 +5,7 @@ import {
   CharacterDataImpl, CommentImpl, CustomEventImpl, DocumentFragmentImpl,
   DocumentImpl, DocumentTypeImpl, DOMException, DOMImplementationImpl,
   DOMTokenListImpl, ElementImpl, EventImpl, HTMLCollectionImpl, 
+  MutationObserverImpl, MutationRecordImpl,
   NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
   XMLDocumentImpl, RangeImpl
@@ -17,6 +18,7 @@ import { TupleSet } from '../../src/dom/serializer/TupleSet'
 import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
 import { XMLSpec, HTMLSpec } from '../../src/dom/spec'
 import { DOMAlgorithmImpl } from '../../src/dom/algorithm/DOMAlgorithmImpl'
+import { ElementInternal } from "../../src/dom/interfacesInternal"
 
 export default class TestHelpers extends TestHelpersRoot {
   static AbortController = AbortControllerImpl
@@ -35,6 +37,8 @@ export default class TestHelpers extends TestHelpersRoot {
   static Element = ElementImpl
   static Event = EventImpl
   static HTMLCollection = HTMLCollectionImpl
+  static MutationObserver = MutationObserverImpl
+  static MutationRecord = MutationRecordImpl
   static NamedNodeMap = NamedNodeMapImpl
   static NodeFilter = NodeFilterImpl
   static Node = NodeImpl
@@ -73,4 +77,15 @@ export default class TestHelpers extends TestHelpersRoot {
    * Returns the DOM implementation object.
    */
   static dom = window.document.implementation
+  /**
+   * Returns the root element of a new document.
+   */
+  static get newDoc(): ElementInternal {
+    const doc = window.document.implementation.createDocument('ns', 'root')
+
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+  
+    return doc.documentElement as ElementInternal
+  }
 } 
