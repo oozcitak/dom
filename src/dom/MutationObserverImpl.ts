@@ -44,8 +44,8 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * 1. If either options’s attributeOldValue or attributeFilter is present 
      * and options’s attributes is omitted, then set options’s attributes 
      * to true.
-     * 2. If options’s characterDataOldValue is present and options’s c
-     * haracterData is omitted, then set options’s characterData to true.
+     * 2. If options’s characterDataOldValue is present and options’s 
+     * characterData is omitted, then set options’s characterData to true.
      * 3. If none of options’s childList, attributes, and characterData is 
      * true, then throw a TypeError.
      * 4. If options’s attributeOldValue is true and options’s attributes is 
@@ -56,7 +56,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * is false, then throw a TypeError.
      */
     if ((options.attributeOldValue !== undefined || options.attributeFilter !== undefined) &&
-      options.attributes !== undefined) {
+      options.attributes === undefined) {
       options.attributes = true
     }
     if (options.characterDataOldValue !== undefined && options.characterData === undefined) {
@@ -89,17 +89,9 @@ export class MutationObserverImpl implements MutationObserverInternal {
          * registered observer list.
          */
         for (const node of this._nodeList) {
-          const toRemove: Array<TransientRegisteredObserver> = []
-          const transientObservers = (node as NodeInternal)._registeredObserverList
-          for (const transient of transientObservers) {
-            if(Guard.isTransientRegisteredObserver(transient) && transient.source === registered) {
-              toRemove.push(transient)
-            }
-          }
-          for (const transient of toRemove) {
-            const index = transientObservers.indexOf(transient)
-            transientObservers.splice(index, 1)
-          }
+          infra.list.remove((node as NodeInternal)._registeredObserverList, (ob) => 
+            Guard.isTransientRegisteredObserver(ob) && ob.source === registered
+          )
         }
         /**
          * 7.2. Set registered’s options to options.
@@ -128,17 +120,9 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * context object is the observer.
      */
     for (const node of this._nodeList) {
-      const toRemove: Array<RegisteredObserver> = []
-      const observers = (node as NodeInternal)._registeredObserverList
-      for (const observer of observers) {
-        if (observer.observer = this) {
-          toRemove.push(observer)
-        }
-      }
-      for (const observer of toRemove) {
-        const index = observers.indexOf(observer)
-        observers.splice(index, 1)
-      }
+      infra.list.remove((node as NodeInternal)._registeredObserverList, (ob) =>
+        ob.observer === this
+      )
     }
 
     /**
