@@ -115,7 +115,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 		for (let i = Math.min(pos1, pos2); i > 0; i--) {
 			const parent1 = parentsA[--pos1]
 			const parent2 = parentsB[--pos2]
-			if (parent1 != parent2) {
+			if (parent1 !== parent2) {
 				break
 			}
 			parent = parent1
