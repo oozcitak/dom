@@ -63,11 +63,7 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRootIn
    * @param document - owner document
    * @param host - shadow root's host element
    */
-  static _create(document: DocumentInternal, host: ElementInternal | null = null): ShadowRootInternal {
-    if (host === null) {
-      throw new Error("Shadow root's host element cannot be null.")
-    }
-
+  static _create(document: DocumentInternal, host: ElementInternal): ShadowRootInternal {
     return new ShadowRootImpl(host, "closed")
   }
 }
