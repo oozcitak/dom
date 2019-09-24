@@ -73,8 +73,7 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * than offset plus count, increase its end offset by data’s length and 
      * decrease it by count.
      */
-    const rangeList = node._nodeDocument._rangeList
-    for (const range of rangeList.entries()) {
+    for (const range of this.dom.range.ranges()) {
       if (range._start[0] === node && range._start[1] > offset && range._start[1] <= offset + count) {
         range._start[1] += offset
       }

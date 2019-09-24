@@ -19,25 +19,11 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
   __start: BoundaryPoint
   get _start(): BoundaryPoint { return this.__start }
-  set _start(val: BoundaryPoint) {
-    const oldRangeList = (this.__start[0] as NodeInternal)._nodeDocument._rangeList
-    oldRangeList.remove(this)
-
-    this.__start = val 
-    const newRangeList = (val[0] as NodeInternal)._nodeDocument._rangeList
-    newRangeList.add(this)
-  }
+  set _start(val: BoundaryPoint) { this.__start = val }
 
   __end: BoundaryPoint
   get _end(): BoundaryPoint { return this.__end }
-  set _end(val: BoundaryPoint) { 
-    const oldRangeList = (this.__end[0] as NodeInternal)._nodeDocument._rangeList
-    oldRangeList.remove(this)
-
-    this.__end = val
-    const newRangeList = (val[0] as NodeInternal)._nodeDocument._rangeList
-    newRangeList.add(this)
-  }
+  set _end(val: BoundaryPoint) { this.__end = val }
 
   static readonly START_TO_START: number = 0
   static readonly START_TO_END: number = 1
@@ -65,8 +51,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     this._start = [doc, 0]
     this._end = [doc, 0]
 
-    const rangeList = (doc as DocumentInternal)._rangeList
-    rangeList.add(this)
+    this._algo.range.addRange(this)
   }
 
   /** @inheritdoc */
@@ -486,9 +471,9 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     /**
      * The detach() method, when invoked, must do nothing.
      * 
-     * since JS lacks weak references, we still require detach
+     * since JS lacks weak references, we still use detach
      */
-    this._algo.range.removeRange(this, this._algo.range.root(this)._nodeDocument)
+    this._algo.range.removeRange(this)
   }
 
   /** @inheritdoc */

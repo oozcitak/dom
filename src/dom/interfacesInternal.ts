@@ -21,6 +21,8 @@ export interface WindowInternal extends Window, EventTargetInternal {
   _signalSlots: Set<Slot>
   _mutationObserverMicrotaskQueued: boolean
   _mutationObservers: Set<MutationObserver>
+  
+  _rangeList: DOMObjectCache<RangeInternal>
 }
 
 /**
@@ -192,8 +194,6 @@ export interface DocumentInternal extends NodeInternal, Document {
   _origin: string
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
-
-  _rangeList: DOMObjectCache<RangeInternal>
 }
 
 /**

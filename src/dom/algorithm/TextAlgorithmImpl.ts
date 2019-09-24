@@ -134,8 +134,7 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
        * 7.5. For each live range whose end node is parent and end offset is equal
        * to the index of node plus 1, increase its end offset by 1.
        */
-      const rangeList = node._nodeDocument._rangeList
-      for (const range of rangeList.entries()) {
+      for (const range of this.dom.range.ranges()) {
         if (range._start[0] === node && range._start[1] > offset) {
           range._start[0] = newNode
           range._start[1] -= offset

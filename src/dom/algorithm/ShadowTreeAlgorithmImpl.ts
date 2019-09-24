@@ -219,7 +219,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * The relevant agent for a platform object platformObject is the agent
      * whose set of realms contains platformObject's relevant Realm.
      */
-    const window = globalStore.window as unknown as WindowInternal
+    const window = globalStore.window
     window._signalSlots.add(slot)
     this.dom.observer.queueAMutationObserverMicrotask()
   }

@@ -1,6 +1,5 @@
 import {
-  Node, MutationObserverInit, MutationRecord,
-  MutationCallback, RegisteredObserver, TransientRegisteredObserver
+  Node, MutationObserverInit, MutationRecord, MutationCallback
 } from "./interfaces"
 import { MutationObserverInternal, NodeInternal, WindowInternal } from "./interfacesInternal"
 import { Guard } from "./util"
@@ -29,7 +28,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * 3. Return mo.
      */
     this._callback = callback
-    const window = globalStore.window as unknown as WindowInternal
+    const window = globalStore.window
     infra.set.append(window._mutationObservers, this)
   }
 

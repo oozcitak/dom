@@ -37,7 +37,7 @@ export class WindowImpl extends DOMWindowImpl implements WindowInternal {
   /**
    * Creates a new window with a blank document.
    */
-  static _create(): Window {   
+  static _create(): WindowInternal {   
     return new WindowImpl()
   }
 

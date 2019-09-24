@@ -2,7 +2,7 @@ import { DOMAlgorithm, RangeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   NodeInternal, AbstractRangeInternal, DocumentInternal,
-  DocumentFragmentInternal, CharacterDataInternal, RangeInternal
+  DocumentFragmentInternal, CharacterDataInternal, RangeInternal, WindowInternal
 } from '../interfacesInternal'
 import { BoundaryPoint, BoundaryPosition } from '../interfaces'
 import { Guard } from '../util'
@@ -693,8 +693,18 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  removeRange(range: RangeInternal, doc: DocumentInternal): void {
-    doc._rangeList.remove(range)
+  addRange(range: RangeInternal): void {
+    globalStore.window._rangeList.add(range)
+  }
+
+  /** @inheritdoc */
+  removeRange(range: RangeInternal): void {
+    globalStore.window._rangeList.remove(range)
+  }
+
+  /** @inheritdoc */
+  *ranges(): IterableIterator<RangeInternal> {
+    yield* globalStore.window._rangeList.entries()
   }
 
 }

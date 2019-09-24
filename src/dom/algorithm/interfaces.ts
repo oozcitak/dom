@@ -1695,13 +1695,23 @@ export interface RangeAlgorithm extends SubAlgorithm {
   getPartiallyContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
 
   /**
-   * Removes a range object from the given document.
+   * Adds a range to the global range list.
    * 
-   * @param doc - owner document
+   * @param range - the range to add
+   */
+  addRange(range: AbstractRangeInternal): void
+
+  /**
+   * Removes a range object from the global range list.
+   * 
    * @param range - the range to remove
    */
-  removeRange(range: AbstractRangeInternal, doc: DocumentInternal): void
+  removeRange(range: AbstractRangeInternal): void
 
+  /**
+   * Iterates through the global range list.
+   */
+  ranges(): IterableIterator<RangeInternal>
 }
 
 /**

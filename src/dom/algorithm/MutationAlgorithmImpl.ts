@@ -208,9 +208,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * offset is greater than child's index, increase its end 
        * offset by count.
        */
-      const rangeList = node._nodeDocument._rangeList
       const index = this.dom.tree.index(child)
-      for (const range of rangeList.entries()) {
+      for (const range of this.dom.range.ranges()) {
         if (range._start[0] === parent && range._start[1] > index) {
           range._start[1] += count
         }
@@ -637,8 +636,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. For each live range whose end node is an inclusive descendant of 
      * node, set its end to (parent, index).
      */
-    const rangeList = node._nodeDocument._rangeList
-    for (const range of rangeList.entries()) {
+    for (const range of this.dom.range.ranges()) {
       if (this.dom.tree.isDescendantOf(node, range._start[0] as NodeInternal, true)) {
         range._start = [parent, index]
       }
@@ -659,7 +657,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. For each live range whose end node is parent and end offset is greater 
      * than index, decrease its end offset by 1.
      */
-    for (const range of rangeList.entries()) {
+    for (const range of this.dom.range.ranges()) {
       if (range._start[0] === parent && range._start[1] > index) {
         range._start[1] -= 1
       }

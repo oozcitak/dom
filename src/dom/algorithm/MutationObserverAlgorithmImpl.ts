@@ -30,7 +30,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 2. Set the surrounding agent’s mutation observer microtask queued to true.
      * 3. Queue a microtask to notify mutation observers.
      */
-    const window = globalStore.window as unknown as WindowInternal
+    const window = globalStore.window
 
     if (window._mutationObserverMicrotaskQueued) return
     window._mutationObserverMicrotaskQueued = true
@@ -45,7 +45,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 3. Let signalSet be a clone of the surrounding agent’s signal slots.
      * 4. Empty the surrounding agent’s signal slots.
      */
-    const window = globalStore.window as unknown as WindowInternal
+    const window = globalStore.window
 
     window._mutationObserverMicrotaskQueued = false
     const notifySet = infra.set.clone(window._mutationObservers)
