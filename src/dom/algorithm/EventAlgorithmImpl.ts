@@ -700,7 +700,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     /**
      * 1. If eventConstructor is not given, then let eventConstructor be Event.
      */
-    if (eventConstructor == undefined) {
+    if (eventConstructor === undefined) {
       eventConstructor = EventImpl
     }
 

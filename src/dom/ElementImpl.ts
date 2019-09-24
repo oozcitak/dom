@@ -301,7 +301,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
        * context object, and then return true.
        * 4.2. Return false.
        */
-      if (force === undefined || force == true) {
+      if (force === undefined || force === true) {
         attribute = this._algo.create.attr(this._nodeDocument, qualifiedName)
         attribute._value = ''
         this._algo.element.append(attribute, this)
