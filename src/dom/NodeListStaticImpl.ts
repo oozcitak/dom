@@ -1,5 +1,6 @@
 import { Node, NodeList } from "./interfaces"
 import { NodeListInternal } from "./interfacesInternal"
+import { globalStore } from "../util"
 
 /**
  * Represents an ordered list of nodes.
@@ -48,7 +49,7 @@ export class NodeListStaticImpl implements NodeListInternal {
   /** @inheritdoc */
   *keys(): IterableIterator<number> {
     for (let index = 0; index < this._items.length; index++) {
-      yield index++
+      yield index
     }
   }
 
@@ -74,7 +75,11 @@ export class NodeListStaticImpl implements NodeListInternal {
 
   /** @inheritdoc */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
-    thisArg: any): void {
+    thisArg?: any): void {
+    if (thisArg === undefined) {
+      thisArg = globalStore.window
+    }
+
     for (const [index, node] of this.entries()) {
       callback.call(thisArg, node, index, this)
     }

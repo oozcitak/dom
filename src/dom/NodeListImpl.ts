@@ -1,6 +1,7 @@
 import { Node, NodeList } from "./interfaces"
 import { NodeListInternal, NodeInternal } from "./interfacesInternal"
 import { infra } from "../infra"
+import { globalStore } from "../util"
 
 /**
  * Represents an ordered list of nodes.
@@ -86,7 +87,11 @@ export class NodeListImpl implements NodeListInternal {
 
   /** @inheritdoc */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
-    thisArg: any): void {
+    thisArg?: any): void {
+    if (thisArg === undefined) {
+      thisArg = globalStore.window
+    }
+
     for (const [index, node] of this.entries()) {
       callback.call(thisArg, node, index, this)
     }

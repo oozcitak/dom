@@ -1649,7 +1649,7 @@ export interface NodeList extends Collection, Iterable<Node> {
    * @param thisArg - value to use as `this` when executing callback 
    */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
-    thisArg: any): void
+    thisArg?: any): void
 }
 
 /**
