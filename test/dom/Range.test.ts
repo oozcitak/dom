@@ -401,4 +401,198 @@ describe('Range', function () {
     expect((((frag.childNodes.item(0) as any).childNodes.item(0) as any).childNodes.item(0) as any).localName).toBe('grandChild2')
   })
 
+  test('range is updated when the tree is mutated', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createElement('node2')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+
+    const range = new $$.Range()
+
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    root.removeChild(node3)
+    expect(range.startOffset).toBe(1)
+    expect(range.endOffset).toBe(2)
+  })
+
+  test('intersectsNode()', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const root2 = $$.newDoc
+    const child1 = root._nodeDocument.createElement('child1')
+    const child2 = root._nodeDocument.createElement('child2')
+    root2.append(child1, child2)
+
+    const range = new $$.Range()
+
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+    expect(range.intersectsNode(root._nodeDocument)).toBe(true)
+    expect(range.intersectsNode(node3)).toBe(true)
+    expect(range.intersectsNode(node5)).toBe(false)
+
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    expect(range.intersectsNode(child2)).toBe(false)    
+  })
+
+  test('isPointInRange() - guards', function () {
+    const root = $$.newDoc
+    const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
+    root._nodeDocument.insertBefore(docType, root)
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const root2 = $$.newDoc
+
+    const range = new $$.Range()
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+
+    expect(range.isPointInRange(root2, 0)).toBe(false)
+    expect(() => range.isPointInRange(docType, 0)).toThrow()
+    expect(() => range.isPointInRange(node1, 20)).toThrow()
+  })
+
+  test('isPointInRange()', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const range = new $$.Range()
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+
+    expect(range.isPointInRange(node1, 0)).toBe(false)
+    expect(range.isPointInRange(node5, 0)).toBe(false)
+    expect(range.isPointInRange(node3, 0)).toBe(true)
+  })
+
+  test('comparePoint() - guards', function () {
+    const root = $$.newDoc
+    const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
+    root._nodeDocument.insertBefore(docType, root)
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const root2 = $$.newDoc
+
+    const range = new $$.Range()
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+
+    expect(() => range.comparePoint(root2, 0)).toThrow()
+    expect(() => range.comparePoint(docType, 0)).toThrow()
+    expect(() => range.comparePoint(node1, 20)).toThrow()
+  })
+
+  test('comparePoint()', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const range = new $$.Range()
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+
+    expect(range.comparePoint(node1, 0)).toBe(-1)
+    expect(range.comparePoint(node5, 0)).toBe(1)
+    expect(range.comparePoint(node3, 0)).toBe(0)
+  })
+
+  test('cloneRange()', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createElement('node2')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+
+    const range = new $$.Range()
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    const clone = range.cloneRange()
+    expect(clone).not.toBe(range)
+    expect(clone.startOffset).toBe(1)
+    expect(clone.endOffset).toBe(3)
+  })
+
+  test('detach() - range is updated when the tree is mutated', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createElement('node2')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+
+    const range = new $$.Range()
+
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    root.removeChild(node3)
+    expect(range.startOffset).toBe(1)
+    expect(range.endOffset).toBe(2)
+  })
+
+  test('detach() - range is no longer updated when the tree is mutated', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createElement('node2')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+
+    const range = new $$.Range()
+
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    range.detach()
+    root.removeChild(node3)
+    expect(range.startOffset).toBe(1)
+    expect(range.endOffset).toBe(3)
+  })
+
+  test('stringify', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+    const child1 = root._nodeDocument.createTextNode(' ? ')
+    const child2 = root._nodeDocument.createTextNode(' ! ')
+    node3.append(child1, child2)  
+    const range = new $$.Range()
+
+    range.setStart(node2, 2)
+    range.setEnd(node4, 3)
+    expect(range.toString()).toBe('xt ?  ! pre')
+  })
+
 })

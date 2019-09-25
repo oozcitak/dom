@@ -553,7 +553,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * 2. Let parent be node’s parent.
      * 3. If parent is null, return true.
      */
-    const parent = node.parentNode
+    const parent = (node as NodeInternal)._parent
     if (parent === null) return true
 
     /**
