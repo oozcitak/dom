@@ -445,6 +445,26 @@ describe('Range', function () {
     expect(range.intersectsNode(child2)).toBe(false)    
   })
 
+  test('insertNode()', function () {
+    const root = $$.newDoc
+    const node1 = root._nodeDocument.createElement('node1')
+    const node2 = root._nodeDocument.createTextNode('next')
+    const node3 = root._nodeDocument.createElement('node3')
+    const node4 = root._nodeDocument.createTextNode('prev')
+    const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+
+    const range = new $$.Range()
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+
+    const newNode = root._nodeDocument.createElement('new')
+    range.insertNode(newNode)
+    expect(range.startOffset).toBe(1)
+    expect(range.endOffset).toBe(4)
+    expect(root.childNodes.length).toBe(6)
+  })
+
   test('isPointInRange() - guards', function () {
     const root = $$.newDoc
     const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
