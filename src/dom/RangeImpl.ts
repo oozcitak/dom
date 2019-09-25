@@ -17,13 +17,8 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
   _algo: DOMAlgorithm
 
-  __start: BoundaryPoint
-  get _start(): BoundaryPoint { return this.__start }
-  set _start(val: BoundaryPoint) { this.__start = val }
-
-  __end: BoundaryPoint
-  get _end(): BoundaryPoint { return this.__end }
-  set _end(val: BoundaryPoint) { this.__end = val }
+  _start: BoundaryPoint
+  _end: BoundaryPoint
 
   static readonly START_TO_START: number = 0
   static readonly START_TO_END: number = 1
@@ -45,9 +40,6 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     const window = globalStore.window as WindowInternal
     const doc = window.document
 
-    this.__start = [doc, 0]
-    this.__end = [doc, 0]
-
     this._start = [doc, 0]
     this._end = [doc, 0]
 
@@ -62,10 +54,12 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * container be container’s parent.
      * 3. Return container.
      */
-    let container = this._algo.tree.getCommonAncestor(
-      this._start[0] as NodeInternal, this._end[0] as NodeInternal)
-    if (container === null) {
-      throw new Error("Common ancestor container is null.")
+    let container = this._start[0] as NodeInternal
+    while(!this._algo.tree.isAncestorOf(this._end[0] as NodeInternal, container, true)) {
+      if (container._parent === null) {
+        throw new Error("Parent node  is null.")
+      }
+      container = container._parent as NodeInternal
     }
 
     return container
@@ -238,12 +232,16 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
       case HowToCompare.StartToEnd:
         thisPoint = this._end
         otherPoint = [sourceRange.startContainer, sourceRange.startOffset]
+        break
       case HowToCompare.EndToEnd:
         thisPoint = this._end
         otherPoint = [sourceRange.endContainer, sourceRange.endOffset]
+        break
       case HowToCompare.EndToStart:
         thisPoint = this._start
         otherPoint = [sourceRange.endContainer, sourceRange.endOffset]
+        break
+      /* istanbul ignore next */
       default:
         throw DOMException.NotSupportedError
     }
@@ -280,7 +278,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
 
     const originalStartNode = this._startNode
     const originalStartOffset = this._startOffset
-    const originalEndNode = this._startNode
+    const originalEndNode = this._endNode
     const originalEndOffset = this._endOffset
 
     /**
@@ -332,15 +330,15 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
        * one plus the index of reference node.
        */
       let referenceNode = originalStartNode
-      while (referenceNode.parentNode !== null &&
-        this._algo.tree.isAncestorOf(originalEndNode, referenceNode.parentNode as NodeInternal, true)) {
-        referenceNode = referenceNode.parentNode as NodeInternal
+      while (referenceNode._parent !== null &&
+        !this._algo.tree.isAncestorOf(originalEndNode, referenceNode._parent as NodeInternal, true)) {
+        referenceNode = referenceNode._parent as NodeInternal
       }
-      /** istanbul ignore next */
-      if (referenceNode.parentNode === null) {
+      /* istanbul ignore next */
+      if (referenceNode._parent === null) {
         throw new Error("Parent node is null.")
       }
-      newNode = referenceNode.parentNode as NodeInternal
+      newNode = referenceNode._parent as NodeInternal
       newOffset = this._algo.tree.index(referenceNode) + 1
     }
 
@@ -361,8 +359,9 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * parent.
      */
     for (const node of nodesToRemove) {
-      if (node.parentNode) {
-        this._algo.mutation.remove(node, node.parentNode as NodeInternal)
+      /* istanbul ignore else */
+      if (node._parent) {
+        this._algo.mutation.remove(node, node._parent as NodeInternal)
       }
     }
 

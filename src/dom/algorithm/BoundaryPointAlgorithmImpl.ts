@@ -53,9 +53,10 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
      * return before.
      */
     if (this.dom.tree.isFollowing(nodeB, nodeA)) {
-      if (this.position(relativeTo, bp) === BoundaryPosition.Before) {
+      const pos = this.position([nodeB, offsetB], [nodeA, offsetA])
+      if (pos === BoundaryPosition.Before) {
         return BoundaryPosition.After
-      } else {
+      } else if (pos === BoundaryPosition.After) {
         return BoundaryPosition.Before
       }
     }
@@ -72,10 +73,10 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
       let child = nodeB
 
       while (!this.dom.tree.isChildOf(nodeA, child)) {
-        if (child.parentNode === null) {
+        if (child._parent === null) {
           throw new Error("Node has no parent node.")
         } else {
-          child = child.parentNode as NodeInternal
+          child = child._parent as NodeInternal
         }
       }
 
