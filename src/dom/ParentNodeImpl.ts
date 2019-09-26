@@ -109,23 +109,29 @@ export class ParentNodeImpl implements ParentNodeInternal {
   /** @inheritdoc */
   querySelector(selectors: string): Element | null {
     /**
-     * TODO:
      * The querySelector(selectors) method, when invoked, must return the first
      * result of running scope-match a selectors string selectors against
      * context object, if the result is not an empty list, and null otherwise.
      */
-    throw DOMException.NotSupportedError
+    const algo = globalStore.algorithm as DOMAlgorithm
+    const node = Cast.asNode(this)
+
+    const result = algo.selectors.scopeMatchASelectorsString(selectors, node)
+    return (result.length === 0 ? null : result[0])
   }
 
   /** @inheritdoc */
   querySelectorAll(selectors: string): NodeList {
     /**
-     * TODO:
      * The querySelectorAll(selectors) method, when invoked, must return the 
      * static result of running scope-match a selectors string selectors against
      * context object.
      */
-    throw DOMException.NotSupportedError
+    const algo = globalStore.algorithm as DOMAlgorithm
+    const node = Cast.asNode(this)
+
+    const result = algo.selectors.scopeMatchASelectorsString(selectors, node)
+    return algo.create.nodeListStatic(node, result)
   }
 
 }
