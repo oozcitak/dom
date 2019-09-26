@@ -1,6 +1,7 @@
 import $$ from './TestHelpers'
 
 describe('DOMObjectCache', () => {
+  
   test('add()', () => {
     const cache = new $$.util.DOMObjectCacheImpl<number>()
     cache.add(1)
