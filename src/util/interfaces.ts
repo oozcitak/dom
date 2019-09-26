@@ -3,7 +3,7 @@ import { NodeInternal } from "../dom/interfacesInternal"
 /**
  * Represents a cache for DOM objects.
  */
-export interface DOMObjectCache<T> {
+export interface DOMObjectCache<T> extends Iterable<T> {
 
   /**
    * Adds a new item to the cache.

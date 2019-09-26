@@ -37,8 +37,13 @@ export class DOMObjectCacheImpl<T> implements DOMObjectCache<T> {
 
   /** @inheritdoc */
   *entries(): IterableIterator<T> {
+    yield *this
+  }
+
+  /** @inheritdoc */
+  *[Symbol.iterator](): IterableIterator<T> {
     for (const item of this._items) {
       yield item
     }
-  }
+  }  
 }

@@ -40,6 +40,18 @@ describe('DOMObjectCache', () => {
     expect([...cache.entries()]).toEqual([1, 2, 3])
   })
 
+  test('iterator', () => {
+    const cache = new $$.util.DOMObjectCacheImpl<number>()
+    cache.add(1)
+    cache.add(2)
+    cache.add(3)
+    const items: number[] = []
+    for (const item of cache) {
+      items.push(item)
+    }
+    expect([...items]).toEqual([1, 2, 3])
+  })
+
   test('length', () => {
     const cache = new $$.util.DOMObjectCacheImpl<number>()
     cache.add(1)

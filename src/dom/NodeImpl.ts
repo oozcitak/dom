@@ -367,7 +367,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
          * end offset to length.
          */
         const index = algo.tree.index(currentNode)
-        for (const range of algo.range.ranges()) {
+        for (const range of algo.range.rangeList) {
           if (range._start[0] === currentNode) {
             range._start[0] = node
             range._start[1] += length

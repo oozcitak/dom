@@ -14,6 +14,7 @@ import {
   PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult
 } from "../interfaces"
 import { EventImpl } from "../EventImpl"
+import { DOMObjectCache } from "../../util/interfaces"
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -1695,23 +1696,9 @@ export interface RangeAlgorithm extends SubAlgorithm {
   getPartiallyContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
 
   /**
-   * Adds a range to the global range list.
-   * 
-   * @param range - the range to add
+   * Gets the global range list.
    */
-  addRange(range: AbstractRangeInternal): void
-
-  /**
-   * Removes a range object from the global range list.
-   * 
-   * @param range - the range to remove
-   */
-  removeRange(range: AbstractRangeInternal): void
-
-  /**
-   * Iterates through the global range list.
-   */
-  ranges(): IterableIterator<RangeInternal>
+  readonly rangeList: DOMObjectCache<RangeInternal>
 }
 
 /**

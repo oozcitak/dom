@@ -209,7 +209,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * offset by count.
        */
       const index = this.dom.tree.index(child)
-      for (const range of this.dom.range.ranges()) {
+      for (const range of this.dom.range.rangeList) {
         if (range._start[0] === parent && range._start[1] > index) {
           range._start[1] += count
         }
@@ -636,7 +636,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. For each live range whose end node is an inclusive descendant of 
      * node, set its end to (parent, index).
      */
-    for (const range of this.dom.range.ranges()) {
+    for (const range of this.dom.range.rangeList) {
       if (this.dom.tree.isDescendantOf(node, range._start[0] as NodeInternal, true)) {
         range._start = [parent, index]
       }
@@ -657,7 +657,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. For each live range whose end node is parent and end offset is greater 
      * than index, decrease its end offset by 1.
      */
-    for (const range of this.dom.range.ranges()) {
+    for (const range of this.dom.range.rangeList) {
       if (range._start[0] === parent && range._start[1] > index) {
         range._start[1] -= 1
       }
@@ -672,6 +672,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * node’s node document, run the NodeIterator pre-removing steps given node
      * and iterator.
      */
+
 
     /**
      * 7. Let oldPreviousSibling be node’s previous sibling.

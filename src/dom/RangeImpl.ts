@@ -43,7 +43,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     this._start = [doc, 0]
     this._end = [doc, 0]
 
-    this._algo.range.addRange(this)
+    this._algo.range.rangeList.add(this)
   }
 
   /** @inheritdoc */
@@ -472,7 +472,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * 
      * since JS lacks weak references, we still use detach
      */
-    this._algo.range.removeRange(this)
+    this._algo.range.rangeList.remove(this)
   }
 
   /** @inheritdoc */

@@ -8,6 +8,7 @@ import { BoundaryPoint, BoundaryPosition } from '../interfaces'
 import { Guard } from '../util'
 import { DOMException } from '../DOMException'
 import { globalStore } from '../../util'
+import { DOMObjectCache } from '../../util/interfaces'
 
 /**
  * Contains range algorithms.
@@ -698,18 +699,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  addRange(range: RangeInternal): void {
-    globalStore.window._rangeList.add(range)
-  }
-
-  /** @inheritdoc */
-  removeRange(range: RangeInternal): void {
-    globalStore.window._rangeList.remove(range)
-  }
-
-  /** @inheritdoc */
-  *ranges(): IterableIterator<RangeInternal> {
-    yield* globalStore.window._rangeList.entries()
+  get rangeList(): DOMObjectCache<RangeInternal> {
+    return globalStore.window._rangeList
   }
 
 }
