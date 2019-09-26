@@ -465,7 +465,7 @@ describe('Range', () => {
 		expect(root.childNodes.length).toBe(6)
 	})
 
-	test('isPointInRange() - guards', () => {
+	test('isPointInRange() guards', () => {
 		const root = $$.newDoc
 		const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
 		root._nodeDocument.insertBefore(docType, root)
@@ -505,7 +505,7 @@ describe('Range', () => {
 		expect(range.isPointInRange(node3, 0)).toBe(true)
 	})
 
-	test('comparePoint() - guards', () => {
+	test('comparePoint() guards', () => {
 		const root = $$.newDoc
 		const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
 		root._nodeDocument.insertBefore(docType, root)
@@ -752,5 +752,123 @@ describe('Range', () => {
 		expect(((root.childNodes.item(0) as any).childNodes.item(0) as any).childNodes.length).toBe(1)
 		expect((((root.childNodes.item(0) as any).childNodes.item(0) as any).childNodes.item(0) as any).localName).toBe('grandChild1')
 	})
+
+	test('surroundContents() guards', () => {
+		const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
+    const doc = $$.dom.createDocument('ns', 'name', docType)
+    const frag = new $$.DocumentFragment()
+
+    const root = doc.documentElement
+    if (!root) {
+      throw new Error("Document element is null")
+    }
+
+		const node1 = doc.createElement('node1')
+		const node2 = doc.createTextNode('next')
+		const node3 = doc.createElement('node3')
+		const node4 = doc.createTextNode('prev')
+    const node5 = doc.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+		const child1 = doc.createElement('child1')
+		const child2 = doc.createElement('child2')
+    node1.append(child1, child2)
+
+    const newParent = doc.createElement('parent')
+        
+		const range = new $$.Range()
+		range.setStart(node1, 1)
+    range.setEnd(root, 3)
+
+    // splits a non-Text node with only one of its boundary points
+    expect(() => range.surroundContents(newParent)).toThrow()
+
+    range.setStart(root, 1)
+    range.setEnd(root, 3)
+    expect(() => range.surroundContents(doc)).toThrow()
+    expect(() => range.surroundContents(docType)).toThrow()
+    expect(() => range.surroundContents(frag)).toThrow()
+  })
+
+	test('surroundContents()', () => {
+		const root = $$.newDoc
+		const node1 = root._nodeDocument.createElement('node1')
+		const node2 = root._nodeDocument.createElement('node2')
+		const node3 = root._nodeDocument.createElement('node3')
+		const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+    
+		const range = new $$.Range()
+		range.setStart(root, 1)
+    range.setEnd(root, 3)
+    
+    const newParent = root._nodeDocument.createElement('parent')
+
+    range.surroundContents(newParent)
+
+		expect(root.childNodes.length).toBe(3)
+    expect((root.childNodes.item(0) as any).localName).toBe('node1')
+    expect((root.childNodes.item(1) as any).localName).toBe('parent')
+    expect((root.childNodes.item(2) as any).localName).toBe('node4')
+    expect((root.childNodes.item(1) as any).childNodes.length).toBe(2)
+    expect(((root.childNodes.item(1) as any).childNodes.item(0) as any).localName).toBe('node2')
+    expect(((root.childNodes.item(1) as any).childNodes.item(1) as any).localName).toBe('node3')
+  })
+  
+	test('surroundContents() splits text node', () => {
+		const root = $$.newDoc
+		const node1 = root._nodeDocument.createElement('node1')
+		const node2 = root._nodeDocument.createTextNode('next')
+		const node3 = root._nodeDocument.createElement('node3')
+		const node4 = root._nodeDocument.createTextNode('prev')
+		const node5 = root._nodeDocument.createElement('node5')
+    root.append(node1, node2, node3, node4, node5)
+    
+		const range = new $$.Range()
+		range.setStart(node2, 2)
+    range.setEnd(node4, 2)
+    
+    const newParent = root._nodeDocument.createElement('parent')
+    
+    range.surroundContents(newParent)
+
+		expect(root.childNodes.length).toBe(5)
+    expect((root.childNodes.item(0) as any).localName).toBe('node1')
+    expect((root.childNodes.item(1) as any).textContent).toBe('ne')
+    expect((root.childNodes.item(2) as any).localName).toBe('parent')
+    expect((root.childNodes.item(3) as any).textContent).toBe('ev')
+    expect((root.childNodes.item(4) as any).localName).toBe('node5')
+    expect((root.childNodes.item(2) as any).childNodes.length).toBe(3)
+    expect(((root.childNodes.item(2) as any).childNodes.item(0) as any).textContent).toBe('xt')
+    expect(((root.childNodes.item(2) as any).childNodes.item(1) as any).localName).toBe('node3')
+    expect(((root.childNodes.item(2) as any).childNodes.item(2) as any).textContent).toBe('pr')
+  })
+
+	test('surroundContents() new parent with child nodes', () => {
+		const root = $$.newDoc
+		const node1 = root._nodeDocument.createElement('node1')
+		const node2 = root._nodeDocument.createElement('node2')
+		const node3 = root._nodeDocument.createElement('node3')
+		const node4 = root._nodeDocument.createElement('node4')
+    root.append(node1, node2, node3, node4)
+    
+		const range = new $$.Range()
+		range.setStart(root, 1)
+    range.setEnd(root, 3)
+    
+    const newParent = root._nodeDocument.createElement('parent')
+		const child1 = root._nodeDocument.createElement('child1')
+		const child2 = root._nodeDocument.createElement('child2')
+    newParent.append(child1, child2)
+
+    range.surroundContents(newParent)
+
+		expect(root.childNodes.length).toBe(3)
+    expect((root.childNodes.item(0) as any).localName).toBe('node1')
+    expect((root.childNodes.item(1) as any).localName).toBe('parent')
+    expect((root.childNodes.item(2) as any).localName).toBe('node4')
+    expect((root.childNodes.item(1) as any).childNodes.length).toBe(2)
+    expect(((root.childNodes.item(1) as any).childNodes.item(0) as any).localName).toBe('node2')
+    expect(((root.childNodes.item(1) as any).childNodes.item(1) as any).localName).toBe('node3')
+  })
 
 })

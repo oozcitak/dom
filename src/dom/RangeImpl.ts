@@ -439,7 +439,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     /**
      * 4. If newParent has children, then replace all with null within newParent.
      */
-    if (newParent.hasChildNodes) {
+    if ((newParent as NodeInternal)._children.size !== 0) {
       this._algo.mutation.replaceAll(null, newParent as NodeInternal)
     }
 
