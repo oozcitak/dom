@@ -28,6 +28,11 @@ export class DOMObjectCacheImpl<T> implements DOMObjectCache<T> {
   }
 
   /** @inheritdoc */
+  clear(): void {
+    this._items = []
+  }
+
+  /** @inheritdoc */
   get length(): number { return this._items.length }
 
   /** @inheritdoc */

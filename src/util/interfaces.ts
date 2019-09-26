@@ -20,6 +20,11 @@ export interface DOMObjectCache<T> {
   remove(item: T): void
 
   /**
+   * Removes all items from the cache.
+   */
+  clear(): void
+
+  /**
    * Gets the number of items in the cache.
    */
   readonly length: number
