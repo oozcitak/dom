@@ -45,6 +45,7 @@
   "scripts": {
     "compile": "tsc",
     "test": "tsc && jest",
+    "testChanged": "tsc && jest --onlyChanged",
     "cover": "tsc && jest --coverage"
   }
 }
