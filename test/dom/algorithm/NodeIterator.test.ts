@@ -1,6 +1,6 @@
 import $$ from '../TestHelpers'
 
-describe('NodeIterator', function () {
+describe('NodeIterator', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -41,7 +41,7 @@ describe('NodeIterator', function () {
         child3_2
     `)
 
-  test('traverse() forward', function () {
+  test('traverse() forward', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
     iter.nextNode() // skip root
@@ -52,7 +52,7 @@ describe('NodeIterator', function () {
     expect(iter.pointerBeforeReferenceNode).toBe(false)
   })
 
-  test('traverse() backward', function () {
+  test('traverse() backward', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
     const node = $$.algo.nodeIterator.traverse(iter as any, false)

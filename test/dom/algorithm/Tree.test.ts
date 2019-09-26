@@ -1,8 +1,8 @@
 import $$ from '../TestHelpers'
 
-describe('Tree', function () {
+describe('Tree', () => {
 
-  test('getDescendantNodes()', function () {
+  test('getDescendantNodes()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -26,7 +26,7 @@ describe('Tree', function () {
     expect(str).toBe('text shtext ')
   })
 
-  test('getDescendantElements()', function () {
+  test('getDescendantElements()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -50,7 +50,7 @@ describe('Tree', function () {
     expect(str).toBe('sele sh1 sh2 ')
   })
 
-  test('getSiblingNodes()', function () {
+  test('getSiblingNodes()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -81,7 +81,7 @@ describe('Tree', function () {
     expect(count).toBe(3)
   })
 
-  test('isConstrained()', function () {
+  test('isConstrained()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pub', 'sys')
     const doc = $$.dom.createDocument('ns', '')
     
@@ -123,7 +123,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc as any)).toBe(true)
   })
 
-  test('isConstrained() - two doctypes', function () {
+  test('isConstrained() - two doctypes', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const doctype1 = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     const doctype2 = $$.dom.createDocumentType('root', 'pub', 'sys') as any
@@ -134,7 +134,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc as any)).toBe(false)
   })
 
-  test('isConstrained() - doctype after element', function () {
+  test('isConstrained() - doctype after element', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const ele = doc.createElement('root') as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
@@ -145,7 +145,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc)).toBe(false)
   })
 
-  test('isConstrained() - two document elements', function () {
+  test('isConstrained() - two document elements', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const ele1 = doc.createElement('root') as any
     const ele2 = doc.createElement('root') as any
@@ -156,7 +156,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc)).toBe(false)
   })
 
-  test('isConstrained() - text at root level', function () {
+  test('isConstrained() - text at root level', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const node = doc.createTextNode('root') as any
     doc._children.add(node)
@@ -164,7 +164,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc)).toBe(false)
   })
 
-  test('isConstrained() - CDATA at root level', function () {
+  test('isConstrained() - CDATA at root level', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const node = doc.createCDATASection('root') as any
     doc._children.add(node)
@@ -172,7 +172,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc)).toBe(false)
   })
 
-  test('isConstrained() - doctype in fragment', function () {
+  test('isConstrained() - doctype in fragment', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const frag = doc.createDocumentFragment() as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
@@ -181,7 +181,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(frag)).toBe(false)
   })
 
-  test('isConstrained() - doctype inside element node', function () {
+  test('isConstrained() - doctype inside element node', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     const de = doc.createElement('root') as any
@@ -193,7 +193,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isConstrained(doc)).toBe(false)
   })
 
-  test('nodeLength()', function () {
+  test('nodeLength()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -209,7 +209,7 @@ describe('Tree', function () {
     expect($$.algo.tree.nodeLength(ele[1] as any)).toBe(4)
   })
 
-  test('isEmpty()', function () {
+  test('isEmpty()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -225,7 +225,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isEmpty(ele[1] as any)).toBe(false)
   })
 
-  test('rootNode()', function () {
+  test('rootNode()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -239,7 +239,7 @@ describe('Tree', function () {
     expect($$.algo.tree.rootNode(de as any)).toBe(doc)
   })
 
-  test('isDescendantOf()', function () {
+  test('isDescendantOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -264,7 +264,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isDescendantOf(de as any, shtext as any, false, true)).toBe(true)
   })
 
-  test('isAncestorOf()', function () {
+  test('isAncestorOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -289,7 +289,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isAncestorOf(shtext as any, de as any, false, true)).toBe(true)
   })
 
-  test('isSiblingOf()', function () {
+  test('isSiblingOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -315,7 +315,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isSiblingOf(shtext as any, shele as any)).toBe(true)
   })
 
-  test('isPreceding()', function () {
+  test('isPreceding()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -343,7 +343,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isPreceding(de as any, de2 as any)).toBe(false)
   })
 
-  test('isFollowing()', function () {
+  test('isFollowing()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -371,7 +371,7 @@ describe('Tree', function () {
     expect($$.algo.tree.isFollowing(de as any, de2 as any)).toBe(false)
   })
 
-  test('firstChild()', function () {
+  test('firstChild()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -394,7 +394,7 @@ describe('Tree', function () {
     expect($$.algo.tree.firstChild(shadowRoot as any)).toBe(shele)
   })
 
-  test('lastChild()', function () {
+  test('lastChild()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)

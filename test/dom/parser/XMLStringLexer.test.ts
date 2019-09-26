@@ -1,8 +1,8 @@
 import $$ from '../TestHelpers'
 
-describe('XMLStringLexer', function () {
+describe('XMLStringLexer', () => {
 
-  test('basic', function () {
+  test('basic', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
       <!DOCTYPE root>
@@ -50,7 +50,7 @@ describe('XMLStringLexer', function () {
     expect(i).toBe(tokens.length)
   })
 
-  test('with insignificant whitespace', function () {
+  test('with insignificant whitespace', () => {
     const xmlStr = $$.t`
       <?xml version = "1.0" ?>
       <!DOCTYPE root >
@@ -95,7 +95,7 @@ describe('XMLStringLexer', function () {
     expect(i).toBe(tokens.length)
   })
 
-  test('public DTD', function () {
+  test('public DTD', () => {
     const xmlStr = $$.t`
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <!DOCTYPE root PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -117,7 +117,7 @@ describe('XMLStringLexer', function () {
     expect(i).toBe(tokens.length)
   })
 
-  test('system DTD', function () {
+  test('system DTD', () => {
     const xmlStr = $$.t`
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <!DOCTYPE root SYSTEM "http://www.w3.org/Math/DTD/mathml1/mathml.dtd">
@@ -139,7 +139,7 @@ describe('XMLStringLexer', function () {
     expect(i).toBe(tokens.length)
   })
 
-  test('DTD with internal subset', function () {
+  test('DTD with internal subset', () => {
     const xmlStr = $$.t`
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <!DOCTYPE root[ <!ELEMENT root (#PCDATA)> ]>
@@ -161,7 +161,7 @@ describe('XMLStringLexer', function () {
     expect(i).toBe(tokens.length)
   })
 
-  test('declaration attribute without quote', function () {
+  test('declaration attribute without quote', () => {
     const xmlStr = $$.t`
       <?xml version=1.0?>
       <root/>
@@ -170,7 +170,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('declaration attribute without equals', function () {
+  test('declaration attribute without equals', () => {
     const xmlStr = $$.t`
       <?xml version 1.0?>
       <root/>
@@ -179,7 +179,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('unknown declaration attribute', function () {
+  test('unknown declaration attribute', () => {
     const xmlStr = $$.t`
       <?xml venison='1.0'?>
       <root/>
@@ -188,7 +188,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete declaration', function () {
+  test('incomplete declaration', () => {
     const xmlStr = $$.t`
       <?xml version='1.0'
       `
@@ -196,7 +196,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('doctype pubId without quote', function () {
+  test('doctype pubId without quote', () => {
     const xmlStr = $$.t`
       <!DOCTYPE root PUBLIC pubId>
       `
@@ -204,7 +204,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('doctype sysId without quote', function () {
+  test('doctype sysId without quote', () => {
     const xmlStr = $$.t`
       <!DOCTYPE root PUBLIC 'pubId' sysId>
       `
@@ -212,7 +212,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('doctype sysId without quote', function () {
+  test('doctype sysId without quote', () => {
     const xmlStr = $$.t`
       <!DOCTYPE root SYSTEM sysId>
       `
@@ -220,7 +220,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete doctype', function () {
+  test('incomplete doctype', () => {
     const xmlStr = $$.t`
       <!DOCTYPE root
       `
@@ -228,7 +228,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete processing instruction', function () {
+  test('incomplete processing instruction', () => {
     const xmlStr = $$.t`
       <?target name="content"
       `
@@ -236,7 +236,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete comment', function () {
+  test('incomplete comment', () => {
     const xmlStr = $$.t`
       <!-- comment
       `
@@ -244,7 +244,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete CDATA', function () {
+  test('incomplete CDATA', () => {
     const xmlStr = $$.t`
       <![CDATA[here
       `
@@ -252,7 +252,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('element attribute without quote', function () {
+  test('element attribute without quote', () => {
     const xmlStr = $$.t`
       <root att=val/>
       `
@@ -260,7 +260,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('element attribute without equals sign', function () {
+  test('element attribute without equals sign', () => {
     const xmlStr = $$.t`
       <root att val/>
       `
@@ -268,7 +268,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete element', function () {
+  test('incomplete element', () => {
     const xmlStr = $$.t`
       <root
       `
@@ -276,7 +276,7 @@ describe('XMLStringLexer', function () {
     expect(() => lexer.nextToken()).toThrow()
   })
 
-  test('incomplete closing element tag', function () {
+  test('incomplete closing element tag', () => {
     const xmlStr = $$.t`
       <root>hello</root
       `

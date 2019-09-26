@@ -1,7 +1,7 @@
 import $$ from './TestHelpers'
 import { MutationRecord, NodeList } from '../../src/dom/interfaces'
 
-describe('NodeListStatic', function () {
+describe('NodeListStatic', () => {
 
   const root = $$.newDoc
 
@@ -28,12 +28,12 @@ describe('NodeListStatic', function () {
   observer.disconnect()
 
 
-  test('length', function () {
+  test('length', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect(list.length).toBe(5)
   })
 
-  test('item()', function () {
+  test('item()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect(list.item(0)).toBe(ele1)
     expect(list.item(1)).toBe(ele2)
@@ -44,22 +44,22 @@ describe('NodeListStatic', function () {
     expect(list.item(1001)).toBeNull()
   })
 
-  test('keys()', function () {
+  test('keys()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect([...list.keys()]).toEqual([0, 1, 2, 3, 4])
   })
 
-  test('values()', function () {
+  test('values()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect([...list.values()]).toEqual([ele1, ele2, ele3, ele4, ele5])
   })
 
-  test('entries()', function () {
+  test('entries()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect([...list.entries()]).toEqual([[0, ele1], [1, ele2], [2, ele3], [3, ele4], [4, ele5]])
   })
 
-  test('iteration()', function () {
+  test('iteration()', () => {
     if (list === undefined) throw new Error("List is undefined")
     let arr = []
     for (const ele of list) {
@@ -68,7 +68,7 @@ describe('NodeListStatic', function () {
     expect(arr).toEqual([ele1, ele2, ele3, ele4, ele5])
   })
 
-  test('forEach()', function () {
+  test('forEach()', () => {
     if (list === undefined) throw new Error("List is undefined")
     let arr: Array<[number, any]> = []
     list.forEach((node, index) => {

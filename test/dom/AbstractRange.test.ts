@@ -1,10 +1,10 @@
 import $$ from './TestHelpers'
 
-describe('AbstractRange', function () {
+describe('AbstractRange', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
-  test('_startNode, _endNode', function () {
+  test('_startNode, _endNode', () => {
     const range = doc.createRange() as any
     expect(range._startNode).toBe(doc)
     expect(range._startOffset).toBe(0)
@@ -13,7 +13,7 @@ describe('AbstractRange', function () {
     expect(range._collapsed).toBe(true)
   })
 
-  test('startContainer, endContainer', function () {
+  test('startContainer, endContainer', () => {
     const range = doc.createRange()
     expect(range.startContainer).toBe(doc)
     expect(range.startOffset).toBe(0)

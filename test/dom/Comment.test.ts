@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Comment', function () {
+describe('Comment', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,13 +10,13 @@ describe('Comment', function () {
   const node = doc.createComment('data')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node.nodeType).toBe(8)
     expect(node.nodeName).toBe('#comment')
     expect(node.data).toBe('data')
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(8)
@@ -24,7 +24,7 @@ describe('Comment', function () {
     expect(clonedNode.data).toBe('data')
   })
 
-  test('_create()', function () {
+  test('_create()', () => {
     const node1 = $$.Comment._create(doc as any, 'data')
     expect(node1.nodeType).toBe(8)
     expect(node1.nodeName).toBe('#comment')

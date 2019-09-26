@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('NodeIterator', function () {
+describe('NodeIterator', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -37,7 +37,7 @@ describe('NodeIterator', function () {
         child3_2
     `)
 
-  test('nextNode()', function () {
+  test('nextNode()', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()
@@ -48,7 +48,7 @@ describe('NodeIterator', function () {
     expect(str).toBe(':root:node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
   })
 
-  test('nextNode() with type filter', function () {
+  test('nextNode() with type filter', () => {
     const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
@@ -59,7 +59,7 @@ describe('NodeIterator', function () {
     expect(str).toBe(':node1:child1:child2')
   })
 
-  test('nextNode() with user filter', function () {
+  test('nextNode() with user filter', () => {
     const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
@@ -74,7 +74,7 @@ describe('NodeIterator', function () {
     expect(str).toBe(':child1:child2')
   })
 
-  test('previousNode()', function () {
+  test('previousNode()', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()

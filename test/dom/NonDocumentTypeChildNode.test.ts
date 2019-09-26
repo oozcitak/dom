@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('NonDocumentTypeChildNode', function () {
+describe('NonDocumentTypeChildNode', () => {
 
   const doc = $$.dom.createDocument('myns', 'n:root')
 
@@ -18,13 +18,13 @@ describe('NonDocumentTypeChildNode', function () {
   de.appendChild(child3)
   de.appendChild(child4)
 
-  test('previousElementSibling', function () {
+  test('previousElementSibling', () => {
     expect(child4.previousElementSibling).toBe(child3)
     expect(child3.previousElementSibling).toBe(child1)
     expect(child1.previousElementSibling).toBeNull()
   })
 
-  test('nextElementSibling', function () {
+  test('nextElementSibling', () => {
     expect(child1.nextElementSibling).toBe(child3)
     expect(child3.nextElementSibling).toBeNull()
   })

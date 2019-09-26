@@ -1,8 +1,8 @@
 import $$ from './TestHelpers'
 
-describe('String', function () {
+describe('String', () => {
 
-  test('splitAStringOnASCIIWhitespace()', function () {
+  test('splitAStringOnASCIIWhitespace()', () => {
     const str = 'a b    c'
     const list = $$.infra.string.splitAStringOnASCIIWhitespace(str)
     expect(list.length).toBe(3)

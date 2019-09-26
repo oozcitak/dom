@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('EventTarget', function () {
+describe('EventTarget', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -9,7 +9,7 @@ describe('EventTarget', function () {
 
   const de = doc.documentElement
 
-  test('addEventListener() with null callback', function () {
+  test('addEventListener() with null callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -18,7 +18,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList.length).toBe(0)
   })
 
-  test('addEventListener() with function callback', function () {
+  test('addEventListener() with function callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -29,7 +29,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList[0].callback).toEqual({ handleEvent: callback })
   })
 
-  test('addEventListener() with event handler', function () {
+  test('addEventListener() with event handler', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -40,7 +40,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList[0].callback).toEqual(handler)
   })
 
-  test('removeEventListener() with null callback', function () {
+  test('removeEventListener() with null callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -50,7 +50,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList.length).toBe(1)
   })
 
-  test('removeEventListener() with function callback', function () {
+  test('removeEventListener() with function callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -63,7 +63,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList.length).toBe(2)
   })
 
-  test('removeEventListener() with event handler', function () {
+  test('removeEventListener() with event handler', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -76,7 +76,7 @@ describe('EventTarget', function () {
     expect((ele as any)._eventListenerList.length).toBe(2)
   })
 
-  test('dispatchEvent()', function () {
+  test('dispatchEvent()', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -87,7 +87,7 @@ describe('EventTarget', function () {
     expect(num).toBe(1)
   })
 
-  test('dispatchEvent() cant be nested', function () {
+  test('dispatchEvent() cant be nested', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 

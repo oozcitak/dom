@@ -1,14 +1,14 @@
 import $$ from './TestHelpers'
 
-describe('Stack', function () {
+describe('Stack', () => {
 
-  test('push()', function () {
+  test('push()', () => {
     const list = ['a', 'b', 'c']
     $$.infra.stack.push(list, 'd')
     expect(list).toEqual(['a', 'b', 'c', 'd'])
   })
 
-  test('pop()', function () {
+  test('pop()', () => {
     const list = ['a', 'b', 'c']
     const item = $$.infra.stack.pop(list)
     expect(item).toBe('c')

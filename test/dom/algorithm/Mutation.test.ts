@@ -1,8 +1,8 @@
 import $$ from '../TestHelpers'
 
-describe('Mutation', function () {
+describe('Mutation', () => {
 
-  test('ensurePreInsertionValidity()', function () {
+  test('ensurePreInsertionValidity()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -114,7 +114,7 @@ describe('Mutation', function () {
 
   })
 
-  test('preInsert()', function () {
+  test('preInsert()', () => {
     const doc = $$.dom.createDocument('my ns', 'root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -133,7 +133,7 @@ describe('Mutation', function () {
       `)
   })
 
-  test('replace()', function () {
+  test('replace()', () => {
     // Only document, document fragment and element nodes can have
     // child nodes
     const doc1 = $$.dom.createDocument('my ns', '')
@@ -298,7 +298,7 @@ describe('Mutation', function () {
       `)
   })
 
-  test('replaceAll()', function () {
+  test('replaceAll()', () => {
     const doc5 = $$.dom.createDocument('my ns', '')
     const ele5 = doc5.createElement('ele1')
     const ele5a = doc5.createComment('ele2')
@@ -332,7 +332,7 @@ describe('Mutation', function () {
       `)
   })
 
-  test('preRemove()', function () {
+  test('preRemove()', () => {
     // node should be a child of parent
     const doc1 = $$.dom.createDocument('my ns', '')
     const ele1 = doc1.createElement('ele1')

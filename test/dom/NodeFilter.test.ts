@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('NodeFilter', function () {
+describe('NodeFilter', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -37,7 +37,7 @@ describe('NodeFilter', function () {
         child3_2
     `)
 
-  test('acceptNode()', function () {
+  test('acceptNode()', () => {
     const filter = $$.NodeFilter._create()
     const iter = doc.createTreeWalker(root, $$.WhatToShow.All, filter)
     let str = ''

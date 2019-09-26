@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('ProcessingInstruction', function () {
+describe('ProcessingInstruction', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,14 +10,14 @@ describe('ProcessingInstruction', function () {
   const node = doc.createProcessingInstruction('program', 'instruction')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node.nodeType).toBe(7)
     expect(node.nodeName).toBe('program')
     expect(node.target).toBe('program')
     expect(node.data).toBe('instruction')
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(7)
@@ -26,13 +26,13 @@ describe('ProcessingInstruction', function () {
     expect(clonedNode.data).toBe('instruction')
   })
 
-  test('isEqualNode()', function () {
+  test('isEqualNode()', () => {
     const node2 = doc.createProcessingInstruction('program', 'instruction')
     expect(node.isEqualNode(node2)).toBe(true)
     expect(node.isEqualNode()).toBe(false)
   })
 
-  test('_create()', function () {
+  test('_create()', () => {
     const node1 = $$.ProcessingInstruction._create(doc as any, 'target', 'data')
     expect(node1.nodeType).toBe(7)
     expect(node1.nodeName).toBe('target')

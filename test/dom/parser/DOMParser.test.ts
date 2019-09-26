@@ -1,13 +1,13 @@
 import $$ from '../TestHelpers'
 
-describe('DOMParser - XML', function () {
+describe('DOMParser - XML', () => {
 
-  test('HTML parser not yet supported', function () {
+  test('HTML parser not yet supported', () => {
     const parser = new $$.DOMParser()
     expect(() => parser.parseFromString('', $$.MimeType.HTML)).toThrow()
   })
 
-  test('basic', function () {
+  test('basic', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
       <!DOCTYPE root PUBLIC "pubid" "sysid">
@@ -38,7 +38,7 @@ describe('DOMParser - XML', function () {
       `)
   })
 
-  test('closing tag should match', function () {
+  test('closing tag should match', () => {
     const xmlStr = $$.t`
       <root>
         <node att="val"/>
@@ -49,7 +49,7 @@ describe('DOMParser - XML', function () {
     expect(() => parser.parseFromString(xmlStr, $$.MimeType.XML)).toThrow()
   })
 
-  test('default namespace', function () {
+  test('default namespace', () => {
     const xmlStr = '<root xmlns="uri:myns"><node1><node2>text</node2></node1></root>'
 
     const parser = new $$.DOMParser()
@@ -63,7 +63,7 @@ describe('DOMParser - XML', function () {
     `)
   })
 
-  test('namespace prefix', function () {
+  test('namespace prefix', () => {
     const xmlStr =
       '<root xmlns="uri:myns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:myschema.xsd">' +
       '<node1><node2>text</node2></node1>' +
@@ -80,7 +80,7 @@ describe('DOMParser - XML', function () {
       `)
   })
 
-  test('explicit namespace declaration', function () {
+  test('explicit namespace declaration', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
       '<script type="text/ecmascript" xlink:href="foo.js"/>' +
@@ -95,7 +95,7 @@ describe('DOMParser - XML', function () {
       `)
   })
 
-  test('empty default namespace', function () {
+  test('empty default namespace', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns=""/>' +
@@ -110,7 +110,7 @@ describe('DOMParser - XML', function () {
       `)
   })
 
-  test('default namespace override', function () {
+  test('default namespace override', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns="http://www.w3.org/1999/xlink"/>' +
@@ -125,7 +125,7 @@ describe('DOMParser - XML', function () {
       `)
   })
 
-  test('prefixed namespace override', function () {
+  test('prefixed namespace override', () => {
     const xmlStr =
       '<p:root xmlns:p="uri:my ns1">' +
       '<p:node><p:child/></p:node>' +

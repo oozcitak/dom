@@ -1,10 +1,10 @@
 import $$ from './TestHelpers'
 
-describe('Node Constructors', function () {
+describe('Node Constructors', () => {
 
   const doc = $$.window.document
 
-  test('Comment constructor()', function () {
+  test('Comment constructor()', () => {
     const node = new $$.Comment()
     expect(node.ownerDocument).toBe(doc)
     expect(node.data).toBe('')
@@ -13,17 +13,17 @@ describe('Node Constructors', function () {
     expect(node2.data).toBe('test')
   })
 
-  test('DocumentFragment constructor()', function () {
+  test('DocumentFragment constructor()', () => {
     const node = new $$.DocumentFragment()
     expect(node.ownerDocument).toBe(doc)
   })
 
-  test('Document constructor()', function () {
+  test('Document constructor()', () => {
     const node = new $$.Document()
     expect(node.ownerDocument).toBeNull()
   })
 
-  test('Text constructor()', function () {
+  test('Text constructor()', () => {
     const node = new $$.Text()
     expect(node.ownerDocument).toBe(doc)
     expect(node.data).toBe('')
@@ -32,7 +32,7 @@ describe('Node Constructors', function () {
     expect(node2.data).toBe('test')
   })
 
-  test('XMLDocument constructor()', function () {
+  test('XMLDocument constructor()', () => {
     const node = new $$.XMLDocument()
     expect(node.ownerDocument).toBeNull()
   })

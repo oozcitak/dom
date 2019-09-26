@@ -1,7 +1,7 @@
 import $$ from './TestHelpers'
 import { HTMLCollectionImpl } from '../../src/dom'
 
-describe('HTMLCollection', function () {
+describe('HTMLCollection', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -32,11 +32,11 @@ describe('HTMLCollection', function () {
   htmlDE.appendChild(htmlDiv)
   const htmlList = htmlDoc.getElementsByTagName('div')
 
-  test('length', function () {
+  test('length', () => {
     expect(list.length).toBe(3)
   })
 
-  test('item', function () {
+  test('item', () => {
     expect(list.item(0)).toBe(ele1)
     expect(list.item(1)).toBe(ele3)
     expect(list.item(2)).toBe(ele2)
@@ -44,7 +44,7 @@ describe('HTMLCollection', function () {
     expect(list.item(1001)).toBeNull()
   })
 
-  test('namedItem', function () {
+  test('namedItem', () => {
     expect(list.namedItem('ele1')).toBe(ele1)
     expect(list.namedItem('ele2')).toBe(ele2)
     expect(list.namedItem('ele3')).toBe(ele3)
@@ -54,7 +54,7 @@ describe('HTMLCollection', function () {
     expect(htmlList.namedItem('my div')).toBe(htmlDiv)
   })
 
-  test('indexers', function () {
+  test('indexers', () => {
     expect(list[0]).toBe(ele1)
     expect(list[1]).toBe(ele3)
     expect(list[2]).toBe(ele2)
@@ -63,7 +63,7 @@ describe('HTMLCollection', function () {
     expect(list['ele3']).toBe(ele3)
   })
 
-  test('iteration', function () {
+  test('iteration', () => {
     let names = ''
     for (const ele of list) {
       names += '_' + ele.id
@@ -71,7 +71,7 @@ describe('HTMLCollection', function () {
     expect(names).toBe('_ele1_ele3_ele2')
   })
 
-  test('_create()', function () {
+  test('_create()', () => {
     const list2 = HTMLCollectionImpl._create(de)
     expect(list2._root).toBe(de)
   })

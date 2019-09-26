@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Attr', function () {
+describe('Attr', () => {
 
   const doc = $$.dom.createDocument('mydefaultns', 'root')
 
@@ -15,7 +15,7 @@ describe('Attr', function () {
   if (attr === null)
     throw new Error("attr is null")
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(attr.nodeType).toBe(2)
     expect(attr.nodeName).toBe('ns:name')
     expect(attr.ownerElement).toBe(ele)
@@ -25,38 +25,38 @@ describe('Attr', function () {
     expect(attr.value).toBe('value')
   })
 
-  test('value', function () {
+  test('value', () => {
     expect(attr.value).toBe('value')
     attr.value = 'modified'
     expect(attr.value).toBe('modified')
     attr.value = 'value'
   })
 
-  test('nodeValue', function () {
+  test('nodeValue', () => {
     attr.nodeValue = 'modified'
     expect(attr.nodeValue).toBe('modified')
     attr.nodeValue = 'value'
   })
 
-  test('textContent', function () {
+  test('textContent', () => {
     attr.textContent = 'modified'
     expect(attr.textContent).toBe('modified')
     attr.textContent = 'value'
   })
 
-  test('nodeValue with null', function () {
+  test('nodeValue with null', () => {
     attr.nodeValue = null
     expect(attr.nodeValue).toBe('')
     attr.nodeValue = 'value'
   })
 
-  test('textContent with null', function () {
+  test('textContent with null', () => {
     attr.textContent = null
     expect(attr.textContent).toBe('')
     attr.textContent = 'value'
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedAttr = attr.cloneNode() as any
     expect(clonedAttr).not.toBe(attr)
     expect(clonedAttr.nodeType).toBe(2)
@@ -68,21 +68,21 @@ describe('Attr', function () {
     expect(clonedAttr.value).toBe('value')
   })
 
-  test('lookupPrefix()', function () {
+  test('lookupPrefix()', () => {
     expect(attr.lookupPrefix('myns')).toBe('n')
     expect(attr.lookupPrefix(null)).toBeNull()
     const cloned = attr.cloneNode() as any
     expect(cloned.lookupPrefix('none')).toBeNull()
   })
 
-  test('lookupNamespaceURI()', function () {
+  test('lookupNamespaceURI()', () => {
     expect(attr.lookupNamespaceURI('n')).toBe('myns')
     expect(attr.lookupNamespaceURI(null)).toBe('mydefaultns')
     const cloned = attr.cloneNode() as any
     expect(cloned.lookupNamespaceURI('none')).toBeNull()
   })
 
-  test('isEqualNode()', function () {
+  test('isEqualNode()', () => {
     const attr1 = doc.createAttributeNS('my ns', 'att')
     attr1.value = 'val'
     const attr2 = doc.createAttributeNS('my ns', 'att')

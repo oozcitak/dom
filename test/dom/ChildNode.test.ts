@@ -1,8 +1,8 @@
 import $$ from './TestHelpers'
 
-describe('ChildNode', function () {
+describe('ChildNode', () => {
 
-  test('before()', function () {
+  test('before()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -46,7 +46,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('before() with single node', function () {
+  test('before() with single node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -68,7 +68,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('before() with own node', function () {
+  test('before() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -93,7 +93,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('before() with removed node', function () {
+  test('before() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -119,7 +119,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('after()', function () {
+  test('after()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -163,7 +163,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('after() with own node', function () {
+  test('after() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -188,7 +188,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('after() with removed node', function () {
+  test('after() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -214,7 +214,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('replaceWith()', function () {
+  test('replaceWith()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -255,7 +255,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('replaceWith() with own node', function () {
+  test('replaceWith() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -279,7 +279,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('replaceWith() with self node', function () {
+  test('replaceWith() with self node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -304,7 +304,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('replaceWith() with removed node', function () {
+  test('replaceWith() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -330,7 +330,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('remove()', function () {
+  test('remove()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -350,7 +350,7 @@ describe('ChildNode', function () {
       `)
   })
 
-  test('remove() with removed node', function () {
+  test('remove() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")

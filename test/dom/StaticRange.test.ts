@@ -1,8 +1,8 @@
 import $$ from './TestHelpers'
 
-describe('StaticRange', function () {
+describe('StaticRange', () => {
 
-  test('constructor throws', function () {
+  test('constructor throws', () => {
     expect(() => new $$.StaticRange()).toThrow()
   })
 

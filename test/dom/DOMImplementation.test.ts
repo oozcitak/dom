@@ -1,21 +1,21 @@
 import $$ from './TestHelpers'
 
-describe('DOMImplementation', function () {
+describe('DOMImplementation', () => {
 
-  test('singleton pattern', function () {
+  test('singleton pattern', () => {
     const impl1 = $$.dom
     const impl2 = $$.dom
     expect(impl1).toBe(impl2)
   })
 
-  test('createDocumentType()', function () {
+  test('createDocumentType()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     expect($$.printTree(doctype)).toBe($$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       `)
   })
 
-  test('createDocument()', function () {
+  test('createDocument()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'qname', doctype)
     expect(doc.contentType).toBe('application/xml')
@@ -31,7 +31,7 @@ describe('DOMImplementation', function () {
     expect(svg.contentType).toBe('image/svg+xml')
   })
 
-  test('createHTMLDocument()', function () {
+  test('createHTMLDocument()', () => {
     const doc = $$.dom.createHTMLDocument('htmldoc')
     expect(doc.contentType).toBe('text/html')
     expect($$.printTree(doc)).toBe($$.t`
@@ -44,7 +44,7 @@ describe('DOMImplementation', function () {
       `)
   })
 
-  test('createHTMLDocument() without title', function () {
+  test('createHTMLDocument() without title', () => {
     const doc = $$.dom.createHTMLDocument()
     expect(doc.contentType).toBe('text/html')
     expect($$.printTree(doc)).toBe($$.t`
@@ -55,7 +55,7 @@ describe('DOMImplementation', function () {
       `)
   })
 
-  test('hasFeature()', function () {
+  test('hasFeature()', () => {
     expect($$.dom.hasFeature()).toBe(true)
   })
 

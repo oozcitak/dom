@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('NamedNodeMap', function () {
+describe('NamedNodeMap', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -16,11 +16,11 @@ describe('NamedNodeMap', function () {
   elex.setAttribute('att2', 'val2')
   const list = ele.attributes
 
-  test('length', function () {
+  test('length', () => {
     expect(list.length).toBe(2)
   })
 
-  test('item()', function () {
+  test('item()', () => {
     const attr1 = list.item(0)
     expect(attr1).not.toBeNull()
     if (attr1) {
@@ -36,7 +36,7 @@ describe('NamedNodeMap', function () {
     expect(list.item(-1)).toBeNull()
   })
 
-  test('getNamedItem()', function () {
+  test('getNamedItem()', () => {
     let attr = list.getNamedItem('att')
     expect(attr).not.toBeNull()
     if (attr) {
@@ -44,7 +44,7 @@ describe('NamedNodeMap', function () {
     }
   })
 
-  test('getNamedItemNS()', function () {
+  test('getNamedItemNS()', () => {
     let attr = list.getNamedItemNS('myns', 'att2')
     expect(attr).not.toBeNull()
     if (attr) {
@@ -52,7 +52,7 @@ describe('NamedNodeMap', function () {
     }
   })
 
-  test('setNamedItem()', function () {
+  test('setNamedItem()', () => {
     let attr = doc.createAttribute('att')
     attr.value = 'newval'
     let oldattr = list.setNamedItem(attr)
@@ -67,7 +67,7 @@ describe('NamedNodeMap', function () {
     }
   })
 
-  test('setNamedItemNS()', function () {
+  test('setNamedItemNS()', () => {
     let attr = doc.createAttributeNS('myns', 'd:att2')
     attr.value = 'newval'
     let oldattr = list.setNamedItemNS(attr)
@@ -85,7 +85,7 @@ describe('NamedNodeMap', function () {
     expect(() => list.setNamedItemNS(attx)).toThrow()
   })
 
-  test('removeNamedItem()', function () {
+  test('removeNamedItem()', () => {
     let oldattr = list.removeNamedItem('att')
     expect(oldattr).not.toBeNull()
     if (oldattr) {
@@ -95,7 +95,7 @@ describe('NamedNodeMap', function () {
     expect(() => list.removeNamedItem('none')).toThrow()
   })
 
-  test('removeNamedItemNS()', function () {
+  test('removeNamedItemNS()', () => {
     let oldattr = list.removeNamedItemNS('myns', 'att2')
     expect(oldattr).not.toBeNull()
     if (oldattr) {
@@ -105,7 +105,7 @@ describe('NamedNodeMap', function () {
     expect(() => list.removeNamedItemNS('none', 'none')).toThrow()
   })
 
-  test('iteration', function () {
+  test('iteration', () => {
     ele.setAttribute('att', 'val')
     ele.setAttributeNS('myns', 'd:att2', 'val2')
 

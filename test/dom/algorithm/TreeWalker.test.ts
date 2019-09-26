@@ -1,6 +1,6 @@
 import $$ from '../TestHelpers'
 
-describe('TreeWalker', function () {
+describe('TreeWalker', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -41,7 +41,7 @@ describe('TreeWalker', function () {
         child3_2
     `)
 
-  test('traverseChildren() first child', function () {
+  test('traverseChildren() first child', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
@@ -51,7 +51,7 @@ describe('TreeWalker', function () {
     expect(node).toBe(child1)
   })
 
-  test('traverseChildren() sibling of first child', function () {
+  test('traverseChildren() sibling of first child', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') && node.nodeName.endsWith('2') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
@@ -61,7 +61,7 @@ describe('TreeWalker', function () {
     expect(node).toBe(child2)
   })
 
-  test('traverseChildren() without matching children null', function () {
+  test('traverseChildren() without matching children null', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('x') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
@@ -71,7 +71,7 @@ describe('TreeWalker', function () {
     expect(node).toBeNull()
   })
 
-  test('traverseChildren() without children returns null', function () {
+  test('traverseChildren() without children returns null', () => {
     const iter = doc.createTreeWalker(child2)
 
     const node = $$.algo.treeWalker.traverseChildren(iter as any, true)
@@ -79,7 +79,7 @@ describe('TreeWalker', function () {
     expect(node).toBeNull()
   })
 
-  test('traverseSiblings() next sibling', function () {
+  test('traverseSiblings() next sibling', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node1
@@ -88,7 +88,7 @@ describe('TreeWalker', function () {
     expect(node).toBe(node2)
   })
 
-  test('traverseSiblings() previous sibling', function () {
+  test('traverseSiblings() previous sibling', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node2
@@ -97,7 +97,7 @@ describe('TreeWalker', function () {
     expect(node).toBe(node1)
   })
 
-  test('traverseSiblings() at root returns null', function () {
+  test('traverseSiblings() at root returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     const node = $$.algo.treeWalker.traverseSiblings(iter as any, true)
@@ -105,7 +105,7 @@ describe('TreeWalker', function () {
     expect(node).toBeNull()
   })
 
-  test('traverseSiblings() without siblings returns null', function () {
+  test('traverseSiblings() without siblings returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = child32
@@ -114,7 +114,7 @@ describe('TreeWalker', function () {
     expect(node).toBeNull()
   })
 
-  test('traverseSiblings() without siblings returns null', function () {
+  test('traverseSiblings() without siblings returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = node3

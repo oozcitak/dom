@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('CDATASection', function () {
+describe('CDATASection', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,13 +10,13 @@ describe('CDATASection', function () {
   const node = doc.createCDATASection('data')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node.nodeType).toBe(4)
     expect(node.nodeName).toBe('#cdata-section')
     expect(node.data).toBe('data')
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(4)
@@ -25,7 +25,7 @@ describe('CDATASection', function () {
   })
 
 
-  test('_create()', function () {
+  test('_create()', () => {
     const node1 = $$.CDATASection._create(doc as any, 'data')
     expect(node1.nodeType).toBe(4)
     expect(node1.nodeName).toBe('#cdata-section')

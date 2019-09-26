@@ -1,8 +1,8 @@
 import $$ from '../TestHelpers'
 
-describe('TupleSet', function () {
+describe('TupleSet', () => {
 
-  test('size', function () {
+  test('size', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -12,7 +12,7 @@ describe('TupleSet', function () {
     expect(set.size).toBe(4)
   })
 
-  test('set()', function () {
+  test('set()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -24,7 +24,7 @@ describe('TupleSet', function () {
     expect(set.has([3, "c"])).toBe(true)
   })
 
-  test('clear()', function () {
+  test('clear()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -40,7 +40,7 @@ describe('TupleSet', function () {
     expect(set.has([3, "c"])).toBe(false)
   })
 
-  test('delete()', function () {
+  test('delete()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -61,7 +61,7 @@ describe('TupleSet', function () {
     expect(set.has([3, "c"])).toBe(false)
   })
 
-  test('entries()', function () {
+  test('entries()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -78,7 +78,7 @@ describe('TupleSet', function () {
     expect(vals).toBe("aaabc")
   })
 
-  test('values()', function () {
+  test('values()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -95,7 +95,7 @@ describe('TupleSet', function () {
     expect(vals).toBe("aaabc")
   })
 
-  test('foreach()', function () {
+  test('foreach()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -122,7 +122,7 @@ describe('TupleSet', function () {
     }, thisObj)
   })
 
-  test('has()', function () {
+  test('has()', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])
@@ -142,7 +142,7 @@ describe('TupleSet', function () {
     expect(set.has([3, "c"])).toBe(false)
   })
 
-  test('iterator', function () {
+  test('iterator', () => {
     const set = new $$.TupleSet<number, string>()
     set.set([1, "a"])
     set.set([1, "aa"])

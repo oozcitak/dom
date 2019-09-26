@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Document', function () {
+describe('Document', () => {
 
   const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
   const doc = $$.dom.createDocument('myns', 'n:root', doctype)
@@ -34,7 +34,7 @@ describe('Document', function () {
   if (!htmlDoc.documentElement)
     throw new Error("documentElement is null")
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect($$.printTree(doc)).toBe($$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       n:root (ns:myns)
@@ -61,17 +61,17 @@ describe('Document', function () {
     expect(() => doc.createElement('invalid name')).toThrow()
   })
 
-  test('doctype', function () {
+  test('doctype', () => {
     expect(doc.doctype).toBe(doctype)
     const emptyDoc = $$.dom.createDocument(null, 'root')
     expect(emptyDoc.doctype).toBe(null)
   })
 
-  test('getElementById()', function () {
+  test('getElementById()', () => {
     expect(doc.getElementById('uniq')).toBe(tele)
   })
 
-  test('getElementsByTagName()', function () {
+  test('getElementsByTagName()', () => {
     const list = doc.getElementsByTagName('tagged')
     expect(list.length).toBe(2)
     expect(list.item(0)).toBe(tele1)
@@ -80,25 +80,25 @@ describe('Document', function () {
     expect(listAll.length).toBe(7)
   })
 
-  test('getElementsByTagNameNS()', function () {
+  test('getElementsByTagNameNS()', () => {
     const list = doc.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'div')
     expect(list.length).toBe(1)
     expect(list.item(0)).toBe(nele1)
   })
 
-  test('getElementsByClassName()', function () {
+  test('getElementsByClassName()', () => {
     const list = doc.getElementsByClassName('para')
     expect(list.length).toBe(1)
     expect(list.item(0)).toBe(nele1)
   })
 
-  test('createElement()', function () {
+  test('createElement()', () => {
     expect(() => { doc.createElement('invalid name') }).toThrow()
     const ele = doc.createElement('tagged')
     expect(ele.tagName).toBe('tagged')
   })
 
-  test('createElementNS()', function () {
+  test('createElementNS()', () => {
     expect(() => { doc.createElementNS('http://www.w3.org/1999/xhtml', 'invalid name') }).toThrow()
     const ele = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div')
     expect(ele.tagName).toBe('n:div')
@@ -113,20 +113,20 @@ describe('Document', function () {
     expect(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'somename') }).toThrow()
   })
 
-  test('createDocumentFragment()', function () {
+  test('createDocumentFragment()', () => {
     const ele = doc.createDocumentFragment()
     expect(ele.nodeType).toBe(11)
     expect(ele.nodeName).toBe('#document-fragment')
   })
 
-  test('createTextNode()', function () {
+  test('createTextNode()', () => {
     const ele = doc.createTextNode('contents')
     expect(ele.nodeType).toBe(3)
     expect(ele.nodeName).toBe('#text')
     expect(ele.data).toBe('contents')
   })
 
-  test('createCDATASection()', function () {
+  test('createCDATASection()', () => {
     expect(() => { doc.createCDATASection(']]>') }).toThrow()
     const ele = doc.createCDATASection('contents')
     expect(ele.nodeType).toBe(4)
@@ -135,14 +135,14 @@ describe('Document', function () {
     expect(() => htmlDoc.createCDATASection('data')).toThrow()
   })
 
-  test('createComment()', function () {
+  test('createComment()', () => {
     const ele = doc.createComment('contents')
     expect(ele.nodeType).toBe(8)
     expect(ele.nodeName).toBe('#comment')
     expect(ele.data).toBe('contents')
   })
 
-  test('createProcessingInstruction()', function () {
+  test('createProcessingInstruction()', () => {
     expect(() => { doc.createProcessingInstruction('invalid target', 'contents') }).toThrow()
     expect(() => { doc.createProcessingInstruction('target', '?>') }).toThrow()
     const ele = doc.createProcessingInstruction('target', 'contents')
@@ -151,7 +151,7 @@ describe('Document', function () {
     expect(ele.data).toBe('contents')
   })
 
-  test('createAttribute()', function () {
+  test('createAttribute()', () => {
     expect(() => { doc.createAttribute('invalid name') }).toThrow()
     const ele = doc.createAttribute('attr')
     expect(ele.name).toBe('attr')
@@ -159,7 +159,7 @@ describe('Document', function () {
     expect(att1.name).toBe('attr')
   })
 
-  test('createAttributeNS()', function () {
+  test('createAttributeNS()', () => {
     expect(() => { doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'invalid name') }).toThrow()
     const ele = doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'n:div')
     expect(ele.name).toBe('n:div')
@@ -168,7 +168,7 @@ describe('Document', function () {
     expect(ele.localName).toBe('div')
   })
 
-  test('importNode()', function () {
+  test('importNode()', () => {
     const ele1 = doc.createElement('tagged')
     ele1.setAttribute('att', 'val')
     const ele2 = doc.importNode(ele1)
@@ -179,7 +179,7 @@ describe('Document', function () {
     expect(() => doc.importNode(shadow)).toThrow()
   })
 
-  test('adoptNode()', function () {
+  test('adoptNode()', () => {
     const otherDoc = $$.dom.createDocument('myns', 'otherroot')
     const otherEle = otherDoc.createElement('othernode')
     const anotherEle = otherDoc.createElement('anothernode')
@@ -201,7 +201,7 @@ describe('Document', function () {
     expect(() => doc.adoptNode(shadow)).toThrow()
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedDoc = <any>doc.cloneNode()
     expect(clonedDoc).not.toBe(doc)
     expect(clonedDoc.URL).toBe('about:blank')
@@ -218,7 +218,7 @@ describe('Document', function () {
     expect(clonedDoc.documentElement).toBeNull()
   })
 
-  test('cloneNode(deep: true)', function () {
+  test('cloneNode(deep: true)', () => {
     const clonedDoc = <any>doc.cloneNode(true)
     expect(clonedDoc).not.toBe(doc)
     expect(clonedDoc.URL).toBe('about:blank')
@@ -235,25 +235,25 @@ describe('Document', function () {
     expect(clonedDoc.documentElement.tagName).toBe('n:root')
   })
 
-  test('lookupPrefix()', function () {
+  test('lookupPrefix()', () => {
     expect(doc.lookupPrefix('myns')).toBe('n')
     expect(doc.lookupPrefix(null)).toBeNull()
     const emptyDoc = $$.dom.createDocument(null, '')
     expect(emptyDoc.lookupPrefix('myns')).toBeNull()
   })
 
-  test('lookupNamespaceURI()', function () {
+  test('lookupNamespaceURI()', () => {
     expect(doc.lookupNamespaceURI('n')).toBe('myns')
     expect(doc.lookupNamespaceURI(null)).toBeNull()
     const emptyDoc = $$.dom.createDocument(null, '')
     expect(emptyDoc.lookupNamespaceURI(null)).toBeNull()
   })
 
-  test('Unsupported Methods', function () {
+  test('Unsupported Methods', () => {
     expect(() => { doc.createEvent('mouseevent') }).toThrow()
   })
 
-  test('createNodeIterator()', function () {
+  test('createNodeIterator()', () => {
     const ele = doc.getElementById('tele1')
     if (!ele)
       throw new Error("element is null")
@@ -268,18 +268,18 @@ describe('Document', function () {
     expect(str).toBe(':tagged:node_with_id:tagged:div:#text:shadow:my-custom-element')
   })
 
-  test('implementation', function () {
+  test('implementation', () => {
     const impl = doc.implementation
     expect(impl.createDocument).not.toBeUndefined()
   })
 
-  test('quirks mode', function () {
+  test('quirks mode', () => {
     const docImpl = doc as any
     docImpl._mode = "quirks"
     expect(doc.compatMode).toBe('BackCompat')
   })
 
-  test('createElement - HTML', function () {
+  test('createElement - HTML', () => {
     const ele = htmlDoc.createElement('H1')
     expect(ele.localName).toBe('h1')
     const customEle1 = htmlDoc.createElement('BUTTON', 'custom-button')

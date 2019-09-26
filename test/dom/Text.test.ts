@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Text', function () {
+describe('Text', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -20,13 +20,13 @@ describe('Text', function () {
   doc.documentElement.appendChild(node3)
   doc.documentElement.appendChild(node4)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node1.nodeType).toBe(3)
     expect(node1.nodeName).toBe('#text')
     expect(node1.data).toBe('peace')
   })
 
-  test('wholeText', function () {
+  test('wholeText', () => {
     expect(node1.wholeText).toBe('peaceintheworld')
     expect(node2.wholeText).toBe('peaceintheworld')
     expect(node3.wholeText).toBe('peaceintheworld')
@@ -34,7 +34,7 @@ describe('Text', function () {
     expect(node.wholeText).toBe('peaceathome')
   })
 
-  test('splitText()', function () {
+  test('splitText()', () => {
     const node5 = node.splitText(5)
     const node6 = node5.splitText(2)
     expect(node.data).toBe('peace')
@@ -56,7 +56,7 @@ describe('Text', function () {
     expect(node.wholeText).toBe('peace')
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>node1.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(3)
@@ -64,7 +64,7 @@ describe('Text', function () {
     expect(clonedNode.data).toBe('peace')
   })
 
-  test('_create()', function () {
+  test('_create()', () => {
     const node1 = $$.Text._create(doc as any, 'data')
     expect(node1.nodeType).toBe(3)
     expect(node1.nodeName).toBe('#text')

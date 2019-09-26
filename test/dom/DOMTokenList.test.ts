@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('DOMTokenList', function () {
+describe('DOMTokenList', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -15,11 +15,11 @@ describe('DOMTokenList', function () {
   doc.documentElement.appendChild(ele2)
   const list2 = ele2.classList
 
-  test('length', function () {
+  test('length', () => {
     expect(list.length).toBe(3)
   })
     
-  test('item()', function () {
+  test('item()', () => {
     expect(list.item(0)).toBe('one')
     expect(list.item(1)).toBe('two')
     expect(list.item(2)).toBe('three')
@@ -27,28 +27,28 @@ describe('DOMTokenList', function () {
     expect(list.item(1001)).toBe(null)
   })
 
-  test('contains()', function () {
+  test('contains()', () => {
     expect(list.contains('one')).toBe(true)
     expect(list.contains('two')).toBe(true)
     expect(list.contains('three')).toBe(true)
     expect(list.contains('none')).toBe(false)
   })
 
-  test('add()', function () {
+  test('add()', () => {
     list.add('four', 'five')
     expect(list.length).toBe(5)
     expect(() => list.add('')).toThrow()
     expect(() => list.add('one two')).toThrow()
   })
 
-  test('remove()', function () {
+  test('remove()', () => {
     list.remove('four', 'five')
     expect(list.length).toBe(3)
     expect(() => list.remove('')).toThrow()
     expect(() => list.remove(' ')).toThrow()
   })
 
-  test('toggle()', function () {
+  test('toggle()', () => {
     expect(list.toggle('one')).toBe(false)
     expect(list.toggle('one')).toBe(true)
     expect(list.toggle('one', false)).toBe(false)
@@ -63,7 +63,7 @@ describe('DOMTokenList', function () {
     expect(() => list.toggle('one two')).toThrow()
   })
 
-  test('replace()', function () {
+  test('replace()', () => {
     expect(() => list.replace('', '1')).toThrow()
     expect(() => list.replace('one', '')).toThrow()
     expect(() => list.replace(' ', '1')).toThrow()
@@ -73,11 +73,11 @@ describe('DOMTokenList', function () {
     expect(list.length).toBe(3)
   })
 
-  test('supports()', function () {
+  test('supports()', () => {
     expect(() => list.supports('feature')).toThrow()
   })
 
-  test('value', function () {
+  test('value', () => {
     list.value = 'four five six seven'
     expect(list.length).toBe(4)
     list.add('eight')
@@ -85,7 +85,7 @@ describe('DOMTokenList', function () {
     expect(list.length).toBe(5)
   })
 
-  test('iteration', function () {
+  test('iteration', () => {
     list.value = 'one two three'
     let names = ''
     for (const name of list) {
@@ -94,12 +94,12 @@ describe('DOMTokenList', function () {
     expect(names).toBe('_one_two_three')
   })
 
-  test('empty token list', function () {
+  test('empty token list', () => {
     list2.value = ''
     expect(list2.length).toBe(0)
   })
 
-  test('change attribute', function () {
+  test('change attribute', () => {
     ele.setAttribute('class', 'four five six seven')
     let names = ''
     for (const name of list) {

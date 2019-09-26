@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('DocumentFragment', function () {
+describe('DocumentFragment', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -15,12 +15,12 @@ describe('DocumentFragment', function () {
   node.appendChild(doc.createTextNode(''))
   node.appendChild(doc.createTextNode('test'))
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node.nodeType).toBe(11)
     expect(node.nodeName).toBe('#document-fragment')
   })
 
-  test('textContent', function () {
+  test('textContent', () => {
     expect(node.textContent).toBe('thisisatest')
     node.textContent = null
     expect(node.childNodes.length).toBe(0)
@@ -31,7 +31,7 @@ describe('DocumentFragment', function () {
     expect(text.data).toBe('or is it?')
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(11)
@@ -39,7 +39,7 @@ describe('DocumentFragment', function () {
     expect(clonedNode.childNodes.length).toBe(0)
   })
 
-  test('cloneNode(deep : true)', function () {
+  test('cloneNode(deep : true)', () => {
     const clonedNode = <any>node.cloneNode(true)
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(11)
@@ -47,11 +47,11 @@ describe('DocumentFragment', function () {
     expect(clonedNode.childNodes.length).toBe(1)
   })
 
-  test('lookupPrefix()', function () {
+  test('lookupPrefix()', () => {
     expect(node.lookupPrefix('none')).toBeNull()
   })
 
-  test('lookupNamespaceURI()', function () {
+  test('lookupNamespaceURI()', () => {
     expect(node.lookupNamespaceURI('none')).toBeNull()
   })
 

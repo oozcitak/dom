@@ -1,8 +1,8 @@
 import $$ from './TestHelpers'
 
-describe('Slotable', function () {
+describe('Slotable', () => {
 
-  test('null assignedSlot', function () {
+  test('null assignedSlot', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     expect(doc.createElementNS('http://www.w3.org/1999/xhtml', 'div').assignedSlot).toBeNull()
 
@@ -21,7 +21,7 @@ describe('Slotable', function () {
     expect(childTextNode.assignedSlot).toBeNull()
   })
 
-  test('assignedSlot in open shadow tree', function () {
+  test('assignedSlot in open shadow tree', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
@@ -39,7 +39,7 @@ describe('Slotable', function () {
     expect(childTextNode.assignedSlot).toBe(slot)
   })
 
-  test('assignedSlot in open closed tree', function () {
+  test('assignedSlot in open closed tree', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')

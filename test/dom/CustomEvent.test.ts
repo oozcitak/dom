@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('CustomEvent', function () {
+describe('CustomEvent', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -9,7 +9,7 @@ describe('CustomEvent', function () {
 
   const de = doc.documentElement
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     const event = new $$.CustomEvent("custom", {
       cancelable: true,
       bubbles: true,
@@ -23,7 +23,7 @@ describe('CustomEvent', function () {
     expect(event.detail).toBe("some data")
   })
 
-  test('dispatch()', function () {
+  test('dispatch()', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -40,7 +40,7 @@ describe('CustomEvent', function () {
     ele.dispatchEvent(event)
   })
 
-  test('initCustomEvent()', function () {
+  test('initCustomEvent()', () => {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom", true, true, "some data")
     expect(event.type).toBe("custom")
@@ -50,7 +50,7 @@ describe('CustomEvent', function () {
     expect(event.detail).toBe("some data")
   })
 
-  test('initCustomEvent() defaults', function () {
+  test('initCustomEvent() defaults', () => {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom")
     expect(event.type).toBe("custom")

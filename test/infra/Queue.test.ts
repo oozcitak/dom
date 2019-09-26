@@ -1,14 +1,14 @@
 import $$ from './TestHelpers'
 
-describe('Queue', function () {
+describe('Queue', () => {
 
-  test('enqueue()', function () {
+  test('enqueue()', () => {
     const list = ['a', 'b', 'c']
     $$.infra.queue.enqueue(list, 'd')
     expect(list).toEqual(['a', 'b', 'c', 'd'])
   })
 
-  test('dequeue()', function () {
+  test('dequeue()', () => {
     const list = ['a', 'b', 'c']
     const item = $$.infra.queue.dequeue(list)
     expect(item).toBe('a')

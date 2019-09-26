@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Event', function () {
+describe('Event', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -11,7 +11,7 @@ describe('Event', function () {
   const ele = doc.createElement('ele')
   de.appendChild(ele)
 
-  test('properties', function () {
+  test('properties', () => {
     const event = new $$.Event('custom', {})
     expect(event.target).toBeNull()
     expect(event.composedPath()).toEqual([])
@@ -39,7 +39,7 @@ describe('Event', function () {
     ele.dispatchEvent(event)
   })
 
-  test('initEvent()', function () {
+  test('initEvent()', () => {
     const event = doc.createEvent('Event')
     event.initEvent('custom', true, true)
 
@@ -53,7 +53,7 @@ describe('Event', function () {
     ele.dispatchEvent(event)
   })
 
-  test('propagation', function () {
+  test('propagation', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -66,7 +66,7 @@ describe('Event', function () {
     expect(propagated).toBe(true)
   })
 
-  test('stopPropagation()', function () {
+  test('stopPropagation()', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -83,7 +83,7 @@ describe('Event', function () {
     expect(propagated).toBe(false)
   })
 
-  test('cancelBubble()', function () {
+  test('cancelBubble()', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -100,7 +100,7 @@ describe('Event', function () {
     expect(propagated).toBe(false)
   })
 
-  test('immediate propagation', function () {
+  test('immediate propagation', () => {
     let propagated = 0
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {
@@ -114,7 +114,7 @@ describe('Event', function () {
     expect(propagated).toBe(2)
   })
 
-  test('stopImmediatePropagation()', function () {
+  test('stopImmediatePropagation()', () => {
     let propagated = false
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {

@@ -1,6 +1,6 @@
 import $$ from '../TestHelpers'
 
-describe('Traverse', function () {
+describe('Traverse', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -41,7 +41,7 @@ describe('Traverse', function () {
         child3_2
     `)
 
-  test('filterNode()', function () {
+  test('filterNode()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
@@ -49,7 +49,7 @@ describe('Traverse', function () {
     expect($$.algo.traversal.filter(iter as any, node1 as any)).toBe($$.FilterResult.Accept)
   })
 
-  test('filterNode() recursion check', function () {
+  test('filterNode() recursion check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
       $$.algo.traversal.filter(iter as any, node1 as any)
     )

@@ -1,18 +1,18 @@
 import $$ from '../TestHelpers'
 
-describe('XMLSpec', function () {
+describe('XMLSpec', () => {
 
-  test('isName()', function () {
+  test('isName()', () => {
     expect($$.XMLSpec.isName('name')).toBe(true)
     expect($$.XMLSpec.isName('not a name')).toBe(false)
   })
 
-  test('isQName()', function () {
+  test('isQName()', () => {
     expect($$.XMLSpec.isQName('prefix:name')).toBe(true)
     expect($$.XMLSpec.isQName('not_a_qname:')).toBe(false)
   })
 
-  test('isLegalChar() XML 1.0', function () {
+  test('isLegalChar() XML 1.0', () => {
     expect($$.XMLSpec.isLegalChar('invalid char \u{0000}')).toBe(false)
     expect($$.XMLSpec.isLegalChar('invalid char \u{0001}')).toBe(false)
     expect($$.XMLSpec.isLegalChar('invalid char \u{0002}')).toBe(false)
@@ -47,7 +47,7 @@ describe('XMLSpec', function () {
     expect($$.XMLSpec.isLegalChar('invalid char \u{FFFF}')).toBe(false)    
   })
 
-  test('isLegalChar() XML 1.1', function () {
+  test('isLegalChar() XML 1.1', () => {
     expect($$.XMLSpec.isLegalChar('invalid char \u{0000}', "1.1")).toBe(false)
     expect($$.XMLSpec.isLegalChar('invalid char \u{D800}', "1.1")).toBe(false)
     expect($$.XMLSpec.isLegalChar('invalid char \u{DFFF}', "1.1")).toBe(false)
@@ -57,7 +57,7 @@ describe('XMLSpec', function () {
     expect($$.XMLSpec.isLegalChar('valid in XML 1.1 \u{0008}', "1.1")).toBe(true)
   })
 
-  test('isPubidChar()', function () {
+  test('isPubidChar()', () => {
     expect($$.XMLSpec.isPubidChar('invalid char ^')).toBe(false)
   })
 

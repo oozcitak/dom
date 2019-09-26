@@ -1,8 +1,8 @@
 import $$ from './TestHelpers'
 
-describe('NonElementParentNode', function () {
+describe('NonElementParentNode', () => {
 
-  test('getElementById() on document', function () {
+  test('getElementById() on document', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
 
     if (!doc.documentElement)
@@ -16,7 +16,7 @@ describe('NonElementParentNode', function () {
     expect(doc.getElementById('none')).toBeNull()
   })
 
-  test('getElementById() on document fragment', function () {
+  test('getElementById() on document fragment', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     const frag = doc.createDocumentFragment()
 

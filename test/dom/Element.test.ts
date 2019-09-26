@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Element', function () {
+describe('Element', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -51,7 +51,7 @@ describe('Element', function () {
   const htmlEle7 = htmlDoc.createElement('ele')
   htmlDoc.documentElement.appendChild(htmlEle7)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(ele1.nodeType).toBe(1)
     expect(ele1.nodeName).toBe('n:root')
     expect(ele1.tagName).toBe('n:root')
@@ -60,7 +60,7 @@ describe('Element', function () {
     expect(ele1.localName).toBe('root')
   })
 
-  test('id', function () {
+  test('id', () => {
     const uniqEle = doc.createElement('tag')
     de.appendChild(uniqEle)
     uniqEle.setAttribute('id', 'uniq1')
@@ -69,7 +69,7 @@ describe('Element', function () {
     expect(uniqEle.id).toBe('')
   })
 
-  test('className', function () {
+  test('className', () => {
     expect(ele2.className).toBe('a b c')
     ele2.className = 'd e f'
     expect(ele2.className).toBe('d e f')
@@ -77,26 +77,26 @@ describe('Element', function () {
     expect(ele1.slot).toBe('')
   })
 
-  test('classList', function () {
+  test('classList', () => {
     expect(ele2.classList.length).toBe(3)
   })
 
-  test('slot', function () {
+  test('slot', () => {
     expect(ele3.slot).toBe('x')
     ele3.slot = 'z'
     expect(ele3.slot).toBe('z')
   })
 
-  test('attributes', function () {
+  test('attributes', () => {
     expect(ele1.attributes.length).toBe(4)
   })
 
-  test('hasAttributes()', function () {
+  test('hasAttributes()', () => {
     expect(ele1.hasAttributes()).toBe(true)
     expect(ele4.hasAttributes()).toBe(false)
   })
 
-  test('toggleAttribute()', function () {
+  test('toggleAttribute()', () => {
     expect(() => ele7.toggleAttribute('invalid name')).toThrow()
     ele7.setAttribute('someAtt1', 'val1')
     ele7.setAttribute('someAtt2', 'val2')
@@ -122,21 +122,21 @@ describe('Element', function () {
     expect(htmlEle7.hasAttribute('toggleAtt')).toBe(true)
   })
 
-  test('getAttributeNames()', function () {
+  test('getAttributeNames()', () => {
     expect(ele1.getAttributeNames()).toEqual(['id', 'att1', 'att2', 'ns:name'])
   })
 
-  test('getAttribute()', function () {
+  test('getAttribute()', () => {
     expect(ele1.getAttribute('att1')).toBe('value1')
     expect(ele1.getAttribute('non-existing')).toBeNull()
   })
 
-  test('getAttributeNS()', function () {
+  test('getAttributeNS()', () => {
     expect(ele1.getAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBe('value')
     expect(ele1.getAttributeNS('my ns', 'non')).toBeNull()
   })
 
-  test('setAttribute()', function () {
+  test('setAttribute()', () => {
     ele1.setAttribute('att1', 'newvalue1')
     expect(ele1.getAttribute('att1')).toBe('newvalue1')
     ele1.setAttribute('att100', 'newvalue100')
@@ -148,7 +148,7 @@ describe('Element', function () {
     expect(htmlEle7.getAttribute('name')).toBe('val')
   })
 
-  test('setAttributeNS()', function () {
+  test('setAttributeNS()', () => {
     ele1.setAttributeNS('http://www.w3.org/1999/xhtml', 'name', 'newvalue')
     expect(ele1.getAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBe('newvalue')
     ele1.setAttributeNS('http://www.w3.org/1999/xhtml', 'name101', 'newvalue101')
@@ -156,17 +156,17 @@ describe('Element', function () {
     expect(ele1.getAttributeNS('http://www.w3.org/1999/xhtml', 'name101')).toBe('newvalue101')
   })
 
-  test('removeAttribute()', function () {
+  test('removeAttribute()', () => {
     ele1.removeAttribute('att100')
     expect(ele1.attributes.length).toBe(5)
   })
 
-  test('removeAttributeNS()', function () {
+  test('removeAttributeNS()', () => {
     ele1.removeAttributeNS('http://www.w3.org/1999/xhtml', 'name101')
     expect(ele1.attributes.length).toBe(4)
   })
 
-  test('hasAttribute()', function () {
+  test('hasAttribute()', () => {
     expect(ele1.hasAttribute('att1')).toBe(true)
     expect(ele1.hasAttribute('nope')).toBe(false)
 
@@ -174,13 +174,13 @@ describe('Element', function () {
     expect(htmlEle7.hasAttribute('name')).toBe(true)
   })
 
-  test('hasAttributeNS()', function () {
+  test('hasAttributeNS()', () => {
     expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'name')).toBe(true)
     expect(ele1.hasAttributeNS('http://www.w3.org/1999/xhtml', 'nope')).toBe(false)
     expect(ele1.hasAttributeNS('', 'name')).toBe(false)
   })
 
-  test('getAttributeNode()', function () {
+  test('getAttributeNode()', () => {
     const attr = ele1.getAttributeNode('att1')
     expect(attr).not.toBeNull()
     if (attr) {
@@ -189,7 +189,7 @@ describe('Element', function () {
     expect(ele1.getAttributeNode('none')).toBeNull()
   })
 
-  test('getAttributeNodeNS()', function () {
+  test('getAttributeNodeNS()', () => {
     const attr = ele1.getAttributeNodeNS('http://www.w3.org/1999/xhtml', 'name')
     expect(attr).not.toBeNull()
     if (attr) {
@@ -198,7 +198,7 @@ describe('Element', function () {
     expect(ele1.getAttributeNodeNS('http://www.w3.org/1999/xhtml', 'none')).toBeNull()
   })
 
-  test('setAttributeNode()', function () {
+  test('setAttributeNode()', () => {
     const newAttr = doc.createAttribute('att1')
     newAttr.value = 'newold'
     ele1.setAttributeNode(newAttr)
@@ -210,7 +210,7 @@ describe('Element', function () {
     expect(ele1.getAttribute('newatt')).toBe('brandnew')
   })
 
-  test('setAttributeNS()', function () {
+  test('setAttributeNS()', () => {
     const newAttr = doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'name')
     newAttr.value = 'newold'
     ele1.setAttributeNodeNS(newAttr)
@@ -222,7 +222,7 @@ describe('Element', function () {
     expect(ele1.getAttributeNS('http://www.w3.org/1999/xhtml', 'newatt')).toBe('brandnew')
   })
 
-  test('removeAttributeNode()', function () {
+  test('removeAttributeNode()', () => {
     const newAttr = ele1.getAttributeNode('newatt')
     if (newAttr) {
       ele1.removeAttributeNode(newAttr)
@@ -238,7 +238,7 @@ describe('Element', function () {
     expect(() => ele1.removeAttributeNode(nonAttr)).toThrow()
   })
 
-  test('textContent', function () {
+  test('textContent', () => {
     expect(ele4.textContent).toBe('masterofpuppets')
     ele4.textContent = 'masterofbobbitts'
     expect(ele4.childNodes.length).toBe(1)
@@ -248,7 +248,7 @@ describe('Element', function () {
     expect(txt.textContent).toBe('masterofbobbitts')
   })
 
-  test('textContent with empty child', function () {
+  test('textContent with empty child', () => {
     const doct = $$.dom.createDocument('myns', 'root')
 
     if (!doct.documentElement)
@@ -264,7 +264,7 @@ describe('Element', function () {
     expect(doct.documentElement.textContent).toBe('abc')
   })
 
-  test('textContent with empty content', function () {
+  test('textContent with empty content', () => {
     const doct = $$.dom.createDocument('myns', 'root')
 
     if (!doct.documentElement)
@@ -280,15 +280,15 @@ describe('Element', function () {
     expect(doct.documentElement.textContent).toBe('')
   })
 
-  test('closest()', function () {
+  test('closest()', () => {
     expect(() => ele1.closest('*')).toThrow()
   })
 
-  test('matches()', function () {
+  test('matches()', () => {
     expect(() => ele1.matches('*')).toThrow()
   })
 
-  test('cloneNode()', function () {
+  test('cloneNode()', () => {
     const clonedNode = <any>ele5.cloneNode()
     expect(clonedNode.attributes.length).toBe(2)
     expect(clonedNode.childNodes.length).toBe(0)
@@ -297,7 +297,7 @@ describe('Element', function () {
     expect(clonedNodeDeep.childNodes.length).toBe(3)
   })
 
-  test('isEqualNode()', function () {
+  test('isEqualNode()', () => {
     expect(ele5.isEqualNode(ele6)).toBe(true)
     expect(ele5.isEqualNode(ele1)).toBe(false)
 
@@ -312,19 +312,19 @@ describe('Element', function () {
     expect(en_ele3.isEqualNode(en_ele4)).toBe(false)
   })
 
-  test('getElementsByTagName()', function () {
+  test('getElementsByTagName()', () => {
     expect(de.getElementsByTagName('withtext')[0]).toBe(ele4)
   })
 
-  test('getElementsByTagNameNS()', function () {
+  test('getElementsByTagNameNS()', () => {
     expect(de.getElementsByTagNameNS('myns', 'root')[0]).toBe(ele1)
   })
 
-  test('getElementsByClassName()', function () {
+  test('getElementsByClassName()', () => {
     expect(de.getElementsByClassName('d e f')[0]).toBe(ele2)
   })
 
-  test('insertAdjacentElement()', function () {
+  test('insertAdjacentElement()', () => {
     const iaedoc = $$.dom.createDocument(null, 'root')
 
     if (!iaedoc.documentElement)
@@ -348,7 +348,7 @@ describe('Element', function () {
       `)
   })
 
-  test('insertAdjacentElement() with null parent', function () {
+  test('insertAdjacentElement() with null parent', () => {
     const iaedoc = $$.dom.createDocument(null, 'root')
 
     if (!iaedoc.documentElement)
@@ -369,7 +369,7 @@ describe('Element', function () {
       `)
   })
 
-  test('insertAdjacentText()', function () {
+  test('insertAdjacentText()', () => {
     const iaedoc = $$.dom.createDocument(null, 'root')
 
     if (!iaedoc.documentElement)
@@ -393,7 +393,7 @@ describe('Element', function () {
       `)
   })
 
-  test('insertAdjacentText() with null parent', function () {
+  test('insertAdjacentText() with null parent', () => {
     const iaedoc = $$.dom.createDocument(null, 'root')
 
     if (!iaedoc.documentElement)
@@ -412,7 +412,7 @@ describe('Element', function () {
       `)
   })
 
-  test('lookupPrefix()', function () {
+  test('lookupPrefix()', () => {
     expect(ele1.lookupPrefix('myns')).toBe('n')
     expect(ele1.lookupPrefix('none')).toBeNull()
 
@@ -428,7 +428,7 @@ describe('Element', function () {
     expect(ele.lookupPrefix('')).toBeNull()
   })
 
-  test('lookupNamespaceURI()', function () {
+  test('lookupNamespaceURI()', () => {
     expect(ele1.lookupNamespaceURI('n')).toBe('myns')
     expect(ele1.lookupNamespaceURI('none')).toBeNull()
 
@@ -446,7 +446,7 @@ describe('Element', function () {
     expect(ele.lookupNamespaceURI('namez')).toBeNull()
   })
 
-  test('attachShadow()', function () {
+  test('attachShadow()', () => {
     const doc = $$.dom.createHTMLDocument('my doc')
     const body = doc.getElementsByTagName('body')[0]
     if (!body)
@@ -459,7 +459,7 @@ describe('Element', function () {
     expect(() => custom.attachShadow({ mode: 'open' })).toThrow()
   })
 
-  test('attachShadow() non-html namespace', function () {
+  test('attachShadow() non-html namespace', () => {
     const xmldoc = $$.dom.createDocument('ns', 'root')
     if (!xmldoc.documentElement)
       throw new Error("documentElement is null")
@@ -469,7 +469,7 @@ describe('Element', function () {
     expect(() => custom2.attachShadow({ mode: 'open' })).toThrow()
   })
 
-  test('attachShadow() invalid element name', function () {
+  test('attachShadow() invalid element name', () => {
     const doc = $$.dom.createHTMLDocument('my doc')
     const body = doc.getElementsByTagName('body')[0]
     if (!body)
@@ -479,7 +479,7 @@ describe('Element', function () {
     expect(() => custom.attachShadow({ mode: 'open' })).toThrow()
   })
 
-  test('attachShadow() reserved element name', function () {
+  test('attachShadow() reserved element name', () => {
     const doc = $$.dom.createHTMLDocument('my doc')
     const body = doc.getElementsByTagName('body')[0]
     if (!body)
@@ -489,7 +489,7 @@ describe('Element', function () {
     expect(() => custom.attachShadow({ mode: 'open' })).toThrow()
   })
 
-  test('shadowRoot', function () {
+  test('shadowRoot', () => {
     const doc = $$.dom.createHTMLDocument('my doc')
     const body = doc.getElementsByTagName('body')[0]
     if (!body)
@@ -504,7 +504,7 @@ describe('Element', function () {
     expect(shadow.host).toBe(custom)
   })
 
-  test('update slot name', function () {
+  test('update slot name', () => {
     const doc = $$.dom.createHTMLDocument('my doc')
     const body = doc.getElementsByTagName('body')[0]
     if (!body)
@@ -532,7 +532,7 @@ describe('Element', function () {
     expect(htmlSlotEle._name).toBe("")
   })
 
-  test('update slotable name', function () {
+  test('update slotable name', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
@@ -557,7 +557,7 @@ describe('Element', function () {
     expect(slotableEle._name).toBe("")
   })
 
-  test('_create', function () {
+  test('_create', () => {
     const ele1 = $$.Element._create(doc as any, 'tag', 'ns', 'prefix')
     expect(ele1.localName).toBe('tag')
     expect(ele1.namespaceURI).toBe('ns')

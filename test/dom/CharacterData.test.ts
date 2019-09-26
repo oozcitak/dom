@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('CharacterData', function () {
+describe('CharacterData', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -12,16 +12,16 @@ describe('CharacterData', function () {
   doc.documentElement.appendChild(node1)
   doc.documentElement.appendChild(node2)
 
-  test('constructor()', function () {
+  test('constructor()', () => {
     expect(node1.data).toBe('data')
   })
 
-  test('isEqualNode()', function () {
+  test('isEqualNode()', () => {
     expect(node1.isEqualNode(node2)).toBe(true)
     expect(node1.isEqualNode()).toBe(false)
   })
 
-  test('nodeValue, textContent, data', function () {
+  test('nodeValue, textContent, data', () => {
     expect(node1.nodeValue).toBe('data')
     expect(node1.textContent).toBe('data')
     expect(node1.data).toBe('data')
@@ -46,37 +46,37 @@ describe('CharacterData', function () {
     node1.data = 'data'
   })
 
-  test('length', function () {
+  test('length', () => {
     expect(node1.length).toBe(4)
   })
 
-  test('appendData', function () {
+  test('appendData', () => {
     node1.appendData(' or data')
     expect(node1.data).toBe('data or data')
     node1.data = 'data'
   })
 
-  test('insertData', function () {
+  test('insertData', () => {
     node1.insertData(2, 'da')
     expect(node1.data).toBe('dadata')
     node1.data = 'data'
   })
 
-  test('deleteData', function () {
+  test('deleteData', () => {
     node1.data = 'a long night'
     node1.deleteData(2, 5)
     expect(node1.data).toBe('a night')
     node1.data = 'data'
   })
 
-  test('replaceData', function () {
+  test('replaceData', () => {
     node1.data = 'a long night'
     node1.replaceData(2, 4, 'starry')
     expect(node1.data).toBe('a starry night')
     node1.data = 'data'
   })
 
-  test('substringData', function () {
+  test('substringData', () => {
     node1.data = 'a long night'
     expect(node1.substringData(2, 4)).toBe('long')
     node1.data = 'data'

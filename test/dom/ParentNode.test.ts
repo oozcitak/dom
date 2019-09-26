@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('ParentNode', function () {
+describe('ParentNode', () => {
 
   const doc = $$.dom.createDocument('myns', 'n:root')
 
@@ -20,27 +20,27 @@ describe('ParentNode', function () {
   de.appendChild(child4)
   de.appendChild(child5)
 
-  test('children', function () {
+  test('children', () => {
     expect(de.children.length).toBe(2)
     expect(de.children[0]).toBe(child2)
     expect(de.children[1]).toBe(child4)
   })
 
-  test('firstElementChild', function () {
+  test('firstElementChild', () => {
     expect(de.firstElementChild).toBe(child2)
     expect(child2.firstElementChild).toBeNull()
   })
 
-  test('lastElementChild', function () {
+  test('lastElementChild', () => {
     expect(de.lastElementChild).toBe(child4)
     expect(child2.lastElementChild).toBeNull()
   })
 
-  test('childElementCount', function () {
+  test('childElementCount', () => {
     expect(de.childElementCount).toBe(2)
   })
 
-  test('prepend() with element node', function () {
+  test('prepend() with element node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
 
     if (!doc.documentElement)
@@ -68,7 +68,7 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('prepend() with document fragment node', function () {
+  test('prepend() with document fragment node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     const frag = doc.createDocumentFragment()
   
@@ -92,7 +92,7 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('prepend() with document node', function () {
+  test('prepend() with document node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
      
     doc.prepend(doc.createComment('comment1'))
@@ -103,7 +103,7 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('append() with element node', function () {
+  test('append() with element node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
 
     if (!doc.documentElement)
@@ -131,7 +131,7 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('append() with document fragment node', function () {
+  test('append() with document fragment node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     const frag = doc.createDocumentFragment()
   
@@ -155,7 +155,7 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('append() with document node', function () {
+  test('append() with document node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
      
     doc.append(doc.createComment('comment1'))
@@ -166,12 +166,12 @@ describe('ParentNode', function () {
       `)
   })
 
-  test('querySelector()', function () {
+  test('querySelector()', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     expect(() => doc.querySelector('*')).toThrow()
   })
 
-  test('querySelectorAll()', function () {
+  test('querySelectorAll()', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     expect(() => doc.querySelectorAll('*')).toThrow()
   })

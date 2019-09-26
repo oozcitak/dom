@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('Node', function () {
+describe('Node', () => {
 
   const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
   const doc = $$.dom.createDocument('myns', 'n:root', doctype)
@@ -27,12 +27,12 @@ describe('Node', function () {
   child4.appendChild(doc.createComment('puppity'))
   child4.appendChild(doc.createTextNode('puppets'))
 
-  test('baseURI', function () {
+  test('baseURI', () => {
     // TODO: return document's URI
     expect(ele1.baseURI).toBe('')
   })
 
-  test('isConnected', function () {
+  test('isConnected', () => {
     expect(ele1.isConnected).toBe(true)
     const newEle = doc.createElement('child4')
     expect(newEle.isConnected).toBe(false)
@@ -42,16 +42,16 @@ describe('Node', function () {
     expect(newEle.isConnected).toBe(false)
   })
 
-  test('ownerDocument', function () {
+  test('ownerDocument', () => {
     expect(ele1.ownerDocument).toBe(doc)
     expect(doc.ownerDocument).toBeNull()
   })
 
-  test('getRootNode()', function () {
+  test('getRootNode()', () => {
     expect(ele1.getRootNode()).toBe(doc)
   })
 
-  test('getRootNode() shadow', function () {
+  test('getRootNode() shadow', () => {
     const sdoc = $$.dom.createHTMLDocument('my doc')
     const sbody = sdoc.getElementsByTagName('body')[0]
     if (!sbody)
@@ -67,42 +67,42 @@ describe('Node', function () {
     expect(snode.getRootNode({composed: true})).toBe(sdoc)
   })
 
-  test('parentNode', function () {
+  test('parentNode', () => {
     expect(ele1.parentNode).toBe(de)
     expect(doc.parentElement).toBeNull()
     expect(attr.parentNode).toBeNull()
   })
 
-  test('parentElement', function () {
+  test('parentElement', () => {
     expect(ele1.parentElement).toBe(de)
     expect(doc.parentElement).toBeNull()
   })
 
-  test('hasChildNodes()', function () {
+  test('hasChildNodes()', () => {
     expect(ele1.hasChildNodes()).toBe(true)
   })
 
-  test('childNodes', function () {
+  test('childNodes', () => {
     expect(ele1.childNodes.length).toBe(4)
   })
 
-  test('firstChild', function () {
+  test('firstChild', () => {
     expect(ele1.firstChild).toBe(child1)
   })
 
-  test('lastChild', function () {
+  test('lastChild', () => {
     expect(ele1.lastChild).toBe(child4)
   })
 
-  test('previousSibling', function () {
+  test('previousSibling', () => {
     expect(child3.previousSibling).toBe(child2)
   })
 
-  test('nextSibling', function () {
+  test('nextSibling', () => {
     expect(child3.nextSibling).toBe(child4)
   })
 
-  test('nodeValue', function () {
+  test('nodeValue', () => {
     const charNode = child4.firstChild
     if (!charNode)
       throw new Error("charNode is null")
@@ -116,7 +116,7 @@ describe('Node', function () {
     expect(doctype.nodeValue).toBeNull()
   })
 
-  test('textContent', function () {
+  test('textContent', () => {
     expect(child4.textContent).toBe('masterofpuppets')
     child4.textContent = 'masterofbobbitts'
     expect(child4.childNodes.length).toBe(1)
@@ -130,7 +130,7 @@ describe('Node', function () {
     expect(doctype.textContent).toBeNull()
   })
 
-  test('normalize()', function () {
+  test('normalize()', () => {
     const newEle = doc.createElement('child')
     de.appendChild(newEle)
     newEle.appendChild(doc.createTextNode(''))
@@ -150,7 +150,7 @@ describe('Node', function () {
     expect(charNode.textContent).toBe('part 1 part 2 ')
   })
 
-  test('normalize() text nodes updates live range', function () {
+  test('normalize() text nodes updates live range', () => {
     const newEle = doc.createElement('child')
     de.appendChild(newEle)
     const nodes = [
@@ -187,7 +187,7 @@ describe('Node', function () {
     expect(range5.toString()).toBe('')
   })
 
-  test('normalize() updates live range', function () {
+  test('normalize() updates live range', () => {
     const newEle = doc.createElement('child')
     de.appendChild(newEle)
     const nodes = [
@@ -220,7 +220,7 @@ describe('Node', function () {
     expect(range4.toString()).toBe('')
   })
 
-  test('cloneNode() shadow', function () {
+  test('cloneNode() shadow', () => {
     const sdoc = $$.dom.createHTMLDocument('my doc')
     const sbody = sdoc.getElementsByTagName('body')[0]
     if (!sbody)
@@ -234,7 +234,7 @@ describe('Node', function () {
     expect(() => shadowRoot.cloneNode()).toThrow()
   })
 
-  test('isEqualNode()', function () {
+  test('isEqualNode()', () => {
     const newEle1 = doc.createElement('child')
     newEle1.setAttribute('att1', 'val1')
     newEle1.setAttribute('att2', 'val2')
@@ -262,7 +262,7 @@ describe('Node', function () {
     expect(newEle1.isEqualNode()).toBe(false)
   })
 
-  test('isSameNode()', function () {
+  test('isSameNode()', () => {
     const sameEle1 = de.firstChild
     if (!sameEle1)
       throw new Error("charNode is null")
@@ -272,14 +272,14 @@ describe('Node', function () {
     expect(ele1.isSameNode()).toBe(false)
   })
 
-  test('compareDocumentPosition()', function () {
+  test('compareDocumentPosition()', () => {
     expect(child1.compareDocumentPosition(child1)).toBe(0)
     expect(child1.compareDocumentPosition(child2)).toBe(0x04)
     expect(child2.compareDocumentPosition(child1)).toBe(0x02)
     expect(child4.compareDocumentPosition(de)).toBe(0x08 + 0x02)
   })
 
-  test('compareDocumentPosition() null node', function () {
+  test('compareDocumentPosition() null node', () => {
     const attr1_1 = doc.createAttribute('attr') // null owner
     const attr1_2 = doc.createAttribute('attr') // null owner
     if (attr1_1.compareDocumentPosition(attr1_2) === 0x20 + 0x01 + 0x02)
@@ -295,7 +295,7 @@ describe('Node', function () {
       expect(attr2_2.compareDocumentPosition(attr2_1)).toBe(0x20 + 0x01 + 0x02)
   })
 
-  test('compareDocumentPosition() attribute', function () {
+  test('compareDocumentPosition() attribute', () => {
     const att11 = doc.createAttribute('att11')
     child1.setAttributeNode(att11)
     const att12 = doc.createAttribute('att12')
@@ -310,7 +310,7 @@ describe('Node', function () {
     expect(att11.compareDocumentPosition(child1)).toBe(0x08 + 0x02)
   })
 
-  test('compareDocumentPosition() disconnected', function () {
+  test('compareDocumentPosition() disconnected', () => {
     const otherdoc = $$.dom.createDocument('ns', 'otherdoc')
     if (!otherdoc.documentElement)
       throw new Error("documentElement is null")
@@ -328,13 +328,13 @@ describe('Node', function () {
       expect(pos2).toBe(0x20 + 0x01 + 0x02)
   })
 
-  test('contains()', function () {
+  test('contains()', () => {
     expect(de.contains(child2)).toBe(true)
     expect(de.contains(null)).toBe(false)
   })
 
 
-  test('lookupPrefix()', function () {
+  test('lookupPrefix()', () => {
     const newText = doc.createTextNode('txt')
     child4.appendChild(newText)
     expect(newText.lookupPrefix('myns')).toBe('n')
@@ -343,7 +343,7 @@ describe('Node', function () {
     expect(newText.lookupPrefix('myns')).toBeNull()
   })
 
-  test('lookupNamespaceURI()', function () {
+  test('lookupNamespaceURI()', () => {
     const newText = doc.createTextNode('txt')
     child4.appendChild(newText)
     expect(newText.lookupNamespaceURI('n')).toBe('myns')
@@ -351,7 +351,7 @@ describe('Node', function () {
     expect(newText.lookupNamespaceURI('n')).toBeNull()
   })
 
-  test('isDefaultNamespace()', function () {
+  test('isDefaultNamespace()', () => {
     const htmlDoc = $$.dom.createHTMLDocument()
     if (!htmlDoc.documentElement)
       throw new Error("documentElement is null")
@@ -364,7 +364,7 @@ describe('Node', function () {
     expect(newText.isDefaultNamespace('')).toBe(false)
   })
 
-  test('insertBefore()', function () {
+  test('insertBefore()', () => {
     const newText = doc.createTextNode('txt')
     let count = ele1.childNodes.length
     ele1.insertBefore(newText, child4)
@@ -378,7 +378,7 @@ describe('Node', function () {
     expect(ele1.childNodes.length).toBe(count)
   })
 
-  test('appendChild()', function () {
+  test('appendChild()', () => {
     const aadoc = $$.dom.createDocument('ns', 'doc')
     if (!aadoc.documentElement)
       throw new Error("documentElement is null")
@@ -427,14 +427,14 @@ describe('Node', function () {
         `)
   })
 
-  test('replaceChild()', function () {
+  test('replaceChild()', () => {
     const newText = doc.createTextNode('txt')
     ele1.replaceChild(newText, child2)
     expect(newText.previousSibling).toBe(child1)
     expect(newText.nextSibling).toBe(child3)
   })
 
-  test('removeChild()', function () {
+  test('removeChild()', () => {
     const node1 = doc.createElement('child1')
     const node2 = doc.createElement('child2')
     const node3 = doc.createElement('child3')

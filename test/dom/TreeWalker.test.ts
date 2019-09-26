@@ -1,6 +1,6 @@
 import $$ from './TestHelpers'
 
-describe('TreeWalker', function () {
+describe('TreeWalker', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -37,7 +37,7 @@ describe('TreeWalker', function () {
         child3_2
     `)
 
-  test('nextNode()', function () {
+  test('nextNode()', () => {
     const iter = doc.createTreeWalker(root)
     let str = ''
     let node = iter.nextNode()
@@ -48,7 +48,7 @@ describe('TreeWalker', function () {
     expect(str).toBe(':node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
   })
 
-  test('nextNode() with type filter', function () {
+  test('nextNode() with type filter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
@@ -59,7 +59,7 @@ describe('TreeWalker', function () {
     expect(str).toBe(':child1:child2')
   })
 
-  test('nextNode() with user filter', function () {
+  test('nextNode() with user filter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
@@ -73,12 +73,12 @@ describe('TreeWalker', function () {
     expect(str).toBe(':child1')
   })
 
-  test('nextNode() null check', function () {
+  test('nextNode() null check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.ProcessingInstruction)
     expect(iter.nextNode()).toBeNull()
   })
 
-  test('previousNode()', function () {
+  test('previousNode()', () => {
     const iter = doc.createTreeWalker(root)
     let str = ''
     let node = iter.nextNode()
@@ -93,7 +93,7 @@ describe('TreeWalker', function () {
     expect(str).toBe(':child3_2:child3_1_2:child3_1_1:child3_1:node3:node2:#comment:child2:#text:child1:node1:root')
   })
 
-  test('previousNode() with type filter', function () {
+  test('previousNode() with type filter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
@@ -108,7 +108,7 @@ describe('TreeWalker', function () {
     expect(str).toBe(':child2:child1:node1')
   })
 
-  test('previousNode() with user filter', function () {
+  test('previousNode() with user filter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
@@ -126,18 +126,18 @@ describe('TreeWalker', function () {
     expect(str).toBe(':child1:node1')
   })
 
-  test('previousNode() null check', function () {
+  test('previousNode() null check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.ProcessingInstruction)
     iter.nextNode()
     expect(iter.previousNode()).toBeNull()
   })
 
-  test('currentNode getter', function () {
+  test('currentNode getter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     expect(iter.currentNode).toBe(node1)
   })
 
-  test('currentNode setter', function () {
+  test('currentNode setter', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     const child1 = node1.firstElementChild
     if (!child1)
@@ -151,18 +151,18 @@ describe('TreeWalker', function () {
     expect(iter.currentNode).toBe(child2)
   })
 
-  test('parentNode()', function () {
+  test('parentNode()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     iter.nextNode()
     expect(iter.parentNode()).toBe(node1)
   })
 
-  test('parentNode() null check', function () {
+  test('parentNode() null check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     expect(iter.parentNode()).toBeNull()
   })
 
-  test('firstChild()', function () {
+  test('firstChild()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     const child1 = node1.firstElementChild
     if (!child1)
@@ -174,7 +174,7 @@ describe('TreeWalker', function () {
     expect(iter.firstChild()).toBe(child1)
   })
 
-  test('lastChild()', function () {
+  test('lastChild()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     const child1 = node1.firstElementChild
     if (!child1)
@@ -186,7 +186,7 @@ describe('TreeWalker', function () {
     expect(iter.lastChild()).toBe(child2)
   })
 
-  test('nextSibling()', function () {
+  test('nextSibling()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     const child1 = node1.firstElementChild
     if (!child1)
@@ -199,7 +199,7 @@ describe('TreeWalker', function () {
     expect(iter.nextSibling()).toBe(child2)
   })
 
-  test('previousSibling()', function () {
+  test('previousSibling()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element)
     const child1 = node1.firstElementChild
     if (!child1)
