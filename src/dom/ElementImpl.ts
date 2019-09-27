@@ -492,6 +492,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   }
 
   /** @inheritdoc */
+  webkitMatchesSelector(selectors: string): boolean {
+    return this.matches(selectors)
+  }
+
+  /** @inheritdoc */
   getElementsByTagName(qualifiedName: string): HTMLCollection {
     /**
      * The getElementsByTagName(qualifiedName) method, when invoked, must return

@@ -1118,6 +1118,11 @@ export interface Element extends Node, ParentNode,
   matches(selectors: string): boolean
 
   /**
+   * Historical alias of `matches`.
+   */
+  webkitMatchesSelector(selectors: string): boolean
+
+  /**
    * Returns a {@link HTMLCollection} of all descendant elements 
    * whose qualified name is `qualifiedName`.
    * 
