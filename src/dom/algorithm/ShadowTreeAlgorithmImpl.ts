@@ -214,11 +214,6 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * 1. Append slot to slot’s relevant agent’s signal slots.
      * 2. Queue a mutation observer microtask.
      */
-    /**
-     * TODO:
-     * The relevant agent for a platform object platformObject is the agent
-     * whose set of realms contains platformObject's relevant Realm.
-     */
     const window = globalStore.window
     window._signalSlots.add(slot)
     this.dom.observer.queueAMutationObserverMicrotask()
