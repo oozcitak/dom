@@ -705,7 +705,6 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     }
 
     /**
-     * TODO:
      * 2. Let event be the result of creating an event given eventConstructor, 
      * in the relevant Realm of target.
      */

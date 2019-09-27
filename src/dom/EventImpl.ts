@@ -47,7 +47,6 @@ export class EventImpl implements EventInternal {
     this._algo = globalStore.algorithm as DOMAlgorithm
 
     /**
-     * TODO:
      * When a constructor of the Event interface, or of an interface that
      * inherits from the Event interface, is invoked, these steps must be run, 
      * given the arguments type and eventInitDict:
