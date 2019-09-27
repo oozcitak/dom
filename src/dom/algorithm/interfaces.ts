@@ -205,6 +205,15 @@ export interface DOMAlgorithm {
   runEventConstructingSteps(event: EventInternal): void
 
   /**
+   * Runs pre-removing steps for a node iterator and node.
+   * 
+   * @param nodeIterator - a node iterator
+   * @param toBeRemoved - node to be removed
+   */
+  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIteratorInternal,
+    toBeRemoved: NodeInternal): void
+
+  /**
    * Determines if there are any supported tokens defined for the given 
    * attribute name.
    * 
@@ -1732,6 +1741,10 @@ export interface NodeIteratorAlgorithm extends SubAlgorithm {
    */
   traverse(iterator: NodeIteratorInternal, forward: boolean): NodeInternal | null
 
+  /**
+   * Gets the global iterator list.
+   */
+  readonly iteratorList: DOMObjectCache<NodeIteratorInternal>
 }
 
 /**
