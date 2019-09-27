@@ -196,12 +196,16 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      */
     if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
       if (a._attributeList.length !== b._attributeList.length) return false
-      const attSet = new Set<AttrInternal>()
+      const attrMap = new Map<string, AttrInternal>()
       for (const attr of a._attributeList) {
-        attSet.add(attr as AttrInternal)
+        const attrA = attr as AttrInternal
+        attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
       }
       for (const attr of b._attributeList) {
-        if (!attSet.has(attr as AttrInternal)) return false
+        const attrB = attr as AttrInternal
+        const attrA = attrMap.get((attrB._namespace || '') + attrB._localName + attrB._value)
+        if (!attrA) return false
+        if (!this.equals(attrA, attrB)) return false
       }
     }
 
