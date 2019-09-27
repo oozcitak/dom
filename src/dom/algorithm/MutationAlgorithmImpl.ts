@@ -667,12 +667,15 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     }
 
     /**
-     * TODO:
      * 6. For each NodeIterator object iterator whose root’s node document is 
      * node’s node document, run the NodeIterator pre-removing steps given node
      * and iterator.
      */
-
+    for (const iterator of this.dom.nodeIterator.iteratorList) {
+      if ((iterator._root as NodeInternal)._nodeDocument === node._nodeDocument) {
+        this.dom.runNodeIteratorPreRemovingSteps(iterator, node)
+      }
+    }
 
     /**
      * 7. Let oldPreviousSibling be node’s previous sibling.

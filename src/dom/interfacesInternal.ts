@@ -23,6 +23,7 @@ export interface WindowInternal extends Window, EventTargetInternal {
   _mutationObservers: Set<MutationObserver>
   
   _rangeList: DOMObjectCache<RangeInternal>
+  _iteratorList: DOMObjectCache<NodeIteratorInternal>
 }
 
 /**

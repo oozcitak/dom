@@ -1,5 +1,5 @@
 import { Event, Slot, MutationObserver } from './interfaces'
-import { WindowInternal, RangeInternal } from './interfacesInternal'
+import { WindowInternal, RangeInternal, NodeIteratorInternal } from './interfacesInternal'
 import { EventTargetImpl } from './EventTargetImpl'
 import { DOMObjectCacheImpl } from '../util'
 
@@ -13,6 +13,7 @@ export class WindowImpl extends EventTargetImpl implements WindowInternal {
   _mutationObserverMicrotaskQueued: boolean = false
   _mutationObservers = new Set<MutationObserver>()
   _rangeList = new DOMObjectCacheImpl<RangeInternal>()
+  _iteratorList = new DOMObjectCacheImpl<NodeIteratorInternal>()
   
   /**
    * Initializes a new instance of `Window`.

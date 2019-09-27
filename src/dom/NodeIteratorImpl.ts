@@ -21,6 +21,8 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
     this._iteratorCollection = undefined as unknown as CollectionInternal
     this._reference = reference
     this._pointerBeforeReference = pointerBeforeReference
+
+    this._algo.nodeIterator.iteratorList.add(this)
   }
 
   /** @inheritdoc */
@@ -50,9 +52,11 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
   /** @inheritdoc */
   detach(): void {
     /**
-     * TODO:
      * The detach() method, when invoked, must do nothing.
+     * 
+     * since JS lacks weak references, we still use detach
      */
+    this._algo.nodeIterator.iteratorList.remove(this)    
    }
 
 
