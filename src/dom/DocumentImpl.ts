@@ -46,7 +46,12 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
     this._implementation = this._algo.create.domImplementation(this)
 
-    // TODO: return a new document whose origin is the origin of current global object’s associated Document.
+    /**
+     * The Document() constructor, when invoked, must return a new document 
+     * whose origin is the origin of current global object’s associated
+     * Document. [HTML]
+     */
+    this._origin = globalStore.window._associatedDocument._origin
   }
 
   /** @inheritdoc */
