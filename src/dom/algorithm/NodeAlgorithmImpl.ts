@@ -195,12 +195,13 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * that equals an attribute in B’s attribute list.
      */
     if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
-      // TODO: Check equal attributes with different order
-      for (let i = 0; i < a._attributeList.length; i++) {
-        const attra = a._attributeList.item(i) as NodeInternal | null
-        const attrb = b._attributeList.item(i) as NodeInternal | null
-        if (attra === null || attrb === null) return false
-        if (!this.equals(attra, attrb)) return false
+      if (a._attributeList.length !== b._attributeList.length) return false
+      const attSet = new Set<AttrInternal>()
+      for (const attr of a._attributeList) {
+        attSet.add(attr as AttrInternal)
+      }
+      for (const attr of b._attributeList) {
+        if (!attSet.has(attr as AttrInternal)) return false
       }
     }
 
