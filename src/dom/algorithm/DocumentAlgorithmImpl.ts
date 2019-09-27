@@ -85,13 +85,17 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
         }
 
         /**
-         * TODO: 
          * 3.2. For each inclusiveDescendant in node's shadow-including 
          * inclusive descendants that is custom, enqueue a custom
          * element callback reaction with inclusiveDescendant, 
          * callback name "adoptedCallback", and an argument list 
          * containing oldDocument and document.
          */
+        if (Guard.isElementNode(inclusiveDescendant) && 
+          inclusiveDescendant._customElementState === "custom") {
+          this.dom.customElement.enqueueACustomElementCallbackReaction(
+            inclusiveDescendant, "adoptedCallback", [oldDocument, document])
+        }
 
         /**
          * 3.3. For each inclusiveDescendant in node’s shadow-including 

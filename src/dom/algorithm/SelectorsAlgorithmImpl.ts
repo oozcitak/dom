@@ -30,5 +30,4 @@ export class SelectorsAlgorithmImpl extends SubAlgorithmImpl implements Selector
     throw DOMException.NotSupportedError
   }
 
-
 }

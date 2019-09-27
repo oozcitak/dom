@@ -143,6 +143,11 @@ export interface DOMAlgorithm {
   readonly tokenList: DOMTokenListAlgorithm
 
   /**
+   * Contains custom element algorithms.
+   */
+  readonly customElement: CustomElementAlgorithm
+
+  /**
    * Runs removing steps for node.
    * 
    * @param removedNode - removed node
@@ -1800,6 +1805,21 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
    */
   serializeSteps(tokenList: DOMTokenListInternal): string
 
+}
+
+/**
+ * Contains custom element algorithms.
+ */
+export interface CustomElementAlgorithm extends SubAlgorithm {
+  /**
+   * Enqueues a callback reaction for a custom element.
+   * 
+   * @param element - a custom element
+   * @param callbackName - name of the callback
+   * @param args - callback arguments
+   */
+  enqueueACustomElementCallbackReaction(element: ElementInternal,
+    callbackName: string, args: any[]): void
 }
 
 /**

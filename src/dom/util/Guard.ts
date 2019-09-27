@@ -130,6 +130,15 @@ export class Guard {
   }
 
   /**
+   * Determines if the given object is a custom `Element`.
+   * 
+   * @param a - the object to check
+   */
+  static isCustomElementNode(a: any): a is ElementInternal {
+    return (Guard.isElementNode(a) && a._customElementState === "custom")
+  }
+
+  /**
    * Determines if the given object is a `ShadowRoot`.
    * 
    * @param a - the object to check

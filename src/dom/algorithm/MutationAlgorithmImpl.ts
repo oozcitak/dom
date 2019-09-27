@@ -339,14 +339,22 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
         /**
          * 7.7.2. If inclusiveDescendant is connected, then:
          */
-        if (this.dom.shadowTree.isConnected(inclusiveDescendant as ElementInternal)) {
-          /**
-           * TODO:
-           * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
-           * element callback reaction with inclusiveDescendant, callback name 
-           * "connectedCallback", and an empty argument list.
-           * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
-           */
+        if (Guard.isElementNode(inclusiveDescendant) && 
+          this.dom.shadowTree.isConnected(inclusiveDescendant)) {
+          if (Guard.isCustomElementNode(inclusiveDescendant)) {
+            /**
+             * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
+             * element callback reaction with inclusiveDescendant, callback name 
+             * "connectedCallback", and an empty argument list.
+             */
+            this.dom.customElement.enqueueACustomElementCallbackReaction(
+              inclusiveDescendant, "connectedCallback", [])
+          } else {
+            /**
+             * TODO:
+             * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
+             */
+          }      
         }
       }
     }
@@ -744,11 +752,14 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     this.dom.runRemovingSteps(node, parent)
 
     /**
-     * TODO:
      * 14. If node is custom, then enqueue a custom element callback 
      * reaction with node, callback name "disconnectedCallback", 
      * and an empty argument list.
      */
+    if (Guard.isCustomElementNode(node)) {
+      this.dom.customElement.enqueueACustomElementCallbackReaction(
+        node, "disconnectedCallback", [])
+    }
 
     /**
      * 15. For each shadow-including descendant descendant of node, 
@@ -761,11 +772,14 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       this.dom.runRemovingSteps(descendant)
 
       /**
-       * TODO:
        * 15.2. If descendant is custom, then enqueue a custom element 
        * callback reaction with descendant, callback name 
        * "disconnectedCallback", and an empty argument list.
        */
+      if (Guard.isCustomElementNode(descendant)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          descendant, "disconnectedCallback", [])
+      }  
     }
 
     /**

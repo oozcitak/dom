@@ -8,10 +8,11 @@ import {
   NodeAlgorithm, DocumentAlgorithm, BoundaryPointAlgorithm, RangeAlgorithm,
   TraversalAlgorithm, NodeIteratorAlgorithm, TreeWalkerAlgorithm,
   NodeIteratorPreRemovingStep, DOMTokenListAlgorithm,
-  EventConstructingStep
+  EventConstructingStep, CustomElementAlgorithm
 } from './interfaces'
 import {
-  DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal, EventInternal
+  DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal, 
+  EventInternal
 } from '../interfacesInternal'
 import { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
 import { OrderedSetAlgorithmImpl } from './OrderedSetAlgorithmImpl'
@@ -37,6 +38,7 @@ import { TraversalAlgorithmImpl } from './TraversalAlgorithmImpl'
 import { NodeIteratorAlgorithmImpl } from './NodeIteratorAlgorithmImpl'
 import { TreeWalkerAlgorithmImpl } from './TreeWalkerAlgorithmImpl'
 import { DOMTokenListAlgorithmImpl } from './DOMTokenListAlgorithmImpl'
+import { CustomElementAlgorithmImpl } from './CustomElementAlgorithmImpl'
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -68,6 +70,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   readonly _nodeIterator: NodeIteratorAlgorithm
   readonly _treeWalker: TreeWalkerAlgorithm
   readonly _tokenList: DOMTokenListAlgorithm
+  readonly _customElement: CustomElementAlgorithm
 
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []
@@ -107,6 +110,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     this._nodeIterator = new NodeIteratorAlgorithmImpl(this)
     this._treeWalker = new TreeWalkerAlgorithmImpl(this)
     this._tokenList = new DOMTokenListAlgorithmImpl(this)
+    this._customElement = new CustomElementAlgorithmImpl(this)
 
     this.supportedTokens = new Map()
 
@@ -184,6 +188,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
 
   /** @inheritdoc */
   get tokenList(): DOMTokenListAlgorithm { return this._tokenList }
+
+  /** @inheritdoc */
+  get customElement(): CustomElementAlgorithm { return this._customElement }
 
   /** @inheritdoc */
   runRemovingSteps(thisObj: any, removedNode: NodeInternal,

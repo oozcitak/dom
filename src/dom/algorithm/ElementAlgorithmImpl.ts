@@ -6,6 +6,7 @@ import {
 import { HTMLSpec } from '../spec'
 import { DOMException } from '..'
 import { infra } from '../../infra'
+import { Guard } from '../util'
 
 /**
  * Contains element algorithms.
@@ -42,12 +43,16 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       attribute._localName, attribute._namespace, attribute._value)
 
     /**
-     * TODO:
      * 2. If element is custom, then enqueue a custom element callback reaction
      * with element, callback name "attributeChangedCallback", and an argument
      * list containing attribute’s local name, attribute’s value, value, and
      * attribute’s namespace.
      */
+    if (Guard.isCustomElementNode(element)) {
+      this.dom.customElement.enqueueACustomElementCallbackReaction(
+        element, "attributeChangedCallback", 
+        [attribute._localName, attribute._value, value, attribute._namespace])
+    }
 
     /**
      * 3. Run the attribute change steps with element, attribute’s local name,
@@ -70,12 +75,16 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       attribute._localName, attribute._namespace, null)
 
     /**
-     * TODO:
      * 2. If element is custom, then enqueue a custom element callback reaction
      * with element, callback name "attributeChangedCallback", and an argument
      * list containing attribute’s local name, null, attribute’s value, and
      * attribute’s namespace.
      */
+    if (Guard.isCustomElementNode(element)) {
+      this.dom.customElement.enqueueACustomElementCallbackReaction(
+        element, "attributeChangedCallback", 
+        [attribute._localName, null, attribute._value, attribute._namespace])
+    }
 
     /**
      * 3. Run the attribute change steps with element, attribute’s local name,
@@ -103,12 +112,16 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       attribute._localName, attribute._namespace, attribute._value)
 
     /**
-     * TODO:
      * 2. If element is custom, then enqueue a custom element callback reaction
      * with element, callback name "attributeChangedCallback", and an argument
      * list containing attribute’s local name, attribute’s value, null,
      * and attribute’s namespace.
      */
+    if (Guard.isCustomElementNode(element)) {
+      this.dom.customElement.enqueueACustomElementCallbackReaction(
+        element, "attributeChangedCallback", 
+        [attribute._localName, attribute._value, null, attribute._namespace])
+    }
 
     /**
      * 3. Run the attribute change steps with element, attribute’s local name,
@@ -137,12 +150,16 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       oldAttr._localName, oldAttr._namespace, oldAttr._value)
 
     /**
-     * TODO:
      * 2. If element is custom, then enqueue a custom element callback reaction 
      * with element, callback name "attributeChangedCallback", and an argument 
      * list containing oldAttr’s local name, oldAttr’s value, newAttr’s value, 
      * and oldAttr’s namespace.
      */
+    if (Guard.isCustomElementNode(element)) {
+      this.dom.customElement.enqueueACustomElementCallbackReaction(
+        element, "attributeChangedCallback", 
+        [oldAttr._localName, oldAttr._value, newAttr._value, oldAttr._namespace])
+    }
 
     /**
      * 3. Run the attribute change steps with element, oldAttr’s local name, 
