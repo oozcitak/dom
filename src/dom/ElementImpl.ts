@@ -8,8 +8,8 @@ import { DOMException } from './DOMException'
 import {
   ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal, SlotInternal
 } from './interfacesInternal'
-import { HTMLSlotElement } from '../htmldom/interfaces'
-import { infra } from '../infra'
+import { HTMLSlotElement } from '../html/interfaces'
+import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
 import { AttributeChangeStep, DOMAlgorithm } from './algorithm/interfaces'
 import { Guard } from './util'
 import { globalStore } from '../util'
@@ -105,7 +105,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   /** @inheritdoc */
   hasAttributes(): boolean {
-    return !infra.list.isEmpty(
+    return !infraList.isEmpty(
       (this._attributeList as NamedNodeMapInternal)._attributeList)
   }
 
@@ -167,7 +167,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
      * lowercase.
      */
-    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -247,7 +247,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 2. Return true if the context object has an attribute whose qualified
      * name is qualifiedName, and false otherwise.
      */
-    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -275,7 +275,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
      * lowercase.
      */
-    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -405,7 +405,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 1. If context object’s namespace is not the HTML namespace, then throw a
      * "NotSupportedError" DOMException.
      */
-    if (this._namespace !== infra.namespace.HTML)
+    if (this._namespace !== infraNamespace.HTML)
       throw DOMException.NotSupportedError
 
     /**
@@ -575,7 +575,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3. Return qualifiedName.
      */
     let qualifiedName = this._qualifiedName
-    if (this._namespace === infra.namespace.HTML && this._nodeDocument._type === "html") {
+    if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toUpperCase()
     }
     return qualifiedName

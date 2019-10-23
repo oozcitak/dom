@@ -21,7 +21,10 @@
   "engines": {
     "node": ">=6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@oozcitak/infra": "1.0.1",
+    "@oozcitak/url": "0.0.3"
+  },
   "devDependencies": {
     "typescript": "*",
     "jest": "*",
@@ -44,6 +47,7 @@
   },
   "scripts": {
     "compile": "tsc",
+    "init": "tsc ./src/url/IDNAMappingTableCreate.ts && node ./src/url/IDNAMappingTableCreate.js",
     "test": "tsc && jest",
     "testChanged": "tsc && jest --onlyChanged",
     "cover": "tsc && jest --coverage"

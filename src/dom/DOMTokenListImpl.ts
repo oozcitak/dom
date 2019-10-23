@@ -4,7 +4,7 @@ import {
 } from "./interfacesInternal"
 import { DOMAlgorithm } from "./algorithm/interfaces"
 import { globalStore } from "../util"
-import { infra } from "../infra"
+import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
 
 /**
  * Represents a token set.
@@ -112,7 +112,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
     for (const token of tokens) {
       if (token === '') {
         throw new SyntaxError("Cannot add an empty token.")
-      } else if (infra.string.ASCIIWhiteSpace.test(token)) {
+      } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
         throw DOMException.InvalidCharacterError
       } else {
         this._tokenSet.add(token)
@@ -135,7 +135,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
     for (const token of tokens) {
       if (token === '') {
         throw new SyntaxError("Cannot remove an empty token.")
-      } else if (infra.string.ASCIIWhiteSpace.test(token)) {
+      } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
         throw DOMException.InvalidCharacterError
       } else {
         this._tokenSet.delete(token)
@@ -153,7 +153,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
      */
     if (token === '') {
       throw new SyntaxError("Cannot toggle an empty token.")
-    } else if (infra.string.ASCIIWhiteSpace.test(token)) {
+    } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
       throw DOMException.InvalidCharacterError
     }
 
@@ -201,7 +201,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
      */
     if (token === '' || newToken === '') {
       throw new SyntaxError("Cannot replace an empty token.")
-    } else if (infra.string.ASCIIWhiteSpace.test(token) || infra.string.ASCIIWhiteSpace.test(newToken)) {
+    } else if (infraCodePoint.ASCIIWhiteSpace.test(token) || infraCodePoint.ASCIIWhiteSpace.test(newToken)) {
       throw DOMException.InvalidCharacterError
     }
 
@@ -216,7 +216,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
      * 5. Run the update steps.
      * 6. Return true.
      */
-    infra.set.replace(this._tokenSet, token, newToken)
+    infraSet.replace(this._tokenSet, token, newToken)
     this._algo.tokenList.updateSteps(this)
     return true
   }

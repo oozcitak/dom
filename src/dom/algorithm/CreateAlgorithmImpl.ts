@@ -18,6 +18,7 @@ import {
   ShadowRootImpl, AbortControllerImpl, AbortSignalImpl
 } from '..'
 import { BoundaryPoint } from '../interfaces'
+import { URLRecord, URLAlgorithm } from '@oozcitak/url'
 
 /**
  * Contains algorithms for creating DOM objects.
@@ -164,4 +165,14 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
     return DOMTokenListImpl._create(element, attribute)
   }
+
+  /** @inheritdoc */
+  urlRecord(url: string): URLRecord {
+    const urlRecord = new URLAlgorithm().basicURLParser(url)
+    if (urlRecord === null) {
+      throw new Error("Invalid URL.")
+    }
+    return urlRecord
+  }
+
 }

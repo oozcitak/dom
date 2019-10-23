@@ -5,7 +5,7 @@ import {
   HTMLCollectionInternal, DOMTokenListInternal
 } from '../interfacesInternal'
 import { Guard } from '../util'
-import { infra } from '../../infra'
+import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
  * Contains node algorithms.
@@ -245,10 +245,10 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       return this.dom.create.htmlCollection(root)
     } else if (root._nodeDocument._type === "html") {
       return this.dom.create.htmlCollection(root, function (ele) {
-        if (ele._namespace === infra.namespace.HTML &&
+        if (ele._namespace === infraNamespace.HTML &&
           ele._qualifiedName === qualifiedName.toLowerCase()) {
           return ele
-        } else if (ele._namespace !== infra.namespace.HTML &&
+        } else if (ele._namespace !== infraNamespace.HTML &&
           ele._qualifiedName === qualifiedName) {
           return ele
         }
@@ -393,12 +393,12 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        */
       for (const attr of node._attributeList) {
         const attrInt = attr as AttrInternal
-        if (attrInt._namespace === infra.namespace.XMLNS &&
+        if (attrInt._namespace === infraNamespace.XMLNS &&
           attrInt._namespacePrefix === "xmlns" &&
           attrInt._localName === prefix) {
           return attrInt._value || null
         }
-        if (prefix === null && attrInt._namespace === infra.namespace.XMLNS &&
+        if (prefix === null && attrInt._namespace === infraNamespace.XMLNS &&
           attrInt._namespacePrefix === null && attrInt._localName === "xmlns") {
           return attrInt._value || null
         }

@@ -15,6 +15,7 @@ import {
 } from "../interfaces"
 import { EventImpl } from "../EventImpl"
 import { DOMObjectCache } from "../../util/interfaces"
+import { URLRecord } from "@oozcitak/url"
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -1579,6 +1580,13 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param attribute - associated attribute
    */
   domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal
+
+  /** 
+   * Creates an `URLRecord`.
+   * 
+   * @param url - an URL string
+   */
+  urlRecord(url: string): URLRecord
 
 }
 

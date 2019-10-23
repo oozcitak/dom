@@ -2210,6 +2210,17 @@ export type EventPathItem = {
 }
 
 /**
+ * Represents a document origin.
+ * `null` represents an opaque origin.
+ */
+export type Origin = null | [
+  string, // scheme
+  string | number | number[], // host
+  null | number, // port
+  null | string // domain
+]
+
+/**
  * Represents a `<slot>` element.
  */
 export interface HTMLSlotElement {

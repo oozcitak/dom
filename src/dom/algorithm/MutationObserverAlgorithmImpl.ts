@@ -4,7 +4,7 @@ import {
   MutationRecordInternal, MutationObserverInternal, WindowInternal, NodeInternal, SlotInternal
 } from '../interfacesInternal'
 import { globalStore } from '../../util'
-import { infra } from '../../infra'
+import { list as infraList, set as infraSet } from '@oozcitak/infra'
 import { Guard } from '../util'
 
 /**
@@ -48,9 +48,9 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
     const window = globalStore.window
 
     window._mutationObserverMicrotaskQueued = false
-    const notifySet = infra.set.clone(window._mutationObservers)
-    const signalSet = infra.set.clone(window._signalSlots)
-    infra.set.empty(window._signalSlots)
+    const notifySet = infraSet.clone(window._mutationObservers)
+    const signalSet = infraSet.clone(window._signalSlots)
+    infraSet.empty(window._signalSlots)
     /**
      * 5. For each mo of notifySet:
      */
@@ -60,15 +60,15 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
        * 5.1. Let records be a clone of mo’s record queue.
        * 5.2. Empty mo’s record queue.
        */
-      const records = infra.list.clone(mo._recordQueue)
-      infra.list.empty(mo._recordQueue)
+      const records = infraList.clone(mo._recordQueue)
+      infraList.empty(mo._recordQueue)
       /**
        * 5.3. For each node of mo’s node list, remove all transient registered 
        * observers whose observer is mo from node’s registered observer list.
        */
       for (const nodeItem of mo._nodeList) {
         const node = nodeItem as NodeInternal
-        infra.list.remove(node._registeredObserverList, (observer) => {
+        infraList.remove(node._registeredObserverList, (observer) => {
           return Guard.isTransientRegisteredObserver(observer) && observer.observer === mo
         })
       }
@@ -76,7 +76,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
        * 5.4. If records is not empty, then invoke mo’s callback with « records, 
        * mo », and mo. If this throws an exception, then report the exception.
        */
-      if(!infra.list.isEmpty(records)) {
+      if(!infraList.isEmpty(records)) {
         try {
           mo._callback.call(this, records, mo)
         } catch (err) {

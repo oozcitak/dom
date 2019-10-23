@@ -1,6 +1,6 @@
 import { Node, NodeList } from "./interfaces"
 import { NodeListInternal, NodeInternal } from "./interfacesInternal"
-import { infra } from "../infra"
+import { set as infraSet } from '@oozcitak/infra'
 import { globalStore } from "../util"
 
 /**
@@ -28,7 +28,7 @@ export class NodeListImpl implements NodeListInternal {
      * The length attribute must return the number of nodes represented 
      * by the collection.
      */
-    return infra.set.size(this._root._children)
+    return infraSet.size(this._root._children)
   }
 
   /** @inheritdoc */

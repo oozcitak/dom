@@ -1,10 +1,10 @@
 import {
   Node, MutationObserverInit, MutationRecord, MutationCallback
 } from "./interfaces"
-import { MutationObserverInternal, NodeInternal, WindowInternal } from "./interfacesInternal"
+import { MutationObserverInternal, NodeInternal } from "./interfacesInternal"
 import { Guard } from "./util"
 import { globalStore } from "../util"
-import { infra } from "../infra"
+import { list as infraList, set as infraSet } from '@oozcitak/infra'
 
 /**
  * Represents an object that can be used to observe mutations to the tree of
@@ -29,7 +29,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
      */
     this._callback = callback
     const window = globalStore.window
-    infra.set.append(window._mutationObservers, this)
+    infraSet.append(window._mutationObservers, this)
   }
 
   /** @inheritdoc */
@@ -88,7 +88,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
          * registered observer list.
          */
         for (const node of this._nodeList) {
-          infra.list.remove((node as NodeInternal)._registeredObserverList, (ob) => 
+          infraList.remove((node as NodeInternal)._registeredObserverList, (ob) => 
             Guard.isTransientRegisteredObserver(ob) && ob.source === registered
           )
         }
@@ -119,7 +119,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * context object is the observer.
      */
     for (const node of this._nodeList) {
-      infra.list.remove((node as NodeInternal)._registeredObserverList, (ob) =>
+      infraList.remove((node as NodeInternal)._registeredObserverList, (ob) =>
         ob.observer === this
       )
     }

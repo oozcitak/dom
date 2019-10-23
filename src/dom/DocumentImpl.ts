@@ -1,17 +1,17 @@
 import {
-  DOMImplementation, DocumentType, Element, Text,
-  NodeFilter, NodeType, Node, HTMLCollection, DocumentFragment,
-  NodeList, WhatToShow, Attr, ProcessingInstruction, Comment,
-  CDATASection, NodeIterator, TreeWalker, FilterResult, Range, Event,
-  EventTarget
+  DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
+  HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
+  ProcessingInstruction, Comment, CDATASection, NodeIterator, TreeWalker,
+  FilterResult, Range, Event, EventTarget, Origin
 } from './interfaces'
-import { DocumentInternal, NodeInternal, RangeInternal } from './interfacesInternal'
+import { DocumentInternal, NodeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
 import { XMLSpec } from './spec'
 import { Guard } from './util'
-import { globalStore, isFunction, isString, DOMObjectCacheImpl } from '../util'
-import { infra } from '../infra'
+import { globalStore, isFunction, isString } from '../util'
+import { namespace as infraNamespace } from '@oozcitak/infra'
+import { URLRecord, URLAlgorithm } from '@oozcitak/url'
 
 /**
  * Represents a document node.
@@ -25,10 +25,8 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
     labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
   }
   _contentType: string = 'application/xml'
-  // TODO: https://url.spec.whatwg.org/#concept-url
-  _URL: string = 'about:blank'
-  // TODO: https://html.spec.whatwg.org/multipage/origin.html#concept-origin
-  _origin: string = ''
+  _URL: URLRecord
+  _origin: Origin = null
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
@@ -45,13 +43,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
     super()
 
     this._implementation = this._algo.create.domImplementation(this)
-
-    /**
-     * The Document() constructor, when invoked, must return a new document 
-     * whose origin is the origin of current global object’s associated
-     * Document. [HTML]
-     */
-    this._origin = globalStore.window._associatedDocument._origin
+    this._URL = this._algo.create.urlRecord('about:blank')
   }
 
   /** @inheritdoc */
@@ -71,7 +63,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * the URL, serialized.
      * See: https://url.spec.whatwg.org/#concept-url-serializer
      */
-    return this._URL
+    return new URLAlgorithm().urlSerializer(this._URL)
   }
 
   /** @inheritdoc */
@@ -79,12 +71,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
   /** @inheritdoc */
   get origin(): string {
-    /**
-     * TODO:
-     * The origin attribute’s getter must return the serialization of context 
-     * object’s origin.
-     */
-    return this._origin
+    return "null"
   }
 
   /** @inheritdoc */
@@ -207,7 +194,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
     const namespace =
       (this._type === "html" || this._contentType === "application/xhtml+xml") ?
-        infra.namespace.HTML : null
+        infraNamespace.HTML : null
 
     return this._algo.element.createAnElement(this, localName, namespace, null,
       is, true)

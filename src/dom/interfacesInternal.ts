@@ -8,10 +8,11 @@ import {
   Collection, NodeList, HTMLCollection, TreeWalker, DOMTokenList, CustomEvent,
   DOMImplementation, Text, CDATASection, Comment, StaticRange, Slotable,
   ChildNode, NonDocumentTypeChildNode, ParentNode, DocumentOrShadowRoot,
-  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType
+  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin
 } from "./interfaces"
 import { AttributeChangeStep } from "./algorithm/interfaces"
 import { DOMObjectCache } from "../util/interfaces"
+import { URLRecord } from '@oozcitak/url'
 
 /**
  * Represents a window containing a DOM document.
@@ -191,8 +192,8 @@ export interface NodeInternal extends EventTargetInternal, Node {
 export interface DocumentInternal extends NodeInternal, Document {
   _encoding: { name: string, labels: string[] }
   _contentType: string
-  _URL: string
-  _origin: string
+  _URL: URLRecord
+  _origin: Origin
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
 }

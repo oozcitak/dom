@@ -80,8 +80,3 @@ export {
 export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'
 export { HTMLSpec, XMLSpec } from './spec'
-
-// Export interfaces
-import * as Interfaces from './interfaces'
-import * as InternalInterfaces from './interfacesInternal'
-export { Interfaces, InternalInterfaces }

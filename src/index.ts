@@ -1,7 +1,8 @@
 import { globalStore } from "./util"
-import { DOMAlgorithmImpl } from "./dom/algorithm"
-import { WindowImpl } from './htmldom/WindowImpl'
+import { HTMLAlgorithmImpl } from "./html/algorithm"
 
-globalStore.algorithm = new DOMAlgorithmImpl()
-globalStore.window = WindowImpl._create()
+const algo = new HTMLAlgorithmImpl()
+globalStore.algorithm = algo
+globalStore.window = algo.create.window()
+
 export const window = globalStore.window

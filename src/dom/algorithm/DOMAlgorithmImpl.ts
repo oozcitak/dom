@@ -46,31 +46,31 @@ import { CustomElementAlgorithmImpl } from './CustomElementAlgorithmImpl'
  */
 export class DOMAlgorithmImpl implements DOMAlgorithm {
 
-  private _tree: TreeAlgorithm
-  private _orderedSet: OrderedSetAlgorithm
-  private _namespace: NamespaceAlgorithm
-  private _selectors: SelectorsAlgorithm
-  private _event: EventAlgorithm
-  private _eventTarget: EventTargetAlgorithm
-  private _abort: AbortAlgorithm
-  private _shadowTree: ShadowTreeAlgorithm
-  private _mutation: MutationAlgorithm
-  private _parentNode: ParentNodeAlgorithm
-  private _create: CreateAlgorithm
-  private _observer: MutationObserverAlgorithm
-  readonly _attr: AttrAlgorithm
-  readonly _element: ElementAlgorithm
-  readonly _characterData: CharacterDataAlgorithm
-  readonly _text: TextAlgorithm
-  readonly _node: NodeAlgorithm
-  readonly _document: DocumentAlgorithm
-  readonly _boundaryPoint: BoundaryPointAlgorithm
-  readonly _range: RangeAlgorithm
-  readonly _traversal: TraversalAlgorithm
-  readonly _nodeIterator: NodeIteratorAlgorithm
-  readonly _treeWalker: TreeWalkerAlgorithm
-  readonly _tokenList: DOMTokenListAlgorithm
-  readonly _customElement: CustomElementAlgorithm
+  protected _tree: TreeAlgorithm
+  protected _orderedSet: OrderedSetAlgorithm
+  protected _namespace: NamespaceAlgorithm
+  protected _selectors: SelectorsAlgorithm
+  protected _event: EventAlgorithm
+  protected _eventTarget: EventTargetAlgorithm
+  protected _abort: AbortAlgorithm
+  protected _shadowTree: ShadowTreeAlgorithm
+  protected _mutation: MutationAlgorithm
+  protected _parentNode: ParentNodeAlgorithm
+  protected _create: CreateAlgorithm
+  protected _observer: MutationObserverAlgorithm
+  protected _attr: AttrAlgorithm
+  protected _element: ElementAlgorithm
+  protected _characterData: CharacterDataAlgorithm
+  protected _text: TextAlgorithm
+  protected _node: NodeAlgorithm
+  protected _document: DocumentAlgorithm
+  protected _boundaryPoint: BoundaryPointAlgorithm
+  protected _range: RangeAlgorithm
+  protected _traversal: TraversalAlgorithm
+  protected _nodeIterator: NodeIteratorAlgorithm
+  protected _treeWalker: TreeWalkerAlgorithm
+  protected _tokenList: DOMTokenListAlgorithm
+  protected _customElement: CustomElementAlgorithm
 
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []

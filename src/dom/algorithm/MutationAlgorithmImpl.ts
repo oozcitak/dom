@@ -1,11 +1,11 @@
 import { MutationAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../DOMException'
-import { NodeInternal, RangeInternal, ElementInternal, SlotInternal } from '../interfacesInternal'
+import { NodeInternal, ElementInternal, SlotInternal } from '../interfacesInternal'
 import { NodeType } from '../interfaces'
 import { Guard } from '../util'
-import { isEmpty, globalStore } from '../../util'
-import { infra } from '../../infra'
+import { isEmpty } from '../../util'
+import { set as infraSet } from '@oozcitak/infra'
 
 /**
  * Contains mutation algorithms.
@@ -266,9 +266,9 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
 
         node._parent = parent
         if (child === null) {
-          infra.set.append(parent._children, node)
+          infraSet.append(parent._children, node)
         } else {
-          infra.set.insert(parent._children, node, index)
+          infraSet.insert(parent._children, node, index)
           index++
         }
 

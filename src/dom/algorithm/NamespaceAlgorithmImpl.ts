@@ -2,7 +2,7 @@ import { NamespaceAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { XMLSpec } from '../spec'
 import { DOMException } from '../DOMException'
-import { infra } from '../../infra'
+import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
  * Contains namespace algorithms.
@@ -64,14 +64,14 @@ export class NamespaceAlgorithmImpl extends SubAlgorithmImpl implements Namespac
     if (prefix && namespace === null)
       throw DOMException.NamespaceError
 
-    if (prefix === "xml" && namespace !== infra.namespace.XML)
+    if (prefix === "xml" && namespace !== infraNamespace.XML)
       throw DOMException.NamespaceError
 
-    if (namespace !== infra.namespace.XMLNS &&
+    if (namespace !== infraNamespace.XMLNS &&
       (prefix === "xmlns" || qualifiedName === "xmlns"))
       throw DOMException.NamespaceError
 
-    if (namespace === infra.namespace.XMLNS &&
+    if (namespace === infraNamespace.XMLNS &&
       (prefix !== "xmlns" && qualifiedName !== "xmlns"))
       throw DOMException.NamespaceError
 

@@ -5,7 +5,7 @@ import {
 } from '../interfacesInternal'
 import { HTMLSpec } from '../spec'
 import { DOMException } from '..'
-import { infra } from '../../infra'
+import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
 import { Guard } from '../util'
 
 /**
@@ -97,7 +97,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 4. Append attribute to element’s attribute list.
      * 5. Set attribute’s element to element.
      */
-    infra.list.append(
+    infraList.append(
       (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
     attribute._element = element
   }
@@ -134,7 +134,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 3. Remove attribute from element’s attribute list.
      * 5. Set attribute’s element to null.
      */
-    infra.list.remove(
+    infraList.remove(
       (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
     attribute._element = null
   }
@@ -173,7 +173,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 5. Set oldAttr’s element to null.
      * 6. Set newAttr’s element to element.
      */
-    infra.list.replace(
+    infraList.replace(
       (element._attributeList as NamedNodeMapInternal)._attributeList,
       oldAttr, newAttr)
     oldAttr._element = null
@@ -189,7 +189,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 2. Return the first attribute in element’s attribute list whose qualified
      * name is qualifiedName, and null otherwise.
      */
-    if (element._namespace === infra.namespace.HTML && element._nodeDocument._type === "html") {
+    if (element._namespace === infraNamespace.HTML && element._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
@@ -417,7 +417,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * valid custom element name or is is non-null, then set result’s 
      * custom element state to "undefined".
      */
-    if (namespace === infra.namespace.HTML && (is !== null ||
+    if (namespace === infraNamespace.HTML && (is !== null ||
       HTMLSpec.isValidCustomElementName(localName))) {
       result._customElementState = "undefined"
     }

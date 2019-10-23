@@ -1,6 +1,6 @@
 import { DOMAlgorithm, OrderedSetAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { infra } from '../../infra'
+import { string as infraString } from '@oozcitak/infra'
 
 /**
  * Contains ordered set manipulation algorithms.
@@ -24,7 +24,7 @@ export class OrderedSetAlgorithmImpl extends SubAlgorithmImpl implements Ordered
      * 3. For each token in inputTokens, append token to tokens.
      * 4. Return tokens.
      */
-    const inputTokens = infra.string.splitAStringOnASCIIWhitespace(value)
+    const inputTokens = infraString.splitAStringOnASCIIWhitespace(value)
     return new Set<string>(inputTokens)
   }
 
