@@ -120,10 +120,14 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 
      * _Note:_ legacy target override flag is only used by HTML and only when
      * target is a Window object.
-     * 
-     * TODO: Check legacyTargetOverrideFlag if target is Window 
      */
-    const targetOverride: EventTargetInternal = target
+    let targetOverride: EventTargetInternal = target
+    if (legacyTargetOverrideFlag) {
+      const doc = (target as any)._associatedDocument
+      if (Guard.isDocumentNode(doc)) {
+        targetOverride = doc
+      }
+    }
 
     /** 
      * 3. Let activationTarget be null.
