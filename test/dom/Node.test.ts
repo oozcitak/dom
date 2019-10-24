@@ -28,8 +28,7 @@ describe('Node', () => {
   child4.appendChild(doc.createTextNode('puppets'))
 
   test('baseURI', () => {
-    // TODO: return document's URI
-    expect(ele1.baseURI).toBe('')
+    expect(ele1.baseURI).toBe('about:blank')
   })
 
   test('isConnected', () => {
