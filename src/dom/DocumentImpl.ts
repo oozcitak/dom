@@ -58,7 +58,6 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
   /** @inheritdoc */
   get URL(): string {
     /**
-     * TODO:
      * The URL attribute’s getter and documentURI attribute’s getter must return
      * the URL, serialized.
      * See: https://url.spec.whatwg.org/#concept-url-serializer

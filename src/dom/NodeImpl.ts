@@ -10,8 +10,8 @@ import {
 import { globalStore } from '../util'
 import { Guard } from './util'
 import { DOMException } from './DOMException'
-import { DocumentImpl } from './DocumentImpl'
 import { NodeCompareCache } from './util/NodeCompareCache'
+import { URLAlgorithm } from '@oozcitak/url'
 
 /**
  * Represents a generic XML node.
@@ -98,12 +98,12 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    */
   get baseURI(): string {
     /**
-     * TODO:
      * The baseURI attribute’s getter must return node document’s document 
      * base URL, serialized.
-     * See: https://html.spec.whatwg.org/multipage/urls-and-fetching.html#document-base-url
+     * TODO: Implement in HTML DOM
+     * https://html.spec.whatwg.org/multipage/urls-and-fetching.html#document-base-url
      */
-    return ""
+    return new URLAlgorithm().urlSerializer(this._nodeDocument._URL)
   }
 
   /** 
