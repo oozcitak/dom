@@ -22,4 +22,9 @@ export class CustomElementAlgorithmImpl extends SubAlgorithmImpl implements Cust
     // TODO: Implement in HTML DOM
   }
 
+  /** @inheritdoc */
+  tryToUpgrade(element: ElementInternal): void {
+    // TODO: Implement in HTML DOM
+  }
+  
 }

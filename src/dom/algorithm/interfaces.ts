@@ -1828,6 +1828,13 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
    */
   enqueueACustomElementCallbackReaction(element: ElementInternal,
     callbackName: string, args: any[]): void
+
+  /**
+   * Tries to upgrade a custom element.
+   * 
+   * @param element - a custom element
+   */
+  tryToUpgrade(element: ElementInternal): void    
 }
 
 /**

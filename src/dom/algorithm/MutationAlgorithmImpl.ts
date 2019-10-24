@@ -351,9 +351,9 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
               inclusiveDescendant, "connectedCallback", [])
           } else {
             /**
-             * TODO:
              * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
              */
+            this.dom.customElement.tryToUpgrade(inclusiveDescendant)
           }      
         }
       }
