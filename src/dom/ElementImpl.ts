@@ -1,6 +1,6 @@
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
-  Element, HTMLCollection, NodeList, ShadowRootMode
+  Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition
 } from './interfaces'
 import { HTMLSpec, XMLSpec } from './spec'
 import { NodeImpl } from './NodeImpl'
@@ -21,11 +21,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   _nodeType: NodeType = NodeType.Element
 
-  _namespace: string | null
-  _namespacePrefix: string | null
-  _localName: string
+  _namespace: string | null = null
+  _namespacePrefix: string | null = null
+  _localName: string = ""
   _customElementState: "undefined" | "failed" | "uncustomized" | "custom" = "undefined"
-  _customElementDefinition = ElementImpl
+  _customElementDefinition: CustomElementDefinition | null = null
   _is: string | null = null
 
   _shadowRoot: ShadowRoot | null = null
@@ -38,21 +38,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     
   /**
    * Initializes a new instance of `Element`.
-   * 
-   * @param document - owner document
-   * @param localName - local name
-   * @param namespace - namespace
-   * @param prefix - namespace prefix
    */
-  private constructor(localName: string, namespace: string | null,
-    namespacePrefix: string | null) {
+  constructor() {
     super()
 
-    this._localName = localName
-    this._namespace = namespace
-    this._namespacePrefix = namespacePrefix
     this._attributeList = this._algo.create.namedNodeMap(this)
-
+    
     this._attributeChangeSteps.push(this._updateASlotablesName)
     this._attributeChangeSteps.push(this._updateASlotsName)
     this._attributeChangeSteps.push(this._updateAnElementID)
@@ -419,7 +410,6 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
       throw DOMException.NotSupportedError
 
     /**
-     * TODO: 
      * 3. If context object’s local name is a valid custom element name, 
      * or context object’s is value is not null, then:
      * 3.1. Let definition be the result of looking up a custom element 
@@ -428,6 +418,13 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3.2. If definition is not null and definition’s disable shadow is true,
      *  then throw a "NotSupportedError" DOMException.
      */
+    if (HTMLSpec.isValidCustomElementName(this._localName) || this._is !== null) {
+      const definition = this._algo.customElement.lookUpACustomElementDefinition(
+        this._nodeDocument, this._namespace, this._localName, this._is)
+      if (definition !== null && definition.disableShadow === true) {
+        throw DOMException.NotSupportedError
+      }
+    }
 
     /**
      * 4. If context object is a shadow host, then throw an "NotSupportedError" 
@@ -717,7 +714,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   static _create(document: DocumentInternal, localName: string,
     namespace: string | null = null,
     namespacePrefix: string | null = null): ElementInternal {
-    const node = new ElementImpl(localName, namespace, namespacePrefix)
+    const node = new ElementImpl()
+    node._localName = localName
+    node._namespace = namespace
+    node._namespacePrefix = namespacePrefix
+    node._attributeList = node._algo.create.namedNodeMap(node)
+
     node._nodeDocument = document
     return node
   }

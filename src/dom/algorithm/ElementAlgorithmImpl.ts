@@ -340,86 +340,163 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
     let result: ElementInternal | null = null
 
     /**
-     * TODO: 
-     * 5. If definition is non-null, and definition’s name is not equal to 
-     * its local name (i.e., definition represents a customized built-in
-     * element), then:
-     * 5.1. Let interface be the element interface for localName and the HTML
-     * namespace.
-     * 5.2. Set result to a new element that implements interface, with no 
-     * attributes, namespace set to the HTML namespace, namespace prefix 
-     * set to prefix, local name set to localName, custom element state set
-     * to "undefined", custom element definition set to null, is value set
-     * to is, and node document set to document.
-     * 5.3. If the synchronous custom elements flag is set, upgrade element
-     * using definition.
-     * 5.4. Otherwise, enqueue a custom element upgrade reaction given result
-     * and definition.
-     * 6. Otherwise, if definition is non-null, then:
-     * 6.1. If the synchronous custom elements flag is set, then run these
-     * steps while catching any exceptions:
-     * 6.1.1. Let C be definition’s constructor.
-     * 6.1.2. Set result to the result of constructing C, with no arguments.
-     * 6.1.3. Assert: result’s custom element state and custom element definition
-     * are initialized.
-     * 6.1.4. Assert: result’s namespace is the HTML namespace.
-     * _Note:_ IDL enforces that result is an HTMLElement object, which all 
-     * use the HTML namespace.
-     * 6.1.5. If result’s attribute list is not empty, then throw a 
-     * "NotSupportedError" DOMException.
-     * 6.1.6. If result has children, then throw a "NotSupportedError" 
-     * DOMException.
-     * 6.1.7. If result’s parent is not null, then throw a
-     * "NotSupportedError" DOMException.
-     * 6.1.8. If result’s node document is not document, then throw a 
-     * "NotSupportedError" DOMException.
-     * 6.1.9. If result’s local name is not equal to localName, then throw 
-     * a "NotSupportedError" DOMException.
-     * 6.1.10. Set result’s namespace prefix to prefix.
-     * 6.1.11. Set result’s is value to null.
-     * 
-     * If any of these steps threw an exception, then:
-     * - Report the exception.
-     * - Set result to a new element that implements the HTMLUnknownElement
-     * interface, with no attributes, namespace set to the HTML namespace, 
-     * namespace prefix set to prefix, local name set to localName, custom 
-     * element state set to "failed", custom element definition set to null, 
-     * is value set to null, and node document set to document.
-     * 
-     * 6.2. Otherwise:
-     * 6.2.1. Set result to a new element that implements the HTMLElement 
-     * interface, with no attributes, namespace set to the HTML namespace, 
-     * namespace prefix set to prefix, local name set to localName, custom
-     * element state set to "undefined", custom element definition set to 
-     * null, is value set to null, and node document set to document.
-     * 6.2.2. Enqueue a custom element upgrade reaction given result and 
-     * definition.
-     * 7. Otherwise:
+     * 4. Let definition be the result of looking up a custom element definition
+     * given document, namespace, localName, and is.
      */
+    const definition = this.dom.customElement.lookUpACustomElementDefinition(
+      document, namespace, localName, is
+    )
 
-    /**
-     * 7.1. Let interface be the element interface for localName and 
-     * namespace.
-     * 7.2. Set result to a new element that implements interface, with no
-     * attributes, namespace set to namespace, namespace prefix set to prefix,
-     * local name set to localName, custom element state set to 
-     * "uncustomized", custom element definition set to null, is value set to
-     * is, and node document set to document.
-     */
-    result = this.dom.create.element(document, localName, namespace, prefix)
-    result._attributeList = this.dom.create.namedNodeMap(result)
-    result._customElementState = "uncustomized"
-    result._customElementDefinition = null
-    result._is = is
-
-    /**
-     * 7.3. If namespace is the HTML namespace, and either localName is a 
-     * valid custom element name or is is non-null, then set result’s 
-     * custom element state to "undefined".
-     */
-    if (namespace === infraNamespace.HTML && (is !== null ||
-      HTMLSpec.isValidCustomElementName(localName))) {
+    if (definition !== null && definition.name !== definition.localName) {
+      /**
+      * 5. If definition is non-null, and definition’s name is not equal to 
+      * its local name (i.e., definition represents a customized built-in
+      * element), then:
+       * 5.1. Let interface be the element interface for localName and the HTML
+       * namespace.
+       * 5.2. Set result to a new element that implements interface, with no 
+       * attributes, namespace set to the HTML namespace, namespace prefix 
+       * set to prefix, local name set to localName, custom element state set
+       * to "undefined", custom element definition set to null, is value set
+       * to is, and node document set to document.
+       * 5.3. If the synchronous custom elements flag is set, upgrade element
+       * using definition.
+       * 5.4. Otherwise, enqueue a custom element upgrade reaction given result
+       * and definition.
+       */
+      const elemenInterface = this.dom.document.elementInterface(localName, infraNamespace.HTML)
+      result = new elemenInterface()
+      result._localName = localName
+      result._namespace = infraNamespace.HTML
+      result._namespacePrefix = prefix
       result._customElementState = "undefined"
+      result._customElementDefinition = null
+      result._is = is
+      result._nodeDocument = document
+      if (synchronousCustomElementsFlag) {
+        this.dom.customElement.upgrade(definition, result)
+      } else {
+        this.dom.customElement.enqueueACustomElementUpgradeReaction(result, definition)
+      }
+    } else if (definition !== null) {
+      /**
+       * 6. Otherwise, if definition is non-null, then:
+       */
+      if (synchronousCustomElementsFlag) {
+        /**
+         * 6.1. If the synchronous custom elements flag is set, then run these
+         * steps while catching any exceptions:
+         */
+        try {
+          /**
+           * 6.1.1. Let C be definition’s constructor.
+           * 6.1.2. Set result to the result of constructing C, with no arguments.
+           * 6.1.3. Assert: result’s custom element state and custom element definition
+           * are initialized.
+           * 6.1.4. Assert: result’s namespace is the HTML namespace.
+           * _Note:_ IDL enforces that result is an HTMLElement object, which all 
+           * use the HTML namespace.
+           */
+          const C = definition.constructor
+          const result = new C()
+          console.assert(result._customElementState !== undefined)
+          console.assert(result._customElementDefinition !== undefined)
+          console.assert(result._namespace === infraNamespace.HTML)
+
+          /**
+           * 6.1.5. If result’s attribute list is not empty, then throw a 
+           * "NotSupportedError" DOMException.
+           * 6.1.6. If result has children, then throw a "NotSupportedError" 
+           * DOMException.
+           * 6.1.7. If result’s parent is not null, then throw a
+           * "NotSupportedError" DOMException.
+           * 6.1.8. If result’s node document is not document, then throw a 
+           * "NotSupportedError" DOMException.
+           * 6.1.9. If result’s local name is not equal to localName, then throw 
+           * a "NotSupportedError" DOMException.
+           */
+          if (result._attributeList.length !== 0) throw DOMException.NotSupportedError
+          if (result._children.size !== 0) throw DOMException.NotSupportedError
+          if (result._parent !== null) throw DOMException.NotSupportedError
+          if (result._nodeDocument !== document) throw DOMException.NotSupportedError
+          if (result._localName !== localName) throw DOMException.NotSupportedError
+
+          /**
+           * 6.1.10. Set result’s namespace prefix to prefix.
+           * 6.1.11. Set result’s is value to null.
+           */
+          result._namespacePrefix = prefix
+          result._is = null
+        } catch (e) {
+          /**
+           * If any of these steps threw an exception, then:
+           * - Report the exception.
+           * - Set result to a new element that implements the HTMLUnknownElement
+           * interface, with no attributes, namespace set to the HTML namespace, 
+           * namespace prefix set to prefix, local name set to localName, custom 
+           * element state set to "failed", custom element definition set to null, 
+           * is value set to null, and node document set to document.
+           */
+          // TODO: Report the exception
+          result = this.dom.create.htmlUnknownElement(document, localName, 
+            infraNamespace.HTML, prefix)
+          result._customElementState = "failed"
+          result._customElementDefinition = null
+          result._is = null
+        }
+      } else {
+        /**
+         * 6.2. Otherwise:
+         * 6.2.1. Set result to a new element that implements the HTMLElement 
+         * interface, with no attributes, namespace set to the HTML namespace, 
+         * namespace prefix set to prefix, local name set to localName, custom
+         * element state set to "undefined", custom element definition set to 
+         * null, is value set to null, and node document set to document.
+         * 6.2.2. Enqueue a custom element upgrade reaction given result and 
+         * definition.
+         */
+        result = this.dom.create.htmlElement(document, localName, 
+          infraNamespace.HTML, prefix)
+        result._customElementState = "undefined"
+        result._customElementDefinition = null
+        result._is = null
+        this.dom.customElement.enqueueACustomElementUpgradeReaction(result, definition)
+      }
+    } else {
+      /**
+       * 7. Otherwise:
+       * 7.1. Let interface be the element interface for localName and 
+       * namespace.
+       * 7.2. Set result to a new element that implements interface, with no
+       * attributes, namespace set to namespace, namespace prefix set to prefix,
+       * local name set to localName, custom element state set to 
+       * "uncustomized", custom element definition set to null, is value set to
+       * is, and node document set to document.
+       */
+      const elementInterface = this.dom.document.elementInterface(localName, infraNamespace.HTML)
+      result = new elementInterface()
+      result._localName = localName
+      result._namespace = namespace
+      result._namespacePrefix = prefix
+      result._customElementState = "uncustomized"
+      result._customElementDefinition = null
+      result._is = is
+      result._nodeDocument = document
+  
+      /**
+       * 7.3. If namespace is the HTML namespace, and either localName is a 
+       * valid custom element name or is is non-null, then set result’s 
+       * custom element state to "undefined".
+       */
+      if (namespace === infraNamespace.HTML && (is !== null ||
+        HTMLSpec.isValidCustomElementName(localName))) {
+        result._customElementState = "undefined"
+      }
+    }
+
+    /* istanbul ignore next */
+    if (result === null) {
+      throw new Error("Unable to create element.")
     }
 
     /**

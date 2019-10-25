@@ -1,3 +1,5 @@
+import { ElementInternal } from "./interfacesInternal"
+
 /**
  * Represents a window containing a DOM document.
  */
@@ -2227,4 +2229,28 @@ export interface HTMLSlotElement {
   name: string
   assignedNodes(options?: any): Node[]
   assignedElements(options?: any): Element[]
+}
+
+/**
+ * Represents a custom element definition.
+ */
+export type CustomElementDefinition = {
+  name: string
+  localName: string
+  constructor: (new (...args: any[]) => ElementInternal)
+  observedAttributes: string[]
+  lifecycleCallbacks: { 
+    "connectedCallback": ((args: any[]) => any) | null
+    "disconnectedCallback": ((args: any[]) => any) | null
+    "adoptedCallback": ((args: any) => any[]) | null
+    "attributeChangedCallback": ((args: any[]) => any) | null
+    "formAssociatedCallback": ((args: any[]) => any) | null
+    "formDisabledCallback": ((args: any[]) => any) | null
+    "formResetCallback": ((args: any[]) => any) | null
+    "formStateRestoreCallback": ((args: any[]) => any) | null
+  }
+  constructionStack: (ElementInternal | boolean)[]
+  formAssociated: boolean
+  disableInternals: boolean
+  disableShadow: boolean
 }

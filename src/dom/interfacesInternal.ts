@@ -8,7 +8,7 @@ import {
   Collection, NodeList, HTMLCollection, TreeWalker, DOMTokenList, CustomEvent,
   DOMImplementation, Text, CDATASection, Comment, StaticRange, Slotable,
   ChildNode, NonDocumentTypeChildNode, ParentNode, DocumentOrShadowRoot,
-  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin
+  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin, CustomElementDefinition
 } from "./interfaces"
 import { AttributeChangeStep } from "./algorithm/interfaces"
 import { DOMObjectCache } from "../util/interfaces"
@@ -246,7 +246,7 @@ export interface ElementInternal extends NodeInternal, Element {
   _namespacePrefix: string | null
   _localName: string
   _customElementState: "undefined" | "failed" | "uncustomized" | "custom"
-  _customElementDefinition: any
+  _customElementDefinition: CustomElementDefinition | null
   _is: string | null
   _shadowRoot: ShadowRoot | null
 

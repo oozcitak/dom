@@ -5,6 +5,7 @@ import {
 } from '../interfacesInternal'
 import { Guard } from '../util'
 import { isString } from '../../util'
+import { ElementImpl } from '..'
 
 /**
  * Contains document algorithms.
@@ -18,6 +19,12 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
    */
   public constructor(algorithm: DOMAlgorithm) {
     super(algorithm)
+  }
+
+  /** @inheritdoc */
+  elementInterface(name: string, namespace: string | null):
+    (new (...args: any[]) => ElementInternal) {
+    return ElementImpl
   }
 
   /** @inheritdoc */

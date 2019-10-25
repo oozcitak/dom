@@ -72,6 +72,20 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   }
 
   /** @inheritdoc */
+  htmlElement(document: DocumentInternal, localName: string, namespace: string | null = null,
+    prefix: string | null = null): ElementInternal {
+    // TODO: Implement in HTML DOM
+    return ElementImpl._create(document, localName, namespace, prefix)
+  }  
+
+  /** @inheritdoc */
+  htmlUnknownElement(document: DocumentInternal, localName: string, namespace: string | null = null,
+    prefix: string | null = null): ElementInternal {
+    // TODO: Implement in HTML DOM
+    return ElementImpl._create(document, localName, namespace, prefix)
+  }
+
+  /** @inheritdoc */
   documentFragment(document: DocumentInternal): DocumentFragmentInternal {
     return DocumentFragmentImpl._create(document)
   }

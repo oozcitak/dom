@@ -11,7 +11,7 @@ import {
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult
+  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult, CustomElementDefinition
 } from "../interfaces"
 import { EventImpl } from "../EventImpl"
 import { DOMObjectCache } from "../../util/interfaces"
@@ -1350,6 +1350,15 @@ export interface NodeAlgorithm extends SubAlgorithm {
 export interface DocumentAlgorithm extends SubAlgorithm {
 
   /**
+   * Returns an element interface for the given name and namespace.
+   * 
+   * @param name - element name
+   * @param namespace - namespace
+   */
+  elementInterface(name: string, namespace: string | null):
+    (new (...args: any[]) => ElementInternal)
+
+  /**
    * Creates a new element node.
    * See: https://dom.spec.whatwg.org/#internal-createelementns-steps
    * 
@@ -1425,6 +1434,28 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param prefix - namespace prefix
    */
   element(document: DocumentInternal, localName: string, namespace: string | null,
+    prefix: string | null): ElementInternal
+
+  /**
+   * Creates a new `HTMLElement` node.
+   * 
+   * @param document - owner document
+   * @param localName - local name
+   * @param namespace - namespace
+   * @param prefix - namespace prefix
+   */
+  htmlElement(document: DocumentInternal, localName: string, namespace: string | null,
+    prefix: string | null): ElementInternal
+
+  /**
+   * Creates a new `HTMLUnknownElement` node.
+   * 
+   * @param document - owner document
+   * @param localName - local name
+   * @param namespace - namespace
+   * @param prefix - namespace prefix
+   */
+  htmlUnknownElement(document: DocumentInternal, localName: string, namespace: string | null,
     prefix: string | null): ElementInternal
 
   /**
@@ -1820,6 +1851,15 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
  */
 export interface CustomElementAlgorithm extends SubAlgorithm {
   /**
+   * Enqueues an upgrade reaction for a custom element.
+   * 
+   * @param element - a custom element
+   * @param definition - a custom element definition
+   */
+  enqueueACustomElementUpgradeReaction(element: ElementInternal,
+    definition: CustomElementDefinition): void
+
+  /**
    * Enqueues a callback reaction for a custom element.
    * 
    * @param element - a custom element
@@ -1830,11 +1870,30 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
     callbackName: string, args: any[]): void
 
   /**
+   * Upgrade a custom element.
+   * 
+   * @param element - a custom element
+   */
+  upgrade(definition: CustomElementDefinition, element: ElementInternal): void
+
+  /**
    * Tries to upgrade a custom element.
    * 
    * @param element - a custom element
    */
-  tryToUpgrade(element: ElementInternal): void    
+  tryToUpgrade(element: ElementInternal): void
+
+  /**
+   * Looks up a custom element definition.
+   * 
+   * @param document - a document
+   * @param namespace - element namespace
+   * @param localName - element local name
+   * @param is - an `is` value
+   */
+  lookUpACustomElementDefinition(document: DocumentInternal, 
+    namespace: string | null, localName: string, is: string | null): 
+    CustomElementDefinition | null
 }
 
 /**
