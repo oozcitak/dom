@@ -462,7 +462,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /** @inheritdoc */
   closest(selectors: string): Element | null {
     /**
-     * TODO:
+     * TODO: Selectors
      * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
      * 2. If s is failure, throw a "SyntaxError" DOMException.
      * 3. Let elements be context object’s inclusive ancestors that are 
@@ -478,7 +478,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /** @inheritdoc */
   matches(selectors: string): boolean {
     /**
-     * TODO:
+     * TODO: Selectors
      * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
      * 2. If s is failure, throw a "SyntaxError" DOMException.
      * 3. Return true if the result of match a selector against an element, 

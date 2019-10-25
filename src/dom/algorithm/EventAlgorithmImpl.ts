@@ -654,19 +654,19 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * listener flag.
          * 2.10. Call a user object's operation with listener's callback, 
          * "handleEvent", « event », and event's currentTarget attribute value.
-         * If this throws an exception, then:
-         * 2.10.1. Report the exception.
-         * 2.10.2. Set legacyOutputDidListenersThrowFlag if given.
-         * 
-         * _Note:_ The legacyOutputDidListenersThrowFlag is only used by 
-         * Indexed Database API.
          */
         if (listener.passive) event._inPassiveListenerFlag = true
         try {
           listener.callback.handleEvent.call(event.currentTarget, event)
         } catch (err) {
           /**
-           * TODO: Report the error.
+           * If this throws an exception, then:
+           * 2.10.1. Report the exception.
+           * 2.10.2. Set legacyOutputDidListenersThrowFlag if given.
+           * 
+           * _Note:_ The legacyOutputDidListenersThrowFlag is only used by 
+           * Indexed Database API.
+           * TODO: Report the exception.
            * See: https://html.spec.whatwg.org/multipage/webappapis.html#runtime-script-errors-in-documents
            */
           legacyOutputDidListenersThrowFlag.value = true

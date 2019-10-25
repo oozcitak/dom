@@ -3,7 +3,7 @@ import { DOMObjectCache } from "./interfaces"
 /**
  * Represents a cache for DOM objects.
  * 
- * TODO:
+ * TODO: Weak references
  * Since weak references are not yet implemented in EcmaScript,
  * limit the number of items in the cache.
  */

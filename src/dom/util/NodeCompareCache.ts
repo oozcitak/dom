@@ -3,7 +3,7 @@ import { NodeInternal } from "../interfacesInternal"
 /**
  * Represents a cache for comparing DOM nodes.
  * 
- * TODO:
+ * TODO: Weak references
  * Since weak references are not yet implemented in EcmaScript,
  * limit the number of items in the cache.
  */
