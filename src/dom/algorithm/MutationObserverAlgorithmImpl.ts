@@ -34,7 +34,11 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
 
     if (window._mutationObserverMicrotaskQueued) return
     window._mutationObserverMicrotaskQueued = true
-    Promise.resolve().then(() => { this.notifyMutationObservers() })
+    if (queueMicrotask !== undefined) {
+      queueMicrotask(() => { this.notifyMutationObservers() })
+    } else {
+      Promise.resolve().then(() => { this.notifyMutationObservers() })
+    }
   }
 
   /** @inheritdoc */
