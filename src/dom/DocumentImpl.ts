@@ -422,7 +422,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
    */
   _getTheParent(event: Event): EventTarget | null {
     /**
-     * TODO:
+     * TODO: Implement realms
      * A document’s get the parent algorithm, given an event, returns null if
      * event’s type attribute value is "load" or document does not have a 
      * browsing context, and the document’s relevant global object otherwise.

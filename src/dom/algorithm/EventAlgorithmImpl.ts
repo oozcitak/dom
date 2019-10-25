@@ -70,7 +70,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     time: Date, dictionary: { [key: string]: any }): EventInternal {
     /**
      * 1. Let event be the result of creating a new object using eventInterface. 
-     * TODO:
+     * TODO: Implement realms
      * If realm is non-null, then use that Realm; otherwise, use the default 
      * behavior defined in Web IDL.
      */
@@ -541,7 +541,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 7. Let found be the result of running inner invoke with event, listeners,
      * phase, and legacyOutputDidListenersThrowFlag if given.
      */
-    const found = this.innerInvoke(event, listeners, phase,
+    const found = this.innerInvoke(event, listeners, phase, struct,
       legacyOutputDidListenersThrowFlag)
 
     /**
@@ -578,7 +578,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
        * legacyOutputDidListenersThrowFlag if given.
        * 8.4. Set event's type attribute value to originalEventType.
        */
-      this.innerInvoke(event, listeners, phase,
+      this.innerInvoke(event, listeners, phase, struct,
         legacyOutputDidListenersThrowFlag)
       event._type = originalEventType
     }
@@ -590,11 +590,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
    * @param event - the event to invoke
    * @param listeners - event listeners
    * @param phase - event phase
+   * @param struct - a struct defining event's path
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  innerInvoke(event: EventInternal,
-    listeners: EventListenerEntry[], phase: "capturing" | "bubbling",
+  innerInvoke(event: EventInternal, listeners: EventListenerEntry[], 
+    phase: "capturing" | "bubbling", struct: EventPathItem,
     legacyOutputDidListenersThrowFlag: OutputFlag = { value: false }): boolean {
 
     /**
@@ -638,16 +639,27 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
         }
 
         /**
-         * TODO: Set current global event of Window
+         * TODO: Implement realms
          * 
          * 2.6. Let global be listener callback's associated Realm's global
          * object.
+         */
+        const globalObject: any = undefined
+
+        /**
          * 2.7. Let currentEvent be undefined.
          * 2.8. If global is a Window object, then:
          * 2.8.1. Set currentEvent to global's current event.
          * 2.8.2. If struct's invocation-target-in-shadow-tree is false, then
          * set global's current event to event.
          */
+        let currentEvent: EventInternal | undefined = undefined
+        if (Guard.isWindow(globalObject)) {
+          currentEvent = globalObject._currentEvent as (EventInternal | undefined)
+          if (struct.invocationTargetInShadowTree === false) {
+            globalObject._currentEvent = event
+          }
+        }
 
         /**
          * 2.9. If listener's passive is true, then set event's in passive
@@ -666,7 +678,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
            * 
            * _Note:_ The legacyOutputDidListenersThrowFlag is only used by 
            * Indexed Database API.
-           * TODO: Report the exception.
+           * TODO: Report the exception
            * See: https://html.spec.whatwg.org/multipage/webappapis.html#runtime-script-errors-in-documents
            */
           legacyOutputDidListenersThrowFlag.value = true
@@ -677,11 +689,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          */
         if (listener.passive) event._inPassiveListenerFlag = false
         /**
-         * TODO: Set current window's current event
-         * 
          * 2.12. If global is a Window object, then set global's current event
          * to currentEvent.
          */
+        if (Guard.isWindow(globalObject)) {
+          globalObject._currentEvent = currentEvent
+        }
 
         /**
          * 2.13. If event's stop immediate propagation flag is set, then return
@@ -746,7 +759,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     let constructor: typeof EventImpl | null = null
 
     /**
-     * TODO:
+     * TODO: Implement in HTML DOM
      * 2. If interface is an ASCII case-insensitive match for any of the strings
      * in the first column in the following table, then set constructor to the
      * interface in the second column on the same row as the matching string:

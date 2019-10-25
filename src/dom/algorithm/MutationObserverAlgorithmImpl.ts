@@ -84,7 +84,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
         try {
           mo._callback.call(this, records, mo)
         } catch (err) {
-          // TODO: report the exception
+          // TODO: Report the exception
         }
       }
     }

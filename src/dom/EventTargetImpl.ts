@@ -65,7 +65,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
     options: EventListenerOptions | boolean = { capture: false }): void {
 
     /**
-     * TODO:
+     * TODO: Implement realms
      * 1. If the context object’s relevant global object is a
      * ServiceWorkerGlobalScope object and its associated service worker’s 
      * script resource’s has ever been evaluated flag is set, then throw
