@@ -837,6 +837,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
 
     /**
      * 3. If constructor is null, then throw a "NotSupportedError" DOMException.
+     */
+    if(constructor === null) {
+      throw DOMException.NotSupportedError
+    }
+
+    /**
      * 4. If the interface indicated by constructor is not exposed on the
      * relevant global object of the context object, then throw a
      * "NotSupportedError" DOMException.
@@ -844,9 +850,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * configurations, in which case this clause would be triggered for the
      * interface TouchEvent.
      */
-    if(constructor === null) {
-      throw DOMException.NotSupportedError
-    }
+    // TODO: Implement realms
 
     /**
      * 5. Let event be the result of creating an event given constructor.
