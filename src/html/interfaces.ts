@@ -109,7 +109,7 @@ export interface HTMLElement extends Element {
    * feature was disabled as part of the element definition, or if it is called
    * twice on the same element.
    */
-  attachInternals(): ElementInternals
+  attachInternals(): any
 }
 
 /**
@@ -126,11 +126,4 @@ export interface HTMLSlotElement extends HTMLElement {
  */
 export interface AssignedNodesOptions {
   flatten?: boolean
-}
-
-/**
- * TODO: Implementation
- */
-export interface ElementInternals {
-
 }
