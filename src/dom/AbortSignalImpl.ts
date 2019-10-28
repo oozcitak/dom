@@ -1,4 +1,4 @@
-import { Event } from "./interfaces"
+import { EventHandler } from "./interfaces"
 import { AbortSignalInternal } from "./interfacesInternal"
 import { EventTargetImpl } from './EventTargetImpl'
 
@@ -22,7 +22,12 @@ export class AbortSignalImpl extends EventTargetImpl implements AbortSignalInter
   get aborted(): boolean { return this._abortedFlag }
 
   /** @inheritdoc */
-  onabort(event: Event): any { }
+  get onabort(): EventHandler {
+    return this._algo.event.getterEventHandlerIDLAttribute(this, "onabort")
+  }
+  set onabort(val: EventHandler) {
+    this._algo.event.setterEventHandlerIDLAttribute(this, "onabort", val)
+  }
 
   /**
    * Creates a new `AbortSignal`.

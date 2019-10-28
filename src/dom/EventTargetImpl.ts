@@ -1,6 +1,6 @@
 import {
   Event, EventListener, EventTarget, AddEventListenerOptions,
-  EventListenerOptions, EventListenerEntry
+  EventListenerOptions, EventListenerEntry, EventHandlerEntry
 } from './interfaces'
 import { DOMException } from './DOMException'
 import { EventTargetInternal, EventInternal } from './interfacesInternal'
@@ -14,6 +14,7 @@ import { Guard } from './util'
 export abstract class EventTargetImpl implements EventTargetInternal {
 
   _eventListenerList: EventListenerEntry[] = []
+  _eventHandlerMap: Map<string, EventHandlerEntry> = new Map()
 
   protected _algo: DOMAlgorithm
 

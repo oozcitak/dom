@@ -294,7 +294,7 @@ export interface AbortSignal extends EventTarget {
   /**
    * Raises an event when the controller has aborted.
    */
-  onabort: (event: Event) => any
+  onabort: EventHandler
 }
 
 /**
@@ -2153,6 +2153,24 @@ export type EventListenerEntry = {
   passive: boolean
   once: boolean
   removed: boolean
+}
+
+/**
+ * Defines a non-null event handler.
+ */
+export type EventHandlerNonNull = ((event: Event) => any)
+
+/**
+ * Defines an event handler.
+ */
+export type EventHandler = EventHandlerNonNull | null
+
+/**
+ * Defines a struct containing an event handler.
+ */
+export type EventHandlerEntry = {
+  value: EventHandler,
+  listener: EventListenerEntry | null
 }
 
 /**

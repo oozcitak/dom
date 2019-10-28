@@ -8,7 +8,8 @@ import {
   Collection, NodeList, HTMLCollection, TreeWalker, DOMTokenList, CustomEvent,
   DOMImplementation, Text, CDATASection, Comment, StaticRange, Slotable,
   ChildNode, NonDocumentTypeChildNode, ParentNode, DocumentOrShadowRoot,
-  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin, CustomElementDefinition
+  NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin,
+  CustomElementDefinition, EventHandlerEntry
 } from "./interfaces"
 import { AttributeChangeStep } from "./algorithm/interfaces"
 import { DOMObjectCache } from "../util/interfaces"
@@ -66,6 +67,7 @@ export interface CustomEventInternal extends CustomEvent {
  */
 export interface EventTargetInternal extends EventTarget {
   _eventListenerList: EventListenerEntry[]
+  _eventHandlerMap: Map<string, EventHandlerEntry>
 
   /**
    * Gets the parent event target for the given event.

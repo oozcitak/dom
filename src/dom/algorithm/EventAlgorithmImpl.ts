@@ -2,7 +2,8 @@ import { EventAlgorithm, DOMAlgorithm, OutputFlag } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { EventInternal, EventTargetInternal } from '../interfacesInternal'
 import {
-  EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry
+  EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
+  EventHandler
 } from '../interfaces'
 import { Guard } from '../util'
 import { CustomEventImpl, EventImpl, DOMException } from '..'
@@ -867,4 +868,76 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     return event
   }
 
+  /** @inheritdoc */
+  getterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+    name: string): EventHandler {
+    /**
+     * 1. Let eventTarget be the result of determining the target of an event
+     * handler given this object and name.
+     * 2. If eventTarget is null, then return null.
+     * 3. Return the result of getting the current value of the event handler
+     * given eventTarget and name.
+     */
+    const eventTarget = this.determineTheTargetOfAnEventHandler(
+      thisObj, name)
+    if (eventTarget === null) return null
+    return this.getTheCurrentValueOfAnEventHandler(
+      eventTarget, name)
+  }
+
+  /** @inheritdoc */
+  setterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+    name: string, value: EventHandler): void {
+    /**
+     * 1. Let eventTarget be the result of determining the target of an event
+     * handler given this object and name.
+     * 2. If eventTarget is null, then return.
+     * 3. If the given value is null, then deactivate an event handler given
+     * eventTarget and name.
+     * 4. Otherwise:
+     * 4.1. Let handlerMap be eventTarget's event handler map.
+     * 4.2. Let eventHandler be handlerMap[name].
+     * 4.3. Set eventHandler's value to the given value.
+     * 4.4. Activate an event handler given eventTarget and name.
+     */
+    const eventTarget = this.determineTheTargetOfAnEventHandler(
+      thisObj, name)
+    if (eventTarget === null) return
+    if (value === null) {
+      this.deactivateAnEventHandler(eventTarget, name)
+    } else {
+      const handlerMap = eventTarget._eventHandlerMap
+      const eventHandler = handlerMap.get("onabort")
+      if (eventHandler !== undefined) {
+        eventHandler.value = value
+      }
+      this.activateAnEventHandler(eventTarget, name)
+    }
+  }
+
+  /** @inheritdoc */
+  determineTheTargetOfAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): EventTargetInternal | null {
+    // TODO: Implement in HTML DOM
+    return null
+  }
+
+  /** @inheritdoc */
+  getTheCurrentValueOfAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): EventHandler {
+    // TODO: Implement in HTML DOM
+    return null
+  }
+
+  /** @inheritdoc */
+  deactivateAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): void {
+    // TODO: Implement in HTML DOM
+  }
+
+  /** @inheritdoc */
+  activateAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): void {
+    // TODO: Implement in HTML DOM
+  }
 }

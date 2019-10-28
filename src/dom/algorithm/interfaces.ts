@@ -11,7 +11,7 @@ import {
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult, CustomElementDefinition
+  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult, CustomElementDefinition, EventHandler
 } from "../interfaces"
 import { EventImpl } from "../EventImpl"
 import { DOMObjectCache } from "../../util/interfaces"
@@ -710,6 +710,61 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventInterface - the name of the event interface
    */
   createLegacyEvent(eventInterface: string): EventInternal
+
+  /**
+   * Getter of an event handler IDL attribute.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   */
+  getterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+    name: string): EventHandler
+
+  /**
+   * Setter of an event handler IDL attribute.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   * @param value - event handler
+   */
+  setterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+    name: string, value: EventHandler): void
+
+  /**
+   * Determines the target of an event handler.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   */
+  determineTheTargetOfAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): EventTargetInternal | null
+
+  /**
+   * Gets the current value of an event handler.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   */
+  getTheCurrentValueOfAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): EventHandler
+
+  /**
+   * Activates an event handler.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   */
+  activateAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): void
+
+  /**
+   * Deactivates an event handler.
+   * 
+   * @param eventTarget - event target
+   * @param name - event name
+   */
+  deactivateAnEventHandler(eventTarget: EventTargetInternal,
+    name: string): void
 }
 
 /**
