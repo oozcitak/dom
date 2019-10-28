@@ -688,7 +688,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    */
   innerInvoke(event: EventInternal,
     listeners: EventListenerEntry[], phase: "capturing" | "bubbling",
-    legacyOutputDidListenersThrowFlag?: OutputFlag): boolean
+    struct: EventPathItem, legacyOutputDidListenersThrowFlag?: OutputFlag): boolean
 
   /**
    * Fires an event at target.
