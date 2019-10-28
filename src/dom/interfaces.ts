@@ -2174,6 +2174,16 @@ export type EventHandlerEntry = {
 }
 
 /**
+ * Defines static range constructor parameters.
+ */
+export type StaticRangeInit = {
+  startContainer: Node
+  startOffset: number
+  endContainer: Node
+  endOffset: number
+}
+
+/**
  * Defines a boundary point which is a tuple consisting of a node and an offset
  * into the node's contents.
  */
