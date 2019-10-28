@@ -1,5 +1,6 @@
 import {
-  NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener
+  NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener,
+  MouseEvent
 } from '../interfaces'
 import {
   SlotableInternal, NodeInternal, TextInternal, ElementInternal,
@@ -150,13 +151,10 @@ export class Guard {
   /**
    * Determines if the given object is a `MouseEvent`.
    * 
-   * TODO: change return type to guard for `MouseEvent` when the HTML DOM 
-   * is implemented.
-   * 
    * @param a - the object to check
    */
-  static isMouseEvent(a: any): boolean {
-    return (!!a && a.screenX !== undefined)
+  static isMouseEvent(a: any): a is MouseEvent {
+    return (!!a && a.screenX !== undefined && a.screenY != undefined)
   }
 
   /**

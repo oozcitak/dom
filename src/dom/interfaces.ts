@@ -2232,6 +2232,36 @@ export interface HTMLSlotElement {
 }
 
 /**
+ * Represents a `UIEvent`.
+ */
+export interface UIEvent extends Event {
+  readonly view?: Window
+  readonly detail: number
+}
+
+/**
+ * Represents a `MouseEvent`.
+ */
+export interface MouseEvent extends UIEvent {
+  readonly screenX: number
+  readonly screenY: number
+  readonly clientX: number
+  readonly clientY: number
+
+  readonly ctrlKey: boolean
+  readonly shiftKey: boolean
+  readonly altKey: boolean
+  readonly metaKey: boolean
+
+  readonly button: number
+  readonly buttons: number
+
+  readonly relatedTarget?: EventTarget
+
+  getModifierState(keyArg: string): boolean
+}
+
+/**
  * Represents a custom element definition.
  */
 export type CustomElementDefinition = {
