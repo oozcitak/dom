@@ -1,11 +1,8 @@
 import { DOMAlgorithm, CharacterDataAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  CharacterDataInternal, RangeInternal, NodeInternal
-} from '../interfacesInternal'
+import { CharacterDataInternal, NodeInternal } from '../interfacesInternal'
 import { DOMException } from '../DOMException'
 import { Guard } from '../util'
-import { globalStore } from '../../util'
 
 /**
  * Contains character data algorithms.

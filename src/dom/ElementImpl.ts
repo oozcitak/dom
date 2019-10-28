@@ -10,9 +10,8 @@ import {
 } from './interfacesInternal'
 import { HTMLSlotElement } from '../html/interfaces'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { AttributeChangeStep, DOMAlgorithm } from './algorithm/interfaces'
+import { AttributeChangeStep } from './algorithm/interfaces'
 import { Guard } from './util'
-import { globalStore } from '../util'
 
 /**
  * Represents an element node.
@@ -642,8 +641,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
         element._name = value
       }
 
-      const algo = globalStore.algorithm as DOMAlgorithm
-      algo.shadowTree.assignSlotablesForATree(algo.tree.rootNode(element))
+      this._algo.shadowTree.assignSlotablesForATree(this._algo.tree.rootNode(element))
     }
   }
 
@@ -675,12 +673,11 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
         element._name = value
       }
 
-      const algo = globalStore.algorithm as DOMAlgorithm
-      if (algo.shadowTree.isAssigned(element)) {
-        algo.shadowTree.assignSlotables(element._assignedSlot as SlotInternal)
+      if (this._algo.shadowTree.isAssigned(element)) {
+        this._algo.shadowTree.assignSlotables(element._assignedSlot as SlotInternal)
       }
 
-      algo.shadowTree.assignASlot(element)
+      this._algo.shadowTree.assignASlot(element)
     }
   }
 

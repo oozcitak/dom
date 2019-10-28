@@ -1,9 +1,8 @@
 import { DOMAlgorithm, TextAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { NodeInternal, TextInternal, RangeInternal } from '../interfacesInternal'
+import { NodeInternal, TextInternal } from '../interfacesInternal'
 import { Guard } from '../util'
 import { DOMException } from '../DOMException'
-import { globalStore } from '../../util'
 
 /**
  * Contains text algorithms.
