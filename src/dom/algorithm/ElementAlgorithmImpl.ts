@@ -3,7 +3,6 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   AttrInternal, ElementInternal, DocumentInternal, NamedNodeMapInternal, NodeInternal
 } from '../interfacesInternal'
-import { HTMLSpec } from '../spec'
 import { DOMException } from '..'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
 import { Guard } from '../util'
@@ -489,7 +488,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
        * custom element state to "undefined".
        */
       if (namespace === infraNamespace.HTML && (is !== null ||
-        HTMLSpec.isValidCustomElementName(localName))) {
+        this.dom.customElement.isValidCustomElementName(localName))) {
         result._customElementState = "undefined"
       }
     }

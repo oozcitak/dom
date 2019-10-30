@@ -11,7 +11,8 @@ import {
 } from "../interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, FilterResult, CustomElementDefinition, EventHandler
+  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, 
+  FilterResult, CustomElementDefinition, EventHandler
 } from "../interfaces"
 import { EventImpl } from "../EventImpl"
 import { DOMObjectCache } from "../../util/interfaces"
@@ -1905,6 +1906,34 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
  * Contains custom element algorithms.
  */
 export interface CustomElementAlgorithm extends SubAlgorithm {
+  /**
+   * Determines if the given string is a valid custom element name.
+   * 
+   * @param name - a name string
+   */
+  isValidCustomElementName(name: string): boolean
+
+  /**
+   * Determines if the given string is a valid element name.
+   * 
+   * @param name - a name string
+   */
+  isValidElementName(name: string): boolean
+
+  /**
+   * Determines if the given string is a void element name.
+   * 
+   * @param name - a name string
+   */
+  isVoidElementName(name: string): boolean
+
+  /**
+   * Determines if the given string is a valid shadow host element name.
+   * 
+   * @param name - a name string
+   */
+  isValidShadowHostName(name: string): boolean
+
   /**
    * Enqueues an upgrade reaction for a custom element.
    * 

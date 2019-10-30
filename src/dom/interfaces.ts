@@ -662,7 +662,7 @@ export interface Document extends Node, NonElementParentNode,
   readonly documentURI: string
 
   /**
-   * Returns sets the document's origin.
+   * Returns the document's origin.
    */
   readonly origin: string
 

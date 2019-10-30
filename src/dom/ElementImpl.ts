@@ -2,7 +2,7 @@ import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition
 } from './interfaces'
-import { HTMLSpec, XMLSpec } from './spec'
+import { XMLSpec } from './spec'
 import { NodeImpl } from './NodeImpl'
 import { DOMException } from './DOMException'
 import {
@@ -405,8 +405,8 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * "h3", "h4", "h5", "h6", "header", "main" "nav", "p", "section", 
      * or "span", then throw a "NotSupportedError" DOMException.
      */
-    if (!HTMLSpec.isValidCustomElementName(this._localName) &&
-      !HTMLSpec.isValidShadowHostName(this._localName))
+    if (!this._algo.customElement.isValidCustomElementName(this._localName) &&
+      !this._algo.customElement.isValidShadowHostName(this._localName))
       throw DOMException.NotSupportedError
 
     /**
@@ -418,7 +418,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3.2. If definition is not null and definition’s disable shadow is true,
      *  then throw a "NotSupportedError" DOMException.
      */
-    if (HTMLSpec.isValidCustomElementName(this._localName) || this._is !== null) {
+    if (this._algo.customElement.isValidCustomElementName(this._localName) || this._is !== null) {
       const definition = this._algo.customElement.lookUpACustomElementDefinition(
         this._nodeDocument, this._namespace, this._localName, this._is)
       if (definition !== null && definition.disableShadow === true) {
