@@ -79,4 +79,3 @@ export {
 }
 export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'
-export { XMLSpec } from './spec'

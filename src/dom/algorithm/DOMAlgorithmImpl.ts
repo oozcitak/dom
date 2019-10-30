@@ -7,8 +7,8 @@ import {
   AttrAlgorithm, ElementAlgorithm, CharacterDataAlgorithm, TextAlgorithm,
   NodeAlgorithm, DocumentAlgorithm, BoundaryPointAlgorithm, RangeAlgorithm,
   TraversalAlgorithm, NodeIteratorAlgorithm, TreeWalkerAlgorithm,
-  NodeIteratorPreRemovingStep, DOMTokenListAlgorithm,
-  EventConstructingStep, CustomElementAlgorithm
+  NodeIteratorPreRemovingStep, DOMTokenListAlgorithm, EventConstructingStep,
+  CustomElementAlgorithm, XMLAlgorithm
 } from './interfaces'
 import {
   DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal, 
@@ -39,6 +39,7 @@ import { NodeIteratorAlgorithmImpl } from './NodeIteratorAlgorithmImpl'
 import { TreeWalkerAlgorithmImpl } from './TreeWalkerAlgorithmImpl'
 import { DOMTokenListAlgorithmImpl } from './DOMTokenListAlgorithmImpl'
 import { CustomElementAlgorithmImpl } from './CustomElementAlgorithmImpl'
+import { XMLAlgorithmImpl } from './XMLAlgorithmImpl'
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -71,6 +72,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   protected _treeWalker: TreeWalkerAlgorithm
   protected _tokenList: DOMTokenListAlgorithm
   protected _customElement: CustomElementAlgorithm
+  protected _xml: XMLAlgorithm
 
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []
@@ -111,6 +113,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     this._treeWalker = new TreeWalkerAlgorithmImpl(this)
     this._tokenList = new DOMTokenListAlgorithmImpl(this)
     this._customElement = new CustomElementAlgorithmImpl(this)
+    this._xml = new XMLAlgorithmImpl(this)
 
     this.supportedTokens = new Map()
 
@@ -191,6 +194,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
 
   /** @inheritdoc */
   get customElement(): CustomElementAlgorithm { return this._customElement }
+
+  /** @inheritdoc */
+  get xml(): XMLAlgorithm { return this._xml }
 
   /** @inheritdoc */
   runRemovingSteps(thisObj: any, removedNode: NodeInternal,

@@ -150,6 +150,11 @@ export interface DOMAlgorithm {
   readonly customElement: CustomElementAlgorithm
 
   /**
+   * Contains XML algorithms.
+   */
+  readonly xml: XMLAlgorithm
+
+  /**
    * Runs removing steps for node.
    * 
    * @param removedNode - removed node
@@ -1903,9 +1908,48 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
 }
 
 /**
+ * Contains regex strings to match against productions defined in the 
+ * [XML 1.0](http://www.w3.org/TR/xml/) and [XML 1.1](http://www.w3.org/TR/xml11).
+ */
+export interface XMLAlgorithm extends SubAlgorithm {
+
+  /**
+   * Determines if the given string is valid for a `"Name"` construct.
+   * 
+   * @param name - name string to test
+   */
+  isName(name: string): boolean
+
+  /**
+   * Determines if the given string is valid for a `"QName"` construct.
+   * 
+   * @param name - name string to test
+   */
+  isQName(name: string): boolean
+
+  /**
+   * Determines if the given string contains legal characters.
+   * 
+   * @param chars - sequence of characters to test
+   * @param xmlVersion - XML specification version
+   */
+  isLegalChar(chars: string, xmlVersion?: "1.0" | "1.1"): boolean
+
+  /**
+   * Determines if the given string contains legal characters for a public 
+   * identifier.
+   * 
+   * @param chars - sequence of characters to test
+   */
+  isPubidChar(chars: string): boolean
+
+}
+
+/**
  * Contains custom element algorithms.
  */
 export interface CustomElementAlgorithm extends SubAlgorithm {
+
   /**
    * Determines if the given string is a valid custom element name.
    * 

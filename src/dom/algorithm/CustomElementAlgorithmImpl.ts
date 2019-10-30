@@ -89,4 +89,5 @@ export class CustomElementAlgorithmImpl extends SubAlgorithmImpl implements Cust
     // TODO: Implement in HTML DOM
     return null
   }
+  
 }

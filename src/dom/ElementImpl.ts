@@ -2,7 +2,6 @@ import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition
 } from './interfaces'
-import { XMLSpec } from './spec'
 import { NodeImpl } from './NodeImpl'
 import { DOMException } from './DOMException'
 import {
@@ -150,7 +149,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 1. If qualifiedName does not match the Name production in XML, then 
      * throw an "InvalidCharacterError" DOMException.
      */
-    if (!XMLSpec.isName(qualifiedName))
+    if (!this._algo.xml.isName(qualifiedName))
       throw DOMException.InvalidCharacterError
 
     /**
@@ -258,7 +257,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 1. If qualifiedName does not match the Name production in XML, then
      * throw an "InvalidCharacterError" DOMException.
      */
-    if (!XMLSpec.isName(qualifiedName))
+    if (!this._algo.xml.isName(qualifiedName))
       throw DOMException.InvalidCharacterError
 
     /**

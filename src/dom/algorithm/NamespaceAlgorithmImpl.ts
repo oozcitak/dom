@@ -1,6 +1,5 @@
 import { NamespaceAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { XMLSpec } from '../spec'
 import { DOMException } from '../DOMException'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
@@ -25,10 +24,10 @@ export class NamespaceAlgorithmImpl extends SubAlgorithmImpl implements Namespac
      * DOMException if qualifiedName does not match the Name or QName 
      * production.
      */
-    if (!XMLSpec.isName(qualifiedName))
+    if (!this.dom.xml.isName(qualifiedName))
       throw DOMException.InvalidCharacterError
 
-    if (!XMLSpec.isQName(qualifiedName))
+    if (!this.dom.xml.isQName(qualifiedName))
       throw DOMException.InvalidCharacterError
   }
 

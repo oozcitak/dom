@@ -16,7 +16,6 @@ import { XMLStringLexer } from '../../src/dom/parser/XMLStringLexer'
 import * as Token from '../../src/dom/parser/XMLToken'
 import { TupleSet } from '../../src/dom/serializer/TupleSet'
 import { WhatToShow, FilterResult } from '../../src/dom/interfaces'
-import { XMLSpec, HTMLSpec } from '../../src/dom/spec'
 import { DOMAlgorithmImpl } from '../../src/dom/algorithm/DOMAlgorithmImpl'
 import { ElementInternal } from "../../src/dom/interfacesInternal"
 
@@ -49,9 +48,6 @@ export default class TestHelpers extends TestHelpersRoot {
   static StaticRange = StaticRangeImpl
   static Text = TextImpl
   static XMLDocument = XMLDocumentImpl
-
-  static XMLSpec = XMLSpec
-  static HTMLSpec = HTMLSpec
 
   static DOMParser = DOMParser
   static MimeType = MimeType

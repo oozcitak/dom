@@ -7,7 +7,6 @@ import {
 import { DocumentInternal, NodeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
-import { XMLSpec } from './spec'
 import { Guard } from './util'
 import { globalStore, isFunction, isString } from '../util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
@@ -177,7 +176,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * flag set.
      */
 
-    if (!localName.match(XMLSpec.Name))
+    if (!this._algo.xml.isName(localName))
       throw DOMException.InvalidCharacterError
 
     if (this._type === "html") localName = localName.toLowerCase()
@@ -268,7 +267,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * data set to data, and node document set to the context object.
      */
 
-    if (!target.match(XMLSpec.Name))
+    if (!this._algo.xml.isName(target))
       throw DOMException.InvalidCharacterError
 
     if (data.includes("?>"))
@@ -323,7 +322,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * 3. Return a new attribute whose local name is localName and node document
      * is context object.
      */
-    if (!localName.match(XMLSpec.Name))
+    if (!this._algo.xml.isName(localName))
       throw DOMException.InvalidCharacterError
 
     if (this._type === "html") {

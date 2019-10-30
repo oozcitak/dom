@@ -2,12 +2,13 @@ import {
   Node, Element, NodeType, Document, Comment, Text, DocumentFragment,
   DocumentType, ProcessingInstruction, CDATASection
 } from "../../dom/interfaces"
-import { XMLSpec } from "../../dom/spec"
 import { TupleSet } from "./TupleSet"
 import { NamespacePrefixMap } from './NamespacePrefixMap'
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
 import { DOMException } from "../DOMException"
 import { namespace as infraNamespace } from '@oozcitak/infra'
+import { DOMAlgorithm } from "../algorithm/interfaces"
+import { globalStore } from "../../util"
 
 /**
  * Stores the last generated prefix. An object is used instead of a number so
@@ -21,6 +22,7 @@ type PrefixIndex = { value: number }
 export class PreSerializer {
 
   private _xmlVersion: "1.0" | "1.1"
+  private _algo: DOMAlgorithm
 
   /**
    * Initializes a new instance of `PreSerializer`.
@@ -29,6 +31,7 @@ export class PreSerializer {
    */
   constructor(xmlVersion: "1.0" | "1.1") {
     this._xmlVersion = xmlVersion
+    this._algo = globalStore.algorithm as DOMAlgorithm
   }
 
   /**
@@ -146,7 +149,7 @@ export class PreSerializer {
      * serialization of this node would not be a well-formed element.
      */
     if (requireWellFormed && (node.localName.includes(":") ||
-      !XMLSpec.isName(node.localName))) {
+      !this._algo.xml.isName(node.localName))) {
       throw new Error("Node local name contains invalid characters (well-formed required).")
     }
 
@@ -514,7 +517,7 @@ export class PreSerializer {
      * ends with a "-" (U+002D HYPHEN-MINUS) character, then throw an exception;
      * the serialization of this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!XMLSpec.isLegalChar(node.data, this._xmlVersion) ||
+    if (requireWellFormed && (!this._algo.xml.isLegalChar(node.data, this._xmlVersion) ||
       node.data.includes("--") || node.data.endsWith("-"))) {
       throw new Error("Comment data contains invalid characters (well-formed required).")
     }
@@ -550,7 +553,7 @@ export class PreSerializer {
      * production, then throw an exception; the serialization of this node's 
      * data would not be well-formed.
      */
-    if (requireWellFormed && !XMLSpec.isLegalChar(node.data, this._xmlVersion)) {
+    if (requireWellFormed && !this._algo.xml.isLegalChar(node.data, this._xmlVersion)) {
       throw new Error("Text data contains invalid characters (well-formed required).")
     }
 
@@ -624,7 +627,7 @@ export class PreSerializer {
      *  production, then throw an exception; the serialization of this node 
      * would not be a well-formed document type declaration.
      */
-    if (requireWellFormed && !XMLSpec.isPubidChar(node.publicId)) {
+    if (requireWellFormed && !this._algo.xml.isPubidChar(node.publicId)) {
       throw new Error("DocType public identifier does not match PubidChar construct (well-formed required).")
     }
 
@@ -636,7 +639,7 @@ export class PreSerializer {
      * of this node would not be a well-formed document type declaration.
      */
     if (requireWellFormed &&
-      (!XMLSpec.isLegalChar(node.systemId, this._xmlVersion) ||
+      (!this._algo.xml.isLegalChar(node.systemId, this._xmlVersion) ||
         (node.systemId.includes('"') && node.systemId.includes("'")))) {
       throw new Error("DocType system identifier contains invalid characters (well-formed required).")
     }
@@ -709,7 +712,7 @@ export class PreSerializer {
      * U+003E GREATER-THAN SIGN), then throw an exception; the serialization of
      * this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!XMLSpec.isLegalChar(node.data, this._xmlVersion) ||
+    if (requireWellFormed && (!this._algo.xml.isLegalChar(node.data, this._xmlVersion) ||
       node.data.includes("?>"))) {
       throw new Error("Processing instruction data contains invalid characters (well-formed required).")
     }
@@ -949,7 +952,7 @@ export class PreSerializer {
        * well-formed attribute.
        */
       if (requireWellFormed && (attr.localName.includes(":") ||
-        !XMLSpec.isName(attr.localName) || 
+        !this._algo.xml.isName(attr.localName) || 
         (attr.localName === "xmlns" && attributeNamespace === null))) {
         throw new Error("Attribute local name contains invalid characters (well-formed required).")
       }
