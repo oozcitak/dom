@@ -6,7 +6,7 @@ import {
   ElementToken, ClosingTagToken
 } from "./XMLToken"
 import { globalStore } from "../util"
-import { DOMAlgorithm } from "../dom/algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**

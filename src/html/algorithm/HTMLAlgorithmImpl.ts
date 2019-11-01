@@ -1,4 +1,4 @@
-import { DOMAlgorithmImpl } from '../../dom/algorithm'
+import { DOMAlgorithmImpl } from '../../algorithm'
 import { 
   HTMLAlgorithm, CreateAlgorithm, OriginAlgorithm 
 } from './interfaces'

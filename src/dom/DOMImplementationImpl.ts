@@ -3,7 +3,7 @@ import {
   DOMImplementationInternal, ElementInternal, DocumentInternal
 } from "./interfacesInternal"
 import { globalStore } from "../util"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**

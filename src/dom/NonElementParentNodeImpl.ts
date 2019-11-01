@@ -1,7 +1,7 @@
 import { Element } from './interfaces'
 import { NonElementParentNodeInternal } from './interfacesInternal'
 import { globalStore, Cast } from '../util'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 
 /**
  * Represents a mixin that extends non-element parent nodes. This mixin

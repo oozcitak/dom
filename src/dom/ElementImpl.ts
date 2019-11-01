@@ -9,7 +9,7 @@ import {
 } from './interfacesInternal'
 import { HTMLSlotElement } from '../html/interfaces'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { AttributeChangeStep } from './algorithm/interfaces'
+import { AttributeChangeStep } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
 
 /**

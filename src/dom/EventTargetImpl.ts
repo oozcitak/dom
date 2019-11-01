@@ -4,7 +4,7 @@ import {
 } from './interfaces'
 import { DOMException } from './DOMException'
 import { EventTargetInternal, EventInternal } from './interfacesInternal'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
 
 /**

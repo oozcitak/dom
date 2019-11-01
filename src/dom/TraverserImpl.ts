@@ -1,6 +1,6 @@
 import { Node, NodeFilter, WhatToShow } from "./interfaces"
 import { TraverserInternal } from "./interfacesInternal"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
 /**

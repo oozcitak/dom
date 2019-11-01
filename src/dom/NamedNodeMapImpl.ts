@@ -1,7 +1,7 @@
 import { Element, Attr } from "./interfaces"
 import { DOMException } from "./DOMException"
 import { NamedNodeMapInternal, ElementInternal, AttrInternal } from "./interfacesInternal"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
 /**

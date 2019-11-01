@@ -1,5 +1,5 @@
-import { CreateAlgorithmImpl as DOMCreateAlgorithmImpl } from '../../dom/algorithm'
-import { DOMAlgorithm } from '../../dom/algorithm/interfaces'
+import { CreateAlgorithmImpl as DOMCreateAlgorithmImpl } from '../../algorithm'
+import { DOMAlgorithm } from '../../algorithm/interfaces'
 import { DocumentImpl } from '../DocumentImpl'
 import { DocumentInternal, WindowInternal } from '../interfacesInternal'
 import { CreateAlgorithm } from './interfaces'

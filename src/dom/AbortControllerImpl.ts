@@ -3,7 +3,7 @@ import {
   AbortControllerInternal, AbortSignalInternal
 } from "./interfacesInternal"
 import { globalStore } from "../util"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 
 /**
  * Represents a controller that allows to abort DOM requests.

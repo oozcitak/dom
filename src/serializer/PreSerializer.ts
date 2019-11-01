@@ -7,7 +7,7 @@ import { NamespacePrefixMap } from './NamespacePrefixMap'
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
 import { DOMException } from "../dom/DOMException"
 import { namespace as infraNamespace } from '@oozcitak/infra'
-import { DOMAlgorithm } from "../dom/algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
 /**

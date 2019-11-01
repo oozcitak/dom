@@ -7,7 +7,7 @@ import { DOMException } from './DOMException'
 import { RangeInternal, NodeInternal } from './interfacesInternal'
 import { globalStore, Guard } from '../util'
 import { WindowInternal } from '../html/interfacesInternal'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 
 /**
  * Represents a live range.

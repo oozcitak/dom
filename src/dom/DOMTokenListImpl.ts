@@ -2,7 +2,7 @@ import { DOMException } from "./DOMException"
 import {
   DOMTokenListInternal, ElementInternal, AttrInternal
 } from "./interfacesInternal"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
 

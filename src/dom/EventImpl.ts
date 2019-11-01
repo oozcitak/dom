@@ -2,7 +2,7 @@ import {
   EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem
 } from './interfaces'
 import { EventInternal } from './interfacesInternal'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore } from '../util'
 
 /**

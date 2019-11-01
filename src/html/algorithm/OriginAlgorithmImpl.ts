@@ -1,6 +1,6 @@
-import { DOMAlgorithm } from '../../dom/algorithm/interfaces'
+import { DOMAlgorithm } from '../../algorithm/interfaces'
 import { OriginAlgorithm } from './interfaces'
-import { SubAlgorithmImpl } from '../../dom/algorithm'
+import { SubAlgorithmImpl } from '../../algorithm'
 import { Origin } from '../../dom/interfaces'
 import { URLAlgorithm } from '@oozcitak/url'
 

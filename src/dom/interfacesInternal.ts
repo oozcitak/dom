@@ -11,7 +11,7 @@ import {
   NonElementParentNode, EventPhase, XMLDocument, Window, Slot, NodeType, Origin,
   CustomElementDefinition, EventHandlerEntry
 } from "./interfaces"
-import { AttributeChangeStep } from "./algorithm/interfaces"
+import { AttributeChangeStep } from "../algorithm/interfaces"
 import { DOMObjectCache } from "../util/interfaces"
 import { URLRecord } from '@oozcitak/url'
 

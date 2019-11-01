@@ -1,7 +1,7 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { HTMLCollectionInternal, ElementInternal, AttrInternal, NodeInternal } from "./interfacesInternal"
 import { globalStore } from "../util"
-import { DOMAlgorithm } from "./algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**

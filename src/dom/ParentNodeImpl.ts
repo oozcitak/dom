@@ -1,6 +1,6 @@
 import { Node, HTMLCollection, NodeList, Element } from './interfaces'
 import { ParentNodeInternal, NodeInternal } from './interfacesInternal'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 import { Cast, Guard, globalStore } from '../util'
 
 /**

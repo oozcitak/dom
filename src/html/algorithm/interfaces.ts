@@ -1,6 +1,6 @@
 import { 
   DOMAlgorithm, SubAlgorithm, CreateAlgorithm as DOMCreateAlgorithm
-} from '../../dom/algorithm/interfaces'
+} from '../../algorithm/interfaces'
 import { WindowInternal } from '../interfacesInternal'
 import { Origin } from '../../dom/interfaces'
 

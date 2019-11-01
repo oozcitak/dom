@@ -17,9 +17,10 @@ import * as Token from '../src/parser/XMLToken'
 // XMLSerializer
 import { XMLSerializer } from '../src/serializer'
 import { TupleSet } from '../src/serializer/TupleSet'
+// DOMAlgorithm
+import { DOMAlgorithmImpl } from '../src/algorithm/DOMAlgorithmImpl'
 
 import { WhatToShow, FilterResult } from '../src/dom/interfaces'
-import { DOMAlgorithmImpl } from '../src/dom/algorithm/DOMAlgorithmImpl'
 import { ElementInternal } from "../src/dom/interfacesInternal"
 import * as util from '../src/util'
 

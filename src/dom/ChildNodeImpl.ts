@@ -1,7 +1,7 @@
 import { Node } from './interfaces'
 import { ChildNodeInternal, NodeInternal } from './interfacesInternal'
 import { globalStore, Cast } from '../util'
-import { DOMAlgorithm } from './algorithm/interfaces'
+import { DOMAlgorithm } from '../algorithm/interfaces'
 
 /**
  * Represents a mixin that extends child nodes that can have siblings
