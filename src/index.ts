@@ -1,14 +1,14 @@
-import { globalStore } from "./util"
-import { DOMAlgorithm } from "./algorithm"
+import * as algorithm from "./algorithm"
+import * as dom from "./dom"
+import * as parser from "./parser"
+import * as serializer from "./serializer"
+import * as util from "./util"
 
-const algo = new DOMAlgorithm()
-globalStore.algorithm = algo
-globalStore.window = algo.create.window()
+export { algorithm, dom, parser, serializer, util }
 
-export const window = globalStore.window
+const algo = new algorithm.DOMAlgorithm()
+util.globalStore.algorithm = algo
+util.globalStore.window = algo.create.window()
 
-// DOMParser
-export { DOMParser, MimeType } from './parser'
-
-// XMLSerializer
-export { XMLSerializer, PreSerializer } from './serializer'
+export const window = util.globalStore.window
+export const implementation = window.document.implementation
