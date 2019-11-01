@@ -1,14 +1,14 @@
 import {
   NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener,
   MouseEvent
-} from '../interfaces'
+} from '../dom/interfaces'
 import {
   SlotableInternal, NodeInternal, TextInternal, ElementInternal,
   ShadowRootInternal, CharacterDataInternal, DocumentInternal,
   DocumentTypeInternal, AttrInternal, CommentInternal,
   ProcessingInstructionInternal, SlotInternal, WindowInternal, 
   CDATASectionInternal, DocumentFragmentInternal
-} from '../interfacesInternal'
+} from '../dom/interfacesInternal'
 
 /**
  * Contains user-defined type guards for DOM objects.

@@ -5,7 +5,7 @@ import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
   EventHandler
 } from '../interfaces'
-import { Guard } from '../util'
+import { Guard } from '../../util'
 import { CustomEventImpl, EventImpl, DOMException } from '..'
 
 /**

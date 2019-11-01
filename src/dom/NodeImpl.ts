@@ -7,10 +7,9 @@ import { EventTargetImpl } from './EventTargetImpl'
 import {
   NodeInternal, DocumentInternal, TextInternal, AttrInternal, ElementInternal
 } from './interfacesInternal'
-import { globalStore } from '../util'
-import { Guard } from './util'
+import { globalStore, Guard } from '../util'
 import { DOMException } from './DOMException'
-import { NodeCompareCache } from './util/NodeCompareCache'
+import { NodeCompareCache } from '../util/NodeCompareCache'
 import { URLAlgorithm } from '@oozcitak/url'
 
 /**

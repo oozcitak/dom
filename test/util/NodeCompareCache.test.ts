@@ -1,10 +1,10 @@
-import $$ from './TestHelpers'
+import $$ from '../TestHelpers'
 
 describe('NodeCompareCache', () => {
 
   test('check()', () => {
     const doc = $$.dom.createDocument('ns', 'root')
-    const cache = $$.NodeCompareCache.instance
+    const cache = $$.util.NodeCompareCache.instance
 
     for (let i = 0; i < 100; i++) {
       const node1 = doc.createElement('node1')

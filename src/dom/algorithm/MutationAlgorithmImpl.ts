@@ -3,8 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../DOMException'
 import { NodeInternal, ElementInternal, SlotInternal } from '../interfacesInternal'
 import { NodeType } from '../interfaces'
-import { Guard } from '../util'
-import { isEmpty } from '../../util'
+import { isEmpty, Guard } from '../../util'
 import { set as infraSet } from '@oozcitak/infra'
 
 /**

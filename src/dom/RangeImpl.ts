@@ -4,9 +4,8 @@ import {
 } from './interfaces'
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
-import { RangeInternal, NodeInternal, DocumentInternal } from './interfacesInternal'
-import { Guard } from './util/Guard'
-import { globalStore } from '../util'
+import { RangeInternal, NodeInternal } from './interfacesInternal'
+import { globalStore, Guard } from '../util'
 import { WindowInternal } from '../html/interfacesInternal'
 import { DOMAlgorithm } from './algorithm/interfaces'
 

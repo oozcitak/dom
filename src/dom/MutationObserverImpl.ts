@@ -2,8 +2,7 @@ import {
   Node, MutationObserverInit, MutationRecord, MutationCallback
 } from "./interfaces"
 import { MutationObserverInternal, NodeInternal } from "./interfacesInternal"
-import { Guard } from "./util"
-import { globalStore } from "../util"
+import { globalStore, Guard } from "../util"
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
 
 /**

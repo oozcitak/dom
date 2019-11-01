@@ -1,7 +1,6 @@
 import { Element } from './interfaces'
 import { NonElementParentNodeInternal } from './interfacesInternal'
-import { Cast } from './util/Cast'
-import { globalStore } from '../util'
+import { globalStore, Cast } from '../util'
 import { DOMAlgorithm } from './algorithm/interfaces'
 
 /**

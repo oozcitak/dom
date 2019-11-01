@@ -1,5 +1,8 @@
 import { GlobalStore } from './GlobalStore'
 export { DOMObjectCacheImpl } from './DOMObjectCacheImpl'
+export { Cast } from './Cast'
+export { Guard } from './Guard'
+export { NodeCompareCache } from './NodeCompareCache'
 
 // Export interfaces
 import * as Interfaces from './interfaces'

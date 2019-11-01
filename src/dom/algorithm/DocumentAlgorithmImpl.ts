@@ -3,8 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   AttrInternal, ElementInternal, DocumentInternal, NodeInternal
 } from '../interfacesInternal'
-import { Guard } from '../util'
-import { isString } from '../../util'
+import { isString, Guard } from '../../util'
 import { ElementImpl } from '..'
 
 /**

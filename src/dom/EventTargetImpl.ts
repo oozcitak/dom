@@ -5,8 +5,7 @@ import {
 import { DOMException } from './DOMException'
 import { EventTargetInternal, EventInternal } from './interfacesInternal'
 import { DOMAlgorithm } from './algorithm/interfaces'
-import { globalStore } from '../util'
-import { Guard } from './util'
+import { globalStore, Guard } from '../util'
 
 /**
  * Represents a target to which an event can be dispatched.

@@ -1,4 +1,5 @@
-import { NodeInternal } from '../interfacesInternal'
+import { NodeInternal } from '../dom/interfacesInternal'
+import { Guard } from './Guard'
 
 /**
  * Contains type casts for DOM objects.
@@ -11,6 +12,10 @@ export class Cast {
    * @param a - the object to cast
    */
   static asNode(a: any): NodeInternal {
-    return (a as unknown as NodeInternal)
+    if (Guard.isNode(a)) {
+      return a
+    } else {
+      throw new Error("Invalid object. Node expected.")
+    }
   }
 }

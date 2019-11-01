@@ -1,26 +1,20 @@
-import { GlobalStore } from '../../src/util/GlobalStore'
+import $$ from '../TestHelpers'
 
 describe('GlobalStore without DOM', () => {
 
   test('algorithm', () => {
-    const store = GlobalStore.instance
-    expect(() => store.algorithm).toThrow()
-
-    store.algorithm = "test" as any
-    expect(store.algorithm).toBe("test")
+    const store = $$.util.globalStore
+    expect(() => store.algorithm).not.toThrow()
   })
 
   test('window', () => {
-    const store = GlobalStore.instance
-    expect(() => store.window).toThrow()
-
-    store.window = "test" as any
-    expect(store.window).toBe("test")
+    const store = $$.util.globalStore
+    expect(() => store.window).not.toThrow()
   })
 
   test('instance', () => {
-    const store1 = GlobalStore.instance
-    const store2 = GlobalStore.instance
+    const store1 = $$.util.globalStore
+    const store2 = $$.util.globalStore
     expect(store1).toBe(store2)
   })
 

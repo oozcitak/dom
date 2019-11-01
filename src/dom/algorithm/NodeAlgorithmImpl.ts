@@ -4,7 +4,7 @@ import {
   AttrInternal, ElementInternal, NodeInternal, DocumentInternal,
   HTMLCollectionInternal, DOMTokenListInternal
 } from '../interfacesInternal'
-import { Guard } from '../util'
+import { Guard } from '../../util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**

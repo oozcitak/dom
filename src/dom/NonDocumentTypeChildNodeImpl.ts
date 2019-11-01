@@ -1,6 +1,6 @@
-import { Element, NodeType } from './interfaces'
+import { Element } from './interfaces'
 import { NonDocumentTypeChildNodeInternal } from './interfacesInternal'
-import { Cast, Guard } from './util'
+import { Cast, Guard } from '../util'
 
 /**
  * Represents a mixin that extends child nodes that can have siblings

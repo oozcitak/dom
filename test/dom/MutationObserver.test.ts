@@ -1,4 +1,4 @@
-import $$ from './TestHelpers'
+import $$ from '../TestHelpers'
 import { MutationRecord } from '../../src/dom/interfaces'
 
 

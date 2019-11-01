@@ -10,8 +10,7 @@ import {
 import { HTMLSlotElement } from '../html/interfaces'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
 import { AttributeChangeStep } from './algorithm/interfaces'
-import { Guard } from './util'
-import { globalStore } from '../util'
+import { globalStore, Guard } from '../util'
 
 /**
  * Represents an element node.

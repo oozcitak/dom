@@ -1,9 +1,7 @@
 import { Node, HTMLCollection, NodeList, Element } from './interfaces'
-import { DOMException } from './DOMException'
 import { ParentNodeInternal, NodeInternal } from './interfacesInternal'
-import { globalStore } from '../util'
 import { DOMAlgorithm } from './algorithm/interfaces'
-import { Cast, Guard } from './util'
+import { Cast, Guard, globalStore } from '../util'
 
 /**
  * Represents a mixin that extends parent nodes that can have children.

@@ -1,13 +1,12 @@
 import { DOMAlgorithm, RangeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
-  NodeInternal, AbstractRangeInternal, DocumentInternal,
-  DocumentFragmentInternal, CharacterDataInternal, RangeInternal, WindowInternal
+  NodeInternal, AbstractRangeInternal, DocumentFragmentInternal, 
+  CharacterDataInternal, RangeInternal
 } from '../interfacesInternal'
 import { BoundaryPoint, BoundaryPosition } from '../interfaces'
-import { Guard } from '../util'
 import { DOMException } from '../DOMException'
-import { globalStore } from '../../util'
+import { globalStore, Guard } from '../../util'
 import { DOMObjectCache } from '../../util/interfaces'
 
 /**

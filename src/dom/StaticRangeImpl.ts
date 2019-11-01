@@ -2,7 +2,7 @@ import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
 import { StaticRangeInternal } from './interfacesInternal'
 import { BoundaryPoint, StaticRangeInit } from './interfaces'
-import { Guard } from './util'
+import { Guard } from '../util'
 
 /**
  * Represents a static range.

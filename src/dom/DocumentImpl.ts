@@ -7,8 +7,7 @@ import {
 import { DocumentInternal, NodeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
-import { Guard } from './util'
-import { globalStore, isFunction, isString } from '../util'
+import { globalStore, isFunction, isString, Guard } from '../util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 import { URLRecord, URLAlgorithm } from '@oozcitak/url'
 

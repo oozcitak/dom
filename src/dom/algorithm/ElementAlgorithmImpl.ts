@@ -5,7 +5,7 @@ import {
 } from '../interfacesInternal'
 import { DOMException } from '..'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
-import { Guard } from '../util'
+import { Guard } from '../../util'
 
 /**
  * Contains element algorithms.

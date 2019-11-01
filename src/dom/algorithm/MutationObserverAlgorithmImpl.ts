@@ -1,11 +1,10 @@
 import { MutationObserverAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
-  MutationRecordInternal, MutationObserverInternal, WindowInternal, NodeInternal, SlotInternal
+  MutationRecordInternal, MutationObserverInternal, NodeInternal, SlotInternal
 } from '../interfacesInternal'
-import { globalStore } from '../../util'
+import { globalStore, Guard } from '../../util'
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
-import { Guard } from '../util'
 
 /**
  * Contains mutation observer algorithms.

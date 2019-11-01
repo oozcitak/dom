@@ -2,11 +2,9 @@ import { DOMAlgorithm, ShadowTreeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   SlotableInternal, SlotInternal, ElementInternal, ShadowRootInternal,
-  NodeInternal,
-  WindowInternal
+  NodeInternal
 } from '../interfacesInternal'
-import { Cast, Guard } from '../util'
-import { isEmpty, globalStore } from '../../util'
+import { isEmpty, globalStore, Cast, Guard } from '../../util'
 
 /**
  * Contains shadow tree algorithms.

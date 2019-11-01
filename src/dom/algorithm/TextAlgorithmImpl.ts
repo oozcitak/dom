@@ -1,7 +1,7 @@
 import { DOMAlgorithm, TextAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { NodeInternal, TextInternal } from '../interfacesInternal'
-import { Guard } from '../util'
+import { Guard } from '../../util'
 import { DOMException } from '../DOMException'
 
 /**

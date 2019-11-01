@@ -1,4 +1,4 @@
-import { NodeInternal } from "../interfacesInternal"
+import { NodeInternal } from "../dom/interfacesInternal"
 
 /**
  * Represents a cache for comparing DOM nodes.
