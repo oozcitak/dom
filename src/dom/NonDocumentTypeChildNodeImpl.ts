@@ -1,5 +1,4 @@
-import { Element } from './interfaces'
-import { NonDocumentTypeChildNodeInternal } from './interfacesInternal'
+import { Element, NonDocumentTypeChildNode } from './interfaces'
 import { Cast, Guard } from '../util'
 
 /**
@@ -7,7 +6,7 @@ import { Cast, Guard } from '../util'
  * other than doctypes. This mixin is implemented by {@link Element} and
  * {@link CharacterData}.
  */
-export class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNodeInternal {
+export class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
 
   /** @inheritdoc */
   get previousElementSibling(): Element | null {

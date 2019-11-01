@@ -1,24 +1,15 @@
 import { CreateAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
-  DocumentInternal, ElementInternal, HTMLCollectionInternal, NodeInternal,
-  DocumentFragmentInternal, TextInternal, CDATASectionInternal, CommentInternal,
-  ProcessingInstructionInternal, AttrInternal, DOMImplementationInternal,
-  DocumentTypeInternal, RangeInternal, NodeListInternal, NamedNodeMapInternal,
-  NodeIteratorInternal, TreeWalkerInternal, NodeFilterInternal,
-  MutationRecordInternal, XMLDocumentInternal, DOMTokenListInternal,
-  ShadowRootInternal, AbortControllerInternal, AbortSignalInternal, WindowInternal
-} from '../dom/interfacesInternal'
-import {
   Text, CDATASection, ProcessingInstruction, DOMImplementation,
   Comment, Document, DocumentFragment, HTMLCollection,
-  NamedNodeMap, Element, DocumentType, Attr, NodeList,
+  NamedNodeMap, Element, DocumentType, Attr, Node, NodeList,
   NodeListStatic, Range, NodeIterator, TreeWalker,
   NodeFilter, MutationRecord, XMLDocument, DOMTokenList, 
-  ShadowRoot, AbortController, AbortSignal, Window
+  ShadowRoot, AbortController, AbortSignal, Window, Interfaces
 } from '../dom'
-import { BoundaryPoint } from '../dom/interfaces'
 import { URLRecord, URLAlgorithm } from '@oozcitak/url'
+import { BoundaryPoint } from '../dom/interfaces'
 
 /**
  * Contains algorithms for creating DOM objects.
@@ -35,153 +26,152 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   }
 
   /** @inheritdoc */
-  domImplementation(document: DocumentInternal): DOMImplementationInternal {
+  domImplementation(document: Document): DOMImplementation {
     return DOMImplementation._create(document)
   }
 
   /** @inheritdoc */
-  window(): WindowInternal {
+  window(): Window {
     return Window._create()
   }
   
   /** @inheritdoc */
-  xmlDocument(): XMLDocumentInternal {
+  xmlDocument(): XMLDocument {
     return new XMLDocument()
   }
 
   /** @inheritdoc */
-  document(): DocumentInternal {
+  document(): Document {
     return new Document()
   }
 
   /** @inheritdoc */
-  abortController(): AbortControllerInternal {
+  abortController(): AbortController {
     return new AbortController()
   }
 
   /** @inheritdoc */
-  abortSignal(): AbortSignalInternal {
+  abortSignal(): AbortSignal {
     return AbortSignal._create()
   }
 
   /** @inheritdoc */
-  documentType(document: DocumentInternal, name: string, publicId: string = '',
-    systemId: string = ''): DocumentTypeInternal {
+  documentType(document: Document, name: string, publicId: string = '',
+    systemId: string = ''): DocumentType {
     return DocumentType._create(document, name, publicId, systemId)
   }
 
   /** @inheritdoc */
-  element(document: DocumentInternal, localName: string, namespace: string | null = null,
-    prefix: string | null = null): ElementInternal {
+  element(document: Document, localName: string, namespace: string | null = null,
+    prefix: string | null = null): Element {
     return Element._create(document, localName, namespace, prefix)
   }
 
   /** @inheritdoc */
-  htmlElement(document: DocumentInternal, localName: string, namespace: string | null = null,
-    prefix: string | null = null): ElementInternal {
+  htmlElement(document: Document, localName: string, namespace: string | null = null,
+    prefix: string | null = null): Element {
     // TODO: Implement in HTML DOM
     return Element._create(document, localName, namespace, prefix)
   }  
 
   /** @inheritdoc */
-  htmlUnknownElement(document: DocumentInternal, localName: string, namespace: string | null = null,
-    prefix: string | null = null): ElementInternal {
+  htmlUnknownElement(document: Document, localName: string, namespace: string | null = null,
+    prefix: string | null = null): Element {
     // TODO: Implement in HTML DOM
     return Element._create(document, localName, namespace, prefix)
   }
 
   /** @inheritdoc */
-  documentFragment(document: DocumentInternal): DocumentFragmentInternal {
+  documentFragment(document: Document): DocumentFragment {
     return DocumentFragment._create(document)
   }
 
   /** @inheritdoc */
-  shadowRoot(document: DocumentInternal, host: ElementInternal): ShadowRootInternal {
+  shadowRoot(document: Document, host: Element): ShadowRoot {
     return ShadowRoot._create(document, host)
   }
 
   /** @inheritdoc */
-  attr(document: DocumentInternal, localName: string): AttrInternal {
+  attr(document: Document, localName: string): Attr {
     return Attr._create(document, localName)
   }
 
   /** @inheritdoc */
-  text(document: DocumentInternal, data: string = ''): TextInternal {
+  text(document: Document, data: string = ''): Text {
     return Text._create(document, data)
   }
 
   /** @inheritdoc */
-  cdataSection(document: DocumentInternal, data: string = ''): CDATASectionInternal {
+  cdataSection(document: Document, data: string = ''): CDATASection {
     return CDATASection._create(document, data)
   }
 
   /** @inheritdoc */
-  comment(document: DocumentInternal, data: string = ''): CommentInternal {
+  comment(document: Document, data: string = ''): Comment {
     return Comment._create(document, data)
   }
 
   /** @inheritdoc */
-  processingInstruction(document: DocumentInternal, target: string,
-    data: string = ''): ProcessingInstructionInternal {
+  processingInstruction(document: Document, target: string,
+    data: string = ''): ProcessingInstruction {
     return ProcessingInstruction._create(document, target, data)
   }
 
   /** @inheritdoc */
-  htmlCollection(root: NodeInternal,
-    filter: ((element: ElementInternal) => any) = (() => true)): HTMLCollectionInternal {
+  htmlCollection(root: Node,
+    filter: ((element: Interfaces.Element) => any) = (() => true)): HTMLCollection {
     return HTMLCollection._create(root, filter)
   }
 
   /** @inheritdoc */
-  nodeList(root: NodeInternal): NodeListInternal {
+  nodeList(root: Node): NodeList {
     return NodeList._create(root)
   }
 
   /** @inheritdoc */
-  nodeListStatic(root: NodeInternal, items: NodeInternal[]): NodeListInternal {
+  nodeListStatic(root: Node, items: Node[]): NodeList {
     return NodeListStatic._create(root, items)
   }
 
   /** @inheritdoc */
-  namedNodeMap(element: ElementInternal): NamedNodeMapInternal {
+  namedNodeMap(element: Element): NamedNodeMap {
     return NamedNodeMap._create(element)
   }
 
   /** @inheritdoc */
-  range(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal {
+  range(start?: BoundaryPoint, end?: BoundaryPoint): Range {
     return Range._create(start, end)
   }
 
   /** @inheritdoc */
-  nodeIterator(root: NodeInternal, reference: NodeInternal,
-    pointerBeforeReference: boolean): NodeIteratorInternal {
-
+  nodeIterator(root: Node, reference: Node,
+    pointerBeforeReference: boolean): NodeIterator {
     return NodeIterator._create(root, reference, pointerBeforeReference)
   }
 
   /** @inheritdoc */
-  treeWalker(root: NodeInternal, current: NodeInternal): TreeWalkerInternal {
+  treeWalker(root: Node, current: Node): TreeWalker {
     return TreeWalker._create(root, current)
   }
 
   /** @inheritdoc */
-  nodeFilter(): NodeFilterInternal {
+  nodeFilter(): NodeFilter {
     return NodeFilter._create()
   }
 
   /** @inheritdoc */
   mutationRecord(type: "attributes" | "characterData" | "childList",
-    target: NodeInternal, addedNodes: NodeListInternal,
-    removedNodes: NodeListInternal, previousSibling: NodeInternal | null,
-    nextSibling: NodeInternal | null, attributeName: string | null,
-    attributeNamespace: string | null, oldValue: string | null): MutationRecordInternal {
+    target: Node, addedNodes: NodeList,
+    removedNodes: NodeList, previousSibling: Node | null,
+    nextSibling: Node | null, attributeName: string | null,
+    attributeNamespace: string | null, oldValue: string | null): MutationRecord {
 
     return MutationRecord._create(type, target, addedNodes, removedNodes,
       previousSibling, nextSibling, attributeName, attributeNamespace, oldValue)
   }
 
   /** @inheritdoc */
-  domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
+  domTokenList(element: Element, attribute: Attr): DOMTokenList {
     return DOMTokenList._create(element, attribute)
   }
 

@@ -1,12 +1,9 @@
 import {
-  Node, NodeList, Element, Document, NodeType,
-  Position, GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
+  Node, NodeList, Element, Document, NodeType, Text, Attr, Position,
+  GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
   Event, EventTarget
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
-import {
-  NodeInternal, DocumentInternal, TextInternal, AttrInternal, ElementInternal
-} from './interfacesInternal'
 import { globalStore, Guard } from '../util'
 import { DOMException } from './DOMException'
 import { NodeCompareCache } from '../util/NodeCompareCache'
@@ -15,7 +12,7 @@ import { URLAlgorithm } from '@oozcitak/url'
 /**
  * Represents a generic XML node.
  */
-export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
+export abstract class NodeImpl extends EventTargetImpl implements Node {
 
   static readonly ELEMENT_NODE: number = 1
   static readonly ATTRIBUTE_NODE: number = 2
@@ -39,9 +36,9 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
 
   protected _childNodes: NodeList
 
-  private _nodeDocumentOverride: DocumentInternal | undefined = undefined
-  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverride || globalStore.window._associatedDocument }
-  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverride = val }
+  private _nodeDocumentOverride: Document | undefined = undefined
+  get _nodeDocument(): Document { return this._nodeDocumentOverride || globalStore.window._associatedDocument }
+  set _nodeDocument(val: Document) { this._nodeDocumentOverride = val }
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
 
@@ -311,7 +308,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * descendant exclusive Text node node of context object:
      */
     const algo = this._algo
-    const descendantNodes: TextInternal[] = []
+    const descendantNodes: Text[] = []
     for (const node of algo.tree.getDescendantNodes(this)) {
       if (Guard.isExclusiveTextNode(node)) {
         descendantNodes.push(node)
@@ -328,14 +325,14 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        */
       let length = algo.tree.nodeLength(node)
       if (length === 0) {
-        algo.mutation.remove(node, node._parent as NodeInternal)
+        algo.mutation.remove(node, node._parent as Node)
         continue
       }
       /**
        * 3. Let data be the concatenation of the data of node’s contiguous 
        * exclusive Text nodes (excluding itself), in tree order.
        */
-      const textSiblings: TextInternal[] = []
+      const textSiblings: Text[] = []
       let data = ''
       for (const sibling of algo.text.contiguousExclusiveTextNodes(node)) {
         textSiblings.push(sibling)
@@ -398,7 +395,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        */
       for (const sibling of textSiblings) {
         if (sibling._parent === null) continue
-        algo.mutation.remove(sibling, sibling._parent as NodeInternal)
+        algo.mutation.remove(sibling, sibling._parent as Node)
       }
     }
   }
@@ -436,7 +433,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * otherNode is non-null and context object equals otherNode, and false 
      * otherwise.
      */
-    return (node !== null && this._algo.node.equals(this, node as NodeInternal))
+    return (node !== null && this._algo.node.equals(this, node as Node))
   }
 
   /**
@@ -467,11 +464,11 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      */
     if (other === this) return 0
 
-    let node1: NodeInternal | null = other as NodeInternal | null
-    let node2: NodeInternal | null = this as NodeInternal | null
+    let node1: Node | null = other as Node | null
+    let node2: Node | null = this as Node | null
 
-    let attr1: AttrInternal | null = null
-    let attr2: AttrInternal | null = null
+    let attr1: Attr | null = null
+    let attr2: Attr | null = null
 
     /**
      * 4. If node1 is an attribute, then set attr1 to node1 and node1 to 
@@ -479,7 +476,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      */
     if (Guard.isAttrNode(node1)) {
       attr1 = node1
-      node1 = attr1._element as ElementInternal | null
+      node1 = attr1._element as Element | null
     }
 
     /**
@@ -490,7 +487,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
        * 5.1. Set attr2 to node2 and node2 to attr2’s element.
        */
       attr2 = node2
-      node2 = attr2._element as ElementInternal | null
+      node2 = attr2._element as Element | null
 
       /**
        * 5.2. If attr1 and node1 are non-null, and node2 is node1, then:
@@ -499,7 +496,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
         /**
          * 5.2. For each attr in node2’s attribute list:
          */
-        for (const attr of (node2 as ElementInternal)._attributeList) {
+        for (const attr of (node2 as Element)._attributeList) {
           /**
            * 5.2.1. If attr equals attr1, then return the result of adding
            * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and
@@ -508,9 +505,9 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
            * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and 
            * DOCUMENT_POSITION_FOLLOWING.
            */
-          if (algo.node.equals(attr as AttrInternal, attr1)) {
+          if (algo.node.equals(attr as Attr, attr1)) {
             return Position.ImplementationSpecific | Position.Preceding
-          } else if (algo.node.equals(attr as AttrInternal, attr2)) {
+          } else if (algo.node.equals(attr as Attr, attr2)) {
             return Position.ImplementationSpecific | Position.Following
           }
         }
@@ -529,7 +526,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
       // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        (NodeCompareCache.instance.check(this, other as NodeInternal) ? Position.Preceding : Position.Following)
+        (NodeCompareCache.instance.check(this, other as Node) ? Position.Preceding : Position.Following)
     }
 
     /**
@@ -577,7 +574,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * when other is null).
      */
     if (other === null) return false
-    return this._algo.tree.isDescendantOf(this, other as NodeInternal, true)
+    return this._algo.tree.isDescendantOf(this, other as Node, true)
   }
 
   /**
@@ -607,7 +604,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
         return null
       } else {
         return this._algo.node.locateANamespacePrefix(
-          this.documentElement as ElementInternal, namespace)
+          this.documentElement as Element, namespace)
       }
     } else if (Guard.isDocumentTypeNode(this) || Guard.isDocumentFragmentNode(this)) {
       return null
@@ -620,7 +617,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
         return null
       } else {
         return this._algo.node.locateANamespacePrefix(
-          this._element as ElementInternal, namespace)
+          this._element as Element, namespace)
       }
     } else {
       /**
@@ -631,7 +628,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
         return null
       } else {
         return this._algo.node.locateANamespacePrefix(
-          this.parentElement as ElementInternal, namespace)
+          this.parentElement as Element, namespace)
       }
     }
   }
@@ -690,8 +687,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * The insertBefore(node, child) method, when invoked, must return the 
      * result of pre-inserting node into context object before child.
      */
-    return this._algo.mutation.preInsert(newChild as NodeInternal, this,
-      refChild as NodeInternal | null)
+    return this._algo.mutation.preInsert(newChild as Node, this,
+      refChild as Node | null)
   }
 
   /**
@@ -712,7 +709,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * The appendChild(node) method, when invoked, must return the result of 
      * appending node to context object.
      */
-    return this._algo.mutation.append(newChild as NodeInternal, this)
+    return this._algo.mutation.append(newChild as Node, this)
   }
 
   /**
@@ -730,8 +727,8 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * The replaceChild(node, child) method, when invoked, must return the 
      * result of replacing child with node within context object.
      */
-    return this._algo.mutation.replace(oldChild as NodeInternal,
-      newChild as NodeInternal, this)
+    return this._algo.mutation.replace(oldChild as Node,
+      newChild as Node, this)
   }
 
   /**
@@ -747,7 +744,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
      * The removeChild(child) method, when invoked, must return the result of 
      * pre-removing child from context object.
      */
-    return this._algo.mutation.preRemove(oldChild as NodeInternal, this)
+    return this._algo.mutation.preRemove(oldChild as Node, this)
   }
 
   /**

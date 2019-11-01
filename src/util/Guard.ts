@@ -1,14 +1,9 @@
 import {
   NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener,
-  MouseEvent
+  MouseEvent, Slotable, Node, Text, Element, ShadowRoot, CharacterData, 
+  Document, DocumentType, Attr, Comment, ProcessingInstruction, Slot, Window, 
+  CDATASection, DocumentFragment
 } from '../dom/interfaces'
-import {
-  SlotableInternal, NodeInternal, TextInternal, ElementInternal,
-  ShadowRootInternal, CharacterDataInternal, DocumentInternal,
-  DocumentTypeInternal, AttrInternal, CommentInternal,
-  ProcessingInstructionInternal, SlotInternal, WindowInternal, 
-  CDATASectionInternal, DocumentFragmentInternal
-} from '../dom/interfacesInternal'
 
 /**
  * Contains user-defined type guards for DOM objects.
@@ -20,7 +15,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isNode(a: any): a is NodeInternal {
+  static isNode(a: any): a is Node {
     return (!!a && a.nodeType !== undefined)
   }
 
@@ -29,7 +24,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isDocumentNode(a: any): a is DocumentInternal {
+  static isDocumentNode(a: any): a is Document {
     return (Guard.isNode(a) && a.nodeType === NodeType.Document)
   }
 
@@ -38,7 +33,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isDocumentTypeNode(a: any): a is DocumentTypeInternal {
+  static isDocumentTypeNode(a: any): a is DocumentType {
     return (Guard.isNode(a) && a.nodeType === NodeType.DocumentType)
   }
 
@@ -47,7 +42,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isDocumentFragmentNode(a: any): a is DocumentFragmentInternal {
+  static isDocumentFragmentNode(a: any): a is DocumentFragment {
     return (Guard.isNode(a) && a.nodeType === NodeType.DocumentFragment)
   }
 
@@ -56,7 +51,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isAttrNode(a: any): a is AttrInternal {
+  static isAttrNode(a: any): a is Attr {
     return (Guard.isNode(a) && a.nodeType === NodeType.Attribute)
   }
 
@@ -65,7 +60,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isCharacterDataNode(a: any): a is CharacterDataInternal {
+  static isCharacterDataNode(a: any): a is CharacterData {
     if(!Guard.isNode(a)) return false
 
     const type = a.nodeType
@@ -81,7 +76,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isTextNode(a: any): a is TextInternal {
+  static isTextNode(a: any): a is Text {
     return (Guard.isNode(a) && (a.nodeType === NodeType.Text || a.nodeType === NodeType.CData))
   }
 
@@ -90,7 +85,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isExclusiveTextNode(a: any): a is TextInternal {
+  static isExclusiveTextNode(a: any): a is Text {
     return (Guard.isNode(a) && a.nodeType === NodeType.Text)
   }
 
@@ -99,7 +94,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isCDATASectionNode(a: any): a is CDATASectionInternal {
+  static isCDATASectionNode(a: any): a is CDATASection {
     return (Guard.isNode(a) && a.nodeType === NodeType.CData)
   }
 
@@ -108,7 +103,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isCommentNode(a: any): a is CommentInternal {
+  static isCommentNode(a: any): a is Comment {
     return (Guard.isNode(a) && a.nodeType === NodeType.Comment)
   }
 
@@ -117,7 +112,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isProcessingInstructionNode(a: any): a is ProcessingInstructionInternal {
+  static isProcessingInstructionNode(a: any): a is ProcessingInstruction {
     return (Guard.isNode(a) && a.nodeType === NodeType.ProcessingInstruction)
   }
 
@@ -126,7 +121,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isElementNode(a: any): a is ElementInternal {
+  static isElementNode(a: any): a is Element {
     return (Guard.isNode(a) && a.nodeType === NodeType.Element)
   }
 
@@ -135,7 +130,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isCustomElementNode(a: any): a is ElementInternal {
+  static isCustomElementNode(a: any): a is Element {
     return (Guard.isElementNode(a) && a._customElementState === "custom")
   }
 
@@ -144,7 +139,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isShadowRoot(a: any): a is ShadowRootInternal {
+  static isShadowRoot(a: any): a is ShadowRoot {
     return (!!a && a.host !== undefined)
   }
 
@@ -165,7 +160,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isSlotable(a: any): a is SlotableInternal {
+  static isSlotable(a: any): a is Slotable {
     return (!!a && a._name !== undefined && a._assignedSlot !== undefined &&
       (Guard.isTextNode(a) || Guard.isElementNode(a)))
   }
@@ -175,7 +170,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isSlot(a: any): a is SlotInternal {
+  static isSlot(a: any): a is Slot {
     return (!!a && a._name !== undefined && a._assignedNodes !== undefined &&
       Guard.isElementNode(a))
   }
@@ -185,7 +180,7 @@ export class Guard {
    * 
    * @param a - the object to check
    */
-  static isWindow(a: any): a is WindowInternal {
+  static isWindow(a: any): a is Window {
     return (!!a && a.navigator !== undefined)
   }
 

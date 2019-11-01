@@ -1,13 +1,12 @@
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
-import { StaticRangeInternal } from './interfacesInternal'
-import { BoundaryPoint, StaticRangeInit } from './interfaces'
+import { BoundaryPoint, StaticRangeInit, StaticRange } from './interfaces'
 import { Guard } from '../util'
 
 /**
  * Represents a static range.
  */
-export class StaticRangeImpl extends AbstractRangeImpl implements StaticRangeInternal {
+export class StaticRangeImpl extends AbstractRangeImpl implements StaticRange {
   
   _start: BoundaryPoint
   _end: BoundaryPoint

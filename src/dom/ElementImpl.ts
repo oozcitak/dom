@@ -1,14 +1,10 @@
 import {
-  Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
+  Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node, Document,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
-  HTMLSlotElement
+  HTMLSlotElement, Slot
 } from './interfaces'
 import { NodeImpl } from './NodeImpl'
 import { DOMException } from './DOMException'
-import {
-  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal,
-  SlotInternal
-} from './interfacesInternal'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
 import { AttributeChangeStep } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
@@ -16,7 +12,7 @@ import { globalStore, Guard } from '../util'
 /**
  * Represents an element node.
  */
-export class ElementImpl extends NodeImpl implements ElementInternal {
+export class ElementImpl extends NodeImpl implements Element {
 
   _nodeType: NodeType = NodeType.Element
 
@@ -35,6 +31,9 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
   _attributeChangeSteps: AttributeChangeStep[] = []
     
+  _name: string = ''
+  _assignedSlot: Slot | null = null
+
   /**
    * Initializes a new instance of `Element`.
    */
@@ -96,7 +95,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /** @inheritdoc */
   hasAttributes(): boolean {
     return !infraList.isEmpty(
-      (this._attributeList as NamedNodeMapInternal)._attributeList)
+      (this._attributeList as NamedNodeMap)._attributeList)
   }
 
   /** @inheritdoc */
@@ -112,7 +111,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     const names: string[] = []
 
     for (const attr of this._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       names.push(attrInt._qualifiedName)
     }
 
@@ -165,9 +164,9 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3. Let attribute be the first attribute in context object’s attribute
      * list whose qualified name is qualifiedName, and null otherwise.
      */
-    let attribute: AttrInternal | null = null
+    let attribute: Attr | null = null
     for (const attr of this._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       if (attrInt._qualifiedName === qualifiedName) {
         attribute = attrInt
         break
@@ -242,7 +241,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     }
 
     for (const attr of this._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       if (attrInt._qualifiedName === qualifiedName) {
         return true
       }
@@ -273,9 +272,9 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * 3. Let attribute be the first attribute in the context object’s attribute
      * list whose qualified name is qualifiedName, and null otherwise.
      */
-    let attribute: AttrInternal | null = null
+    let attribute: Attr | null = null
     for (const attr of this._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       if (attrInt._qualifiedName === qualifiedName) {
         attribute = attrInt
         break
@@ -323,7 +322,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     const ns = namespace || null
 
     for (const attr of this._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       if (attrInt._namespace === ns && attrInt._localName === localName) {
         return true
       }
@@ -359,12 +358,12 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      * invoked, must return the result of setting an attribute given attr and 
      * the context object.
      */
-    return this._algo.element.setAnAttribute(attr as AttrInternal, this)
+    return this._algo.element.setAnAttribute(attr as Attr, this)
   }
 
   /** @inheritdoc */
   setAttributeNodeNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr as AttrInternal, this)
+    return this._algo.element.setAnAttribute(attr as Attr, this)
   }
 
   /** @inheritdoc */
@@ -385,7 +384,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
     if (!found)
       throw DOMException.NotFoundError
 
-    this._algo.element.remove(attr as AttrInternal, this)
+    this._algo.element.remove(attr as Attr, this)
     return attr
   }
 
@@ -530,7 +529,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
      *  where, and element.
      */
     return this._algo.element.insertAdjacent(this, where,
-      element as ElementInternal) as ElementInternal | null
+      element as Element) as Element | null
   }
 
   /** @inheritdoc */
@@ -618,7 +617,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /**
    * Defines attribute change steps to update a slot’s name.
    */
-  private _updateASlotsName(element: ElementInternal, localName: string,
+  private _updateASlotsName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     /**
      * 1. If element is a slot, localName is name, and namespace is null, then:
@@ -649,7 +648,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /**
    * Defines attribute change steps to update a slotable’s name.
    */
-  private _updateASlotablesName(element: ElementInternal, localName: string,
+  private _updateASlotablesName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     /**
      * 1. If localName is slot and namespace is null, then:
@@ -676,7 +675,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
 
       const algo = globalStore.algorithm
       if (algo.shadowTree.isAssigned(element)) {
-        algo.shadowTree.assignSlotables(element._assignedSlot as SlotInternal)
+        algo.shadowTree.assignSlotables(element._assignedSlot as Slot)
       }
 
       algo.shadowTree.assignASlot(element)
@@ -686,7 +685,7 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
   /**
    * Defines attribute change steps to update an element's ID.
    */
-  private _updateAnElementID(element: ElementInternal, localName: string,
+  private _updateAnElementID(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     /**
      * 1. If localName is id, namespace is null, and value is null or the empty
@@ -710,9 +709,9 @@ export class ElementImpl extends NodeImpl implements ElementInternal {
    * @param namespace - namespace
    * @param prefix - namespace prefix
    */
-  static _create(document: DocumentInternal, localName: string,
+  static _create(document: Document, localName: string,
     namespace: string | null = null,
-    namespacePrefix: string | null = null): ElementInternal {
+    namespacePrefix: string | null = null): ElementImpl {
     const node = new ElementImpl()
     node._localName = localName
     node._namespace = namespace

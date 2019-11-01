@@ -1,5 +1,4 @@
-import { Node, Element, HTMLCollection } from "./interfaces"
-import { HTMLCollectionInternal, ElementInternal, AttrInternal, NodeInternal } from "./interfacesInternal"
+import { Node, Element, HTMLCollection, Attr } from "./interfaces"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
@@ -7,11 +6,11 @@ import { namespace as infraNamespace } from '@oozcitak/infra'
 /**
  * Represents a collection of elements.
  */
-export class HTMLCollectionImpl implements HTMLCollectionInternal {
+export class HTMLCollectionImpl implements HTMLCollection {
 
   _live: boolean = true
   _root: Node
-  _filter: ((element: ElementInternal) => any)
+  _filter: ((element: Element) => any)
 
   protected static reservedNames = ['_root', '_live', '_filter', 'length',
     'item', 'namedItem', 'get']
@@ -22,7 +21,7 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
    * @param root - root node
    * @param filter - node filter
    */
-  private constructor(root: Node, filter: ((element: ElementInternal) => any)) {
+  private constructor(root: Node, filter: ((element: Element) => any)) {
     this._root = root
     this._filter = filter
 
@@ -73,12 +72,12 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
     if (key === '') return null
 
     for (const ele of this) {
-      const eleInt = ele as ElementInternal
+      const eleInt = ele as Element
       if (eleInt._uniqueIdentifier === key) {
         return eleInt
       } else if (eleInt._namespace === infraNamespace.HTML) {
         for (const attr of eleInt._attributeList) {
-          const attrInt = attr as AttrInternal
+          const attrInt = attr as Attr
           if (attrInt._localName === "name" && attrInt._namespace === null &&
             attrInt._namespacePrefix === null && attrInt._value === key)
             return eleInt
@@ -92,8 +91,8 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
   /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<Element> {
     const algo = globalStore.algorithm as DOMAlgorithm
-    yield* algo.tree.getDescendantElements(this._root as NodeInternal, false, false,
-      (ele) => { return !!this._filter(ele as ElementInternal) })
+    yield* algo.tree.getDescendantElements(this._root as Node, false, false,
+      (ele) => { return !!this._filter(ele as Element) })
   }
 
   /** @inheritdoc */
@@ -125,7 +124,7 @@ export class HTMLCollectionImpl implements HTMLCollectionInternal {
    * @param filter - node filter
    */
   static _create(root: Node,
-    filter: ((element: ElementInternal) => any) = (() => true)): HTMLCollectionInternal {
+    filter: ((element: Element) => any) = (() => true)): HTMLCollectionImpl {
     return new HTMLCollectionImpl(root, filter)
   }
 }

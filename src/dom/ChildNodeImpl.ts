@@ -1,5 +1,4 @@
-import { Node } from './interfaces'
-import { ChildNodeInternal, NodeInternal } from './interfacesInternal'
+import { Node, ChildNode } from './interfaces'
 import { globalStore, Cast } from '../util'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 
@@ -8,7 +7,7 @@ import { DOMAlgorithm } from '../algorithm/interfaces'
  * including doctypes. This mixin is implemented by {@link Element},
  * {@link CharacterData} and {@link DocumentType}.
  */
-export class ChildNodeImpl implements ChildNodeInternal {
+export class ChildNodeImpl implements ChildNode {
 
   /** @inheritdoc */
   before(...nodes: (Node | string)[]): void {
@@ -42,8 +41,8 @@ export class ChildNodeImpl implements ChildNodeInternal {
      * 4. Let node be the result of converting nodes into a node, given nodes
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(
-      nodes as (NodeInternal | string)[], context._nodeDocument)
+    const node = algo.parentNode.convertNodesIntoANode(nodes,
+      context._nodeDocument)
 
     /**
      * 5. If viablePreviousSibling is null, set it to parent’s first child,
@@ -57,8 +56,7 @@ export class ChildNodeImpl implements ChildNodeInternal {
     /**
      * 6. Pre-insert node into parent before viablePreviousSibling.
      */
-    algo.mutation.preInsert(node, parent as NodeInternal,
-      viablePreviousSibling as NodeInternal | null)
+    algo.mutation.preInsert(node, parent, viablePreviousSibling)
   }
 
   /** @inheritdoc */
@@ -94,14 +92,13 @@ export class ChildNodeImpl implements ChildNodeInternal {
      * 4. Let node be the result of converting nodes into a node, given nodes 
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(
-      nodes as (NodeInternal | string)[], context._nodeDocument)
+    const node = algo.parentNode.convertNodesIntoANode(nodes,
+      context._nodeDocument)
 
     /**
      * 5. Pre-insert node into parent before viableNextSibling.
      */
-    algo.mutation.preInsert(node, parent as NodeInternal,
-      viableNextSibling as NodeInternal | null)
+    algo.mutation.preInsert(node, parent, viableNextSibling)
   }
 
   /** @inheritdoc */
@@ -137,8 +134,8 @@ export class ChildNodeImpl implements ChildNodeInternal {
      * 4. Let node be the result of converting nodes into a node, given nodes 
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(
-      nodes as (NodeInternal | string)[], context._nodeDocument)
+    const node = algo.parentNode.convertNodesIntoANode(nodes,
+      context._nodeDocument)
 
     /**
      * 5. If context object’s parent is parent, replace the context object with
@@ -147,10 +144,9 @@ export class ChildNodeImpl implements ChildNodeInternal {
      * 6. Otherwise, pre-insert node into parent before viableNextSibling.
      */
     if (context.parentNode === parent)
-      algo.mutation.replace(context, node, parent as NodeInternal)
+      algo.mutation.replace(context, node, parent)
     else
-      algo.mutation.preInsert(node, parent as NodeInternal,
-        viableNextSibling as NodeInternal | null)
+      algo.mutation.preInsert(node, parent, viableNextSibling)
   }
 
   /** @inheritdoc */
@@ -164,7 +160,7 @@ export class ChildNodeImpl implements ChildNodeInternal {
     const parent = context.parentNode
     if (!parent) return
 
-    algo.mutation.remove(context, parent as NodeInternal)
+    algo.mutation.remove(context, parent)
   }
 
 }

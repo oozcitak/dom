@@ -1,4 +1,4 @@
-import { DocumentOrShadowRootInternal } from './interfacesInternal'
+import { DocumentOrShadowRoot } from './interfaces'
 
 /**
  * Represents a mixin for an interface to be used to share APIs between
@@ -8,6 +8,6 @@ import { DocumentOrShadowRootInternal } from './interfacesInternal'
  * _Note:_ The DocumentOrShadowRoot mixin is expected to be used by other 
  * standards that want to define APIs shared between documents and shadow roots.
  */
-export class DocumentOrShadowRootImpl implements DocumentOrShadowRootInternal {
+export class DocumentOrShadowRootImpl implements DocumentOrShadowRoot {
 
 }

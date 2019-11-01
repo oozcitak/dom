@@ -1,24 +1,23 @@
-import { Event, Slot, MutationObserver, Document } from './interfaces'
 import {
-  WindowInternal, RangeInternal, NodeIteratorInternal, DocumentInternal
-} from './interfacesInternal'
+  Event, Slot, MutationObserver, Document, Window, Range, NodeIterator
+} from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
 import { DOMObjectCacheImpl } from '../util'
 
 /**
  * Represents a window containing a DOM document.
  */
-export class WindowImpl extends EventTargetImpl implements WindowInternal {
+export class WindowImpl extends EventTargetImpl implements Window {
 
   _currentEvent?: Event
   _signalSlots = new Set<Slot>()
   _mutationObserverMicrotaskQueued: boolean = false
   _mutationObservers = new Set<MutationObserver>()
 
-  _associatedDocument: DocumentInternal
+  _associatedDocument: Document
 
-  _rangeList = new DOMObjectCacheImpl<RangeInternal>()
-  _iteratorList = new DOMObjectCacheImpl<NodeIteratorInternal>()
+  _rangeList = new DOMObjectCacheImpl<Range>()
+  _iteratorList = new DOMObjectCacheImpl<NodeIterator>()
   
   /**
    * Initializes a new instance of `Window`.
@@ -38,7 +37,7 @@ export class WindowImpl extends EventTargetImpl implements WindowInternal {
   /**
    * Creates a new window with a blank document.
    */
-  static _create(): WindowInternal {   
+  static _create(): WindowImpl {   
     return new WindowImpl()
   }
 }

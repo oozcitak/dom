@@ -1,4 +1,4 @@
-import { NodeInternal } from "../dom/interfacesInternal"
+import { Node } from "../dom/interfaces"
 
 /**
  * Represents a cache for comparing DOM nodes.
@@ -10,7 +10,7 @@ import { NodeInternal } from "../dom/interfacesInternal"
 export class NodeCompareCache {
   private static _instance: NodeCompareCache
 
-  _items = new Map<NodeInternal, NodeInternal>()
+  _items = new Map<Node, Node>()
 
   /**
    * Initializes a new instance of `NodeCompareCache`.
@@ -18,7 +18,7 @@ export class NodeCompareCache {
   private constructor() { }
 
   /** @inheritdoc */
-  check(nodeA: NodeInternal, nodeB: NodeInternal): boolean {
+  check(nodeA: Node, nodeB: Node): boolean {
     if (this._items.get(nodeA) === nodeB)
       return true
     else if (this._items.get(nodeB) === nodeA)

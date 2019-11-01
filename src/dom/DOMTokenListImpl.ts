@@ -1,7 +1,5 @@
 import { DOMException } from "./DOMException"
-import {
-  DOMTokenListInternal, ElementInternal, AttrInternal
-} from "./interfacesInternal"
+import { DOMTokenList, Element, Attr } from "./interfaces"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
@@ -9,10 +7,10 @@ import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
 /**
  * Represents a token set.
  */
-export class DOMTokenListImpl implements DOMTokenListInternal {
+export class DOMTokenListImpl implements DOMTokenList {
 
-  _element: ElementInternal
-  _attribute: AttrInternal
+  _element: Element
+  _attribute: Attr
   _tokenSet: Set<string>
 
   protected _algo: DOMAlgorithm
@@ -23,7 +21,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
    * @param element - associated element
    * @param attribute - associated attribute
    */
-  private constructor(element: ElementInternal, attribute: AttrInternal) {
+  private constructor(element: Element, attribute: Attr) {
 
     this._algo = globalStore.algorithm as DOMAlgorithm
 
@@ -44,7 +42,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
 
     // define a closure to be called when the associated attribute's value changes
     const thisObj = this
-    function updateTokenSet(element: ElementInternal, localName: string,
+    function updateTokenSet(element: Element, localName: string,
       oldValue: string | null, value: string | null, namespace: string | null): void {
       /**
        * 1. If localName is associated attribute’s local name, namespace is null,
@@ -259,7 +257,7 @@ export class DOMTokenListImpl implements DOMTokenListInternal {
    * @param element - associated element
    * @param attribute - associated attribute
    */
-  static _create(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
+  static _create(element: Element, attribute: Attr): DOMTokenListImpl {
     return new DOMTokenListImpl(element, attribute)
   }
 

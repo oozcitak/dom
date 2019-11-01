@@ -1,12 +1,11 @@
-import { Node, NodeType } from "./interfaces"
+import { Node, NodeType, DocumentType, Document } from "./interfaces"
 import { NodeImpl } from './NodeImpl'
-import { DocumentTypeInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents an object providing methods which are not dependent on 
  * any particular document
  */
-export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
+export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
   _nodeType: NodeType = NodeType.DocumentType
 
@@ -56,8 +55,8 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentTypeInternal {
    * @param publicId - `PUBLIC` identifier
    * @param systemId - `SYSTEM` identifier
    */
-  static _create(document: DocumentInternal, name: string, publicId: string = '',
-    systemId: string = ''): DocumentTypeInternal {
+  static _create(document: Document, name: string, publicId: string = '',
+    systemId: string = ''): DocumentTypeImpl {
     const node = new DocumentTypeImpl(name, publicId, systemId)
     node._nodeDocument = document
     return node

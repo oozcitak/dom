@@ -1,7 +1,6 @@
 import { DOMAlgorithm, NodeIteratorAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { NodeInternal, NodeIteratorInternal } from '../dom/interfacesInternal'
-import { FilterResult } from '../dom/interfaces'
+import { FilterResult, Node, NodeIterator } from '../dom/interfaces'
 import { globalStore } from '../util'
 import { DOMObjectCache } from '../util/interfaces'
 
@@ -20,12 +19,12 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
   }
 
   /** @inheritdoc */
-  traverse(iterator: NodeIteratorInternal, forward: boolean): NodeInternal | null {
+  traverse(iterator: NodeIterator, forward: boolean): Node | null {
     /**
      * 1. Let node be iterator’s reference.
      * 2. Let beforeNode be iterator’s pointer before reference.
      */
-    let node = iterator._reference as NodeInternal
+    let node = iterator._reference as Node
     let beforeNode = iterator._pointerBeforeReference
 
     /**
@@ -46,7 +45,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
            * then return null.
            */
           const nextNode = this.dom.tree.getFollowingNode(
-            iterator._root as NodeInternal, node)
+            iterator._root as Node, node)
           if (nextNode) {
             node = nextNode
           } else {
@@ -69,7 +68,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
            * then return null.
            */
           const prevNode = this.dom.tree.getPrecedingNode(
-            iterator.root as NodeInternal, node as NodeInternal)
+            iterator.root as Node, node as Node)
           if (prevNode) {
             node = prevNode
           } else {
@@ -104,7 +103,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
   }
 
   /** @inheritdoc */
-  get iteratorList(): DOMObjectCache<NodeIteratorInternal> {
+  get iteratorList(): DOMObjectCache<NodeIterator> {
     return globalStore.window._iteratorList
   }
 

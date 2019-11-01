@@ -1,6 +1,6 @@
 import { DOMAlgorithm, CharacterDataAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { CharacterDataInternal, NodeInternal } from '../dom/interfacesInternal'
+import { CharacterData, Node } from '../dom/interfaces'
 import { DOMException } from '../dom/DOMException'
 import { Guard } from '../util'
 
@@ -19,7 +19,7 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
   }
 
   /** @inheritdoc */
-  replaceData(node: CharacterDataInternal, offset: number, count: number,
+  replaceData(node: CharacterData, offset: number, count: number,
     data: string): void {
 
     /**
@@ -90,12 +90,12 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * text content change steps for node’s parent.
      */
     if (Guard.isTextNode(node) && node.parentNode !== null) {
-      this.dom.runChildTextContentChangeSteps(node.parentNode as NodeInternal)
+      this.dom.runChildTextContentChangeSteps(node.parentNode as Node)
     }
   }
 
   /** @inheritdoc */
-  substringData(node: CharacterDataInternal, offset: number, count: number): string {
+  substringData(node: CharacterData, offset: number, count: number): string {
     /**
      * 1. Let length be node’s length.
      * 2. If offset is greater than length, then throw an "IndexSizeError" 

@@ -1,5 +1,4 @@
-import { Node, NodeFilter, WhatToShow } from "./interfaces"
-import { TraverserInternal } from "./interfacesInternal"
+import { Node, NodeFilter, WhatToShow, Traverser } from "./interfaces"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
@@ -7,7 +6,7 @@ import { globalStore } from "../util"
  * Represents an object which can be used to iterate through the nodes
  * of a subtree.
  */
-export abstract class TraverserImpl implements TraverserInternal {
+export abstract class TraverserImpl implements Traverser {
 
   _algo: DOMAlgorithm
 

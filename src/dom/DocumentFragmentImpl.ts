@@ -1,13 +1,12 @@
-import { Node, Element, NodeType, HTMLCollection, NodeList } from "./interfaces"
-import { NodeImpl } from "./NodeImpl"
 import {
-  DocumentFragmentInternal, DocumentInternal, ElementInternal
-} from "./interfacesInternal"
+  Node, Element, NodeType, HTMLCollection, NodeList, DocumentFragment, Document
+} from "./interfaces"
+import { NodeImpl } from "./NodeImpl"
 
 /**
  * Represents a document fragment in the XML tree.
  */
-export class DocumentFragmentImpl extends NodeImpl implements DocumentFragmentInternal {
+export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
   _nodeType: NodeType = NodeType.DocumentFragment
 
@@ -52,7 +51,8 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragmentIn
    * @param document - owner document
    * @param host - shadow root's host element
    */
-  static _create(document: DocumentInternal, host: ElementInternal | null = null): DocumentFragmentInternal {
+  static _create(document: Document, host: Element | null = null): 
+    DocumentFragmentImpl {
     const node = new DocumentFragmentImpl(host)
     node._nodeDocument = document
     return node

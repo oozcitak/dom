@@ -1,5 +1,4 @@
-import { Node, HTMLCollection, NodeList, Element } from './interfaces'
-import { ParentNodeInternal, NodeInternal } from './interfacesInternal'
+import { Node, HTMLCollection, NodeList, Element, ParentNode } from './interfaces'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { Cast, Guard, globalStore } from '../util'
 
@@ -8,7 +7,7 @@ import { Cast, Guard, globalStore } from '../util'
  * This mixin is implemented by {@link Element}, {@link Document} and
  * {@link DocumentFragment}.
  */
-export class ParentNodeImpl implements ParentNodeInternal {
+export class ParentNodeImpl implements ParentNode {
 
   /** @inheritdoc */
   get children(): HTMLCollection {
@@ -85,8 +84,8 @@ export class ParentNodeImpl implements ParentNodeInternal {
     const node = Cast.asNode(this)
 
     const childNode = algo.parentNode.convertNodesIntoANode(
-      nodes as (NodeInternal | string)[], node._nodeDocument)
-    algo.mutation.preInsert(childNode, node, node.firstChild as NodeInternal | null)
+      nodes as (Node | string)[], node._nodeDocument)
+    algo.mutation.preInsert(childNode, node, node.firstChild as Node | null)
   }
 
   /** @inheritdoc */
@@ -100,7 +99,7 @@ export class ParentNodeImpl implements ParentNodeInternal {
     const node = Cast.asNode(this)
 
     const childNode = algo.parentNode.convertNodesIntoANode(
-      nodes as (NodeInternal | string)[], node._nodeDocument)
+      nodes as (Node | string)[], node._nodeDocument)
     algo.mutation.append(childNode, node)
   }
 

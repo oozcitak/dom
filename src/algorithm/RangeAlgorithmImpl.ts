@@ -1,10 +1,9 @@
 import { DOMAlgorithm, RangeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  NodeInternal, AbstractRangeInternal, DocumentFragmentInternal, 
-  CharacterDataInternal, RangeInternal
-} from '../dom/interfacesInternal'
-import { BoundaryPoint, BoundaryPosition } from '../dom/interfaces'
+import { 
+  Node, AbstractRange, DocumentFragment, CharacterData, Range, BoundaryPoint, 
+  BoundaryPosition
+} from '../dom/interfaces'
 import { DOMException } from '../dom/DOMException'
 import { globalStore, Guard } from '../util'
 import { DOMObjectCache } from '../util/interfaces'
@@ -24,7 +23,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  collapsed(range: AbstractRangeInternal): boolean {
+  collapsed(range: AbstractRange): boolean {
     /**
      * A range is collapsed if its start node is its end node and its start offset is its end offset.
      */
@@ -32,7 +31,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  root(range: AbstractRangeInternal): NodeInternal {
+  root(range: AbstractRange): Node {
     /**
      * The root of a live range is the root of its start node.
      */
@@ -40,7 +39,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  isContained(node: NodeInternal, range: AbstractRangeInternal): boolean {
+  isContained(node: Node, range: AbstractRange): boolean {
     /**
      * A node node is contained in a live range range if node’s root is range’s
      * root, and (node, 0) is after range’s start, and (node, node’s length) is
@@ -52,7 +51,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  isPartiallyContained(node: NodeInternal, range: AbstractRangeInternal): boolean {
+  isPartiallyContained(node: Node, range: AbstractRange): boolean {
     /**
      * A node is partially contained in a live range if it’s an inclusive
      * ancestor of the live range’s start node but not its end node, 
@@ -65,7 +64,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  setTheStart(range: AbstractRangeInternal, node: NodeInternal, offset: number): void {
+  setTheStart(range: AbstractRange, node: Node, offset: number): void {
     /**
      * 1. If node is a doctype, then throw an "InvalidNodeTypeError" DOMException.
      * 2. If offset is greater than node’s length, then throw an "IndexSizeError" 
@@ -94,7 +93,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  setTheEnd(range: AbstractRangeInternal, node: NodeInternal, offset: number): void {
+  setTheEnd(range: AbstractRange, node: Node, offset: number): void {
     /**
      * 1. If node is a doctype, then throw an "InvalidNodeTypeError" DOMException.
      * 2. If offset is greater than node’s length, then throw an "IndexSizeError" 
@@ -123,7 +122,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  select(node: NodeInternal, range: AbstractRangeInternal): void {
+  select(node: Node, range: AbstractRange): void {
     /**
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
@@ -143,7 +142,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  extract(range: AbstractRangeInternal): DocumentFragmentInternal {
+  extract(range: AbstractRange): DocumentFragment {
     /**
      * 1. Let fragment be a new DocumentFragment node whose node document is
      * range’s start node’s node document.
@@ -177,7 +176,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     if (originalStartNode === originalEndNode &&
       Guard.isCharacterDataNode(originalStartNode)) {
-      const clone = this.dom.node.clone(originalStartNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalStartNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
         originalStartNode, originalStartOffset,
         originalEndOffset - originalStartOffset)
@@ -198,7 +197,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       if (commonAncestor._parent === null) {
         throw new Error("Parent node  is null.")
       }
-      commonAncestor = commonAncestor._parent as NodeInternal
+      commonAncestor = commonAncestor._parent as Node
     }
 
     /**
@@ -207,11 +206,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * node, set first partially contained child to the first child of common
      * ancestor that is partially contained in range.
      */
-    let firstPartiallyContainedChild: NodeInternal | null = null
+    let firstPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
       for (const node of commonAncestor._children) {
-        if (this.isPartiallyContained(node as NodeInternal, range)) {
-          firstPartiallyContainedChild = node as NodeInternal
+        if (this.isPartiallyContained(node as Node, range)) {
+          firstPartiallyContainedChild = node as Node
           break
         }
       }
@@ -223,13 +222,13 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * node, set last partially contained child to the last child of common
      * ancestor that is partially contained in range.
      */
-    let lastPartiallyContainedChild: NodeInternal | null = null
+    let lastPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalStartNode, originalEndNode, true)) {
       const children = [...commonAncestor._children]
       for (let i = children.length - 1; i > 0; i--) {
         const node = children[i]
-        if (this.isPartiallyContained(node as NodeInternal, range)) {
-          lastPartiallyContainedChild = node as NodeInternal
+        if (this.isPartiallyContained(node as Node, range)) {
+          lastPartiallyContainedChild = node as Node
           break
         }
       }
@@ -241,17 +240,17 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 12. If any member of contained children is a doctype, then throw a
      * "HierarchyRequestError" DOMException.
      */
-    const containedChildren: NodeInternal[] = []
+    const containedChildren: Node[] = []
     for (const child of commonAncestor._children) {
-      if (this.isContained(child as NodeInternal, range)) {
+      if (this.isContained(child as Node, range)) {
         if (Guard.isDocumentTypeNode(child)) {
           throw DOMException.HierarchyRequestError
         }
-        containedChildren.push(child as NodeInternal)
+        containedChildren.push(child as Node)
       }
     }
 
-    let newNode: NodeInternal
+    let newNode: Node
     let newOffset: number
     if (this.dom.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
       /**
@@ -272,8 +271,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        */
       let referenceNode = originalStartNode
       while (referenceNode._parent !== null &&
-        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parent as NodeInternal)) {
-        referenceNode = referenceNode._parent as NodeInternal
+        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parent as Node)) {
+        referenceNode = referenceNode._parent as Node
       }
       /* istanbul ignore next */
       if (referenceNode._parent === null) {
@@ -284,7 +283,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
          */
         throw new Error("Parent node is null.")
       }
-      newNode = referenceNode._parent as NodeInternal
+      newNode = referenceNode._parent as Node
       newOffset = 1 + this.dom.tree.index(referenceNode)
     }
 
@@ -301,12 +300,12 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * start offset, count original start node’s length minus original start 
        * offset, and data the empty string.
        */
-      const clone = this.dom.node.clone(originalStartNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalStartNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
-        originalStartNode as CharacterDataInternal, originalStartOffset,
+        originalStartNode as CharacterData, originalStartOffset,
         this.dom.tree.nodeLength(originalStartNode) - originalStartOffset)
       this.dom.mutation.append(clone, fragment)
-      this.dom.characterData.replaceData(originalStartNode as CharacterDataInternal,
+      this.dom.characterData.replaceData(originalStartNode as CharacterData,
         originalStartOffset,
         this.dom.tree.nodeLength(originalStartNode) - originalStartOffset, '')
     } else if (firstPartiallyContainedChild !== null) {
@@ -348,11 +347,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * 18.4. Replace data with node original end node, offset 0, count
        * original end offset, and data the empty string.
        */
-      const clone = this.dom.node.clone(originalEndNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalEndNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
-        originalEndNode as CharacterDataInternal, 0, originalEndOffset)
+        originalEndNode as CharacterData, 0, originalEndOffset)
       this.dom.mutation.append(clone, fragment)
-      this.dom.characterData.replaceData(originalEndNode as CharacterDataInternal,
+      this.dom.characterData.replaceData(originalEndNode as CharacterData,
         0, originalEndOffset, '')
     } else if (lastPartiallyContainedChild !== null) {
       /**
@@ -387,7 +386,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  cloneTheContents(range: AbstractRangeInternal): DocumentFragmentInternal {
+  cloneTheContents(range: AbstractRange): DocumentFragment {
     /**
      * 1. Let fragment be a new DocumentFragment node whose node document
      * is range’s start node’s node document.
@@ -416,7 +415,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
 
     if (originalStartNode === originalEndNode &&
       Guard.isCharacterDataNode(originalStartNode)) {
-      const clone = this.dom.node.clone(originalStartNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalStartNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
         originalStartNode, originalStartOffset,
         originalEndOffset - originalStartOffset)
@@ -433,7 +432,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       if (commonAncestor._parent === null) {
         throw new Error("Parent node  is null.")
       }
-      commonAncestor = commonAncestor._parent as NodeInternal
+      commonAncestor = commonAncestor._parent as Node
     }
 
     /**
@@ -442,11 +441,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * node, set first partially contained child to the first child of common
      * ancestor that is partially contained in range.
      */
-    let firstPartiallyContainedChild: NodeInternal | null = null
+    let firstPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
       for (const node of commonAncestor._children) {
-        if (this.isPartiallyContained(node as NodeInternal, range)) {
-          firstPartiallyContainedChild = node as NodeInternal
+        if (this.isPartiallyContained(node as Node, range)) {
+          firstPartiallyContainedChild = node as Node
           break
         }
       }
@@ -458,13 +457,13 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * node, set last partially contained child to the last child of common
      * ancestor that is partially contained in range.
      */
-    let lastPartiallyContainedChild: NodeInternal | null = null
+    let lastPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalStartNode, originalEndNode, true)) {
       const children = [...commonAncestor._children]
       for (let i = children.length - 1; i > 0; i--) {
         const node = children[i]
-        if (this.isPartiallyContained(node as NodeInternal, range)) {
-          lastPartiallyContainedChild = node as NodeInternal
+        if (this.isPartiallyContained(node as Node, range)) {
+          lastPartiallyContainedChild = node as Node
           break
         }
       }
@@ -476,13 +475,13 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 12. If any member of contained children is a doctype, then throw a
      * "HierarchyRequestError" DOMException.
      */
-    const containedChildren: NodeInternal[] = []
+    const containedChildren: Node[] = []
     for (const child of commonAncestor._children) {
-      if (this.isContained(child as NodeInternal, range)) {
+      if (this.isContained(child as Node, range)) {
         if (Guard.isDocumentTypeNode(child)) {
           throw DOMException.HierarchyRequestError
         }
-        containedChildren.push(child as NodeInternal)
+        containedChildren.push(child as Node)
       }
     }
 
@@ -496,9 +495,9 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * original start node’s length minus original start offset.
        * 13.3. Append clone to fragment.
        */
-      const clone = this.dom.node.clone(originalStartNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalStartNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
-        originalStartNode as CharacterDataInternal, originalStartOffset,
+        originalStartNode as CharacterData, originalStartOffset,
         this.dom.tree.nodeLength(originalStartNode) - originalStartOffset)
       this.dom.mutation.append(clone, fragment)
     } else if (firstPartiallyContainedChild !== null) {
@@ -543,9 +542,9 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        * node original end node, offset 0, and count original end offset.
        * 16.3. Append clone to fragment.
        */
-      const clone = this.dom.node.clone(originalEndNode) as CharacterDataInternal
+      const clone = this.dom.node.clone(originalEndNode) as CharacterData
       clone._data = this.dom.characterData.substringData(
-        originalEndNode as CharacterDataInternal, 0, originalEndOffset)
+        originalEndNode as CharacterData, 0, originalEndOffset)
       this.dom.mutation.append(clone, fragment)
     } else if (lastPartiallyContainedChild !== null) {
       /**
@@ -574,7 +573,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  insert(node: NodeInternal, range: AbstractRangeInternal): void {
+  insert(node: Node, range: AbstractRange): void {
     /**
      * 1. If range’s start node is a ProcessingInstruction or Comment node, is a
      * Text node whose parent is null, or is node, then throw a
@@ -594,14 +593,14 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 4. Otherwise, set referenceNode to the child of start node whose index is
      * start offset, and null if there is no such child.
      */
-    let referenceNode: NodeInternal | null = null
+    let referenceNode: Node | null = null
     if (Guard.isTextNode(range._startNode)) {
       referenceNode = range._startNode
     } else {
       let index = 0
       for (const child of range._startNode._children) {
         if (index === range._startOffset) {
-          referenceNode = child as NodeInternal
+          referenceNode = child as Node
           break
         }
         index++
@@ -612,14 +611,14 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 5. Let parent be range’s start node if referenceNode is null, and
      * referenceNode’s parent otherwise.
      */
-    let parent: NodeInternal
+    let parent: Node
     if (referenceNode === null) {
       parent = range._startNode
     } else {
       if (referenceNode._parent === null) {
         throw new Error("Parent node is null.")
       }
-      parent = referenceNode._parent as NodeInternal
+      parent = referenceNode._parent as Node
     }
 
     /**
@@ -639,14 +638,14 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 8. If node is referenceNode, set referenceNode to its next sibling.
      */
     if (node === referenceNode) {
-      referenceNode = node.nextSibling as NodeInternal | null
+      referenceNode = node.nextSibling as Node | null
     }
 
     /**
      * 9. If node’s parent is not null, remove node from its parent.
      */
     if (node._parent !== null) {
-      this.dom.mutation.remove(node, node._parent as NodeInternal)
+      this.dom.mutation.remove(node, node._parent as Node)
     }
 
     /**
@@ -680,8 +679,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  *getContainedNodes(range: RangeInternal): IterableIterator<NodeInternal> {
-    const container = range.commonAncestorContainer as NodeInternal
+  *getContainedNodes(range: Range): IterableIterator<Node> {
+    const container = range.commonAncestorContainer as Node
 
     for (const node of this.dom.tree.getDescendantNodes(container)) {
       if (this.isContained(node, range)) yield node
@@ -689,8 +688,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  *getPartiallyContainedNodes(range: RangeInternal): IterableIterator<NodeInternal> {
-    const container = range.commonAncestorContainer as NodeInternal
+  *getPartiallyContainedNodes(range: Range): IterableIterator<Node> {
+    const container = range.commonAncestorContainer as Node
 
     for (const node of this.dom.tree.getDescendantNodes(container)) {
       if (this.isPartiallyContained(node, range)) yield node
@@ -698,7 +697,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  get rangeList(): DOMObjectCache<RangeInternal> {
+  get rangeList(): DOMObjectCache<Range> {
     return globalStore.window._rangeList
   }
 

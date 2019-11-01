@@ -1,11 +1,10 @@
-import { Element, NodeType } from "./interfaces"
+import { Element, NodeType, Attr, Document } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
-import { AttrInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents an attribute of an element node.
  */
-export class AttrImpl extends NodeImpl implements AttrInternal {
+export class AttrImpl extends NodeImpl implements Attr {
 
   _nodeType: NodeType = NodeType.Attribute
 
@@ -74,7 +73,7 @@ export class AttrImpl extends NodeImpl implements AttrInternal {
    * @param document - owner document
    * @param localName - local name
    */
-  static _create(document: DocumentInternal, localName: string): AttrInternal {
+  static _create(document: Document, localName: string): AttrImpl {
     const node = new AttrImpl(localName)
     node._nodeDocument = document
     return node

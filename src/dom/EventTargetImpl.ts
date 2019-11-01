@@ -3,14 +3,13 @@ import {
   EventListenerOptions, EventListenerEntry, EventHandlerEntry
 } from './interfaces'
 import { DOMException } from './DOMException'
-import { EventTargetInternal, EventInternal } from './interfacesInternal'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
 
 /**
  * Represents a target to which an event can be dispatched.
  */
-export abstract class EventTargetImpl implements EventTargetInternal {
+export abstract class EventTargetImpl implements EventTarget {
 
   _eventListenerList: EventListenerEntry[] = []
   _eventHandlerMap: Map<string, EventHandlerEntry> = new Map()
@@ -99,7 +98,7 @@ export abstract class EventTargetImpl implements EventTargetInternal {
   }
 
   /** @inheritdoc */
-  dispatchEvent(event: EventInternal): boolean {
+  dispatchEvent(event: Event): boolean {
     /**
      * 1. If event’s dispatch flag is set, or if its initialized flag is not
      * set, then throw an "InvalidStateError" DOMException.

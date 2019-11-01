@@ -1,12 +1,11 @@
 import { EventAlgorithm, DOMAlgorithm, OutputFlag } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { EventInternal, EventTargetInternal } from '../dom/interfacesInternal'
 import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
-  EventHandler
+  EventHandler, Event, EventTarget
 } from '../dom/interfaces'
 import { Guard } from '../util'
-import { CustomEvent, Event, DOMException } from '../dom'
+import { CustomEvent as CustomEventImpl, DOMException, Event as EventImpl } from '../dom'
 
 /**
  * Contains event algorithms.
@@ -23,14 +22,14 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  setTheCanceledFlag(event: EventInternal): void {
+  setTheCanceledFlag(event: Event): void {
     if (event.cancelable && !event._inPassiveListenerFlag) {
       event._canceledFlag = true
     }
   }
 
   /** @inheritdoc */
-  initialize(event: EventInternal, type: string, bubbles: boolean, cancelable: boolean): void {
+  initialize(event: Event, type: string, bubbles: boolean, cancelable: boolean): void {
     event._initializedFlag = true
     event._stopPropagationFlag = false
     event._stopImmediatePropagationFlag = false
@@ -44,7 +43,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  createAnEvent(eventInterface: typeof Event, realm: any | undefined = undefined): EventInternal {
+  createAnEvent(eventInterface: typeof EventImpl, realm: any | undefined = undefined): Event {
     /**
      * 1. If realm is not given, then set it to null.
      * 2. Let dictionary be the result of converting the JavaScript value 
@@ -67,8 +66,8 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  innerEventCreationSteps(eventInterface: typeof Event, realm: any,
-    time: Date, dictionary: { [key: string]: any }): EventInternal {
+  innerEventCreationSteps(eventInterface: typeof EventImpl, realm: any,
+    time: Date, dictionary: { [key: string]: any }): Event {
     /**
      * 1. Let event be the result of creating a new object using eventInterface. 
      * TODO: Implement realms
@@ -103,8 +102,8 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  dispatch(event: EventInternal,
-    target: EventTargetInternal,
+  dispatch(event: Event,
+    target: EventTarget,
     legacyTargetOverrideFlag: boolean = false,
     legacyOutputDidListenersThrowFlag: OutputFlag = { value: false }): boolean {
 
@@ -122,7 +121,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * _Note:_ legacy target override flag is only used by HTML and only when
      * target is a Window object.
      */
-    let targetOverride: EventTargetInternal = target
+    let targetOverride: EventTarget = target
     if (legacyTargetOverrideFlag) {
       const doc = (target as any)._associatedDocument
       if (Guard.isDocumentNode(doc)) {
@@ -137,8 +136,8 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 5. If target is not relatedTarget or target is event's relatedTarget, 
      * then:
     */
-    let activationTarget: EventTargetInternal | null = null
-    let relatedTarget = this.dom.tree.retarget(event._relatedTarget, target) as EventTargetInternal
+    let activationTarget: EventTarget | null = null
+    let relatedTarget = this.dom.tree.retarget(event._relatedTarget, target) as EventTarget
 
     if (target !== relatedTarget || target === event._relatedTarget) {
       /**
@@ -170,12 +169,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
         activationTarget = target
       }
 
-      let slotable: EventTargetInternal | null =
+      let slotable: EventTarget | null =
         (Guard.isSlotable(target) && this.dom.shadowTree.isAssigned(target)) ?
           target : null
 
       let slotInClosedTree = false
-      let parent: EventTargetInternal | null = target._getTheParent(event) as EventTargetInternal | null
+      let parent: EventTarget | null = target._getTheParent(event) as EventTarget | null
 
       /**
        * 5.9. While parent is non-null:
@@ -267,7 +266,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * 5.9.10. Set slot-in-closed-tree to false.
          */
         if (parent !== null) {
-          parent = parent._getTheParent(event) as EventTargetInternal | null
+          parent = parent._getTheParent(event) as EventTarget | null
         }
         slotInClosedTree = false
       }
@@ -317,7 +316,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
        * legacy-pre-activation behavior, then run activationTarget's
        * legacy-pre-activation behavior.
        */
-      const atImpl = activationTarget as EventTargetInternal
+      const atImpl = activationTarget as EventTarget
       if (activationTarget !== null &&
         atImpl._legacyPreActivationBehavior !== undefined) {
         atImpl._legacyPreActivationBehavior(event)
@@ -434,8 +433,8 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
    * @param touchTargets - a list of touch targets
    * @param slotInClosedTree - if the target's parent is a closed shadow root
    */
-  appendToAnEventPath(event: EventInternal,
-    invocationTarget: EventTargetInternal, shadowAdjustedTarget: PotentialEventTarget,
+  appendToAnEventPath(event: Event,
+    invocationTarget: EventTarget, shadowAdjustedTarget: PotentialEventTarget,
     relatedTarget: PotentialEventTarget, touchTargets: PotentialEventTarget[],
     slotInClosedTree: boolean): void {
 
@@ -489,7 +488,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  invoke(struct: EventPathItem, event: EventInternal,
+  invoke(struct: EventPathItem, event: Event,
     phase: "capturing" | "bubbling",
     legacyOutputDidListenersThrowFlag: OutputFlag = { value: false }): void {
 
@@ -534,7 +533,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     event._touchTargetList = struct.touchTargetList
     if (event._stopPropagationFlag) return
     event._currentTarget = struct.invocationTarget
-    const currentTarget = event._currentTarget as EventTargetInternal
+    const currentTarget = event._currentTarget as EventTarget
     const targetListeners: EventListenerEntry[] = currentTarget._eventListenerList
     let listeners: EventListenerEntry[] = new Array(...targetListeners)
 
@@ -595,7 +594,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  innerInvoke(event: EventInternal, listeners: EventListenerEntry[], 
+  innerInvoke(event: Event, listeners: EventListenerEntry[], 
     phase: "capturing" | "bubbling", struct: EventPathItem,
     legacyOutputDidListenersThrowFlag: OutputFlag = { value: false }): boolean {
 
@@ -626,7 +625,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * currentTarget attribute value's event listener list.
          */
         if (listener.once && event.currentTarget !== null) {
-          const impl = event.currentTarget as EventTargetInternal
+          const impl = event.currentTarget as EventTarget
           let index = -1
           for (let i = 0; i < impl._eventListenerList.length; i++) {
             if (impl._eventListenerList[i] === listener) {
@@ -654,9 +653,9 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * 2.8.2. If struct's invocation-target-in-shadow-tree is false, then
          * set global's current event to event.
          */
-        let currentEvent: EventInternal | undefined = undefined
+        let currentEvent: Event | undefined = undefined
         if (Guard.isWindow(globalObject)) {
-          currentEvent = globalObject._currentEvent as (EventInternal | undefined)
+          currentEvent = globalObject._currentEvent as (Event | undefined)
           if (struct.invocationTargetInShadowTree === false) {
             globalObject._currentEvent = event
           }
@@ -712,14 +711,14 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  fireAnEvent(e: string, target: EventTargetInternal,
-    eventConstructor?: typeof Event, idlAttributes?: { [key:string]: any },
+  fireAnEvent(e: string, target: EventTarget,
+    eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
     legacyTargetOverrideFlag?: boolean): boolean {
     /**
      * 1. If eventConstructor is not given, then let eventConstructor be Event.
      */
     if (eventConstructor === undefined) {
-      eventConstructor = Event
+      eventConstructor = EventImpl
     }
 
     /**
@@ -753,11 +752,11 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  createLegacyEvent(eventInterface: string): EventInternal {
+  createLegacyEvent(eventInterface: string): Event {
     /**
      * 1. Let constructor be null.
      */
-    let constructor: typeof Event | null = null
+    let constructor: typeof EventImpl | null = null
 
     /**
      * TODO: Implement in HTML DOM
@@ -795,7 +794,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
       case "compositionevent":
         break
       case "customevent":
-          constructor = CustomEvent
+          constructor = CustomEventImpl
         break
       case "devicemotionevent":
         break
@@ -805,7 +804,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
         break
       case "event":
       case "events":
-          constructor = Event
+          constructor = EventImpl
           break
       case "focusevent":
         break
@@ -873,7 +872,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  getterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+  getterEventHandlerIDLAttribute(thisObj: EventTarget,
     name: string): EventHandler {
     /**
      * 1. Let eventTarget be the result of determining the target of an event
@@ -890,7 +889,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  setterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+  setterEventHandlerIDLAttribute(thisObj: EventTarget,
     name: string, value: EventHandler): void {
     /**
      * 1. Let eventTarget be the result of determining the target of an event
@@ -920,27 +919,27 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  determineTheTargetOfAnEventHandler(eventTarget: EventTargetInternal,
-    name: string): EventTargetInternal | null {
+  determineTheTargetOfAnEventHandler(eventTarget: EventTarget,
+    name: string): EventTarget | null {
     // TODO: Implement in HTML DOM
     return null
   }
 
   /** @inheritdoc */
-  getTheCurrentValueOfAnEventHandler(eventTarget: EventTargetInternal,
+  getTheCurrentValueOfAnEventHandler(eventTarget: EventTarget,
     name: string): EventHandler {
     // TODO: Implement in HTML DOM
     return null
   }
 
   /** @inheritdoc */
-  deactivateAnEventHandler(eventTarget: EventTargetInternal,
+  deactivateAnEventHandler(eventTarget: EventTarget,
     name: string): void {
     // TODO: Implement in HTML DOM
   }
 
   /** @inheritdoc */
-  activateAnEventHandler(eventTarget: EventTargetInternal,
+  activateAnEventHandler(eventTarget: EventTarget,
     name: string): void {
     // TODO: Implement in HTML DOM
   }

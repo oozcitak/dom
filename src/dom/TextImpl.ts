@@ -1,13 +1,15 @@
-import { NodeType, Text, HTMLSlotElement } from "./interfaces"
+import { NodeType, Text, HTMLSlotElement, Document, Slot } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { TextInternal, DocumentInternal, SlotInternal } from "./interfacesInternal"
 
 /**
  * Represents a text node.
  */
-export class TextImpl extends CharacterDataImpl implements TextInternal {
+export class TextImpl extends CharacterDataImpl implements Text {
 
   _nodeType: NodeType = NodeType.Text
+
+  _name: string = ''
+  _assignedSlot: Slot | null = null
 
   /**
    * Initializes a new instance of `Text`.
@@ -52,7 +54,7 @@ export class TextImpl extends CharacterDataImpl implements TextInternal {
    * @param document - owner document
    * @param data - the text content
    */
-  static _create(document: DocumentInternal, data: string = ''): TextInternal {
+  static _create(document: Document, data: string = ''): TextImpl {
     const node = new TextImpl(data)
     node._nodeDocument = document
     return node

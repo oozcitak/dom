@@ -1,8 +1,7 @@
 import { MutationAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../dom/DOMException'
-import { NodeInternal, ElementInternal, SlotInternal } from '../dom/interfacesInternal'
-import { NodeType } from '../dom/interfaces'
+import { NodeType, Node, Element, Slot } from '../dom/interfaces'
 import { isEmpty, Guard } from '../util'
 import { set as infraSet } from '@oozcitak/infra'
 
@@ -21,8 +20,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  ensurePreInsertionValidity(node: NodeInternal, parent: NodeInternal,
-    child: NodeInternal | null): void {
+  ensurePreInsertionValidity(node: Node, parent: Node, child: Node | null): void {
     /**
      * 1. If parent is not a Document, DocumentFragment, or Element node,
      * throw a "HierarchyRequestError" DOMException.
@@ -162,8 +160,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  preInsert(node: NodeInternal, parent: NodeInternal,
-    child: NodeInternal | null): NodeInternal {
+  preInsert(node: Node, parent: Node,
+    child: Node | null): Node {
     /**
      * 1. Ensure pre-insertion validity of node into parent before child.
      * 2. Let reference child be child.
@@ -176,7 +174,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
 
     let referenceChild = child
     if (referenceChild === node)
-      referenceChild = node.nextSibling as NodeInternal | null
+      referenceChild = node.nextSibling as Node | null
 
     this.dom.document.adopt(node, parent._nodeDocument)
     this.insert(node, parent, referenceChild)
@@ -185,7 +183,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  insert(node: NodeInternal, parent: NodeInternal, child: NodeInternal | null,
+  insert(node: Node, parent: Node, child: Node | null,
     suppressObservers?: boolean): void {
 
     /**
@@ -224,14 +222,14 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 4. If node is a DocumentFragment node, remove its children with the 
      * suppress observers flag set.
      */
-    const nodes: NodeInternal[] = []
+    const nodes: Node[] = []
     if (node.nodeType === NodeType.DocumentFragment) {
       for (const childNode of node.childNodes) {
-        nodes.push(childNode as NodeInternal)
+        nodes.push(childNode as Node)
       }
       // remove child nodes
       while (node.firstChild) {
-        this.remove(node.firstChild as NodeInternal, node, true)
+        this.remove(node.firstChild as Node, node, true)
       }
     } else {
       nodes.push(node)
@@ -249,7 +247,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 6. Let previousSibling be child’s previous sibling or parent’s last 
      * child if child is null.
      */
-    const previousSibling = (child ? child.previousSibling : parent.lastChild) as NodeInternal | null
+    const previousSibling = (child ? child.previousSibling : parent.lastChild) as Node | null
 
     let index = child === null ? -1 : this.dom.tree.index(child)
     /**
@@ -279,7 +277,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
           parent._firstChild = node
           parent._lastChild = node
         } else {
-          const prev = (child ? child.previousSibling : parent.lastChild) as NodeInternal | null
+          const prev = (child ? child.previousSibling : parent.lastChild) as Node | null
           const next = (child ? child : null)
 
           node._previousSibling = prev
@@ -297,7 +295,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * 7.3. If parent is a shadow host and node is a slotable, then 
        * assign a slot for node.
        */
-      if ((parent as ElementInternal)._shadowRoot !== null && Guard.isSlotable(node)) {
+      if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
         this.dom.shadowTree.assignASlot(node)
       }
 
@@ -369,7 +367,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  append(node: NodeInternal, parent: NodeInternal): NodeInternal {
+  append(node: Node, parent: Node): Node {
     /**
      * To append a node to a parent, pre-insert node into parent before null.
      */
@@ -377,8 +375,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  replace(child: NodeInternal, node: NodeInternal,
-    parent: NodeInternal): NodeInternal {
+  replace(child: Node, node: Node,
+    parent: Node): Node {
 
     /**
      * 1. If parent is not a Document, DocumentFragment, or Element node,
@@ -502,16 +500,16 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. If reference child is node, set it to node’s next sibling.
      * 8. Let previousSibling be child’s previous sibling.
      */
-    let referenceChild = child.nextSibling as NodeInternal | null
-    if (referenceChild === node) referenceChild = node.nextSibling as NodeInternal | null
-    let previousSibling = child.previousSibling as NodeInternal | null
+    let referenceChild = child.nextSibling as Node | null
+    if (referenceChild === node) referenceChild = node.nextSibling as Node | null
+    let previousSibling = child.previousSibling as Node | null
 
     /**
      * 10. Adopt node into parent’s node document.
      * 11. Let removedNodes be the empty list.
      */
-    this.dom.document.adopt(node, (parent as NodeInternal)._nodeDocument)
-    const removedNodes: NodeInternal[] = []
+    this.dom.document.adopt(node, (parent as Node)._nodeDocument)
+    const removedNodes: Node[] = []
 
     /**
      * 12. If child’s parent is not null, then:
@@ -530,10 +528,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 13. Let nodes be node’s children if node is a DocumentFragment node; 
      * otherwise [node].
      */
-    const nodes: NodeInternal[] = []
+    const nodes: Node[] = []
     if (node.nodeType === NodeType.DocumentFragment) {
       for (const childNode of node.childNodes) {
-        nodes.push(childNode as NodeInternal)
+        nodes.push(childNode as Node)
       }
     } else {
       nodes.push(node)
@@ -559,7 +557,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  replaceAll(node: NodeInternal | null, parent: NodeInternal): void {
+  replaceAll(node: Node | null, parent: Node): void {
     /**
      * 1. If node is not null, adopt node into parent’s node document.
      */
@@ -570,9 +568,9 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     /**
      * 2. Let removedNodes be parent’s children.
      */
-    const removedNodes: NodeInternal[] = []
+    const removedNodes: Node[] = []
     for (const childNode of parent.childNodes) {
-      removedNodes.push(childNode as NodeInternal)
+      removedNodes.push(childNode as Node)
     }
 
     /**
@@ -581,10 +579,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * children.
      * 5. Otherwise, if node is non-null, set addedNodes to [node].
      */
-    const addedNodes: NodeInternal[] = []
+    const addedNodes: Node[] = []
     if (node && node.nodeType === NodeType.DocumentFragment) {
       for (const childNode of node.childNodes) {
-        addedNodes.push(childNode as NodeInternal)
+        addedNodes.push(childNode as Node)
       }
     } else if (node !== null) {
       addedNodes.push(node)
@@ -615,7 +613,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  preRemove(child: NodeInternal, parent: NodeInternal): NodeInternal {
+  preRemove(child: Node, parent: Node): Node {
     /**
      * 1. If child’s parent is not parent, then throw a "NotFoundError" 
      * DOMException.
@@ -631,7 +629,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
   }
 
   /** @inheritdoc */
-  remove(node: NodeInternal, parent: NodeInternal, suppressObservers?: boolean): void {
+  remove(node: Node, parent: Node, suppressObservers?: boolean): void {
     /**
      * 1. Let index be node’s index.
      */
@@ -644,10 +642,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * node, set its end to (parent, index).
      */
     for (const range of this.dom.range.rangeList) {
-      if (this.dom.tree.isDescendantOf(node, range._start[0] as NodeInternal, true)) {
+      if (this.dom.tree.isDescendantOf(node, range._start[0] as Node, true)) {
         range._start = [parent, index]
       }
-      if (this.dom.tree.isDescendantOf(node, range._end[0] as NodeInternal, true)) {
+      if (this.dom.tree.isDescendantOf(node, range._end[0] as Node, true)) {
         range._end = [parent, index]
       }
       if (range._start[0] === parent && range._start[1] > index) {
@@ -679,7 +677,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * and iterator.
      */
     for (const iterator of this.dom.nodeIterator.iteratorList) {
-      if ((iterator._root as NodeInternal)._nodeDocument === node._nodeDocument) {
+      if ((iterator._root as Node)._nodeDocument === node._nodeDocument) {
         this.dom.runNodeIteratorPreRemovingSteps(iterator, node)
       }
     }
@@ -688,8 +686,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 7. Let oldPreviousSibling be node’s previous sibling.
      * 8. Let oldNextSibling be node’s next sibling.
      */
-    const oldPreviousSibling = node.previousSibling as NodeInternal | null
-    const oldNextSibling = node.nextSibling as NodeInternal | null
+    const oldPreviousSibling = node.previousSibling as Node | null
+    const oldNextSibling = node.nextSibling as Node | null
 
     /**
      * 9. Remove node from its parent’s children.
@@ -698,8 +696,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     parent._children.delete(node)
 
     // assign siblings and children for quick lookups
-    const prev = node.previousSibling as NodeInternal | null
-    const next = node.nextSibling as NodeInternal | null
+    const prev = node.previousSibling as Node | null
+    const next = node.nextSibling as Node | null
 
     node._previousSibling = null
     node._nextSibling = null
@@ -715,7 +713,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * slot.
      */
     if (Guard.isSlotable(node) && this.dom.shadowTree.isAssigned(node)) {
-      this.dom.shadowTree.assignSlotables(node._assignedSlot as SlotInternal)
+      this.dom.shadowTree.assignSlotables(node._assignedSlot as Slot)
     }
 
     /**

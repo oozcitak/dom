@@ -1,9 +1,6 @@
 import { TreeAlgorithm, DOMAlgorithm } from './interfaces'
-import {
-	ElementInternal, NodeInternal, ShadowRootInternal, DocumentFragmentInternal
-} from '../dom/interfacesInternal'
 import { Guard } from '../util'
-import { NodeType } from '../dom/interfaces'
+import { NodeType, Element, Node, ShadowRoot, DocumentFragment } from '../dom/interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 
 /**
@@ -21,10 +18,10 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	*getDescendantNodes(node: NodeInternal, self: boolean = false,
+	*getDescendantNodes(node: Node, self: boolean = false,
 		shadow: boolean = false, filter:
-			((childNode: NodeInternal) => any) = () => true):
-		IterableIterator<NodeInternal> {
+			((childNode: Node) => any) = () => true):
+		IterableIterator<Node> {
 
 		if (self && filter(node))
 			yield node
@@ -32,45 +29,45 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 		// traverse shadow tree
 		if (shadow && Guard.isElementNode(node)) {
 			if (node.shadowRoot) {
-				const shadowRoot = node.shadowRoot as ShadowRootInternal as DocumentFragmentInternal as NodeInternal
-				let child = shadowRoot._firstChild as NodeInternal | null
+				const shadowRoot = node.shadowRoot as ShadowRoot as DocumentFragment as Node
+				let child = shadowRoot._firstChild as Node | null
 				while (child) {
 					yield* this.getDescendantNodes(child, true, shadow, filter)
-					child = child._nextSibling as NodeInternal | null
+					child = child._nextSibling as Node | null
 				}
 			}
 		}
 
 		// traverse child nodes
-		let child = node._firstChild as NodeInternal | null
+		let child = node._firstChild as Node | null
 		while (child) {
 			yield* this.getDescendantNodes(child, true, shadow, filter)
-			child = child._nextSibling as NodeInternal | null
+			child = child._nextSibling as Node | null
 		}
 	}
 
 	/** @inheritdoc */
-	*getDescendantElements(node: NodeInternal, self: boolean = false,
+	*getDescendantElements(node: Node, self: boolean = false,
 		shadow: boolean = false, filter:
-			((childNode: ElementInternal) => any) = (() => true)):
-		IterableIterator<ElementInternal> {
+			((childNode: Element) => any) = (() => true)):
+		IterableIterator<Element> {
 
 		for (const child of this.getDescendantNodes(node, self, shadow,
 			(node) => { return Guard.isElementNode(node) })) {
-			const ele = child as ElementInternal
+			const ele = child as Element
 			if (filter(ele))
 				yield ele
 		}
 	}
 
 	/** @inheritdoc */
-	*getSiblingNodes(node: NodeInternal, self: boolean = false,
-		filter: ((childNode: NodeInternal) => any) = (() => true)):
-		IterableIterator<NodeInternal> {
+	*getSiblingNodes(node: Node, self: boolean = false,
+		filter: ((childNode: Node) => any) = (() => true)):
+		IterableIterator<Node> {
 
 		if (node._parent) {
-			const parent = node._parent as NodeInternal
-			let child = parent._firstChild as NodeInternal | null
+			const parent = node._parent as Node
+			let child = parent._firstChild as Node | null
 			while (child) {
 				if (!filter || !!filter(child)) {
 					if (child === node) {
@@ -79,41 +76,41 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 						yield child
 					}
 				}
-				child = child._nextSibling as NodeInternal | null
+				child = child._nextSibling as Node | null
 			}
 		}
 	}
 
 	/** @inheritdoc */
-	*getAncestorNodes(node: NodeInternal, self: boolean = false,
-		filter: ((ancestorNode: NodeInternal) => any) = (() => true)):
-		IterableIterator<NodeInternal> {
+	*getAncestorNodes(node: Node, self: boolean = false,
+		filter: ((ancestorNode: Node) => any) = (() => true)):
+		IterableIterator<Node> {
 
 		if (self && filter(node))
 			yield node
 
-		let parent = node._parent as NodeInternal | null
+		let parent = node._parent as Node | null
 		while (parent !== null) {
 			if (filter(parent))
 				yield parent
-			parent = parent._parent as NodeInternal | null
+			parent = parent._parent as Node | null
 		}
 	}
 
 	/** @inheritdoc */
-	getCommonAncestor(nodeA: NodeInternal, nodeB: NodeInternal): NodeInternal | null {
+	getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
 		if(nodeA === nodeB){
-			return nodeA._parent as NodeInternal | null
+			return nodeA._parent as Node | null
     }
 
     // lists of parent nodes
-    const parentsA: NodeInternal[] = [...this.getAncestorNodes(nodeA, true)]
-    const parentsB: NodeInternal[] = [...this.getAncestorNodes(nodeB, true)]
+    const parentsA: Node[] = [...this.getAncestorNodes(nodeA, true)]
+    const parentsB: Node[] = [...this.getAncestorNodes(nodeB, true)]
 
 		// walk through parents backwards until they differ
 		let pos1 = parentsA.length
 		let pos2 = parentsB.length
-		let parent: NodeInternal | null = null
+		let parent: Node | null = null
 		for (let i = Math.min(pos1, pos2); i > 0; i--) {
 			const parent1 = parentsA[--pos1]
 			const parent2 = parentsB[--pos2]
@@ -127,18 +124,18 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	getFollowingNode(root: NodeInternal, node: NodeInternal): NodeInternal | null {
+	getFollowingNode(root: Node, node: Node): Node | null {
 		if (node._firstChild) {
-			return node._firstChild as NodeInternal
+			return node._firstChild as Node
 		} else if (node._nextSibling) {
-			return node._nextSibling as NodeInternal
+			return node._nextSibling as Node
 		} else {
 			while (true) {
-				const parent = node._parent as NodeInternal | null
+				const parent = node._parent as Node | null
 				if (parent === null || parent === root) {
 					return null
 				} else if (parent._nextSibling) {
-					return parent._nextSibling as NodeInternal
+					return parent._nextSibling as Node
 				} else {
 					node = parent
 				}
@@ -147,24 +144,24 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	getPrecedingNode(root: NodeInternal, node: NodeInternal): NodeInternal | null {
+	getPrecedingNode(root: Node, node: Node): Node | null {
 		if (node === root) {
 			return null
 		}
 		if (node._previousSibling) {
-			node = node._previousSibling as NodeInternal
+			node = node._previousSibling as Node
 			if (node._lastChild) {
-				return node._lastChild as NodeInternal
+				return node._lastChild as Node
 			} else {
 				return node
 			}
 		} else {
-			return node._parent as NodeInternal | null
+			return node._parent as Node | null
 		}
 	}
 
 	/** @inheritdoc */
-	isConstrained(node: NodeInternal): boolean {
+	isConstrained(node: Node): boolean {
 		switch (node.nodeType) {
 			case NodeType.Document:
 				let hasDocType = false
@@ -212,14 +209,14 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 		for (const childNode of node._children) {
 			// recursively check child nodes
-			if (!this.isConstrained(childNode as NodeInternal))
+			if (!this.isConstrained(childNode as Node))
 				return false
 		}
 		return true
 	}
 
 	/** @inheritdoc */
-	nodeLength(node: NodeInternal): number {
+	nodeLength(node: Node): number {
 		/**
 			* To determine the length of a node node, switch on node:
 			* - DocumentType
@@ -241,7 +238,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isEmpty(node: NodeInternal): boolean {
+	isEmpty(node: Node): boolean {
 		/**
 			* A node is considered empty if its length is zero.
 			*/
@@ -249,7 +246,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	rootNode(node: NodeInternal, shadow = false): NodeInternal {
+	rootNode(node: Node, shadow = false): Node {
 		/**
 			* The root of an object is itself, if its parent is null, or else it is the 
 			* root of its parent. The root of a tree is any object participating in 
@@ -258,19 +255,19 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 		if (shadow) {
 			const root = this.rootNode(node, false)
 			if (Guard.isShadowRoot(root))
-				return this.rootNode(root._host as ElementInternal, true)
+				return this.rootNode(root._host as Element, true)
 			else
 				return root
 		} else {
 			if (!node._parent)
 				return node
 			else
-				return this.rootNode(node._parent as NodeInternal)
+				return this.rootNode(node._parent as Node)
 		}
 	}
 
 	/** @inheritdoc */
-	isDescendantOf(node: NodeInternal, other: NodeInternal,
+	isDescendantOf(node: Node, other: Node,
 		self: boolean = false, shadow: boolean = false): boolean {
 		/**
 			* An object A is called a descendant of an object B, if either A is a 
@@ -287,7 +284,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isAncestorOf(node: NodeInternal, other: NodeInternal,
+	isAncestorOf(node: Node, other: Node,
 		self: boolean = false, shadow: boolean = false): boolean {
 		/**
 			* An object A is called an ancestor of an object B if and only if B is a
@@ -300,7 +297,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isSiblingOf(node: NodeInternal, other: NodeInternal,
+	isSiblingOf(node: Node, other: Node,
 		self: boolean = false): boolean {
 		/**
 			* An object A is called a sibling of an object B, if and only if B and A 
@@ -318,7 +315,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isPreceding(node: NodeInternal, other: NodeInternal): boolean {
+	isPreceding(node: Node, other: Node): boolean {
 		/**
 			* An object A is preceding an object B if A and B are in the same tree and 
 			* A comes before B in tree order.
@@ -335,7 +332,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isFollowing(node: NodeInternal, other: NodeInternal): boolean {
+	isFollowing(node: Node, other: Node): boolean {
 		/**
 			* An object A is following an object B if A and B are in the same tree and 
 			* A comes after B in tree order.
@@ -352,7 +349,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isParentOf(node: NodeInternal, other: NodeInternal): boolean {
+	isParentOf(node: Node, other: Node): boolean {
 		/**
 			* An object that participates in a tree has a parent, which is either
 			* null or an object, and has children, which is an ordered set of objects.
@@ -362,7 +359,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	isChildOf(node: NodeInternal, other: NodeInternal): boolean {
+	isChildOf(node: Node, other: Node): boolean {
 		/**
 			* An object that participates in a tree has a parent, which is either
 			* null or an object, and has children, which is an ordered set of objects.
@@ -372,43 +369,43 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	previousSibling(node: NodeInternal): NodeInternal | null {
+	previousSibling(node: Node): Node | null {
 		/**
 			* The previous sibling of an object is its first preceding sibling or null 
 			* if it has no preceding sibling.
 			*/
-		return node._previousSibling as NodeInternal | null
+		return node._previousSibling as Node | null
 	}
 
 	/** @inheritdoc */
-	nextSibling(node: NodeInternal): NodeInternal | null {
+	nextSibling(node: Node): Node | null {
 		/**
 			* The next sibling of an object is its first following sibling or null 
 			* if it has no following sibling.
 			*/
-		return node._nextSibling as NodeInternal | null
+		return node._nextSibling as Node | null
 	}
 
 	/** @inheritdoc */
-	firstChild(node: NodeInternal): NodeInternal | null {
+	firstChild(node: Node): Node | null {
 		/**
 			* The first child of an object is its first child or null if it has no 
 			* children.
 			*/
-		return node._firstChild as NodeInternal | null
+		return node._firstChild as Node | null
 	}
 
 	/** @inheritdoc */
-	lastChild(node: NodeInternal): NodeInternal | null {
+	lastChild(node: Node): Node | null {
 		/**
 			* The last child of an object is its last child or null if it has no 
 			* children.
 			*/
-		return node._lastChild as NodeInternal | null
+		return node._lastChild as Node | null
 	}
 
 	/** @inheritdoc */
-	treePosition(node: NodeInternal): number {
+	treePosition(node: Node): number {
 		const root = this.rootNode(node)
 
 		let pos = 0
@@ -421,7 +418,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	index(node: NodeInternal): number {
+	index(node: Node): number {
 		/**
 			* The index of an object is its number of preceding siblings, or 0 if it 
 			* has none.
@@ -430,7 +427,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 		while (node._previousSibling !== null) {
 			n++
-			node = node._previousSibling as NodeInternal
+			node = node._previousSibling as Node
 		}
 
 		return n

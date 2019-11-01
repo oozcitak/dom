@@ -1,10 +1,9 @@
-import { Node, FilterResult } from "./interfaces"
-import { NodeFilterInternal } from "./interfacesInternal"
+import { Node, FilterResult, NodeFilter } from "./interfaces"
 
 /**
  * Represents a node filter.
  */
-export class NodeFilterImpl implements NodeFilterInternal {
+export class NodeFilterImpl implements NodeFilter {
 
   static readonly FILTER_ACCEPT: number = 1
   static readonly FILTER_REJECT: number = 2
@@ -41,7 +40,7 @@ export class NodeFilterImpl implements NodeFilterInternal {
   /**
    * Creates a new `NodeFilter`.
    */
-  static _create(): NodeFilterInternal {
+  static _create(): NodeFilter {
     return new NodeFilterImpl()
   }
 }

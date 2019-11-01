@@ -1,7 +1,6 @@
-import { DocumentType, Document, XMLDocument } from "./interfaces"
 import {
-  DOMImplementationInternal, ElementInternal, DocumentInternal
-} from "./interfacesInternal"
+  DocumentType, Document, XMLDocument, DOMImplementation, Element
+} from "./interfaces"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
@@ -10,16 +9,16 @@ import { namespace as infraNamespace } from '@oozcitak/infra'
  * Represents an object providing methods which are not dependent on 
  * any particular document.
  */
-export class DOMImplementationImpl implements DOMImplementationInternal {
+export class DOMImplementationImpl implements DOMImplementation {
 
-  _associatedDocument: DocumentInternal
+  _associatedDocument: Document
 
   private _algo: DOMAlgorithm
 
   /**
    * Initializes a new instance of `DOMImplementation`.
    */
-  private constructor(document: DocumentInternal) {
+  private constructor(document: Document) {
     this._associatedDocument = document
 
     this._algo = globalStore.algorithm as DOMAlgorithm
@@ -54,7 +53,7 @@ export class DOMImplementationImpl implements DOMImplementationInternal {
      * the result of running the internal createElementNS steps, given document, 
      * namespace, qualifiedName, and an empty dictionary.
      */
-    let element: ElementInternal | null = null
+    let element: Element | null = null
     if (qualifiedName) {
       element = this._algo.document.internalCreateElementNS(document,
         namespace, qualifiedName)
@@ -165,7 +164,7 @@ export class DOMImplementationImpl implements DOMImplementationInternal {
    * 
    * @param document - owner document
    */
-  static _create(document: DocumentInternal): DOMImplementationInternal {
+  static _create(document: Document): DOMImplementationImpl {
     return new DOMImplementationImpl(document)
   }
 }

@@ -1,6 +1,6 @@
 import { CustomElementAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { ElementInternal, DocumentInternal } from '../dom/interfacesInternal'
+import { Element, Document } from '../dom/interfaces'
 import { CustomElementDefinition } from '../dom/interfaces'
 
 /**
@@ -62,29 +62,29 @@ export class CustomElementAlgorithmImpl extends SubAlgorithmImpl implements Cust
   }
 
   /** @inheritdoc */
-  enqueueACustomElementUpgradeReaction(element: ElementInternal,
+  enqueueACustomElementUpgradeReaction(element: Element,
     definition: CustomElementDefinition): void {
     // TODO: Implement in HTML DOM
   }
 
   /** @inheritdoc */
-  enqueueACustomElementCallbackReaction(element: ElementInternal,
+  enqueueACustomElementCallbackReaction(element: Element,
     callbackName: string, args: any[]): void {
     // TODO: Implement in HTML DOM
   }
 
   /** @inheritdoc */
-  upgrade(definition: CustomElementDefinition, element: ElementInternal): void {
+  upgrade(definition: CustomElementDefinition, element: Element): void {
     // TODO: Implement in HTML DOM
   }
 
   /** @inheritdoc */
-  tryToUpgrade(element: ElementInternal): void {
+  tryToUpgrade(element: Element): void {
     // TODO: Implement in HTML DOM
   }
   
   /** @inheritdoc */
-  lookUpACustomElementDefinition(document: DocumentInternal, namespace: string,
+  lookUpACustomElementDefinition(document: Document, namespace: string,
     localName: string | null, is: string | null): CustomElementDefinition | null {
     // TODO: Implement in HTML DOM
     return null

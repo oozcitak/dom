@@ -1,8 +1,6 @@
 import { DOMAlgorithm, ElementAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  AttrInternal, ElementInternal, DocumentInternal, NamedNodeMapInternal, NodeInternal
-} from '../dom/interfacesInternal'
+import { Attr, Element, Document, NamedNodeMap, Node } from '../dom/interfaces'
 import { DOMException } from '../dom'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
 import { Guard } from '../util'
@@ -22,7 +20,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  has(attribute: AttrInternal, element: ElementInternal): boolean {
+  has(attribute: Attr, element: Element): boolean {
     /**
      * An element has an attribute A if its attribute list contains A.
      */
@@ -33,7 +31,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  change(attribute: AttrInternal, element: ElementInternal, value: string): void {
+  change(attribute: Attr, element: Element, value: string): void {
     /**
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
@@ -65,7 +63,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  append(attribute: AttrInternal, element: ElementInternal): void {
+  append(attribute: Attr, element: Element): void {
     /**
      * 1. Queue an attribute mutation record for element with attribute’s
      * local name, attribute’s namespace, and null.
@@ -97,12 +95,12 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 5. Set attribute’s element to element.
      */
     infraList.append(
-      (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
+      (element._attributeList as NamedNodeMap)._attributeList, attribute)
     attribute._element = element
   }
 
   /** @inheritdoc */
-  remove(attribute: AttrInternal, element: ElementInternal): void {
+  remove(attribute: Attr, element: Element): void {
     /**
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
@@ -134,13 +132,13 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 5. Set attribute’s element to null.
      */
     infraList.remove(
-      (element._attributeList as NamedNodeMapInternal)._attributeList, attribute)
+      (element._attributeList as NamedNodeMap)._attributeList, attribute)
     attribute._element = null
   }
 
   /** @inheritdoc */
-  replace(oldAttr: AttrInternal, newAttr: AttrInternal,
-    element: ElementInternal): void {
+  replace(oldAttr: Attr, newAttr: Attr,
+    element: Element): void {
     /**
      * 1. Queue an attribute mutation record for element with oldAttr’s 
      * local name, oldAttr’s namespace, and oldAttr’s value.
@@ -173,15 +171,15 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 6. Set newAttr’s element to element.
      */
     infraList.replace(
-      (element._attributeList as NamedNodeMapInternal)._attributeList,
+      (element._attributeList as NamedNodeMap)._attributeList,
       oldAttr, newAttr)
     oldAttr._element = null
     newAttr._element = element
   }
 
   /** @inheritdoc */
-  getAnAttributeByName(qualifiedName: string, element: ElementInternal):
-    AttrInternal | null {
+  getAnAttributeByName(qualifiedName: string, element: Element):
+    Attr | null {
     /**
      * 1. If element is in the HTML namespace and its node document is an HTML
      * document, then set qualifiedName to qualifiedName in ASCII lowercase.
@@ -192,8 +190,8 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       qualifiedName = qualifiedName.toLowerCase()
     }
 
-    for (const attr of (element._attributeList as NamedNodeMapInternal)._attributeList) {
-      const attrInt = attr as AttrInternal
+    for (const attr of (element._attributeList as NamedNodeMap)._attributeList) {
+      const attrInt = attr as Attr
       if (attrInt._qualifiedName === qualifiedName) {
         return attrInt
       }
@@ -203,15 +201,15 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
 
   /** @inheritdoc */
   getAnAttributeByNamespaceAndLocalName(namespace: string, localName: string,
-    element: ElementInternal): AttrInternal | null {
+    element: Element): Attr | null {
     /**
      * 1. If namespace is the empty string, set it to null.
      * 2. Return the attribute in element’s attribute list whose namespace is
      * namespace and local name is localName, if any, and null otherwise.
      */
     const ns: string | null = namespace || null
-    for (const attr of (element._attributeList as NamedNodeMapInternal)._attributeList) {
-      const attrInt = attr as AttrInternal
+    for (const attr of (element._attributeList as NamedNodeMap)._attributeList) {
+      const attrInt = attr as Attr
       if (attrInt._namespace === ns && attrInt._localName === localName) {
         return attrInt
       }
@@ -220,7 +218,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  getAnAttributeValue(element: ElementInternal, localName: string,
+  getAnAttributeValue(element: Element, localName: string,
     namespace: string = ''): string {
     /**
      * 1. Let attr be the result of getting an attribute given namespace, 
@@ -237,7 +235,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  setAnAttribute(attr: AttrInternal, element: ElementInternal): AttrInternal | null {
+  setAnAttribute(attr: Attr, element: Element): Attr | null {
     /**
      * 1. If attr’s element is neither null nor element, throw an 
      * "InUseAttributeError" DOMException.
@@ -265,7 +263,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  setAnAttributeValue(element: ElementInternal, localName: string,
+  setAnAttributeValue(element: Element, localName: string,
     value: string, prefix: string | null = null, namespace: string | null = null): void {
     /**
      * 1. If prefix is not given, set it to null.
@@ -294,8 +292,8 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  removeAnAttributeByName(qualifiedName: string, element: ElementInternal):
-    AttrInternal | null {
+  removeAnAttributeByName(qualifiedName: string, element: Element):
+    Attr | null {
     /**
      * 1. Let attr be the result of getting an attribute given qualifiedName 
      * and element.
@@ -311,7 +309,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
 
   /** @inheritdoc */
   removeAnAttributeByNamespaceAndLocalName(namespace: string, localName: string,
-    element: ElementInternal): AttrInternal | null {
+    element: Element): Attr | null {
     /**
      * 1. Let attr be the result of getting an attribute given namespace, localName, and element.
      * 2. If attr is non-null, remove it from element.
@@ -326,17 +324,17 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  createAnElement(document: DocumentInternal, localName: string,
+  createAnElement(document: Document, localName: string,
     namespace: string | null, prefix: string | null = null,
     is: string | null = null,
-    synchronousCustomElementsFlag: boolean = false): ElementInternal {
+    synchronousCustomElementsFlag: boolean = false): Element {
 
     /**
      * 1. If prefix was not given, let prefix be null.
      * 2. If is was not given, let is be null.
      * 3. Let result be null.
      */
-    let result: ElementInternal | null = null
+    let result: Element | null = null
 
     /**
      * 4. Let definition be the result of looking up a custom element definition
@@ -505,9 +503,9 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
   }
 
   /** @inheritdoc */
-  insertAdjacent(element: ElementInternal,
+  insertAdjacent(element: Element,
     where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
-    node: NodeInternal): NodeInternal | null {
+    node: Node): Node | null {
     /**
      * - "beforebegin"
      * If element’s parent is null, return null.
@@ -527,17 +525,17 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
     switch (where.toLowerCase()) {
       case 'beforebegin':
         if (element._parent === null) return null
-        return this.dom.mutation.preInsert(node, element._parent as NodeInternal,
+        return this.dom.mutation.preInsert(node, element._parent as Node,
           element)
       case 'afterbegin':
         return this.dom.mutation.preInsert(node, element,
-          element.firstChild as NodeInternal | null)
+          element.firstChild as Node | null)
       case 'beforeend':
         return this.dom.mutation.preInsert(node, element, null)
       case 'afterend':
         if (element._parent === null) return null
-        return this.dom.mutation.preInsert(node, element._parent as NodeInternal,
-          element.nextSibling as NodeInternal | null)
+        return this.dom.mutation.preInsert(node, element._parent as Node,
+          element.nextSibling as Node | null)
       default:
         throw DOMException.SyntaxError
     }

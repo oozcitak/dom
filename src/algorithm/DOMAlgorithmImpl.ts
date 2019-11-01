@@ -10,10 +10,7 @@ import {
   NodeIteratorPreRemovingStep, DOMTokenListAlgorithm, EventConstructingStep,
   CustomElementAlgorithm, XMLAlgorithm
 } from './interfaces'
-import {
-  DocumentInternal, ElementInternal, NodeInternal, NodeIteratorInternal, 
-  EventInternal
-} from '../dom/interfacesInternal'
+import { Document, Element, Node, NodeIterator, Event } from '../dom/interfaces'
 import { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
 import { OrderedSetAlgorithmImpl } from './OrderedSetAlgorithmImpl'
 import { NamespaceAlgorithmImpl } from './NamespaceAlgorithmImpl'
@@ -199,37 +196,37 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   get xml(): XMLAlgorithm { return this._xml }
 
   /** @inheritdoc */
-  runRemovingSteps(thisObj: any, removedNode: NodeInternal,
-    oldParent: NodeInternal | null = null): void {
+  runRemovingSteps(thisObj: any, removedNode: Node,
+    oldParent: Node | null = null): void {
     for (const removingStep of this.removingSteps) {
       removingStep.call(thisObj, removedNode, oldParent)
     }
   }
 
   /** @inheritdoc */
-  runCloningSteps(copy: NodeInternal, node: NodeInternal, document:
-    DocumentInternal, cloneChildrenFlag?: boolean): void {
+  runCloningSteps(copy: Node, node: Node, document:
+    Document, cloneChildrenFlag?: boolean): void {
     for (const cloningStep of this.cloningSteps) {
       cloningStep.call(this, copy, node, document, cloneChildrenFlag)
     }
   }
 
   /** @inheritdoc */
-  runAdoptingSteps(node: NodeInternal, oldDocument: DocumentInternal): void {
+  runAdoptingSteps(node: Node, oldDocument: Document): void {
     for (const adoptingStep of this.adoptingSteps) {
       adoptingStep.call(this, node, oldDocument)
     }
   }
 
   /** @inheritdoc */
-  runChildTextContentChangeSteps(parent: NodeInternal): void {
+  runChildTextContentChangeSteps(parent: Node): void {
     for (const textChangeStep of this.childTextContentChangeSteps) {
       textChangeStep.call(this, parent)
     }
   }
 
   /** @inheritdoc */
-  runAttributeChangeSteps(element: ElementInternal, localName: string,
+  runAttributeChangeSteps(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     for (const attributeChangeStep of element._attributeChangeSteps) {
       attributeChangeStep.call(this, element, localName, oldValue, value, namespace)
@@ -237,22 +234,22 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   }
 
   /** @inheritdoc */
-  runInsertionSteps(insertedNode: NodeInternal): void {
+  runInsertionSteps(insertedNode: Node): void {
     for (const insertionStep of this.insertionSteps) {
       insertionStep.call(this, insertedNode)
     }
   }
 
   /** @inheritdoc */
-  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIteratorInternal,
-    toBeRemovedNode: NodeInternal): void {
+  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIterator,
+    toBeRemovedNode: Node): void {
     for (const removingStep of this.nodeIteratorPreRemovingSteps) {
       removingStep.call(this, nodeIterator, toBeRemovedNode)
     }
   }
 
   /** @inheritdoc */
-  runEventConstructingSteps(event: EventInternal): void {
+  runEventConstructingSteps(event: Event): void {
     for (const constructionStep of this.eventConstructingSteps) {
       constructionStep.call(this, event)
     }
@@ -261,14 +258,14 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   /**
    * Defines pre-removing steps for a node iterator.
    */
-  private removeNodeIterator(nodeIterator: NodeIteratorInternal,
-    toBeRemovedNode: NodeInternal): void {
+  private removeNodeIterator(nodeIterator: NodeIterator,
+    toBeRemovedNode: Node): void {
     /**
      * 1. If toBeRemovedNode is not an inclusive ancestor of nodeIterator’s 
      * reference, or toBeRemovedNode is nodeIterator’s root, then return.
      */
     if (toBeRemovedNode === nodeIterator._root ||
-      !this.tree.isAncestorOf(nodeIterator._reference as NodeInternal, toBeRemovedNode, true)) {
+      !this.tree.isAncestorOf(nodeIterator._reference as Node, toBeRemovedNode, true)) {
       return
     }
 
@@ -282,9 +279,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
        * descendant of toBeRemovedNode, and null if there is no such node.
        */
       while (true) {
-        const nextNode = this.tree.getFollowingNode(nodeIterator._root as NodeInternal, toBeRemovedNode)
+        const nextNode = this.tree.getFollowingNode(nodeIterator._root as Node, toBeRemovedNode)
         if (nextNode !== null &&
-          this.tree.isDescendantOf(nodeIterator._root as NodeInternal, nextNode, true) &&
+          this.tree.isDescendantOf(nodeIterator._root as Node, nextNode, true) &&
           !this.tree.isDescendantOf(toBeRemovedNode, nextNode, true)) {
           /**
            * 2.2. If next is non-null, then set nodeIterator’s reference to next 
@@ -313,8 +310,8 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
         nodeIterator._reference = toBeRemovedNode.parentNode
       }
     } else {
-      let childNode: NodeInternal = toBeRemovedNode.previousSibling as NodeInternal
-      for (childNode of this.tree.getDescendantElements(toBeRemovedNode.previousSibling as NodeInternal, true)) {
+      let childNode: Node = toBeRemovedNode.previousSibling as Node
+      for (childNode of this.tree.getDescendantElements(toBeRemovedNode.previousSibling as Node, true)) {
         // loop through to get the last descendant node
       }
       nodeIterator._reference = childNode

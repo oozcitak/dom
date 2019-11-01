@@ -1,17 +1,16 @@
-import { Node, BoundaryPoint } from './interfaces'
-import { AbstractRangeInternal, NodeInternal } from './interfacesInternal'
+import { Node, BoundaryPoint, AbstractRange } from './interfaces'
 
 /**
  * Represents an abstract range with a start and end boundary point.
  */
-export abstract class AbstractRangeImpl implements AbstractRangeInternal {
+export abstract class AbstractRangeImpl implements AbstractRange {
 
   abstract _start: BoundaryPoint
   abstract _end: BoundaryPoint
 
-  get _startNode(): NodeInternal { return this._start[0] as NodeInternal }
+  get _startNode(): Node { return this._start[0] }
   get _startOffset(): number { return this._start[1] }
-  get _endNode(): NodeInternal { return this._end[0] as NodeInternal }
+  get _endNode(): Node { return this._end[0] }
   get _endOffset(): number { return this._end[1] }
 
   get _collapsed(): boolean {

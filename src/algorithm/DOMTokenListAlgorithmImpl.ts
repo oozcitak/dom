@@ -1,6 +1,6 @@
 import { DOMTokenListAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { ElementInternal, DOMTokenListInternal } from '../dom/interfacesInternal'
+import { Element, DOMTokenList } from '../dom/interfaces'
 
 /**
  * Contains DOM token list algorithms.
@@ -17,7 +17,7 @@ export class DOMTokenListAlgorithmImpl extends SubAlgorithmImpl implements DOMTo
   }
 
   /** @inheritdoc */
-  validationSteps(tokenList: DOMTokenListInternal, token: string): boolean {
+  validationSteps(tokenList: DOMTokenList, token: string): boolean {
     /**
      * 1. If the associated attribute’s local name does not define supported 
      * tokens, throw a TypeError.
@@ -32,7 +32,7 @@ export class DOMTokenListAlgorithmImpl extends SubAlgorithmImpl implements DOMTo
   }
 
   /** @inheritdoc */
-  updateSteps(tokenList: DOMTokenListInternal): void {
+  updateSteps(tokenList: DOMTokenList): void {
     /**
      * 1. If the associated element does not have an associated attribute and 
      * token set is empty, then return.
@@ -44,19 +44,19 @@ export class DOMTokenListAlgorithmImpl extends SubAlgorithmImpl implements DOMTo
       tokenList._tokenSet.size === 0) {
       return
     }
-    this.dom.element.setAnAttributeValue(tokenList._element as ElementInternal,
+    this.dom.element.setAnAttributeValue(tokenList._element as Element,
       tokenList._attribute._localName, this.dom.orderedSet.serialize(tokenList._tokenSet))
   }
 
   /** @inheritdoc */
-  serializeSteps(tokenList: DOMTokenListInternal): string {
+  serializeSteps(tokenList: DOMTokenList): string {
     /**
      * A DOMTokenList object’s serialize steps are to return the result of 
      * running get an attribute value given the associated element and the
      * associated attribute’s local name.
      */
     return this.dom.element.getAnAttributeValue(
-      tokenList._element as ElementInternal, tokenList._attribute._localName)
+      tokenList._element as Element, tokenList._attribute._localName)
   }
 
 }

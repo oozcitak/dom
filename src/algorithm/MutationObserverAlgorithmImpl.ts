@@ -1,8 +1,6 @@
 import { MutationObserverAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  MutationRecordInternal, MutationObserverInternal, NodeInternal, SlotInternal
-} from '../dom/interfacesInternal'
+import { MutationRecord, MutationObserver, Node, Slot } from '../dom/interfaces'
 import { globalStore, Guard } from '../util'
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
 
@@ -54,7 +52,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 5. For each mo of notifySet:
      */
     for (const moItem of notifySet) {
-      const mo = moItem as MutationObserverInternal
+      const mo = moItem as MutationObserver
       /**
        * 5.1. Let records be a clone of mo’s record queue.
        * 5.2. Empty mo’s record queue.
@@ -66,7 +64,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
        * observers whose observer is mo from node’s registered observer list.
        */
       for (const nodeItem of mo._nodeList) {
-        const node = nodeItem as NodeInternal
+        const node = nodeItem as Node
         infraList.remove(node._registeredObserverList, (observer) => {
           return Guard.isTransientRegisteredObserver(observer) && observer.observer === mo
         })
@@ -88,16 +86,16 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * bubbles attribute set to true, at slot.
      */
     for (const slot of signalSet) {
-      this.dom.event.fireAnEvent("slotchange", slot as SlotInternal, undefined, { bubbles: true })
+      this.dom.event.fireAnEvent("slotchange", slot as Slot, undefined, { bubbles: true })
     }
   }
 
   /** @inheritdoc */
   queueMutationRecord(type: "attributes" | "characterData" | "childList",
-    target: NodeInternal, name: string | null,
+    target: Node, name: string | null,
     namespace: string | null, oldValue: string | null,
-    addedNodes: NodeInternal[], removedNodes: NodeInternal[],
-    previousSibling: NodeInternal | null, nextSibling: NodeInternal | null): void {
+    addedNodes: Node[], removedNodes: Node[],
+    previousSibling: Node | null, nextSibling: Node | null): void {
 
     /**
      * 1. Let interestedObservers be an empty map.
@@ -105,7 +103,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
      * 3. For each node in nodes, and then for each registered of node’s 
      * registered observer list:
      */
-    const interestedObservers = new Map<MutationObserverInternal, string | null>()
+    const interestedObservers = new Map<MutationObserver, string | null>()
     for (const node of this.dom.tree.getAncestorNodes(target, true)) {
       for (const registered of node._registeredObserverList) {
         /**
@@ -138,7 +136,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
          * characterDataOldValue is true, then set interestedObservers[mo] 
          * to oldValue.
          */
-        const mo = registered.observer as MutationObserverInternal
+        const mo = registered.observer as MutationObserver
         if (!interestedObservers.has(mo)) {
           interestedObservers.set(mo, null)
         }
@@ -167,7 +165,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
         this.dom.create.nodeListStatic(target, removedNodes),
         previousSibling, nextSibling, name, namespace, mappedOldValue)
 
-      const queue: MutationRecordInternal[] = observer._recordQueue
+      const queue: MutationRecord[] = observer._recordQueue
       queue.push(record)
     }
 
@@ -178,9 +176,9 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
   }
 
   /** @inheritdoc */
-  queueTreeMutationRecord(target: NodeInternal,
-    addedNodes: NodeInternal[], removedNodes: NodeInternal[],
-    previousSibling: NodeInternal | null, nextSibling: NodeInternal | null): void {
+  queueTreeMutationRecord(target: Node,
+    addedNodes: Node[], removedNodes: Node[],
+    previousSibling: Node | null, nextSibling: Node | null): void {
     /**
      * To queue a tree mutation record for target with addedNodes, removedNodes, 
      * previousSibling, and nextSibling, queue a mutation record of "childList" 
@@ -192,7 +190,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
   }
 
   /** @inheritdoc */
-  queueAttributeMutationRecord(target: NodeInternal, name: string | null,
+  queueAttributeMutationRecord(target: Node, name: string | null,
     namespace: string | null, oldValue: string | null): void {
     /**
      * To queue an attribute mutation record for target with name, namespace, 

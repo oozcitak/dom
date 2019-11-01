@@ -1,14 +1,13 @@
-import { Node } from "./interfaces"
+import { Node, NodeIterator, Collection } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
-import { NodeIteratorInternal, CollectionInternal } from "./interfacesInternal"
 
 /**
  * Represents an object which can be used to iterate through the nodes
  * of a subtree.
  */
-export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInternal {
+export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
 
-  _iteratorCollection: CollectionInternal
+  _iteratorCollection: Collection
   _reference: Node
   _pointerBeforeReference: boolean
 
@@ -18,7 +17,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
   private constructor(root: Node, reference: Node, pointerBeforeReference: boolean) {
     super(root)
 
-    this._iteratorCollection = undefined as unknown as CollectionInternal
+    this._iteratorCollection = undefined as unknown as Collection
     this._reference = reference
     this._pointerBeforeReference = pointerBeforeReference
 
@@ -69,7 +68,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIteratorInter
    * reference node 
    */
   static _create(root: Node, reference: Node, pointerBeforeReference: boolean):
-    NodeIteratorInternal {
+    NodeIteratorImpl {
     return new NodeIteratorImpl(root, reference, pointerBeforeReference)
   }
 }

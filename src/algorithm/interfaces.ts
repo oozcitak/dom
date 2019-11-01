@@ -1,19 +1,13 @@
 import {
-  NodeInternal, DocumentInternal, ElementInternal, HTMLCollectionInternal,
-  AttrInternal, DOMImplementationInternal, DocumentTypeInternal,
-  DocumentFragmentInternal, TextInternal, CDATASectionInternal,
-  CommentInternal, ProcessingInstructionInternal, NodeListInternal,
-  NamedNodeMapInternal, RangeInternal, NodeIteratorInternal,
-  TreeWalkerInternal, NodeFilterInternal, EventInternal, EventTargetInternal,
-  AbortSignalInternal, SlotableInternal, SlotInternal, MutationRecordInternal,
-  CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, 
-  ShadowRootInternal, AbstractRangeInternal, AbortControllerInternal,
-  WindowInternal
-} from "../dom/interfacesInternal"
-import {
-  AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
-  PotentialEventTarget, EventPathItem, BoundaryPoint, BoundaryPosition, 
-  FilterResult, CustomElementDefinition, EventHandler
+  Node, Document, Element, HTMLCollection, Attr, DOMImplementation, 
+  DocumentType, DocumentFragment, Text, CDATASection, Comment, 
+  ProcessingInstruction, NodeList, NamedNodeMap, Range, NodeIterator,
+  TreeWalker, NodeFilter, Event, EventTarget, AbortSignal, Slotable, Slot,
+  MutationRecord, CharacterData, XMLDocument, DOMTokenList, ShadowRoot,
+  AbstractRange, AbortController, Window, AddEventListenerOptions,
+  EventListenerOptions, EventListenerEntry, PotentialEventTarget, EventPathItem,
+  BoundaryPoint, BoundaryPosition, FilterResult, CustomElementDefinition,
+  EventHandler
 } from "../dom/interfaces"
 import { EventImpl } from "../dom/EventImpl"
 import { DOMObjectCache } from "../util/interfaces"
@@ -161,8 +155,8 @@ export interface DOMAlgorithm {
    * @param removedNode - removed node
    * @param oldParent - old parent node
    */
-  runRemovingSteps(removedNode: NodeInternal,
-    oldParent?: NodeInternal | null): void
+  runRemovingSteps(removedNode: Node,
+    oldParent?: Node | null): void
 
   /**
    * Runs cloning steps for node.
@@ -172,8 +166,8 @@ export interface DOMAlgorithm {
    * @param document - document to own the cloned node
    * @param cloneChildrenFlag - whether child nodes are cloned
    */
-  runCloningSteps(copy: NodeInternal, node: NodeInternal,
-    document: DocumentInternal, cloneChildrenFlag?: boolean): void
+  runCloningSteps(copy: Node, node: Node,
+    document: Document, cloneChildrenFlag?: boolean): void
 
   /**
    * Runs adopting steps for node.
@@ -181,14 +175,14 @@ export interface DOMAlgorithm {
    * @param node - node
    * @param oldDocument - old document
    */
-  runAdoptingSteps(node: NodeInternal, oldDocument: DocumentInternal): void
+  runAdoptingSteps(node: Node, oldDocument: Document): void
 
   /**
    * Runs child text content change steps for a parent node.
    * 
    * @param parent - parent node with text node child nodes
    */
-  runChildTextContentChangeSteps(parent: NodeInternal): void
+  runChildTextContentChangeSteps(parent: Node): void
 
   /**
    * Runs attribute change steps for an element node.
@@ -199,7 +193,7 @@ export interface DOMAlgorithm {
    * @param value - attribute's new value
    * @param namespace - attribute's namespace
    */
-  runAttributeChangeSteps(element: ElementInternal,
+  runAttributeChangeSteps(element: Element,
     localName: string, oldValue: string | null, value: string | null,
     namespace: string | null): void
 
@@ -208,14 +202,14 @@ export interface DOMAlgorithm {
    * 
    * @param insertedNode - inserted node
    */
-  runInsertionSteps(insertedNode: NodeInternal): void
+  runInsertionSteps(insertedNode: Node): void
 
   /**
    * Runs event construction steps.
    * 
    * @param event - an event
    */
-  runEventConstructingSteps(event: EventInternal): void
+  runEventConstructingSteps(event: Event): void
 
   /**
    * Runs pre-removing steps for a node iterator and node.
@@ -223,8 +217,8 @@ export interface DOMAlgorithm {
    * @param nodeIterator - a node iterator
    * @param toBeRemoved - node to be removed
    */
-  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIteratorInternal,
-    toBeRemoved: NodeInternal): void
+  runNodeIteratorPreRemovingSteps(nodeIterator: NodeIterator,
+    toBeRemoved: Node): void
 
   /**
    * Determines if there are any supported tokens defined for the given 
@@ -268,7 +262,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param shadow - if `true`, traversal includes the 
    * node's and its descendant's shadow trees as well.
    */
-  isAncestorOf(node: NodeInternal, other: NodeInternal, self?: boolean,
+  isAncestorOf(node: Node, other: Node, self?: boolean,
     shadow?: boolean): boolean
 
   /**
@@ -282,7 +276,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param shadow - if `true`, traversal includes the 
    * node's and its descendant's shadow trees as well.
    */
-  isDescendantOf(node: NodeInternal, other: NodeInternal, self?: boolean,
+  isDescendantOf(node: Node, other: Node, self?: boolean,
     shadow?: boolean): boolean
 
   /**
@@ -294,8 +288,8 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param shadow - whether to visit shadow tree nodes
    * @param filter - a function to filter nodes
    */
-  getDescendantNodes(node: NodeInternal, self?: boolean, shadow?: boolean,
-    filter?: (childNode: NodeInternal) => any): IterableIterator<NodeInternal>
+  getDescendantNodes(node: Node, self?: boolean, shadow?: boolean,
+    filter?: (childNode: Node) => any): IterableIterator<Node>
 
   /**
    * Traverses through all descendant element nodes of the tree rooted at
@@ -306,8 +300,8 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param shadow - whether to visit shadow tree nodes
    * @param filter - a function to filter nodes
    */
-  getDescendantElements(node: NodeInternal, self?: boolean, shadow?: boolean,
-    filter?: (childNode: ElementInternal) => any): IterableIterator<ElementInternal>
+  getDescendantElements(node: Node, self?: boolean, shadow?: boolean,
+    filter?: (childNode: Element) => any): IterableIterator<Element>
 
   /**
    * Traverses through all sibling nodes of `node`.
@@ -316,8 +310,8 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param self - whether to include `node` in traversal
    * @param filter - a function to filter nodes
    */
-  getSiblingNodes(node: NodeInternal, self?: boolean,
-    filter?: (childNode: NodeInternal) => any): IterableIterator<NodeInternal>
+  getSiblingNodes(node: Node, self?: boolean,
+    filter?: (childNode: Node) => any): IterableIterator<Node>
 
   /**
    * Traverses through all ancestor nodes `node` in reverse tree order.
@@ -326,8 +320,8 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param self - whether to include `node` in traversal
    * @param filter - a function to filter nodes
    */
-  getAncestorNodes(node: NodeInternal, self?: boolean,
-    filter?: (ancestorNode: NodeInternal) => any): IterableIterator<NodeInternal>
+  getAncestorNodes(node: Node, self?: boolean,
+    filter?: (ancestorNode: Node) => any): IterableIterator<Node>
 
   /**
    * Returns the common ancestor of the given nodes.
@@ -335,7 +329,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param nodeA - a node
    * @param nodeB - a node
    */
-  getCommonAncestor(nodeA: NodeInternal, nodeB: NodeInternal): NodeInternal | null
+  getCommonAncestor(nodeA: Node, nodeB: Node): Node | null
 
   /**
    * Returns the node following `node` in depth-first preorder.
@@ -343,7 +337,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param root - root of the subtree
    * @param node - a node
    */
-  getFollowingNode(root: NodeInternal, node: NodeInternal): NodeInternal | null
+  getFollowingNode(root: Node, node: Node): Node | null
 
   /**
    * Returns the node preceding `node` in depth-first preorder.
@@ -351,7 +345,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param root - root of the subtree
    * @param node - a node
    */
-  getPrecedingNode(root: NodeInternal, node: NodeInternal): NodeInternal | null
+  getPrecedingNode(root: Node, node: Node): Node | null
 
   /**
    * Determines if the node tree is constrained. A node tree is 
@@ -374,21 +368,21 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node - the root of the tree
    */
-  isConstrained(node: NodeInternal): boolean
+  isConstrained(node: Node): boolean
 
   /**
    * Returns the length of a node.
    * 
    * @param node - a node to check
    */
-  nodeLength(node: NodeInternal): number
+  nodeLength(node: Node): number
 
   /**
    * Determines if a node is empty.
    * 
    * @param node - a node to check
    */
-  isEmpty(node: NodeInternal): boolean
+  isEmpty(node: Node): boolean
 
   /**
    * Returns the root node of a tree. The root of an object is itself,
@@ -400,7 +394,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param shadow - `true` to return shadow-including root, otherwise 
    * `false`
    */
-  rootNode(node: NodeInternal, shadow?: boolean): NodeInternal
+  rootNode(node: Node, shadow?: boolean): Node
 
   /**
    * Determines whether `other` is a sibling of `node`. An object A is
@@ -411,7 +405,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param other - the node to check
    * @param self - if `true`, traversal includes `node` itself
    */
-  isSiblingOf(node: NodeInternal, other: NodeInternal,
+  isSiblingOf(node: Node, other: Node,
     self?: boolean): boolean
 
   /**
@@ -422,7 +416,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param other - the node to check
    */
-  isPreceding(node: NodeInternal, other: NodeInternal): boolean
+  isPreceding(node: Node, other: Node): boolean
 
   /**
    * Determines whether `other` is following `node`. An object A is 
@@ -432,7 +426,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param other - the node to check
    */
-  isFollowing(node: NodeInternal, other: NodeInternal): boolean
+  isFollowing(node: Node, other: Node): boolean
 
   /**
    * Determines whether `other` is the parent node of `node`.
@@ -440,7 +434,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param other - the node to check
    */
-  isParentOf(node: NodeInternal, other: NodeInternal): boolean
+  isParentOf(node: Node, other: Node): boolean
 
   /**
    * Determines whether `other` is a child node of `node`.
@@ -448,7 +442,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param other - the node to check
    */
-  isChildOf(node: NodeInternal, other: NodeInternal): boolean
+  isChildOf(node: Node, other: Node): boolean
 
   /**
    * Returns the first child node of `node` or null if it has no
@@ -456,7 +450,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node 
    */
-  firstChild(node: NodeInternal): NodeInternal | null
+  firstChild(node: Node): Node | null
 
   /**
    * Returns the last child node of `node` or null if it has no
@@ -464,7 +458,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node 
    */
-  lastChild(node: NodeInternal): NodeInternal | null
+  lastChild(node: Node): Node | null
 
   /**
    * Returns the previous sibling node of `node` or null if it has no
@@ -472,7 +466,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node 
    */
-  previousSibling(node: NodeInternal): NodeInternal | null
+  previousSibling(node: Node): Node | null
 
   /**
    * Returns the next sibling node of `node` or null if it has no
@@ -480,7 +474,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node 
    */
-  nextSibling(node: NodeInternal): NodeInternal | null
+  nextSibling(node: Node): Node | null
 
   /**
    * Returns the zero-based index of `node` when counted preorder in
@@ -489,7 +483,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * 
    * @param node - the node to get the index of
    */
-  treePosition(node: NodeInternal): number
+  treePosition(node: Node): number
 
   /**
    * Determines the index of `node`. The index of an object is its number of 
@@ -498,7 +492,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param other - the node to check
    */
-  index(node: NodeInternal): number
+  index(node: Node): number
 
   /**
    * Retargets an object against another object.
@@ -595,8 +589,8 @@ export interface SelectorsAlgorithm extends SubAlgorithm {
    * @param selectors - selectors
    * @param node - the node to match against
    */
-  scopeMatchASelectorsString(selectors: string, node: NodeInternal):
-    ElementInternal[]
+  scopeMatchASelectorsString(selectors: string, node: Node):
+    Element[]
 
 }
 
@@ -610,7 +604,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * 
    * @param event - an event
    */
-  setTheCanceledFlag(event: EventInternal): void
+  setTheCanceledFlag(event: Event): void
 
   /**
    * Initializes the value of an event.
@@ -620,7 +614,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param bubbles - whether the event propagates in reverse
    * @param cancelable - whether the event can be cancelled
    */
-  initialize(event: EventInternal, type: string, bubbles: boolean,
+  initialize(event: Event, type: string, bubbles: boolean,
     cancelable: boolean): void
 
   /**
@@ -629,7 +623,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventInterface - event interface
    * @param realm - realm
    */
-  createAnEvent(eventInterface: typeof EventImpl, realm?: any): EventInternal
+  createAnEvent(eventInterface: typeof EventImpl, realm?: any): Event
 
   /**
    * Performs event creation steps.
@@ -641,7 +635,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * 
    */
   innerEventCreationSteps(eventInterface: typeof EventImpl, realm: any,
-    time: Date, dictionary: { [key: string]: any }): EventInternal
+    time: Date, dictionary: { [key: string]: any }): Event
 
   /**
    * Dispatches an event to an event target.
@@ -652,7 +646,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  dispatch(event: EventInternal, target: EventTargetInternal,
+  dispatch(event: Event, target: EventTarget,
     legacyTargetOverrideFlag?: boolean,
     legacyOutputDidListenersThrowFlag?: OutputFlag): boolean
 
@@ -666,8 +660,8 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param touchTargets - a list of touch targets
    * @param slotInClosedTree - if the target's parent is a closed shadow root
    */
-  appendToAnEventPath(event: EventInternal,
-    invocationTarget: EventTargetInternal, shadowAdjustedTarget: PotentialEventTarget,
+  appendToAnEventPath(event: Event,
+    invocationTarget: EventTarget, shadowAdjustedTarget: PotentialEventTarget,
     relatedTarget: PotentialEventTarget, touchTargets: PotentialEventTarget[],
     slotInClosedTree: boolean): void
 
@@ -680,7 +674,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  invoke(struct: EventPathItem, event: EventInternal,
+  invoke(struct: EventPathItem, event: Event,
     phase: "capturing" | "bubbling",
     legacyOutputDidListenersThrowFlag?: OutputFlag): void
 
@@ -693,7 +687,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
    * whether the event listener's callback threw an exception
    */
-  innerInvoke(event: EventInternal,
+  innerInvoke(event: Event,
     listeners: EventListenerEntry[], phase: "capturing" | "bubbling",
     struct: EventPathItem, legacyOutputDidListenersThrowFlag?: OutputFlag): boolean
 
@@ -707,7 +701,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * to be initialized
    * @param legacyTargetOverrideFlag - legacy target override flag
    */
-  fireAnEvent(e: string, target: EventTargetInternal, 
+  fireAnEvent(e: string, target: EventTarget, 
     eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
     legacyTargetOverrideFlag?: boolean): boolean
 
@@ -716,7 +710,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * 
    * @param eventInterface - the name of the event interface
    */
-  createLegacyEvent(eventInterface: string): EventInternal
+  createLegacyEvent(eventInterface: string): Event
 
   /**
    * Getter of an event handler IDL attribute.
@@ -724,7 +718,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param name - event name
    */
-  getterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+  getterEventHandlerIDLAttribute(thisObj: EventTarget,
     name: string): EventHandler
 
   /**
@@ -734,7 +728,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param name - event name
    * @param value - event handler
    */
-  setterEventHandlerIDLAttribute(thisObj: EventTargetInternal,
+  setterEventHandlerIDLAttribute(thisObj: EventTarget,
     name: string, value: EventHandler): void
 
   /**
@@ -743,8 +737,8 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param name - event name
    */
-  determineTheTargetOfAnEventHandler(eventTarget: EventTargetInternal,
-    name: string): EventTargetInternal | null
+  determineTheTargetOfAnEventHandler(eventTarget: EventTarget,
+    name: string): EventTarget | null
 
   /**
    * Gets the current value of an event handler.
@@ -752,7 +746,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param name - event name
    */
-  getTheCurrentValueOfAnEventHandler(eventTarget: EventTargetInternal,
+  getTheCurrentValueOfAnEventHandler(eventTarget: EventTarget,
     name: string): EventHandler
 
   /**
@@ -761,7 +755,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param name - event name
    */
-  activateAnEventHandler(eventTarget: EventTargetInternal,
+  activateAnEventHandler(eventTarget: EventTarget,
     name: string): void
 
   /**
@@ -770,7 +764,7 @@ export interface EventAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param name - event name
    */
-  deactivateAnEventHandler(eventTarget: EventTargetInternal,
+  deactivateAnEventHandler(eventTarget: EventTarget,
     name: string): void
 }
 
@@ -800,7 +794,7 @@ export interface EventTargetAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param listener - event listener
    */
-  addEventListener(eventTarget: EventTargetInternal,
+  addEventListener(eventTarget: EventTarget,
     listener: EventListenerEntry): void
 
   /**
@@ -809,7 +803,7 @@ export interface EventTargetAlgorithm extends SubAlgorithm {
    * @param eventTarget - event target
    * @param listener - event listener
    */
-  removeEventListener(eventTarget: EventTargetInternal,
+  removeEventListener(eventTarget: EventTarget,
     listener: EventListenerEntry, index?: number): void
 
   /**
@@ -817,7 +811,7 @@ export interface EventTargetAlgorithm extends SubAlgorithm {
    * 
    * @param eventTarget - event target
    */
-  removeAllEventListeners(eventTarget: EventTargetInternal): void
+  removeAllEventListeners(eventTarget: EventTarget): void
 
 }
 
@@ -832,7 +826,7 @@ export interface AbortAlgorithm extends SubAlgorithm {
    * @param algorithm - an algorithm
    * @param signal - abort signal
    */
-  add(algorithm: ((...args: any[]) => any), signal: AbortSignalInternal): void
+  add(algorithm: ((...args: any[]) => any), signal: AbortSignal): void
 
   /**
    * Removes an algorithm from the given abort signal.
@@ -840,14 +834,14 @@ export interface AbortAlgorithm extends SubAlgorithm {
    * @param algorithm - an algorithm
    * @param signal - abort signal
    */
-  remove(algorithm: ((...args: any[]) => any), signal: AbortSignalInternal): void
+  remove(algorithm: ((...args: any[]) => any), signal: AbortSignal): void
 
   /**
    * Signals abort on the given abort signal.
    * 
    * @param signal - abort signal
    */
-  signalAbort(signal: AbortSignalInternal): void
+  signalAbort(signal: AbortSignal): void
 
 }
 
@@ -862,14 +856,14 @@ export interface ShadowTreeAlgorithm extends SubAlgorithm {
    * 
    * @param element - an element node of the shadow tree
    */
-  isConnected(element: ElementInternal): boolean
+  isConnected(element: Element): boolean
 
   /**
    * Determines whether a slotable is assigned.
    * 
    * @param slotable - a slotable
    */
-  isAssigned(slotable: SlotableInternal): boolean
+  isAssigned(slotable: Slotable): boolean
 
   /**
    * Finds a slot for the given slotable.
@@ -877,49 +871,49 @@ export interface ShadowTreeAlgorithm extends SubAlgorithm {
    * @param slotable - a slotable
    * @param openFlag - `true` to search open shadow tree's only
    */
-  findASlot(slotable: SlotableInternal, openFlag?: boolean): SlotInternal | null
+  findASlot(slotable: Slotable, openFlag?: boolean): Slot | null
 
   /**
    * Finds slotables for the given slot.
    * 
    * @param slot - a slot
    */
-  findSlotables(slot: SlotInternal): SlotableInternal[]
+  findSlotables(slot: Slot): Slotable[]
 
   /**
    * Finds slotables for the given slot.
    * 
    * @param slot - a slot
    */
-  findFlattenedSlotables(slot: SlotInternal): SlotableInternal[]
+  findFlattenedSlotables(slot: Slot): Slotable[]
 
   /**
    * Assigns slotables to the given slot.
    * 
    * @param slot - a slot
    */
-  assignSlotables(slot: SlotInternal): void
+  assignSlotables(slot: Slot): void
 
   /**
    * Assigns slotables to all nodes of a tree.
    * 
    * @param root - root node
    */
-  assignSlotablesForATree(root: NodeInternal): void
+  assignSlotablesForATree(root: Node): void
 
   /**
    * Assigns a slot to a slotables.
    * 
    * @param slotable - a slotable
    */
-  assignASlot(slotable: SlotableInternal): void
+  assignASlot(slotable: Slotable): void
 
   /**
    * Signals a slot change to the given slot.
    * 
    * @param slot - a slot
    */
-  signalASlotChange(slot: SlotInternal): void
+  signalASlotChange(slot: Slot): void
 }
 
 /**
@@ -935,8 +929,8 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param parent - parent node to receive node
    * @param child - child node to insert node before
    */
-  ensurePreInsertionValidity(node: NodeInternal, parent: NodeInternal,
-    child: NodeInternal | null): void
+  ensurePreInsertionValidity(node: Node, parent: Node,
+    child: Node | null): void
 
   /**
    * Ensures pre-insertion validity of a node into a parent before a
@@ -946,8 +940,8 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param parent - parent node to receive node
    * @param child - child node to insert node before
    */
-  preInsert(node: NodeInternal, parent: NodeInternal,
-    child: NodeInternal | null): NodeInternal
+  preInsert(node: Node, parent: Node,
+    child: Node | null): Node
 
   /**
    * Inserts a node into a parent node before the given child node.
@@ -957,8 +951,8 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param child - child node to insert node before
    * @param suppressObservers - whether to notify observers
    */
-  insert(node: NodeInternal, parent: NodeInternal,
-    child: NodeInternal | null, suppressObservers?: boolean): void
+  insert(node: Node, parent: Node,
+    child: Node | null, suppressObservers?: boolean): void
 
   /**
    * Appends a node to the children of a parent node.
@@ -966,7 +960,7 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param parent - the parent to receive node
    */
-  append(node: NodeInternal, parent: NodeInternal): NodeInternal
+  append(node: Node, parent: Node): Node
 
   /**
    * Replaces a node with another node.
@@ -975,8 +969,8 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param node - node to insert
    * @param parent - parent node to receive node
    */
-  replace(child: NodeInternal, node: NodeInternal,
-    parent: NodeInternal): NodeInternal
+  replace(child: Node, node: Node,
+    parent: Node): Node
 
   /**
    * Replaces all nodes of a parent with the given node.
@@ -984,7 +978,7 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param node - node to insert
    * @param parent - parent node to receive node
    */
-  replaceAll(node: NodeInternal | null, parent: NodeInternal): void
+  replaceAll(node: Node | null, parent: Node): void
 
   /**
    * Ensures pre-removal validity of a child node from a parent, then
@@ -993,7 +987,7 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param child - child node to remove
    * @param parent - parent node
    */
-  preRemove(child: NodeInternal, parent: NodeInternal): NodeInternal
+  preRemove(child: Node, parent: Node): Node
 
   /**
    * Removes a child node from its parent.
@@ -1002,7 +996,7 @@ export interface MutationAlgorithm extends SubAlgorithm {
    * @param parent - parent node
    * @param suppressObservers - whether to notify observers
    */
-  remove(node: NodeInternal, parent: NodeInternal, suppressObservers?: boolean): void
+  remove(node: Node, parent: Node, suppressObservers?: boolean): void
 
 }
 
@@ -1018,8 +1012,8 @@ export interface ParentNodeAlgorithm extends SubAlgorithm {
    * @param nodes - the array of nodes or strings,
    * @param document - owner document
    */
-  convertNodesIntoANode(nodes: (NodeInternal | string)[],
-    document: DocumentInternal): NodeInternal
+  convertNodesIntoANode(nodes: (Node | string)[],
+    document: Document): Node
 
 }
 
@@ -1052,10 +1046,10 @@ export interface MutationObserverAlgorithm extends SubAlgorithm {
    * @param previousSibling - previous sibling of target before mutation
    * @param nextSibling - next sibling of target before mutation
    */
-  queueMutationRecord(type: string, target: NodeInternal, name: string | null,
+  queueMutationRecord(type: string, target: Node, name: string | null,
     namespace: string | null, oldValue: string | null,
-    addedNodes: NodeInternal[], removedNodes: NodeInternal[],
-    previousSibling: NodeInternal | null, nextSibling: NodeInternal | null): void
+    addedNodes: Node[], removedNodes: Node[],
+    previousSibling: Node | null, nextSibling: Node | null): void
 
   /**
    * Queues a tree mutation record for target.
@@ -1066,9 +1060,9 @@ export interface MutationObserverAlgorithm extends SubAlgorithm {
    * @param previousSibling - previous sibling of target before mutation
    * @param nextSibling - next sibling of target before mutation
    */
-  queueTreeMutationRecord(target: NodeInternal,
-    addedNodes: NodeInternal[], removedNodes: NodeInternal[],
-    previousSibling: NodeInternal | null, nextSibling: NodeInternal | null): void
+  queueTreeMutationRecord(target: Node,
+    addedNodes: Node[], removedNodes: Node[],
+    previousSibling: Node | null, nextSibling: Node | null): void
 
   /**
    * Queues an attribute mutation record for target.
@@ -1078,7 +1072,7 @@ export interface MutationObserverAlgorithm extends SubAlgorithm {
    * @param namespace - namespace before mutation
    * @param oldValue - attribute value before mutation
    */
-  queueAttributeMutationRecord(target: NodeInternal, name: string | null,
+  queueAttributeMutationRecord(target: Node, name: string | null,
     namespace: string | null, oldValue: string | null): void
 
 }
@@ -1095,7 +1089,7 @@ export interface AttrAlgorithm extends SubAlgorithm {
    * @param attribute - an attribute node
    * @param value - attribute value
    */
-  setAnExistingAttributeValue(attribute: AttrInternal, value: string): void
+  setAnExistingAttributeValue(attribute: Attr, value: string): void
 
 }
 
@@ -1111,7 +1105,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param attribute - an attribute node
    * @param element - an element node
    */
-  has(attribute: AttrInternal, element: ElementInternal): boolean
+  has(attribute: Attr, element: Element): boolean
 
   /**
    * Changes the value of an attribute node.
@@ -1120,7 +1114,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param element - an element node
    * @param value - attribute value
    */
-  change(attribute: AttrInternal, element: ElementInternal, value: string): void
+  change(attribute: Attr, element: Element, value: string): void
 
   /**
    * Appends an attribute to an element node.
@@ -1128,7 +1122,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param attribute - an attribute
    * @param element - an element to receive the attribute
    */
-  append(attribute: AttrInternal, element: ElementInternal): void
+  append(attribute: Attr, element: Element): void
 
   /**
    * Removes an attribute from an element node.
@@ -1136,7 +1130,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param attribute - an attribute
    * @param element - an element to receive the attribute
    */
-  remove(attribute: AttrInternal, element: ElementInternal): void
+  remove(attribute: Attr, element: Element): void
 
   /**
    * Replaces an attribute with another of an element node.
@@ -1145,8 +1139,8 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param newAttr - new attribute
    * @param element - an element to receive the attribute
    */
-  replace(oldAttr: AttrInternal, newAttr: AttrInternal,
-    element: ElementInternal): void
+  replace(oldAttr: Attr, newAttr: Attr,
+    element: Element): void
 
   /**
    * Retrieves an attribute with the given name from an element node.
@@ -1154,8 +1148,8 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param qualifiedName - an attribute name
    * @param element - an element to receive the attribute
    */
-  getAnAttributeByName(qualifiedName: string, element: ElementInternal):
-    AttrInternal | null
+  getAnAttributeByName(qualifiedName: string, element: Element):
+    Attr | null
 
   /**
    * Retrieves an attribute with the given namespace and local name from an
@@ -1166,7 +1160,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param element - an element to receive the attribute
    */
   getAnAttributeByNamespaceAndLocalName(namespace: string, localName: string,
-    element: ElementInternal): AttrInternal | null
+    element: Element): Attr | null
 
   /**
    * Retrieves an attribute's value with the given name namespace and local
@@ -1176,7 +1170,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param localName - an attribute local name
    * @param namespace - an attribute namespace
    */
-  getAnAttributeValue(element: ElementInternal, localName: string,
+  getAnAttributeValue(element: Element, localName: string,
     namespace?: string): string
 
   /**
@@ -1185,7 +1179,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param attr - an attribute
    * @param element - an element to receive the attribute
    */
-  setAnAttribute(attr: AttrInternal, element: ElementInternal): AttrInternal | null
+  setAnAttribute(attr: Attr, element: Element): Attr | null
 
   /**
    * Sets an attribute's value of an element node.
@@ -1196,7 +1190,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param prefix - an attribute prefix
    * @param namespace - an attribute namespace
    */
-  setAnAttributeValue(element: ElementInternal, localName: string,
+  setAnAttributeValue(element: Element, localName: string,
     value: string, prefix?: string | null, namespace?: string | null): void
 
   /**
@@ -1205,8 +1199,8 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param qualifiedName - an attribute name
    * @param element - an element to receive the attribute
    */
-  removeAnAttributeByName(qualifiedName: string, element: ElementInternal):
-    AttrInternal | null
+  removeAnAttributeByName(qualifiedName: string, element: Element):
+    Attr | null
 
   /**
    * Removes an attribute with the given namespace and local name from an
@@ -1217,7 +1211,7 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param element - an element to receive the attribute
    */
   removeAnAttributeByNamespaceAndLocalName(namespace: string, localName: string,
-    element: ElementInternal): AttrInternal | null
+    element: Element): Attr | null
 
   /**
    * Creates an element node.
@@ -1230,9 +1224,9 @@ export interface ElementAlgorithm extends SubAlgorithm {
    * @param is - the "is" value
    * @param synchronousCustomElementsFlag - synchronous custom elements flag
    */
-  createAnElement(document: DocumentInternal, localName: string,
+  createAnElement(document: Document, localName: string,
     namespace: string | null, prefix?: string | null, is?: string | null,
-    synchronousCustomElementsFlag?: boolean): ElementInternal
+    synchronousCustomElementsFlag?: boolean): Element
 
   /**
    * Inserts a new node adjacent to this element.
@@ -1245,9 +1239,9 @@ export interface ElementAlgorithm extends SubAlgorithm {
    *   - `afterend` after this element itself.
    * @param node - node to insert
    */
-  insertAdjacent(element: ElementInternal,
+  insertAdjacent(element: Element,
     where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
-    node: NodeInternal): NodeInternal | null
+    node: Node): Node | null
 }
 
 /**
@@ -1263,7 +1257,7 @@ export interface CharacterDataAlgorithm extends SubAlgorithm {
    * @param count - count of characters to replace
    * @param data - new data
    */
-  replaceData(node: CharacterDataInternal, offset: number, count: number,
+  replaceData(node: CharacterData, offset: number, count: number,
     data: string): void
 
   /**
@@ -1274,7 +1268,7 @@ export interface CharacterDataAlgorithm extends SubAlgorithm {
    * @param offset - start offset
    * @param count - count of characters to return
    */
-  substringData(node: CharacterDataInternal, offset: number, count: number): string
+  substringData(node: CharacterData, offset: number, count: number): string
 
 }
 
@@ -1289,8 +1283,8 @@ export interface TextAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param self - whether to include node itself
    */
-  contiguousTextNodes(node: TextInternal, self?: boolean):
-    IterableIterator<TextInternal>
+  contiguousTextNodes(node: Text, self?: boolean):
+    IterableIterator<Text>
 
   /**
    * Returns node with its adjacent text node siblings.
@@ -1298,8 +1292,8 @@ export interface TextAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param self - whether to include node itself
    */
-  contiguousExclusiveTextNodes(node: TextInternal, self?: boolean):
-    IterableIterator<TextInternal>
+  contiguousExclusiveTextNodes(node: Text, self?: boolean):
+    IterableIterator<Text>
 
   /**
    * Returns the concatenation of the data of all the Text node descendants of
@@ -1307,7 +1301,7 @@ export interface TextAlgorithm extends SubAlgorithm {
    * 
    * @param node - a node
    */
-  descendantTextContent(node: NodeInternal): string
+  descendantTextContent(node: Node): string
 
   /**
    * Splits data at the given offset and returns the remainder as a text
@@ -1316,7 +1310,7 @@ export interface TextAlgorithm extends SubAlgorithm {
    * @param node - a text node
    * @param offset - the offset at which to split the nodes.
    */
-  split(node: TextInternal, offset: number): TextInternal
+  split(node: Text, offset: number): Text
 }
 
 /**
@@ -1330,7 +1324,7 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param string - node contents
    * @param parent - a node
    */
-  stringReplaceAll(str: string, parent: NodeInternal): void
+  stringReplaceAll(str: string, parent: Node): void
 
   /**
    * Clones a node.
@@ -1339,8 +1333,8 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param document - the document to own the cloned node
    * @param cloneChildrenFlag - whether to clone node's children
    */
-  clone(node: NodeInternal, document?: DocumentInternal | null,
-    cloneChildrenFlag?: boolean): NodeInternal
+  clone(node: Node, document?: Document | null,
+    cloneChildrenFlag?: boolean): Node
 
   /**
    * Determines if two nodes can be considered equal.
@@ -1348,7 +1342,7 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param a - node to compare
    * @param b - node to compare
    */
-  equals(a: NodeInternal, b: NodeInternal): boolean
+  equals(a: Node, b: Node): boolean
 
   /**
    * Searches for a namespace prefix associated with the given namespace 
@@ -1357,7 +1351,7 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param element - an element node to start searching at
    * @param namespace - namespace to search for
    */
-  locateANamespacePrefix(element: ElementInternal,
+  locateANamespacePrefix(element: Element,
     namespace: string | null): string | null
 
   /**
@@ -1367,7 +1361,7 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param node - a node to start searching at
    * @param prefix - namespace prefix to search for
    */
-  locateANamespace(node: NodeInternal, prefix: string | null): string | null
+  locateANamespace(node: Node, prefix: string | null): string | null
 
   /**
    * Returns a collection of elements with the given qualified name which are
@@ -1377,8 +1371,8 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param qualifiedName - qualified name
    * @param root - root node
    */
-  listOfElementsWithQualifiedName(qualifiedName: string, root: NodeInternal):
-    HTMLCollectionInternal
+  listOfElementsWithQualifiedName(qualifiedName: string, root: Node):
+    HTMLCollection
 
   /**
    * Returns a collection of elements with the given namespace which are
@@ -1390,7 +1384,7 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param root - root node
    */
   listOfElementsWithNamespace(namespace: string | null, localName: string,
-    root: NodeInternal): HTMLCollectionInternal
+    root: Node): HTMLCollection
 
   /**
    * Returns a collection of elements with the given class names which are
@@ -1401,8 +1395,8 @@ export interface NodeAlgorithm extends SubAlgorithm {
    * @param localName - local name
    * @param root - root node
    */
-  listOfElementsWithClassNames(classNames: string, root: NodeInternal):
-    HTMLCollectionInternal
+  listOfElementsWithClassNames(classNames: string, root: Node):
+    HTMLCollection
 
 }
 
@@ -1418,7 +1412,7 @@ export interface DocumentAlgorithm extends SubAlgorithm {
    * @param namespace - namespace
    */
   elementInterface(name: string, namespace: string | null):
-    (new (...args: any[]) => ElementInternal)
+    (new (...args: any[]) => Element)
 
   /**
    * Creates a new element node.
@@ -1429,8 +1423,8 @@ export interface DocumentAlgorithm extends SubAlgorithm {
    * @param qualifiedName - qualified name
    * @param options - element options
    */
-  internalCreateElementNS(document: DocumentInternal, namespace: string | null,
-    qualifiedName: string, options?: string | { is: string }): ElementInternal
+  internalCreateElementNS(document: Document, namespace: string | null,
+    qualifiedName: string, options?: string | { is: string }): Element
 
   /**
    * Removes `node` and its subtree from its document and changes
@@ -1440,7 +1434,7 @@ export interface DocumentAlgorithm extends SubAlgorithm {
    * @param node - the node to move
    * @param document - document to receive the node and its subtree
    */
-  adopt(node: NodeInternal, document: DocumentInternal): void
+  adopt(node: Node, document: Document): void
 
 }
 
@@ -1454,32 +1448,32 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * 
    * @param document - associated document
    */
-  domImplementation(document: DocumentInternal): DOMImplementationInternal
+  domImplementation(document: Document): DOMImplementation
 
   /** 
    * Creates a `Window` node.
    */
-  window(): WindowInternal
+  window(): Window
   
   /** 
    * Creates a `Document` node.
    */
-  document(): DocumentInternal
+  document(): Document
 
   /** 
    * Creates an `XMLDocument` node.
    */
-  xmlDocument(): XMLDocumentInternal
+  xmlDocument(): XMLDocument
 
   /** 
    * Creates an `AbortController`.
    */
-  abortController(): AbortControllerInternal
+  abortController(): AbortController
 
   /** 
    * Creates an `AbortSignal`.
    */
-  abortSignal(): AbortSignalInternal
+  abortSignal(): AbortSignal
 
   /** 
    * Creates a `DocumentType` node.
@@ -1489,8 +1483,8 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param publicId - `PUBLIC` identifier
    * @param systemId - `SYSTEM` identifier
    */
-  documentType(document: DocumentInternal, name: string, publicId?: string,
-    systemId?: string): DocumentTypeInternal
+  documentType(document: Document, name: string, publicId?: string,
+    systemId?: string): DocumentType
 
   /**
    * Creates a new `Element` node.
@@ -1500,8 +1494,8 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param namespace - namespace
    * @param prefix - namespace prefix
    */
-  element(document: DocumentInternal, localName: string, namespace: string | null,
-    prefix: string | null): ElementInternal
+  element(document: Document, localName: string, namespace: string | null,
+    prefix: string | null): Element
 
   /**
    * Creates a new `HTMLElement` node.
@@ -1511,8 +1505,8 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param namespace - namespace
    * @param prefix - namespace prefix
    */
-  htmlElement(document: DocumentInternal, localName: string, namespace: string | null,
-    prefix: string | null): ElementInternal
+  htmlElement(document: Document, localName: string, namespace: string | null,
+    prefix: string | null): Element
 
   /**
    * Creates a new `HTMLUnknownElement` node.
@@ -1522,15 +1516,15 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param namespace - namespace
    * @param prefix - namespace prefix
    */
-  htmlUnknownElement(document: DocumentInternal, localName: string, namespace: string | null,
-    prefix: string | null): ElementInternal
+  htmlUnknownElement(document: Document, localName: string, namespace: string | null,
+    prefix: string | null): Element
 
   /**
    * Creates a new `DocumentFragment` node.
    * 
    * @param document - owner document
    */
-  documentFragment(document: DocumentInternal): DocumentFragmentInternal
+  documentFragment(document: Document): DocumentFragment
 
   /**
    * Creates a new `ShadowRoot` node.
@@ -1538,7 +1532,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param document - owner document
    * @param host - shadow root's host element node
    */
-  shadowRoot(document: DocumentInternal, host: ElementInternal): ShadowRootInternal
+  shadowRoot(document: Document, host: Element): ShadowRoot
 
   /**
    * Creates a new `Attr` node.
@@ -1546,7 +1540,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param document - owner document
    * @param localName - local name
    */
-  attr(document: DocumentInternal, localName: string): AttrInternal
+  attr(document: Document, localName: string): Attr
 
   /**
    * Creates a new `Text` node.
@@ -1554,7 +1548,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param document - owner document
    * @param data - node contents
    */
-  text(document: DocumentInternal, data?: string): TextInternal
+  text(document: Document, data?: string): Text
 
   /**
    * Creates a new `CDATASection` node.
@@ -1562,7 +1556,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param document - owner document
    * @param data - node contents
    */
-  cdataSection(document: DocumentInternal, data?: string): CDATASectionInternal
+  cdataSection(document: Document, data?: string): CDATASection
 
   /**
    * Creates a new `Comment` node.
@@ -1570,7 +1564,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param document - owner document
    * @param data - node contents
    */
-  comment(document: DocumentInternal, data?: string): CommentInternal
+  comment(document: Document, data?: string): Comment
 
   /**
    * Creates a new `ProcessingInstruction` node.
@@ -1579,8 +1573,8 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param target - instruction target
    * @param data - node contents
    */
-  processingInstruction(document: DocumentInternal, target: string, data?: string):
-    ProcessingInstructionInternal
+  processingInstruction(document: Document, target: string, data?: string):
+    ProcessingInstruction
 
   /**
    * Creates a new `HTMLCollection`.
@@ -1588,22 +1582,22 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param root - root node
    * @param filter - node filter
    */
-  htmlCollection(root: NodeInternal,
-    filter?: ((element: ElementInternal) => any)): HTMLCollectionInternal
+  htmlCollection(root: Node,
+    filter?: ((element: Element) => any)): HTMLCollection
 
   /**
    * Creates a new live `NodeList`.
    * 
    * @param root - root node
    */
-  nodeList(root: NodeInternal): NodeListInternal
+  nodeList(root: Node): NodeList
 
   /**
    * Creates a new `NamedNodeMap`.
    * 
    * @param element - parent element
    */
-  namedNodeMap(element: ElementInternal): NamedNodeMapInternal
+  namedNodeMap(element: Element): NamedNodeMap
 
   /**
    * Creates a new static `NodeList`.
@@ -1611,7 +1605,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param root - root node
    * @param items - a list of items to initialize the list
    */
-  nodeListStatic(root: NodeInternal, items: NodeInternal[]): NodeListInternal
+  nodeListStatic(root: Node, items: Node[]): NodeList
 
   /**
    * Creates a new `Range`.
@@ -1619,7 +1613,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param start - start point
    * @param end - end point
    */
-  range(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal
+  range(start?: BoundaryPoint, end?: BoundaryPoint): Range
 
   /**
    * Creates a new `NodeIterator`.
@@ -1629,8 +1623,8 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param pointerBeforeReference - whether the iterator is before or after the
    * reference node 
    */
-  nodeIterator(root: NodeInternal, reference: NodeInternal,
-    pointerBeforeReference: boolean): NodeIteratorInternal
+  nodeIterator(root: Node, reference: Node,
+    pointerBeforeReference: boolean): NodeIterator
 
 
   /**
@@ -1639,12 +1633,12 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param root - iterator's root node
    * @param current - current node
    */
-  treeWalker(root: NodeInternal, current: NodeInternal): TreeWalkerInternal
+  treeWalker(root: Node, current: Node): TreeWalker
 
   /**
    * Creates a new `NodeFilter`.
    */
-  nodeFilter(): NodeFilterInternal
+  nodeFilter(): NodeFilter
 
   /**
    * Creates a new `MutationRecord`.
@@ -1666,10 +1660,10 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * for a mutation to the tree of nodes.
    */
   mutationRecord(type: "attributes" | "characterData" | "childList",
-    target: NodeInternal, addedNodes: NodeListInternal,
-    removedNodes: NodeListInternal, previousSibling: NodeInternal | null,
-    nextSibling: NodeInternal | null, attributeName: string | null,
-    attributeNamespace: string | null, oldValue: string | null): MutationRecordInternal
+    target: Node, addedNodes: NodeList,
+    removedNodes: NodeList, previousSibling: Node | null,
+    nextSibling: Node | null, attributeName: string | null,
+    attributeNamespace: string | null, oldValue: string | null): MutationRecord
 
   /**
    * Creates a new `DOMTokenList`.
@@ -1677,7 +1671,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param element - associated element
    * @param attribute - associated attribute
    */
-  domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal
+  domTokenList(element: Element, attribute: Attr): DOMTokenList
 
   /** 
    * Creates an `URLRecord`.
@@ -1706,14 +1700,14 @@ export interface BoundaryPointAlgorithm extends SubAlgorithm {
    * 
    * @param node - a node
    */
-  nodeStart(node: NodeInternal): BoundaryPoint
+  nodeStart(node: Node): BoundaryPoint
 
   /**
    * Returns the boundary point for the end of a node.
    * 
    * @param node - a node
    */
-  nodeEnd(node: NodeInternal): BoundaryPoint
+  nodeEnd(node: Node): BoundaryPoint
 
 }
 
@@ -1728,14 +1722,14 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * 
    * @param range - a range
    */
-  collapsed(range: AbstractRangeInternal): boolean
+  collapsed(range: AbstractRange): boolean
 
   /**
    * Gets the root node of a range.
    * 
    * @param range - a range
    */
-  root(range: AbstractRangeInternal): NodeInternal
+  root(range: AbstractRange): Node
 
   /**
    * Determines if a node is fully contained in a range.
@@ -1743,7 +1737,7 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param range - a range
    */
-  isContained(node: NodeInternal, range: AbstractRangeInternal): boolean
+  isContained(node: Node, range: AbstractRange): boolean
 
   /**
    * Determines if a node is partially contained in a range.
@@ -1751,7 +1745,7 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param range - a range
    */
-  isPartiallyContained(node: NodeInternal, range: AbstractRangeInternal): boolean
+  isPartiallyContained(node: Node, range: AbstractRange): boolean
 
   /**
    * Sets the start boundary point of a range.
@@ -1760,7 +1754,7 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param offset - an offset into node
    */
-  setTheStart(range: AbstractRangeInternal, node: NodeInternal, offset: number): void
+  setTheStart(range: AbstractRange, node: Node, offset: number): void
 
   /**
    * Sets the end boundary point of a range.
@@ -1769,7 +1763,7 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param offset - an offset into node
    */
-  setTheEnd(range: AbstractRangeInternal, node: NodeInternal, offset: number): void
+  setTheEnd(range: AbstractRange, node: Node, offset: number): void
 
   /** 
    * Selects a node.
@@ -1777,21 +1771,21 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param range - a range
    * @param node - a node
    */
-  select(node: NodeInternal, range: AbstractRangeInternal): void
+  select(node: Node, range: AbstractRange): void
 
   /**
  * EXtracts the contents of range as a document fragment.
  * 
  * @param range - a range
  */
-  extract(range: AbstractRangeInternal): DocumentFragmentInternal
+  extract(range: AbstractRange): DocumentFragment
 
   /**
    * Clones the contents of range as a document fragment.
    * 
    * @param range - a range
    */
-  cloneTheContents(range: AbstractRangeInternal): DocumentFragmentInternal
+  cloneTheContents(range: AbstractRange): DocumentFragment
 
   /**
    * Inserts a node into a range at the start boundary point.
@@ -1799,26 +1793,26 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * @param node - node to insert
    * @param range - a range
    */
-  insert(node: NodeInternal, range: AbstractRangeInternal): void
+  insert(node: Node, range: AbstractRange): void
 
   /**
    * Traverses through all contained nodes of a range.
    * 
    * @param range - a range
    */
-  getContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
+  getContainedNodes(range: AbstractRange): IterableIterator<Node>
 
   /**
    * Traverses through all partially contained nodes of a range.
    * 
    * @param range - a range
    */
-  getPartiallyContainedNodes(range: AbstractRangeInternal): IterableIterator<NodeInternal>
+  getPartiallyContainedNodes(range: AbstractRange): IterableIterator<Node>
 
   /**
    * Gets the global range list.
    */
-  readonly rangeList: DOMObjectCache<RangeInternal>
+  readonly rangeList: DOMObjectCache<Range>
 }
 
 /**
@@ -1832,8 +1826,8 @@ export interface TraversalAlgorithm extends SubAlgorithm {
    * @param traverser - the `NodeIterator` or `TreeWalker` instance
    * @param node - the node to filter
    */
-  filter(traverser: NodeIteratorInternal | TreeWalkerInternal,
-    node: NodeInternal): FilterResult
+  filter(traverser: NodeIterator | TreeWalker,
+    node: Node): FilterResult
 
 }
 
@@ -1850,12 +1844,12 @@ export interface NodeIteratorAlgorithm extends SubAlgorithm {
    * @param forward- `true` to return the next node, or `false` to 
    * return the previous node.
    */
-  traverse(iterator: NodeIteratorInternal, forward: boolean): NodeInternal | null
+  traverse(iterator: NodeIterator, forward: boolean): Node | null
 
   /**
    * Gets the global iterator list.
    */
-  readonly iteratorList: DOMObjectCache<NodeIteratorInternal>
+  readonly iteratorList: DOMObjectCache<NodeIterator>
 }
 
 /**
@@ -1870,7 +1864,7 @@ export interface TreeWalkerAlgorithm extends SubAlgorithm {
    * @param first - `true` to return the first child node, or `false` to 
    * return the last child node.
    */
-  traverseChildren(walker: TreeWalkerInternal, first: boolean): NodeInternal | null
+  traverseChildren(walker: TreeWalker, first: boolean): Node | null
 
   /**
    * Returns the next or previous sibling node, or `null` if there are none.
@@ -1879,7 +1873,7 @@ export interface TreeWalkerAlgorithm extends SubAlgorithm {
    * @param next - `true` to return the next sibling node, or `false` to 
    * return the previous sibling node.
    */
-  traverseSiblings(walker: TreeWalkerInternal, next: boolean): NodeInternal | null
+  traverseSiblings(walker: TreeWalker, next: boolean): Node | null
 
 }
 
@@ -1895,21 +1889,21 @@ export interface DOMTokenListAlgorithm extends SubAlgorithm {
    * @param tokenList - a token list
    * @param token - a token
    */
-  validationSteps(tokenList: DOMTokenListInternal, token: string): boolean
+  validationSteps(tokenList: DOMTokenList, token: string): boolean
 
   /**
    * Updates the value of the token lists' associated attribute.
    * 
    * @param tokenList - a token list
    */
-  updateSteps(tokenList: DOMTokenListInternal): void
+  updateSteps(tokenList: DOMTokenList): void
 
   /**
    * Gets the value of the token lists' associated attribute.
    * 
    * @param tokenList - a token list
    */
-  serializeSteps(tokenList: DOMTokenListInternal): string
+  serializeSteps(tokenList: DOMTokenList): string
 
 }
 
@@ -1990,7 +1984,7 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
    * @param element - a custom element
    * @param definition - a custom element definition
    */
-  enqueueACustomElementUpgradeReaction(element: ElementInternal,
+  enqueueACustomElementUpgradeReaction(element: Element,
     definition: CustomElementDefinition): void
 
   /**
@@ -2000,7 +1994,7 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
    * @param callbackName - name of the callback
    * @param args - callback arguments
    */
-  enqueueACustomElementCallbackReaction(element: ElementInternal,
+  enqueueACustomElementCallbackReaction(element: Element,
     callbackName: string, args: any[]): void
 
   /**
@@ -2008,14 +2002,14 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
    * 
    * @param element - a custom element
    */
-  upgrade(definition: CustomElementDefinition, element: ElementInternal): void
+  upgrade(definition: CustomElementDefinition, element: Element): void
 
   /**
    * Tries to upgrade a custom element.
    * 
    * @param element - a custom element
    */
-  tryToUpgrade(element: ElementInternal): void
+  tryToUpgrade(element: Element): void
 
   /**
    * Looks up a custom element definition.
@@ -2025,7 +2019,7 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
    * @param localName - element local name
    * @param is - an `is` value
    */
-  lookUpACustomElementDefinition(document: DocumentInternal, 
+  lookUpACustomElementDefinition(document: Document, 
     namespace: string | null, localName: string, is: string | null): 
     CustomElementDefinition | null
 }
@@ -2033,49 +2027,49 @@ export interface CustomElementAlgorithm extends SubAlgorithm {
 /**
  * Defines a removing step.
  */
-export type RemovingStep = ((removedNode: NodeInternal,
-  oldParent: NodeInternal | null) => any)
+export type RemovingStep = ((removedNode: Node,
+  oldParent: Node | null) => any)
 
 /**
  * Defines a cloning step.
  */
-export type CloningStep = ((copy: NodeInternal,
-  node: NodeInternal, document: DocumentInternal,
+export type CloningStep = ((copy: Node,
+  node: Node, document: Document,
   cloneChildrenFlag?: boolean) => any)
 
 /**
  * Defines an adopting step.
  */
-export type AdoptingStep = ((node: NodeInternal,
-  oldDocument: DocumentInternal) => any)
+export type AdoptingStep = ((node: Node,
+  oldDocument: Document) => any)
 
 /**
  * Defines a child text content change step.
  */
-export type ChildTextContentChangeStep = ((parent: NodeInternal) => any)
+export type ChildTextContentChangeStep = ((parent: Node) => any)
 
 /**
  * Defines an attribute change step.
  */
-export type AttributeChangeStep = ((element: ElementInternal,
+export type AttributeChangeStep = ((element: Element,
   localName: string, oldValue: string | null, value: string | null,
   namespace: string | null) => any)
 
 /**
  * Defines an insertion step.
  */
-export type InsertionStep = ((insertedNode: NodeInternal) => any)
+export type InsertionStep = ((insertedNode: Node) => any)
 
 /**
  * Defines a pre-removal step for a node iterator.
  */
-export type NodeIteratorPreRemovingStep = ((nodeIterator: NodeIteratorInternal,
-  toBeRemovedNode: NodeInternal) => any)
+export type NodeIteratorPreRemovingStep = ((nodeIterator: NodeIterator,
+  toBeRemovedNode: Node) => any)
 
 /**
  * Defines an event construction step.
  */
-export type EventConstructingStep = ((event: EventInternal) => any)
+export type EventConstructingStep = ((event: Event) => any)
 
 /**
  * Defines a boolean out variable of a function.

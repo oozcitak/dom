@@ -1,9 +1,6 @@
 import { DOMAlgorithm, TraversalAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  NodeIteratorInternal, NodeInternal, TreeWalkerInternal
-} from '../dom/interfacesInternal'
-import { FilterResult } from '../dom/interfaces'
+import { FilterResult, NodeIterator, Node, TreeWalker } from '../dom/interfaces'
 import { DOMException } from '../dom/DOMException'
 
 /**
@@ -21,8 +18,8 @@ export class TraversalAlgorithmImpl extends SubAlgorithmImpl implements Traversa
   }
 
   /** @inheritdoc */
-  filter(traverser: NodeIteratorInternal | TreeWalkerInternal,
-    node: NodeInternal): FilterResult {
+  filter(traverser: NodeIterator | TreeWalker,
+    node: Node): FilterResult {
     /**
      * 1. If traverser’s active flag is set, then throw an "InvalidStateError"
      * DOMException.

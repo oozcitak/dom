@@ -2,9 +2,8 @@ import {
   DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
   HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
   ProcessingInstruction, Comment, CDATASection, NodeIterator, TreeWalker,
-  FilterResult, Range, Event, EventTarget, Origin
+  FilterResult, Range, Event, EventTarget, Origin, Document
 } from './interfaces'
-import { DocumentInternal, NodeInternal } from './interfacesInternal'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
 import { globalStore, isFunction, isString, Guard } from '../util'
@@ -14,7 +13,7 @@ import { URLRecord, URLAlgorithm } from '@oozcitak/url'
 /**
  * Represents a document node.
  */
-export class DocumentImpl extends NodeImpl implements DocumentInternal {
+export class DocumentImpl extends NodeImpl implements Document {
 
   _nodeType: NodeType = NodeType.Document
 
@@ -30,9 +29,9 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
 
   protected _implementation: DOMImplementation
 
-  _nodeDocumentOverwrite: DocumentInternal | null = null
-  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverwrite || this }
-  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverwrite = val }
+  _nodeDocumentOverwrite: Document | null = null
+  get _nodeDocument(): Document { return this._nodeDocumentOverwrite || this }
+  set _nodeDocument(val: Document) { this._nodeDocumentOverwrite = val }
 
   /**
    * Initializes a new instance of `Document`.
@@ -286,7 +285,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
     /**
      * 2. Return a clone of node, with context object and the clone children flag set if deep is true.
      */
-    return this._algo.node.clone(node as NodeInternal, this, deep)
+    return this._algo.node.clone(node, this, deep)
   }
 
   /** @inheritdoc */
@@ -307,7 +306,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * 3. Adopt node into the context object.
      * 4. Return node.
      */
-    this._algo.document.adopt(node as NodeInternal, this)
+    this._algo.document.adopt(node, this)
     return node
   }
 
@@ -379,10 +378,9 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * 5. Set iterator’s filter to filter.
      * 6. Return iterator.
      */
-    const iterator = this._algo.create.nodeIterator(root as NodeInternal,
-      root as NodeInternal, true)
+    const iterator = this._algo.create.nodeIterator(root, root, true)
     iterator._whatToShow = whatToShow
-    iterator._iteratorCollection = this._algo.create.nodeList(root as NodeInternal)
+    iterator._iteratorCollection = this._algo.create.nodeList(root)
     if (isFunction(filter)) {
       iterator._filter = this._algo.create.nodeFilter()
       iterator._filter.acceptNode = filter
@@ -402,7 +400,7 @@ export class DocumentImpl extends NodeImpl implements DocumentInternal {
      * 4. Set walker’s filter to filter.
      * 5. Return walker.
      */
-    const walker = this._algo.create.treeWalker(root as NodeInternal, root as NodeInternal)
+    const walker = this._algo.create.treeWalker(root, root)
     walker._whatToShow = whatToShow
     if (isFunction(filter)) {
       walker._filter = this._algo.create.nodeFilter()

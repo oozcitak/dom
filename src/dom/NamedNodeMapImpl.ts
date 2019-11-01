@@ -1,17 +1,16 @@
-import { Element, Attr } from "./interfaces"
+import { Element, Attr, NamedNodeMap } from "./interfaces"
 import { DOMException } from "./DOMException"
-import { NamedNodeMapInternal, ElementInternal, AttrInternal } from "./interfacesInternal"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
 /**
  * Represents a collection of nodes.
  */
-export class NamedNodeMapImpl implements NamedNodeMapInternal {
+export class NamedNodeMapImpl implements NamedNodeMap {
 
   private _algo: DOMAlgorithm
 
-  _element: ElementInternal
+  _element: Element
   _attributeList: Attr[] = []
 
   /**
@@ -22,7 +21,7 @@ export class NamedNodeMapImpl implements NamedNodeMapInternal {
   private constructor(element: Element) {
     this._algo = globalStore.algorithm as DOMAlgorithm
 
-    this._element = element as ElementInternal
+    this._element = element as Element
   }
 
   /** @inheritdoc */
@@ -70,12 +69,12 @@ export class NamedNodeMapImpl implements NamedNodeMapInternal {
      * The setNamedItem(attr) and setNamedItemNS(attr) methods, when invoked, 
      * must return the result of setting an attribute given attr and element.
      */
-    return this._algo.element.setAnAttribute(attr as AttrInternal, this._element)
+    return this._algo.element.setAnAttribute(attr as Attr, this._element)
   }
 
   /** @inheritdoc */
   setNamedItemNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr as AttrInternal, this._element)
+    return this._algo.element.setAnAttribute(attr as Attr, this._element)
   }
 
   /** @inheritdoc */
@@ -123,7 +122,7 @@ export class NamedNodeMapImpl implements NamedNodeMapInternal {
    * 
    * @param element - parent element
    */
-  static _create(element: Element): NamedNodeMapInternal {
+  static _create(element: Element): NamedNodeMapImpl {
     return new NamedNodeMapImpl(element)
   }
 }

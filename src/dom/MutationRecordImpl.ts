@@ -1,10 +1,9 @@
-import { Node, NodeList } from "./interfaces"
-import { MutationRecordInternal, } from "./interfacesInternal"
+import { Node, NodeList, MutationRecord } from "./interfaces"
 
 /**
  * Represents a mutation record.
  */
-export class MutationRecordImpl implements MutationRecordInternal {
+export class MutationRecordImpl implements MutationRecord {
 
   private _type: "attributes" | "characterData" | "childList"
   private _target: Node

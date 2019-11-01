@@ -1,11 +1,10 @@
-import { NodeType } from "./interfaces"
+import { NodeType, ProcessingInstruction, Document } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { ProcessingInstructionInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents a processing instruction node.
  */
-export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstructionInternal {
+export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstruction {
 
   _nodeType: NodeType = NodeType.ProcessingInstruction
 
@@ -32,8 +31,8 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
    * @param target - instruction target
    * @param data - node contents
    */
-  static _create(document: DocumentInternal, target: string,
-    data: string): ProcessingInstructionInternal {
+  static _create(document: Document, target: string,
+    data: string): ProcessingInstructionImpl {
     const node = new ProcessingInstructionImpl(target, data)
     node._nodeDocument = document
     return node

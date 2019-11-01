@@ -1,23 +1,22 @@
-import { SlotableInternal, SlotInternal } from './interfacesInternal'
+import { Slotable, Slot, HTMLSlotElement } from './interfaces'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore } from '../util'
-import { HTMLSlotElement } from './interfaces'
 
 /**
  * Represents a mixin that allows nodes to become the contents of
  * a <slot> element. This mixin is implemented by {@link Element} and
  * {@link Text}.
  */
-export class SlotableImpl implements SlotableInternal {
+export class SlotableImpl implements Slotable {
 
   __name: string | undefined
-  __assignedSlot: SlotInternal | null | undefined
+  __assignedSlot: Slot | null | undefined
 
   get _name(): string { return this.__name || '' }
   set _name(val: string) { this.__name = val }
 
-  get _assignedSlot(): SlotInternal | null { return this.__assignedSlot || null }
-  set _assignedSlot(val: SlotInternal | null) { this.__assignedSlot = val }
+  get _assignedSlot(): Slot | null { return this.__assignedSlot || null }
+  set _assignedSlot(val: Slot | null) { this.__assignedSlot = val }
 
   /** @inheritdoc */
   get assignedSlot(): HTMLSlotElement | null {

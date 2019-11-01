@@ -1,17 +1,14 @@
-import { AbortSignal } from "./interfaces"
-import {
-  AbortControllerInternal, AbortSignalInternal
-} from "./interfacesInternal"
+import { AbortSignal, AbortController } from "./interfaces"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 
 /**
  * Represents a controller that allows to abort DOM requests.
  */
-export class AbortControllerImpl implements AbortControllerInternal {
+export class AbortControllerImpl implements AbortController {
 
   _algo: DOMAlgorithm
-  _signal: AbortSignalInternal
+  _signal: AbortSignal
 
   /**
    * Initializes a new instance of `AbortController`.

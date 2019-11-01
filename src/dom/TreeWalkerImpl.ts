@@ -1,11 +1,10 @@
-import { Node, FilterResult } from "./interfaces"
+import { Node, FilterResult, TreeWalker } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
-import { TreeWalkerInternal, NodeInternal } from "./interfacesInternal"
 
 /**
  * Represents the nodes of a subtree and a position within them.
  */
-export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal {
+export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
 
   _current: Node
 
@@ -38,7 +37,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
        */
       node = node.parentNode
       if (node !== null &&
-        this._algo.traversal.filter(this, node as NodeInternal) === FilterResult.Accept) {
+        this._algo.traversal.filter(this, node as Node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -98,7 +97,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
          * object.
          */
         node = sibling
-        let result = this._algo.traversal.filter(this, node as NodeInternal)
+        let result = this._algo.traversal.filter(this, node as Node)
 
         /**
          * 2.2.3. While result is not FILTER_REJECT and node has a child:
@@ -110,7 +109,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
            * context object.
            */
           node = node.lastChild
-          result = this._algo.traversal.filter(this, node as NodeInternal)
+          result = this._algo.traversal.filter(this, node as Node)
         }
 
         /**
@@ -146,7 +145,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
        * FILTER_ACCEPT, then set the context object’s current to node and
        * return node.
        */
-      if (this._algo.traversal.filter(this, node as NodeInternal) === FilterResult.Accept) {
+      if (this._algo.traversal.filter(this, node as Node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -190,7 +189,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
          * current to node and return node.
          */
         node = node.firstChild
-        result = this._algo.traversal.filter(this, node as NodeInternal)
+        result = this._algo.traversal.filter(this, node as Node)
         if (result === FilterResult.Accept) {
           this._current = node
           return node
@@ -231,7 +230,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
        * 3.6. If result is FILTER_ACCEPT, then set the context object’s current 
        * to node and return node.
        */
-      result = this._algo.traversal.filter(this, node as NodeInternal)
+      result = this._algo.traversal.filter(this, node as Node)
       if (result === FilterResult.Accept) {
         this._current = node
         return node
@@ -245,7 +244,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalkerInternal 
    * @param root - iterator's root node
    * @param current - current node
    */
-  static _create(root: Node, current: Node): TreeWalkerInternal {
+  static _create(root: Node, current: Node): TreeWalkerImpl {
     return new TreeWalkerImpl(root, current)
   }
 

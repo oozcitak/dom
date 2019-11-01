@@ -1,4 +1,4 @@
-import { WindowInternal } from "../dom/interfacesInternal"
+import { Window } from "../dom/interfaces"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 
 /**
@@ -8,7 +8,7 @@ export class GlobalStore {
   private static _instance: GlobalStore
   
   private _algorithm: DOMAlgorithm | null = null
-  private _window: WindowInternal | null = null
+  private _window: Window | null = null
 
   /**
    * Initializes a new instance of `GlobalStore`.
@@ -29,13 +29,13 @@ export class GlobalStore {
   /**
    * Gets or sets the global window object.
    */
-  get window(): WindowInternal {
+  get window(): Window {
     if (this._window === null) {
       throw new Error("Global window instance is null.")
     }    
     return this._window 
   }
-  set window(val: WindowInternal) { this._window = val }
+  set window(val: Window) { this._window = val }
 
 
   /**

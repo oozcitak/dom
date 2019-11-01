@@ -1,6 +1,6 @@
 import { DOMAlgorithm, TextAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { NodeInternal, TextInternal } from '../dom/interfacesInternal'
+import { Node, Text } from '../dom/interfaces'
 import { Guard } from '../util'
 import { DOMException } from '../dom/DOMException'
 
@@ -19,8 +19,8 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
   }
 
   /** @inheritdoc */
-  *contiguousTextNodes(node: TextInternal, self: boolean = false):
-    IterableIterator<TextInternal> {
+  *contiguousTextNodes(node: Text, self: boolean = false): 
+    IterableIterator<Text> {
     /**
      * The contiguous Text nodes of a node node are node, node’s previous
      * sibling Text node, if any, and its contiguous Text nodes, and node’s next
@@ -47,8 +47,8 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
   }
 
   /** @inheritdoc */
-  * contiguousExclusiveTextNodes(node: TextInternal, self: boolean = false):
-    IterableIterator<TextInternal> {
+  * contiguousExclusiveTextNodes(node: Text, self: boolean = false):
+    IterableIterator<Text> {
     /**
      * The contiguous exclusive Text nodes of a node node are node, node’s 
      * previous sibling exclusive Text node, if any, and its contiguous 
@@ -75,7 +75,7 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
   }
 
   /** @inheritdoc */
-  descendantTextContent(node: NodeInternal): string {
+  descendantTextContent(node: Node): string {
     /**
      * The descendant text content of a node node is the concatenation of the 
      * data of all the Text node descendants of node, in tree order.
@@ -90,7 +90,7 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
   }
 
   /** @inheritdoc */
-  split(node: TextInternal, offset: number): TextInternal {
+  split(node: Text, offset: number): Text {
     /**
      * 1. Let length be node’s length.
      * 2. If offset is greater than length, then throw an "IndexSizeError" 
@@ -118,8 +118,8 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
       /**
        * 7.1. Insert new node into parent before node’s next sibling.
        */
-      this.dom.mutation.insert(newNode, parent as NodeInternal,
-        node.nextSibling as NodeInternal | null)
+      this.dom.mutation.insert(newNode, parent as Node,
+        node.nextSibling as Node | null)
 
       /**
        * 7.2. For each live range whose start node is node and start offset is

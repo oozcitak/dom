@@ -1,9 +1,8 @@
 import { DOMAlgorithm, NodeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
-  AttrInternal, ElementInternal, NodeInternal, DocumentInternal,
-  HTMLCollectionInternal, DOMTokenListInternal
-} from '../dom/interfacesInternal'
+  Attr, Element, Node, Document, HTMLCollection, DOMTokenList
+} from '../dom/interfaces'
 import { Guard } from '../util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
@@ -22,14 +21,14 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  stringReplaceAll(str: string, parent: NodeInternal): void {
+  stringReplaceAll(str: string, parent: Node): void {
     /**
      * 1. Let node be null.
      * 2. If string is not the empty string, then set node to a new Text node 
      * whose data is string and node document is parent’s node document.
      * 3. Replace all with node within parent.
      */
-    let node: NodeInternal | null = null
+    let node: Node | null = null
     if (str !== '') {
       node = this.dom.create.text(parent._nodeDocument, str)
     }
@@ -37,15 +36,15 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  clone(node: NodeInternal, document: DocumentInternal | null = null,
-    cloneChildrenFlag: boolean = false): NodeInternal {
+  clone(node: Node, document: Document | null = null,
+    cloneChildrenFlag: boolean = false): Node {
     /**
      * 1. If document is not given, let document be node’s node document.
      */
     if (document === null)
       document = node._nodeDocument
 
-    let copy: NodeInternal
+    let copy: Node
 
     if (Guard.isElementNode(node)) {
       /**
@@ -60,8 +59,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       copy = this.dom.element.createAnElement(document, node._localName,
         node._namespace, node._namespacePrefix, node._is, false)
       for (const attribute of node._attributeList) {
-        const copyAttribute = this.clone(attribute as AttrInternal, document)
-        this.dom.element.append(copyAttribute as AttrInternal, copy as ElementInternal)
+        const copyAttribute = this.clone(attribute as Attr, document)
+        this.dom.element.append(copyAttribute as Attr, copy as Element)
       }
     } else {
       /**
@@ -142,7 +141,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      */
     if (cloneChildrenFlag) {
       for (const child of node.childNodes) {
-        const childCopy = this.clone(child as NodeInternal, document, true)
+        const childCopy = this.clone(child as Node, document, true)
         this.dom.mutation.append(childCopy, copy)
       }
     }
@@ -154,7 +153,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  equals(a: NodeInternal, b: NodeInternal): boolean {
+  equals(a: Node, b: Node): boolean {
     /**
      * 1. A and B’s nodeType attribute value is identical.
      */
@@ -196,13 +195,13 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      */
     if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
       if (a._attributeList.length !== b._attributeList.length) return false
-      const attrMap = new Map<string, AttrInternal>()
+      const attrMap = new Map<string, Attr>()
       for (const attr of a._attributeList) {
-        const attrA = attr as AttrInternal
+        const attrA = attr as Attr
         attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
       }
       for (const attr of b._attributeList) {
-        const attrB = attr as AttrInternal
+        const attrB = attr as Attr
         const attrA = attrMap.get((attrB._namespace || '') + attrB._localName + attrB._value)
         if (!attrA) return false
         if (!this.equals(attrA, attrB)) return false
@@ -215,8 +214,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      */
     if (a.childNodes.length !== b.childNodes.length) return false
     for (let i = 0; i < a.childNodes.length; i++) {
-      const child1 = a.childNodes.item(i) as NodeInternal | null
-      const child2 = b.childNodes.item(i) as NodeInternal | null
+      const child1 = a.childNodes.item(i) as Node | null
+      const child2 = b.childNodes.item(i) as Node | null
       if (child1 === null || child2 === null) return false
       if (!this.equals(child1, child2)) return false
     }
@@ -225,8 +224,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  listOfElementsWithQualifiedName(qualifiedName: string, root: NodeInternal):
-    HTMLCollectionInternal {
+  listOfElementsWithQualifiedName(qualifiedName: string, root: Node):
+    HTMLCollection {
 
     /** 
      * 1. If qualifiedName is "*" (U+002A), return a HTMLCollection rooted at
@@ -265,7 +264,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
 
   /** @inheritdoc */
   listOfElementsWithNamespace(namespace: string | null, localName: string,
-    root: NodeInternal): HTMLCollectionInternal {
+    root: Node): HTMLCollection {
     /**
      * 1. If namespace is the empty string, set it to null.
      * 2. If both namespace and localName are "*" (U+002A), return a 
@@ -306,8 +305,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  listOfElementsWithClassNames(classNames: string, root: NodeInternal):
-    HTMLCollectionInternal {
+  listOfElementsWithClassNames(classNames: string, root: Node):
+    HTMLCollection {
 
     /**
      * 1. Let classes be the result of running the ordered set parser
@@ -328,7 +327,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
     const caseSensitive = (root._nodeDocument._mode !== "quirks")
     const algo = this
     return this.dom.create.htmlCollection(root, function (ele) {
-      const eleClasses = ele.classList as DOMTokenListInternal
+      const eleClasses = ele.classList as DOMTokenList
       return algo.dom.orderedSet.contains(eleClasses._tokenSet, classes,
         caseSensitive)
     })
@@ -336,7 +335,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  locateANamespacePrefix(element: ElementInternal,
+  locateANamespacePrefix(element: Element,
     namespace: string | null): string | null {
     /**
      * 1. If element’s namespace is namespace and its namespace prefix is not 
@@ -352,7 +351,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * local name.
      */
     for (const attr of element._attributeList) {
-      const attrInt = attr as AttrInternal
+      const attrInt = attr as Attr
       if (attrInt._namespacePrefix === "xmlns" && attrInt._value === namespace) {
         return attrInt._localName
       }
@@ -363,7 +362,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * running locate a namespace prefix on that element using namespace.
      */
     if (element.parentElement) {
-      return this.locateANamespacePrefix(element.parentElement as ElementInternal,
+      return this.locateANamespacePrefix(element.parentElement as Element,
         namespace)
     }
 
@@ -375,7 +374,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
   }
 
   /** @inheritdoc */
-  locateANamespace(node: NodeInternal, prefix: string | null): string | null {
+  locateANamespace(node: Node, prefix: string | null): string | null {
     if (Guard.isElementNode(node)) {
       /**
        * 1. If its namespace is not null and its namespace prefix is prefix,
@@ -392,7 +391,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * value if it is not the empty string, and null otherwise.
        */
       for (const attr of node._attributeList) {
-        const attrInt = attr as AttrInternal
+        const attrInt = attr as Attr
         if (attrInt._namespace === infraNamespace.XMLNS &&
           attrInt._namespacePrefix === "xmlns" &&
           attrInt._localName === prefix) {
@@ -413,7 +412,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * 4. Return the result of running locate a namespace on its parent
        * element using prefix.
        */
-      return this.locateANamespace(node.parentElement as ElementInternal, prefix)
+      return this.locateANamespace(node.parentElement as Element, prefix)
     } else if (Guard.isDocumentNode(node)) {
       /**
        * 1. If its document element is null, then return null.
@@ -421,7 +420,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * element using prefix.
        */
       if (node.documentElement === null) return null
-      return this.locateANamespace(node.documentElement as ElementInternal, prefix)
+      return this.locateANamespace(node.documentElement as Element, prefix)
     } else if (Guard.isDocumentTypeNode(node) || Guard.isDocumentFragmentNode(node)) {
       return null
     } else if (Guard.isAttrNode(node)) {
@@ -431,7 +430,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * using prefix.
        */
       if (node._element === null) return null
-      return this.locateANamespace(node._element as ElementInternal, prefix)
+      return this.locateANamespace(node._element as Element, prefix)
     } else {
       /**
        * 1. If its parent element is null, then return null.
@@ -439,7 +438,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * element using prefix.
        */
       if (node.parentElement === null) return null
-      return this.locateANamespace(node.parentElement as ElementInternal, prefix)
+      return this.locateANamespace(node.parentElement as Element, prefix)
     }
 
   }

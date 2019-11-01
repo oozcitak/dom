@@ -1,10 +1,8 @@
 import { DOMAlgorithm, DocumentAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  AttrInternal, ElementInternal, DocumentInternal, NodeInternal
-} from '../dom/interfacesInternal'
+import { Attr, Element, Document, Node } from '../dom/interfaces'
 import { isString, Guard } from '../util'
-import { Element } from '../dom'
+import { Element as ElementImpl } from '../dom'
 
 /**
  * Contains document algorithms.
@@ -22,13 +20,13 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
 
   /** @inheritdoc */
   elementInterface(name: string, namespace: string | null):
-    (new (...args: any[]) => ElementInternal) {
-    return Element
+    (new (...args: any[]) => Element) {
+    return ElementImpl
   }
 
   /** @inheritdoc */
-  internalCreateElementNS(document: DocumentInternal, namespace: string | null,
-    qualifiedName: string, options?: string | { is: string }): ElementInternal {
+  internalCreateElementNS(document: Document, namespace: string | null,
+    qualifiedName: string, options?: string | { is: string }): Element {
     /**
      * 1. Let namespace, prefix, and localName be the result of passing 
      * namespace and qualifiedName to validate and extract.
@@ -56,7 +54,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
   }
 
   /** @inheritdoc */
-  adopt(node: NodeInternal, document: DocumentInternal): void {
+  adopt(node: Node, document: Document): void {
     /**
      * 1. Let oldDocument be node’s node document.
      * 2. If node’s parent is not null, remove node from its parent.
@@ -64,7 +62,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
     const oldDocument = node._nodeDocument
 
     if (node.parentNode)
-      this.dom.mutation.remove(node, node.parentNode as NodeInternal)
+      this.dom.mutation.remove(node, node.parentNode as Node)
 
     /**
      * 3. If document is not oldDocument, then:
@@ -82,11 +80,11 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
          * document of each attribute in inclusiveDescendant’s attribute list
          * to document.
          */
-        inclusiveDescendant._nodeDocument = document as DocumentInternal
+        inclusiveDescendant._nodeDocument = document as Document
 
         if (Guard.isElementNode(inclusiveDescendant)) {
           for (const attr of inclusiveDescendant.attributes) {
-            (attr as AttrInternal)._nodeDocument = document
+            (attr as Attr)._nodeDocument = document
           }
         }
 

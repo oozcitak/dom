@@ -1,9 +1,6 @@
 import { DOMAlgorithm, ShadowTreeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import {
-  SlotableInternal, SlotInternal, ElementInternal, ShadowRootInternal,
-  NodeInternal
-} from '../dom/interfacesInternal'
+import { Slotable, Slot, Element, ShadowRoot, Node } from '../dom/interfaces'
 import { isEmpty, globalStore, Cast, Guard } from '../util'
 
 /**
@@ -21,7 +18,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  isConnected(element: ElementInternal): boolean {
+  isConnected(element: Element): boolean {
     /**
      * An element is connected if its shadow-including root is a document.
      */
@@ -29,7 +26,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  isAssigned(slotable: SlotableInternal): boolean {
+  isAssigned(slotable: Slotable): boolean {
     /**
      * A slotable is assigned if its assigned slot is non-null.
      */
@@ -37,8 +34,8 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  findASlot(slotable: SlotableInternal, openFlag: boolean = false):
-    SlotInternal | null {
+  findASlot(slotable: Slotable, openFlag: boolean = false):
+    Slot | null {
     /**
      * 1. If slotable’s parent is null, then return null.
      * 2. Let shadow be slotable’s parent’s shadow root.
@@ -49,9 +46,9 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * is slotable’s name, if any, and null otherwise.
      */
     const node = Cast.asNode(slotable)
-    const parent = node._parent as ElementInternal | null
+    const parent = node._parent as Element | null
     if (parent === null) return null
-    const shadow = (parent._shadowRoot as ShadowRootInternal | null) || null
+    const shadow = (parent._shadowRoot as ShadowRoot | null) || null
     if (shadow === null) return null
     if (openFlag && shadow._mode !== "open") return null
 
@@ -65,12 +62,12 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  findSlotables(slot: SlotInternal): SlotableInternal[] {
+  findSlotables(slot: Slot): Slotable[] {
     /**
      * 1. Let result be an empty list.
      * 2. If slot’s root is not a shadow root, then return result.
      */
-    const result: SlotableInternal[] = []
+    const result: Slotable[] = []
     const root = this.dom.tree.rootNode(slot)
     if (!Guard.isShadowRoot(root)) return result
 
@@ -99,12 +96,12 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  findFlattenedSlotables(slot: SlotInternal): SlotableInternal[] {
+  findFlattenedSlotables(slot: Slot): Slotable[] {
     /**
      * 1. Let result be an empty list.
      * 2. If slot’s root is not a shadow root, then return result.
      */
-    const result: SlotableInternal[] = []
+    const result: Slotable[] = []
     const root = this.dom.tree.rootNode(slot)
     if (!Guard.isShadowRoot(root)) return result
 
@@ -151,7 +148,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  assignSlotables(slot: SlotInternal): void {
+  assignSlotables(slot: Slot): void {
     /**
      * 1. Let slotables be the result of finding slotables for slot.
      * 2. If slotables and slot’s assigned nodes are not identical, then run 
@@ -182,7 +179,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  assignSlotablesForATree(root: NodeInternal): void {
+  assignSlotablesForATree(root: Node): void {
     /**
      * To assign slotables for a tree, given a node root, run assign slotables
      * for each slot slot in root’s inclusive descendants, in tree order.
@@ -195,7 +192,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  assignASlot(slotable: SlotableInternal): void {
+  assignASlot(slotable: Slotable): void {
     /**
      * 1. Let slot be the result of finding a slot with slotable.
      * 2. If slot is non-null, then run assign slotables for slot.
@@ -207,7 +204,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
   }
 
   /** @inheritdoc */
-  signalASlotChange(slot: SlotInternal): void {
+  signalASlotChange(slot: Slot): void {
     /**
      * 1. Append slot to slot’s relevant agent’s signal slots.
      * 2. Queue a mutation observer microtask.

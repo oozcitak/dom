@@ -1,12 +1,11 @@
-import { EventHandler } from "./interfaces"
-import { AbortSignalInternal } from "./interfacesInternal"
+import { EventHandler, AbortSignal } from "./interfaces"
 import { EventTargetImpl } from './EventTargetImpl'
 
 /**
  * Represents a signal object that communicates with a DOM request and abort
  * it through an AbortController.
  */
-export class AbortSignalImpl extends EventTargetImpl implements AbortSignalInternal {
+export class AbortSignalImpl extends EventTargetImpl implements AbortSignal {
 
   _abortedFlag: boolean = false
   _abortAlgorithms: Set<(...args: any[]) => any> = new Set()
@@ -32,7 +31,7 @@ export class AbortSignalImpl extends EventTargetImpl implements AbortSignalInter
   /**
    * Creates a new `AbortSignal`.
    */
-  static _create(): AbortSignalInternal {
+  static _create(): AbortSignalImpl {
     return new AbortSignalImpl()
   }
 

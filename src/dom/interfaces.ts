@@ -1,4 +1,6 @@
-import { ElementInternal } from "./interfacesInternal"
+import { DOMObjectCache } from "../util/interfaces"
+import { AttributeChangeStep } from "../algorithm/interfaces"
+import { URLRecord } from "@oozcitak/url"
 
 /**
  * Represents a window containing a DOM document.
@@ -17,6 +19,16 @@ export interface Window extends EventTarget {
    * Returns the associated Document.
    */
   readonly document: Document
+
+  _currentEvent?: Event
+  _signalSlots: Set<Slot>
+  _mutationObserverMicrotaskQueued: boolean
+  _mutationObservers: Set<MutationObserver>
+  
+  _associatedDocument: Document
+  
+  _rangeList: DOMObjectCache<Range>
+  _iteratorList: DOMObjectCache<NodeIterator>
 }
 
 /**
@@ -124,6 +136,29 @@ export interface Event {
    * @param cancelable - whether the event can be cancelled.
    */
   initEvent(type: string, bubbles?: boolean, cancelable?: boolean): void
+
+  _target: PotentialEventTarget
+  _relatedTarget: PotentialEventTarget
+  _touchTargetList: PotentialEventTarget[]
+  _path: EventPathItem[]
+
+  _stopPropagationFlag: boolean
+  _stopImmediatePropagationFlag: boolean
+  _canceledFlag: boolean
+  _inPassiveListenerFlag: boolean
+  _composedFlag: boolean
+  _initializedFlag: boolean
+  _dispatchFlag: boolean
+
+  _isTrusted: boolean
+
+  _currentTarget: PotentialEventTarget
+  _eventPhase: EventPhase
+
+  _type: string
+  _bubbles: boolean
+  _cancelable: boolean
+  _timeStamp: number
 }
 
 /**
@@ -167,6 +202,10 @@ export interface MutationObserver {
    * Returns the list of mutations.
    */
   takeRecords(): MutationRecord[]
+
+  _callback: MutationCallback
+  _nodeList: Node[]
+  _recordQueue: MutationRecord[]
 }
 
 /**
@@ -268,6 +307,49 @@ export interface EventTarget {
    * @param event - the event to dispatch.
    */
   dispatchEvent(event: Event): boolean
+
+  _eventListenerList: EventListenerEntry[]
+  _eventHandlerMap: Map<string, EventHandlerEntry>
+
+  /**
+   * Gets the parent event target for the given event.
+   * 
+   * @param event - an event
+   */
+  _getTheParent(event: Event): EventTarget | null
+
+  /**
+   * Defines optional activation behavior for the given event.
+   * 
+   * _Note:_ This exists because user agents perform certain actions for certain
+   * EventTarget objects, e.g., the area element, in response to synthetic
+   * MouseEvent events whose type attribute is click. Web compatibility
+   * prevented it from being removed and it is now the enshrined way of
+   * defining an activation of something.
+   * 
+   * @param event - an event
+   */
+  _activationBehavior?(event: Event): void
+
+  /**
+   * Defines optional legacy pre-activation behavior for the given event.
+   *
+   * _Note:_ These algorithms only exist for checkbox and radio input elements
+   * and are not to be used for anything else.
+   * 
+   * @param event - an event
+   */
+  _legacyPreActivationBehavior?(event: Event): void
+
+  /**
+   * Defines optional legacy canceled activation behavior for the given event.
+   *
+   * _Note:_ These algorithms only exist for checkbox and radio input elements
+   * and are not to be used for anything else.
+   * 
+   * @param event - an event
+   */
+  _legacyCanceledActivationBehavior?(event: Event): void  
 }
 
 /**
@@ -284,6 +366,8 @@ export interface AbortController {
    * activity is to be aborted.
    */
   abort(): void
+
+  _signal: AbortSignal
 }
 
 /**
@@ -300,6 +384,9 @@ export interface AbortSignal extends EventTarget {
    * Raises an event when the controller has aborted.
    */
   onabort: EventHandler
+
+  _abortedFlag: boolean
+  _abortAlgorithms: Set<(...args: any[]) => any>
 }
 
 /**
@@ -521,6 +608,20 @@ export interface Node extends EventTarget {
   */
   removeChild(oldChild: Node): Node
 
+  _nodeDocument: Document
+  _registeredObserverList: Array<RegisteredObserver | TransientRegisteredObserver>
+
+  /**
+   * Used to keep track of parent-child relations in the tree. These are 
+   * non-standard properties.
+   */
+  _nodeType: NodeType
+  _parent: Node | null
+  _children: Set<Node>
+  _firstChild: Node | null
+  _lastChild: Node | null
+  _previousSibling: Node | null
+  _nextSibling: Node | null
 }
 
 /**
@@ -583,6 +684,7 @@ export interface CharacterData extends Node,
    */
   replaceData(offset: number, count: number, data: string): void
 
+  _data: string
 }
 
 /**
@@ -883,6 +985,12 @@ export interface Document extends Node, NonElementParentNode,
   createTreeWalker(root: Node, whatToShow?: WhatToShow,
     filter?: NodeFilter | ((node: Node) => FilterResult) | null): TreeWalker
 
+  _encoding: { name: string, labels: string[] }
+  _contentType: string
+  _URL: URLRecord
+  _origin: Origin
+  _type: "xml" | "html"
+  _mode: "no-quirks" | "quirks" | "limited-quirks"  
 }
 
 /**
@@ -897,14 +1005,13 @@ export interface XMLDocument extends Document {
  */
 export interface DocumentFragment extends Node, NonElementParentNode,
   ParentNode {
-
+  _host: Element | null
 }
 
 /**
  * Represents a shadow root.
  */
 export interface ShadowRoot extends DocumentFragment, DocumentOrShadowRoot {
-
   /** 
    * Gets the shadow root's mode.
    */
@@ -915,6 +1022,8 @@ export interface ShadowRoot extends DocumentFragment, DocumentOrShadowRoot {
    */
   readonly host: Element
 
+  _host: Element
+  _mode: ShadowRootMode
 }
 
 /**
@@ -1199,7 +1308,23 @@ export interface Element extends Node, ParentNode,
    */
   insertAdjacentText(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
     data: string): void
-
+    
+  _namespace: string | null
+  _namespacePrefix: string | null
+  _localName: string
+  _customElementState: "undefined" | "failed" | "uncustomized" | "custom"
+  _customElementDefinition: CustomElementDefinition | null
+  _is: string | null
+  _shadowRoot: ShadowRoot | null
+  
+  readonly _qualifiedName: string
+  readonly _htmlUppercasedQualifiedName: string
+  
+  _attributeList: NamedNodeMap
+  
+  _uniqueIdentifier?: string
+  
+  _attributeChangeSteps: AttributeChangeStep[]  
 }
 
 /**
@@ -1223,6 +1348,9 @@ export interface DocumentType extends Node, ChildNode {
    */
   readonly systemId: string
 
+  _name: string
+  _publicId: string
+  _systemId: string
 }
 
 /**
@@ -1345,7 +1473,8 @@ export interface ChildNode {
  * Represents a slot element of a shadow tree.
  */
 export interface Slot extends Element {
-
+  _name: string
+  _assignedNodes: Slotable[]
 }
 
 /**
@@ -1354,11 +1483,13 @@ export interface Slot extends Element {
  * {@link Text}.
  */
 export interface Slotable {
-
   /**
    * Returns the <slot> element which this node is inserted in.
    */
   readonly assignedSlot: HTMLSlotElement | null
+
+  _name: string
+  _assignedSlot: Slot | null
 }
 
 /**
@@ -1403,6 +1534,13 @@ export interface Attr extends Node {
    */
   readonly specified: boolean
 
+  _namespace: string | null
+  _namespacePrefix: string | null
+  _localName: string
+  _value: string
+  _element: Element | null
+
+  readonly _qualifiedName: string
 }
 
 /**
@@ -1450,6 +1588,7 @@ export interface DOMImplementation {
    */
   hasFeature(): boolean
 
+  _associatedDocument: Document
 }
 
 /**
@@ -1529,6 +1668,9 @@ export interface DOMTokenList extends Iterable<string> {
    */
   value: string
 
+  _tokenSet: Set<string>
+  _element: Element
+  _attribute: Attr
 }
 
 /**
@@ -1594,6 +1736,8 @@ export interface NamedNodeMap extends Iterable<Attr> {
    */
   removeNamedItemNS(namespace: string | null, localName: string): Attr
 
+  _element: Element
+  _attributeList: Attr[]
 }
 
 /**
@@ -1610,7 +1754,9 @@ export interface NodeFilter {
  * Represents a collection of nodes.
  */
 export interface Collection {
-
+  _live: boolean
+  _root: Node
+  _filter: ((element: Element) => any) | null
 }
 
 /**
@@ -1662,6 +1808,11 @@ export interface NodeList extends Collection, Iterable<Node> {
    */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
     thisArg?: any): void
+
+  /**
+   * Used to keep track of child node count. This is a non-standard property.
+   */
+  _length: number
 }
 
 /**
@@ -1692,6 +1843,7 @@ export interface ProcessingInstruction extends CharacterData {
    */
   readonly target: string
 
+  _target: string
 }
 
 /**
@@ -1699,11 +1851,6 @@ export interface ProcessingInstruction extends CharacterData {
  * of a subtree.
  */
 export interface Traverser {
-  /**
-   * A flag to avoid recursive invocations.
-   */
-  _activeFlag: boolean
-
   /**
    * Gets the root node of the subtree.
    */
@@ -1718,6 +1865,11 @@ export interface Traverser {
    * Gets the filter used to selected the nodes.
    */
   readonly filter: NodeFilter | null
+
+  _activeFlag: boolean
+  _root: Node
+  _whatToShow: WhatToShow
+  _filter: NodeFilter | null
 }
 
 /**
@@ -1757,6 +1909,10 @@ export interface NodeIterator extends Traverser {
    * manually `detach` range objects after using them.
    */
   detach(): void
+
+  _iteratorCollection: Collection
+  _reference: Node
+  _pointerBeforeReference: boolean
 }
 
 /**
@@ -1808,6 +1964,8 @@ export interface TreeWalker extends Traverser {
    * are none.
    */
   previousNode(): Node | null
+
+  _current: Node
 }
 
 /**
@@ -1838,6 +1996,16 @@ export interface AbstractRange {
    * Returns `true` if the range starts and ends at the same point.
    */
   readonly collapsed: boolean
+
+  _start: BoundaryPoint
+  _end: BoundaryPoint
+
+  readonly _startNode: Node
+  readonly _startOffset: number
+  readonly _endNode: Node
+  readonly _endOffset: number
+
+  readonly _collapsed: boolean
 }
 
 /**
@@ -2312,7 +2480,7 @@ export interface MouseEvent extends UIEvent {
 export type CustomElementDefinition = {
   name: string
   localName: string
-  constructor: (new (...args: any[]) => ElementInternal)
+  constructor: (new (...args: any[]) => Element)
   observedAttributes: string[]
   lifecycleCallbacks: { 
     "connectedCallback": ((args: any[]) => any) | null
@@ -2324,7 +2492,7 @@ export type CustomElementDefinition = {
     "formResetCallback": ((args: any[]) => any) | null
     "formStateRestoreCallback": ((args: any[]) => any) | null
   }
-  constructionStack: (ElementInternal | boolean)[]
+  constructionStack: (Element | boolean)[]
   formAssociated: boolean
   disableInternals: boolean
   disableShadow: boolean

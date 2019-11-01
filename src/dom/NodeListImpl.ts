@@ -1,15 +1,14 @@
 import { Node, NodeList } from "./interfaces"
-import { NodeListInternal, NodeInternal } from "./interfacesInternal"
 import { set as infraSet } from '@oozcitak/infra'
 import { globalStore } from "../util"
 
 /**
  * Represents an ordered list of nodes.
  */
-export class NodeListImpl implements NodeListInternal {
+export class NodeListImpl implements NodeList {
 
   _live: boolean = true
-  _root: NodeInternal
+  _root: Node
   _filter: ((node: Node) => any) = (() => true)
   _length = 0
 
@@ -18,7 +17,7 @@ export class NodeListImpl implements NodeListInternal {
    * 
    * @param root - root node
    */
-  private constructor(root: NodeInternal) {
+  private constructor(root: Node) {
     this._root = root
   }
 
@@ -102,7 +101,7 @@ export class NodeListImpl implements NodeListInternal {
    * 
    * @param root - root node
    */
-  static _create(root: NodeInternal): NodeListInternal {
+  static _create(root: Node): NodeListImpl {
     return new NodeListImpl(root)
   }
 }

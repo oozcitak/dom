@@ -1,11 +1,10 @@
-import { Element, Node } from "./interfaces"
+import { Element, Node, CharacterData } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
-import { CharacterDataInternal } from "./interfacesInternal"
 
 /**
  * Represents a generic text node.
  */
-export abstract class CharacterDataImpl extends NodeImpl implements CharacterDataInternal {
+export abstract class CharacterDataImpl extends NodeImpl implements CharacterData {
 
   _data: string = ''
 

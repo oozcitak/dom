@@ -1,7 +1,6 @@
 import {
-  Node, MutationObserverInit, MutationRecord, MutationCallback
+  Node, MutationObserverInit, MutationRecord, MutationCallback, MutationObserver
 } from "./interfaces"
-import { MutationObserverInternal, NodeInternal } from "./interfacesInternal"
 import { globalStore, Guard } from "../util"
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
 
@@ -9,7 +8,7 @@ import { list as infraList, set as infraSet } from '@oozcitak/infra'
  * Represents an object that can be used to observe mutations to the tree of
  * nodes.
  */
-export class MutationObserverImpl implements MutationObserverInternal {
+export class MutationObserverImpl implements MutationObserver {
 
   _callback: MutationCallback
   _nodeList: Node[] = []
@@ -32,7 +31,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
   }
 
   /** @inheritdoc */
-  observe(target: NodeInternal, options?: MutationObserverInit): void {
+  observe(target: Node, options?: MutationObserverInit): void {
     options = options || {
       childList: false,
       subtree: false
@@ -87,7 +86,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
          * registered observer list.
          */
         for (const node of this._nodeList) {
-          infraList.remove((node as NodeInternal)._registeredObserverList, (ob) => 
+          infraList.remove((node as Node)._registeredObserverList, (ob) => 
             Guard.isTransientRegisteredObserver(ob) && ob.source === registered
           )
         }
@@ -118,7 +117,7 @@ export class MutationObserverImpl implements MutationObserverInternal {
      * context object is the observer.
      */
     for (const node of this._nodeList) {
-      infraList.remove((node as NodeInternal)._registeredObserverList, (ob) =>
+      infraList.remove((node as Node)._registeredObserverList, (ob) =>
         ob.observer === this
       )
     }

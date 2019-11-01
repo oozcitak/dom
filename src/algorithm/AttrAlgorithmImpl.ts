@@ -1,6 +1,6 @@
 import { DOMAlgorithm, AttrAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { AttrInternal, ElementInternal } from '../dom/interfacesInternal'
+import { Attr, Element } from '../dom/interfaces'
 
 /**
  * Contains attribute algorithms.
@@ -17,7 +17,7 @@ export class AttrAlgorithmImpl extends SubAlgorithmImpl implements AttrAlgorithm
   }
 
   /** @inheritdoc */
-  setAnExistingAttributeValue(attribute: AttrInternal, value: string): void {
+  setAnExistingAttributeValue(attribute: Attr, value: string): void {
     /**
      * 1. If attribute’s element is null, then set attribute’s value to value.
      * 2. Otherwise, change attribute from attribute’s element to value.
@@ -25,7 +25,7 @@ export class AttrAlgorithmImpl extends SubAlgorithmImpl implements AttrAlgorithm
     if(attribute._element === null) {
       attribute._value = value
     } else {
-      this.dom.element.change(attribute, attribute._element as ElementInternal, value)
+      this.dom.element.change(attribute, attribute._element as Element, value)
     }
   }
 

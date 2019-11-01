@@ -1,7 +1,7 @@
 import { globalStore } from "./util"
-import { DOMAlgorithmImpl } from "./algorithm"
+import { DOMAlgorithm } from "./algorithm"
 
-const algo = new DOMAlgorithmImpl()
+const algo = new DOMAlgorithm()
 globalStore.algorithm = algo
 globalStore.window = algo.create.window()
 

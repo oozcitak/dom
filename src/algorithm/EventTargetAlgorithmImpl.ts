@@ -1,8 +1,7 @@
 import { EventTargetAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { EventTargetInternal } from '../dom/interfacesInternal'
 import {
-  EventListenerOptions, AddEventListenerOptions, EventListenerEntry
+  EventListenerOptions, AddEventListenerOptions, EventListenerEntry, EventTarget
 } from '../dom/interfaces'
 import { isBoolean } from '../util'
 
@@ -42,7 +41,7 @@ export class EventTargetAlgorithmImpl extends SubAlgorithmImpl implements EventT
   }
 
   /** @inheritdoc */
-  addEventListener(eventTarget: EventTargetInternal,
+  addEventListener(eventTarget: EventTarget,
     listener: EventListenerEntry): void {
 
     if (listener.callback === null) return
@@ -60,7 +59,7 @@ export class EventTargetAlgorithmImpl extends SubAlgorithmImpl implements EventT
   }
 
   /** @inheritdoc */
-  removeEventListener(eventTarget: EventTargetInternal,
+  removeEventListener(eventTarget: EventTarget,
     listener: EventListenerEntry, index: number = -1): void {
 
     listener.removed = true
@@ -85,7 +84,7 @@ export class EventTargetAlgorithmImpl extends SubAlgorithmImpl implements EventT
   }
 
   /** @inheritdoc */
-  removeAllEventListeners(eventTarget: EventTargetInternal): void {
+  removeAllEventListeners(eventTarget: EventTarget): void {
     // check if the listener is defined
     for (const entry of eventTarget._eventListenerList) {
       entry.removed = true

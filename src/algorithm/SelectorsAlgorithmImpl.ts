@@ -1,7 +1,7 @@
 import { SelectorsAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../dom/DOMException'
-import { ElementInternal, NodeInternal } from '../dom/interfacesInternal'
+import { Element, Node } from '../dom/interfaces'
 
 /**
  * Contains selectors algorithms.
@@ -18,8 +18,8 @@ export class SelectorsAlgorithmImpl extends SubAlgorithmImpl implements Selector
   }
 
   /** @inheritdoc */
-  scopeMatchASelectorsString(selectors: string, node: NodeInternal):
-    ElementInternal[] {
+  scopeMatchASelectorsString(selectors: string, node: Node):
+    Element[] {
     /**
      * TODO: Selectors
      * 1. Let s be the result of parse a selector selectors. [SELECTORS4]

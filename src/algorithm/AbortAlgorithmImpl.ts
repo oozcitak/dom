@@ -1,6 +1,6 @@
 import { DOMAlgorithm, AbortAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { AbortSignalInternal } from '../dom/interfacesInternal'
+import { AbortSignal } from '../dom/interfaces'
 
 /**
  * Contains abort algorithms.
@@ -17,7 +17,7 @@ export class AbortAlgorithmImpl extends SubAlgorithmImpl implements AbortAlgorit
   }
 
   /** @inheritdoc */
-  add(algorithm: ((...args: any[]) => any), signal: AbortSignalInternal): void {
+  add(algorithm: ((...args: any[]) => any), signal: AbortSignal): void {
     /**
      * 1. If signal’s aborted flag is set, then return.
      * 2. Append algorithm to signal’s abort algorithms.
@@ -27,7 +27,7 @@ export class AbortAlgorithmImpl extends SubAlgorithmImpl implements AbortAlgorit
   }
 
   /** @inheritdoc */
-  remove(algorithm: ((...args: any[]) => any), signal: AbortSignalInternal): void {
+  remove(algorithm: ((...args: any[]) => any), signal: AbortSignal): void {
     /**
      * To remove an algorithm algorithm from an AbortSignal signal, remove 
      * algorithm from signal’s abort algorithms.
@@ -36,7 +36,7 @@ export class AbortAlgorithmImpl extends SubAlgorithmImpl implements AbortAlgorit
   }
 
   /** @inheritdoc */
-  signalAbort(signal: AbortSignalInternal): void {
+  signalAbort(signal: AbortSignal): void {
     /**
      * 1. If signal’s aborted flag is set, then return.
      * 2. Set signal’s aborted flag.

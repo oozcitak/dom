@@ -1,11 +1,10 @@
-import { CustomEventInit } from './interfaces'
+import { CustomEventInit, CustomEvent } from './interfaces'
 import { EventImpl } from './EventImpl'
-import { CustomEventInternal } from './interfacesInternal'
 
 /**
  * Represents and event that carries custom data.
  */
-export class CustomEventImpl extends EventImpl implements CustomEventInternal {
+export class CustomEventImpl extends EventImpl implements CustomEvent {
 
   protected _detail: any = null
 

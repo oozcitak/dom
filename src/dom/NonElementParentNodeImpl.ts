@@ -1,5 +1,4 @@
-import { Element } from './interfaces'
-import { NonElementParentNodeInternal } from './interfacesInternal'
+import { Element, NonElementParentNode } from './interfaces'
 import { globalStore, Cast } from '../util'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 
@@ -7,7 +6,7 @@ import { DOMAlgorithm } from '../algorithm/interfaces'
  * Represents a mixin that extends non-element parent nodes. This mixin
  * is implemented by {@link Document} and {@link DocumentFragment}.
  */
-export class NonElementParentNodeImpl implements NonElementParentNodeInternal {
+export class NonElementParentNodeImpl implements NonElementParentNode {
 
   /** @inheritdoc */
   getElementById(id: string): Element | null {

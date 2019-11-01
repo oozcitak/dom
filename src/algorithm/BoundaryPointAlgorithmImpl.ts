@@ -1,7 +1,6 @@
 import { BoundaryPointAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { NodeInternal } from '../dom/interfacesInternal'
-import { BoundaryPoint, BoundaryPosition } from '../dom/interfaces'
+import { Node, BoundaryPoint, BoundaryPosition } from '../dom/interfaces'
 
 /**
  * Contains boundary point algorithms.
@@ -20,9 +19,9 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
   /** @inheritdoc */
   position(bp: BoundaryPoint, relativeTo: BoundaryPoint): BoundaryPosition {
 
-    const nodeA = bp[0] as NodeInternal
+    const nodeA = bp[0] as Node
     const offsetA = bp[1]
-    const nodeB = relativeTo[0] as NodeInternal
+    const nodeB = relativeTo[0] as Node
     const offsetB = relativeTo[1]
 
     /**
@@ -76,7 +75,7 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
         if (child._parent === null) {
           throw new Error("Node has no parent node.")
         } else {
-          child = child._parent as NodeInternal
+          child = child._parent as Node
         }
       }
 
@@ -92,12 +91,12 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
   }
 
   /** @inheritdoc */
-  nodeStart(node: NodeInternal): BoundaryPoint {
+  nodeStart(node: Node): BoundaryPoint {
     return [node, 0]
   }
 
   /** @inheritdoc */
-  nodeEnd(node: NodeInternal): BoundaryPoint {
+  nodeEnd(node: Node): BoundaryPoint {
     return [node, this.dom.tree.nodeLength(node)]
   }
 

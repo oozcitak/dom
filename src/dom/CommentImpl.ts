@@ -1,11 +1,10 @@
-import { NodeType } from "./interfaces"
+import { NodeType, Comment, Document } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { CommentInternal, DocumentInternal } from "./interfacesInternal"
 
 /**
  * Represents a comment node.
  */
-export class CommentImpl extends CharacterDataImpl implements CommentInternal {
+export class CommentImpl extends CharacterDataImpl implements Comment {
 
   _nodeType: NodeType = NodeType.Comment
 
@@ -25,7 +24,7 @@ export class CommentImpl extends CharacterDataImpl implements CommentInternal {
    * @param document - owner document
    * @param data - node contents   
    */
-  static _create(document: DocumentInternal, data: string = ''): CommentInternal {
+  static _create(document: Document, data: string = ''): CommentImpl {
     const node = new CommentImpl(data)
     node._nodeDocument = document
     return node

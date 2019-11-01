@@ -4,14 +4,13 @@ import {
 } from './interfaces'
 import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
-import { RangeInternal, NodeInternal } from './interfacesInternal'
 import { globalStore, Guard } from '../util'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 
 /**
  * Represents a live range.
  */
-export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
+export class RangeImpl extends AbstractRangeImpl implements Range {
 
   _algo: DOMAlgorithm
 
@@ -51,12 +50,12 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * container be container’s parent.
      * 3. Return container.
      */
-    let container = this._start[0] as NodeInternal
-    while(!this._algo.tree.isAncestorOf(this._end[0] as NodeInternal, container, true)) {
+    let container = this._start[0] as Node
+    while(!this._algo.tree.isAncestorOf(this._end[0] as Node, container, true)) {
       if (container._parent === null) {
         throw new Error("Parent node  is null.")
       }
-      container = container._parent as NodeInternal
+      container = container._parent as Node
     }
 
     return container
@@ -68,7 +67,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * The setStart(node, offset) method, when invoked, must set the start of
      * context object to boundary point (node, offset).
      */
-    this._algo.range.setTheStart(this, node as NodeInternal, offset)
+    this._algo.range.setTheStart(this, node as Node, offset)
   }
 
   /** @inheritdoc */
@@ -77,7 +76,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * The setEnd(node, offset) method, when invoked, must set the end of
      * context object to boundary point (node, offset).
      */
-    this._algo.range.setTheEnd(this, node as NodeInternal, offset)
+    this._algo.range.setTheEnd(this, node as Node, offset)
   }
 
   /** @inheritdoc */
@@ -92,8 +91,8 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     if (parent === null)
       throw DOMException.InvalidNodeTypeError
 
-    this._algo.range.setTheStart(this, parent as NodeInternal,
-      this._algo.tree.index(node as NodeInternal))
+    this._algo.range.setTheStart(this, parent as Node,
+      this._algo.tree.index(node as Node))
   }
 
   /** @inheritdoc */
@@ -108,8 +107,8 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     if (parent === null)
       throw DOMException.InvalidNodeTypeError
 
-    this._algo.range.setTheStart(this, parent as NodeInternal,
-      this._algo.tree.index(node as NodeInternal) + 1)
+    this._algo.range.setTheStart(this, parent as Node,
+      this._algo.tree.index(node as Node) + 1)
   }
 
   /** @inheritdoc */
@@ -124,8 +123,8 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     if (parent === null)
       throw DOMException.InvalidNodeTypeError
 
-    this._algo.range.setTheEnd(this, parent as NodeInternal,
-      this._algo.tree.index(node as NodeInternal))
+    this._algo.range.setTheEnd(this, parent as Node,
+      this._algo.tree.index(node as Node))
   }
 
   /** @inheritdoc */
@@ -140,8 +139,8 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     if (parent === null)
       throw DOMException.InvalidNodeTypeError
 
-    this._algo.range.setTheEnd(this, parent as NodeInternal,
-      this._algo.tree.index(node as NodeInternal) + 1)
+    this._algo.range.setTheEnd(this, parent as Node,
+      this._algo.tree.index(node as Node) + 1)
   }
 
   /** @inheritdoc */
@@ -163,7 +162,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * The selectNode(node) method, when invoked, must select node within 
      * context object.
      */
-    this._algo.range.select(node as NodeInternal, this)
+    this._algo.range.select(node as Node, this)
   }
 
   /** @inheritdoc */
@@ -177,7 +176,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     if (Guard.isDocumentTypeNode(node))
       throw DOMException.InvalidNodeTypeError
 
-    const length = this._algo.tree.nodeLength(node as NodeInternal)
+    const length = this._algo.tree.nodeLength(node as Node)
     this._start = [node, 0]
     this._end = [node, length]
   }
@@ -200,7 +199,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * 2. If context object’s root is not the same as sourceRange’s root, 
      * then throw a "WrongDocumentError" DOMException.
      */
-    if (this._algo.range.root(this) !== this._algo.range.root(sourceRange as RangeInternal))
+    if (this._algo.range.root(this) !== this._algo.range.root(sourceRange as Range))
       throw DOMException.WrongDocumentError
 
     /**
@@ -297,16 +296,16 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * the context object, in tree order, omitting any node whose parent is also
      * contained in the context object.
      */
-    const nodesToRemove: NodeInternal[] = []
+    const nodesToRemove: Node[] = []
     for (const node of this._algo.range.getContainedNodes(this)) {
       const parent = node.parentNode
-      if (parent !== null && this._algo.range.isContained(parent as NodeInternal, this)) {
+      if (parent !== null && this._algo.range.isContained(parent as Node, this)) {
         continue
       }
       nodesToRemove.push(node)
     }
 
-    let newNode: NodeInternal
+    let newNode: Node
     let newOffset: number
 
     if (this._algo.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
@@ -328,14 +327,14 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
        */
       let referenceNode = originalStartNode
       while (referenceNode._parent !== null &&
-        !this._algo.tree.isAncestorOf(originalEndNode, referenceNode._parent as NodeInternal, true)) {
-        referenceNode = referenceNode._parent as NodeInternal
+        !this._algo.tree.isAncestorOf(originalEndNode, referenceNode._parent as Node, true)) {
+        referenceNode = referenceNode._parent as Node
       }
       /* istanbul ignore next */
       if (referenceNode._parent === null) {
         throw new Error("Parent node is null.")
       }
-      newNode = referenceNode._parent as NodeInternal
+      newNode = referenceNode._parent as Node
       newOffset = this._algo.tree.index(referenceNode) + 1
     }
 
@@ -358,7 +357,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     for (const node of nodesToRemove) {
       /* istanbul ignore else */
       if (node._parent) {
-        this._algo.mutation.remove(node, node._parent as NodeInternal)
+        this._algo.mutation.remove(node, node._parent as Node)
       }
     }
 
@@ -403,7 +402,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * The insertNode(node) method, when invoked, must insert node into the 
      * context object.
      */
-    return this._algo.range.insert(node as NodeInternal, this)
+    return this._algo.range.insert(node as Node, this)
   }
 
   /** @inheritdoc */
@@ -436,21 +435,21 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     /**
      * 4. If newParent has children, then replace all with null within newParent.
      */
-    if ((newParent as NodeInternal)._children.size !== 0) {
-      this._algo.mutation.replaceAll(null, newParent as NodeInternal)
+    if ((newParent as Node)._children.size !== 0) {
+      this._algo.mutation.replaceAll(null, newParent as Node)
     }
 
     /**
      * 5. Insert newParent into the context object.
      * 6. Append fragment to newParent.
      */
-    this._algo.range.insert(newParent as NodeInternal, this)
-    this._algo.mutation.append(fragment, newParent as NodeInternal)
+    this._algo.range.insert(newParent as Node, this)
+    this._algo.mutation.append(fragment, newParent as Node)
 
     /**
      * 7. Select newParent within the context object.
      */
-    this._algo.range.select(newParent as NodeInternal, this)
+    this._algo.range.select(newParent as Node, this)
   }
 
   /** @inheritdoc */
@@ -477,7 +476,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     /**
      * 1. If node’s root is different from the context object’s root, return false.
      */
-    if (this._algo.tree.rootNode(node as NodeInternal) !== this._algo.range.root(this)) {
+    if (this._algo.tree.rootNode(node as Node) !== this._algo.range.root(this)) {
       return false
     }
 
@@ -488,7 +487,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      */
     if (Guard.isDocumentTypeNode(node))
       throw DOMException.InvalidNodeTypeError
-    if (offset > this._algo.tree.nodeLength(node as NodeInternal))
+    if (offset > this._algo.tree.nodeLength(node as Node))
       throw DOMException.IndexSizeError
 
     /**
@@ -515,11 +514,11 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * 3. If offset is greater than node’s length, then throw an 
      * "IndexSizeError" DOMException.
      */
-    if (this._algo.tree.rootNode(node as NodeInternal) !== this._algo.range.root(this))
+    if (this._algo.tree.rootNode(node as Node) !== this._algo.range.root(this))
       throw DOMException.WrongDocumentError
     if (Guard.isDocumentTypeNode(node))
       throw DOMException.InvalidNodeTypeError
-    if (offset > this._algo.tree.nodeLength(node as NodeInternal))
+    if (offset > this._algo.tree.nodeLength(node as Node))
       throw DOMException.IndexSizeError
 
     /**
@@ -542,7 +541,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
     /**
      * 1. If node’s root is different from the context object’s root, return false.
      */
-    if (this._algo.tree.rootNode(node as NodeInternal) !== this._algo.range.root(this)) {
+    if (this._algo.tree.rootNode(node as Node) !== this._algo.range.root(this)) {
       return false
     }
 
@@ -550,13 +549,13 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * 2. Let parent be node’s parent.
      * 3. If parent is null, return true.
      */
-    const parent = (node as NodeInternal)._parent
+    const parent = (node as Node)._parent
     if (parent === null) return true
 
     /**
      * 4. Let offset be node’s index.
      */
-    const offset = this._algo.tree.index(node as NodeInternal)
+    const offset = this._algo.tree.index(node as Node)
 
     /**
      * 5. If (parent, offset) is before end and (parent, offset plus 1) is 
@@ -629,7 +628,7 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
    * @param start - start point
    * @param end - end point
    */
-  static _create(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal {
+  static _create(start?: BoundaryPoint, end?: BoundaryPoint): RangeImpl {
     const range = new RangeImpl()
     if (start) range._start = start
     if (end) range._end = end

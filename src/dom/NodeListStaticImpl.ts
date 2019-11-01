@@ -1,12 +1,11 @@
 import { Node, NodeList } from "./interfaces"
-import { NodeListInternal } from "./interfacesInternal"
 import { globalStore } from "../util"
 
 /**
  * Represents an ordered list of nodes.
  * This is a static implementation of `NodeList`.
  */
-export class NodeListStaticImpl implements NodeListInternal {
+export class NodeListStaticImpl implements NodeList {
 
   _live: boolean = false
   _root: Node
@@ -91,7 +90,7 @@ export class NodeListStaticImpl implements NodeListInternal {
    * @param root - root node
    * @param items - a list of items to initialize the list
    */
-  static _create(root: Node, items: Node[]): NodeListInternal {
+  static _create(root: Node, items: Node[]): NodeListStaticImpl {
     const list = new NodeListStaticImpl(root)
     list._items = items
     return list

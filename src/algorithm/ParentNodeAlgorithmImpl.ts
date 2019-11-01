@@ -1,5 +1,5 @@
 import { ParentNodeAlgorithm, DOMAlgorithm } from './interfaces'
-import { NodeInternal, DocumentInternal } from '../dom/interfacesInternal'
+import { Node, Document } from '../dom/interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { isString } from '../util'
 
@@ -18,15 +18,15 @@ export class ParentNodeAlgorithmImpl extends SubAlgorithmImpl implements ParentN
   }
 
   /** @inheritdoc */
-  convertNodesIntoANode(nodes: (NodeInternal | string)[],
-    document: DocumentInternal): NodeInternal {
+  convertNodesIntoANode(nodes: (Node | string)[],
+    document: Document): Node {
 
     /**
      * 1. Let node be null.
      * 2. Replace each string in nodes with a new Text node whose data is the 
      * string and node document is document.
      */
-    let node: NodeInternal | null = null
+    let node: Node | null = null
     for (let i = 0; i < nodes.length; i++) {
       const item = nodes[i]
       if (isString(item)) {
@@ -41,11 +41,11 @@ export class ParentNodeAlgorithmImpl extends SubAlgorithmImpl implements ParentN
      * document, and then append each node in nodes, if any, to it.
      */
     if (nodes.length === 1) {
-      node = nodes[0] as NodeInternal
+      node = nodes[0] as Node
     } else {
       node = this.dom.create.documentFragment(document)
       for (const item of nodes) {
-        node.appendChild(item as NodeInternal)
+        node.appendChild(item as Node)
       }
     }
 

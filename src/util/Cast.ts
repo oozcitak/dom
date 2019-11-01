@@ -1,4 +1,4 @@
-import { NodeInternal } from '../dom/interfacesInternal'
+import { Node } from '../dom/interfaces'
 import { Guard } from './Guard'
 
 /**
@@ -11,7 +11,7 @@ export class Cast {
    * 
    * @param a - the object to cast
    */
-  static asNode(a: any): NodeInternal {
+  static asNode(a: any): Node {
     if (Guard.isNode(a)) {
       return a
     } else {

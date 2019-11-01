@@ -1,14 +1,13 @@
 import {
-  EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem
+  EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem, Event
 } from './interfaces'
-import { EventInternal } from './interfacesInternal'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore } from '../util'
 
 /**
  * Represents a DOM event.
  */
-export class EventImpl implements EventInternal {
+export class EventImpl implements Event {
 
   static readonly NONE: number = 0
   static readonly CAPTURING_PHASE: number = 1
