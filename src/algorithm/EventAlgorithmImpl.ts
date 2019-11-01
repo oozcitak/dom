@@ -6,7 +6,7 @@ import {
   EventHandler
 } from '../dom/interfaces'
 import { Guard } from '../util'
-import { CustomEventImpl, EventImpl, DOMException } from '../dom'
+import { CustomEvent, Event, DOMException } from '../dom'
 
 /**
  * Contains event algorithms.
@@ -44,7 +44,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  createAnEvent(eventInterface: typeof EventImpl, realm: any | undefined = undefined): EventInternal {
+  createAnEvent(eventInterface: typeof Event, realm: any | undefined = undefined): EventInternal {
     /**
      * 1. If realm is not given, then set it to null.
      * 2. Let dictionary be the result of converting the JavaScript value 
@@ -67,7 +67,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
   }
 
   /** @inheritdoc */
-  innerEventCreationSteps(eventInterface: typeof EventImpl, realm: any,
+  innerEventCreationSteps(eventInterface: typeof Event, realm: any,
     time: Date, dictionary: { [key: string]: any }): EventInternal {
     /**
      * 1. Let event be the result of creating a new object using eventInterface. 
@@ -713,13 +713,13 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
 
   /** @inheritdoc */
   fireAnEvent(e: string, target: EventTargetInternal,
-    eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
+    eventConstructor?: typeof Event, idlAttributes?: { [key:string]: any },
     legacyTargetOverrideFlag?: boolean): boolean {
     /**
      * 1. If eventConstructor is not given, then let eventConstructor be Event.
      */
     if (eventConstructor === undefined) {
-      eventConstructor = EventImpl
+      eventConstructor = Event
     }
 
     /**
@@ -757,7 +757,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     /**
      * 1. Let constructor be null.
      */
-    let constructor: typeof EventImpl | null = null
+    let constructor: typeof Event | null = null
 
     /**
      * TODO: Implement in HTML DOM
@@ -795,7 +795,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
       case "compositionevent":
         break
       case "customevent":
-          constructor = CustomEventImpl
+          constructor = CustomEvent
         break
       case "devicemotionevent":
         break
@@ -805,7 +805,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
         break
       case "event":
       case "events":
-          constructor = EventImpl
+          constructor = Event
           break
       case "focusevent":
         break

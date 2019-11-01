@@ -1,5 +1,4 @@
 import $$ from '../TestHelpers'
-import { HTMLCollectionImpl } from '../../src/dom'
 
 describe('HTMLCollection', () => {
 
@@ -72,7 +71,7 @@ describe('HTMLCollection', () => {
   })
 
   test('_create()', () => {
-    const list2 = HTMLCollectionImpl._create(de)
+    const list2 = $$.HTMLCollection._create(de)
     expect(list2._root).toBe(de)
   })
 

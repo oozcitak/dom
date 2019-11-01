@@ -4,7 +4,7 @@ import {
   AttrInternal, ElementInternal, DocumentInternal, NodeInternal
 } from '../dom/interfacesInternal'
 import { isString, Guard } from '../util'
-import { ElementImpl } from '../dom'
+import { Element } from '../dom'
 
 /**
  * Contains document algorithms.
@@ -23,7 +23,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
   /** @inheritdoc */
   elementInterface(name: string, namespace: string | null):
     (new (...args: any[]) => ElementInternal) {
-    return ElementImpl
+    return Element
   }
 
   /** @inheritdoc */

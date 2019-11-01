@@ -1,3 +1,4 @@
+// Export classes
 export { AbortAlgorithmImpl } from './AbortAlgorithmImpl'
 export { AttrAlgorithmImpl } from './AttrAlgorithmImpl'
 export { BoundaryPointAlgorithmImpl } from './BoundaryPointAlgorithmImpl'
@@ -26,3 +27,7 @@ export { TraversalAlgorithmImpl } from './TraversalAlgorithmImpl'
 export { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
 export { TreeWalkerAlgorithmImpl } from './TreeWalkerAlgorithmImpl'
 export { XMLAlgorithmImpl } from './XMLAlgorithmImpl'
+
+// Export interfaces
+import * as Interfaces from './interfaces'
+export { Interfaces }

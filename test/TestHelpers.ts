@@ -1,14 +1,14 @@
 import dedent from "dedent"
 import { window } from '../src/index'
 import {
-  AbortControllerImpl, AbortSignalImpl, AttrImpl, CDATASectionImpl, 
-  CharacterDataImpl, CommentImpl, CustomEventImpl, DocumentFragmentImpl,
-  DocumentImpl, DocumentTypeImpl, DOMException, DOMImplementationImpl,
-  DOMTokenListImpl, ElementImpl, EventImpl, HTMLCollectionImpl, 
-  MutationObserverImpl, MutationRecordImpl,
-  NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeListImpl,
-  ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
-  XMLDocumentImpl, RangeImpl
+  AbortController, AbortSignal, Attr, CDATASection, 
+  CharacterData, Comment, CustomEvent, DocumentFragment,
+  Document, DocumentType, DOMException, DOMImplementation,
+  DOMTokenList, Element, Event, HTMLCollection, 
+  MutationObserver, MutationRecord,
+  NamedNodeMap, NodeFilter, Node, NodeList,
+  ProcessingInstruction, ShadowRoot, StaticRange, Text,
+  XMLDocument, Range
 } from '../src/dom'
 // DOMParser
 import { DOMParser, MimeType } from '../src/parser'
@@ -99,34 +99,34 @@ export default class TestHelpers {
     return str
   }
 
-  static AbortController = AbortControllerImpl
-  static AbortSignal = AbortSignalImpl
-  static Attr = AttrImpl
-  static CDATASection = CDATASectionImpl
-  static CharacterData = CharacterDataImpl
-  static Comment = CommentImpl
-  static CustomEvent = CustomEventImpl
-  static DocumentFragment = DocumentFragmentImpl
-  static Document = DocumentImpl
-  static DocumentType = DocumentTypeImpl
+  static AbortController = AbortController
+  static AbortSignal = AbortSignal
+  static Attr = Attr
+  static CDATASection = CDATASection
+  static CharacterData = CharacterData
+  static Comment = Comment
+  static CustomEvent = CustomEvent
+  static DocumentFragment = DocumentFragment
+  static Document = Document
+  static DocumentType = DocumentType
   static DOMException = DOMException
-  static DOMImplementation = DOMImplementationImpl
-  static DOMTokenList = DOMTokenListImpl
-  static Element = ElementImpl
-  static Event = EventImpl
-  static HTMLCollection = HTMLCollectionImpl
-  static MutationObserver = MutationObserverImpl
-  static MutationRecord = MutationRecordImpl
-  static NamedNodeMap = NamedNodeMapImpl
-  static NodeFilter = NodeFilterImpl
-  static Node = NodeImpl
-  static NodeList = NodeListImpl
-  static ProcessingInstruction = ProcessingInstructionImpl
-  static Range = RangeImpl
-  static ShadowRoot = ShadowRootImpl
-  static StaticRange = StaticRangeImpl
-  static Text = TextImpl
-  static XMLDocument = XMLDocumentImpl
+  static DOMImplementation = DOMImplementation
+  static DOMTokenList = DOMTokenList
+  static Element = Element
+  static Event = Event
+  static HTMLCollection = HTMLCollection
+  static MutationObserver = MutationObserver
+  static MutationRecord = MutationRecord
+  static NamedNodeMap = NamedNodeMap
+  static NodeFilter = NodeFilter
+  static Node = Node
+  static NodeList = NodeList
+  static ProcessingInstruction = ProcessingInstruction
+  static Range = Range
+  static ShadowRoot = ShadowRoot
+  static StaticRange = StaticRange
+  static Text = Text
+  static XMLDocument = XMLDocument
 
   static DOMParser = DOMParser
   static MimeType = MimeType

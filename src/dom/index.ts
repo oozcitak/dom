@@ -67,13 +67,45 @@ applyMixin(ElementImpl, SlotableImpl)
 
 // Export classes
 export {
-  AbortControllerImpl, AbortSignalImpl, AbstractRangeImpl, AttrImpl,
-  CDATASectionImpl, CharacterDataImpl, CommentImpl, CustomEventImpl,
-  DocumentFragmentImpl, DocumentImpl, DocumentTypeImpl, DOMException,
-  DOMImplementationImpl, DOMTokenListImpl, ElementImpl, EventImpl,
-  EventTargetImpl, HTMLCollectionImpl, MutationObserverImpl, MutationRecordImpl,
-  NamedNodeMapImpl, NodeFilterImpl, NodeImpl, NodeIteratorImpl, NodeListImpl,
-  NodeListStaticImpl, ProcessingInstructionImpl, RangeImpl, ShadowRootImpl,
-  StaticRangeImpl, TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl,
-  XMLDocumentImpl
+  AbortControllerImpl as AbortController,
+  AbortSignalImpl as AbortSignal,
+  AbstractRangeImpl as AbstractRange,
+  AttrImpl as Attr,
+  CDATASectionImpl as CDATASection,
+  CharacterDataImpl as CharacterData,
+  CommentImpl as Comment,
+  CustomEventImpl as CustomEvent,
+  DocumentFragmentImpl as DocumentFragment,
+  DocumentImpl as Document,
+  DocumentTypeImpl as DocumentType,
+  DOMException as DOMExcep,
+  DOMImplementationImpl as DOMImplementation,
+  DOMTokenListImpl as DOMTokenList,
+  ElementImpl as Element,
+  EventImpl as Event,
+  EventTargetImpl as EventTarget,
+  HTMLCollectionImpl as HTMLCollection,
+  MutationObserverImpl as MutationObserver,
+  MutationRecordImpl as MutationRecord,
+  NamedNodeMapImpl as NamedNodeMap,
+  NodeFilterImpl as NodeFilter,
+  NodeImpl as Node,
+  NodeIteratorImpl as NodeIterator,
+  NodeListImpl as NodeList,
+  NodeListStaticImpl as NodeListStatic,
+  ProcessingInstructionImpl as ProcessingInstruction,
+  RangeImpl as Range,
+  ShadowRootImpl as ShadowRoot,
+  StaticRangeImpl as StaticRange,
+  TextImpl as Text,
+  TraverserImpl as Traverser,
+  TreeWalkerImpl as TreeWalker,
+  WindowImpl as Window,
+  XMLDocumentImpl as XMLDocument
 }
+
+export { DOMException }
+
+// Export interfaces
+import * as Interfaces from './interfaces'
+export { Interfaces }

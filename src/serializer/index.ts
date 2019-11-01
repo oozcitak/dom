@@ -1,4 +1,7 @@
 // Export classes
 export { XMLSerializerImpl as XMLSerializer } from './XMLSerializer'
 export { PreSerializer } from './PreSerializer'
-export { PreSerializedNode, PreSerializedAttr } from './interfaces'
+
+// Export interfaces
+import * as Interfaces from './interfaces'
+export { Interfaces }

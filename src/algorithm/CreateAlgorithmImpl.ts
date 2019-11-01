@@ -10,12 +10,12 @@ import {
   ShadowRootInternal, AbortControllerInternal, AbortSignalInternal, WindowInternal
 } from '../dom/interfacesInternal'
 import {
-  TextImpl, CDATASectionImpl, ProcessingInstructionImpl, DOMImplementationImpl,
-  CommentImpl, DocumentImpl, DocumentFragmentImpl, HTMLCollectionImpl,
-  NamedNodeMapImpl, ElementImpl, DocumentTypeImpl, AttrImpl, NodeListImpl,
-  NodeListStaticImpl, RangeImpl, NodeIteratorImpl, TreeWalkerImpl,
-  NodeFilterImpl, MutationRecordImpl, XMLDocumentImpl, DOMTokenListImpl, 
-  ShadowRootImpl, AbortControllerImpl, AbortSignalImpl, WindowImpl
+  Text, CDATASection, ProcessingInstruction, DOMImplementation,
+  Comment, Document, DocumentFragment, HTMLCollection,
+  NamedNodeMap, Element, DocumentType, Attr, NodeList,
+  NodeListStatic, Range, NodeIterator, TreeWalker,
+  NodeFilter, MutationRecord, XMLDocument, DOMTokenList, 
+  ShadowRoot, AbortController, AbortSignal, Window
 } from '../dom'
 import { BoundaryPoint } from '../dom/interfaces'
 import { URLRecord, URLAlgorithm } from '@oozcitak/url'
@@ -36,137 +36,137 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
 
   /** @inheritdoc */
   domImplementation(document: DocumentInternal): DOMImplementationInternal {
-    return DOMImplementationImpl._create(document)
+    return DOMImplementation._create(document)
   }
 
   /** @inheritdoc */
   window(): WindowInternal {
-    return WindowImpl._create()
+    return Window._create()
   }
   
   /** @inheritdoc */
   xmlDocument(): XMLDocumentInternal {
-    return new XMLDocumentImpl()
+    return new XMLDocument()
   }
 
   /** @inheritdoc */
   document(): DocumentInternal {
-    return new DocumentImpl()
+    return new Document()
   }
 
   /** @inheritdoc */
   abortController(): AbortControllerInternal {
-    return new AbortControllerImpl()
+    return new AbortController()
   }
 
   /** @inheritdoc */
   abortSignal(): AbortSignalInternal {
-    return AbortSignalImpl._create()
+    return AbortSignal._create()
   }
 
   /** @inheritdoc */
   documentType(document: DocumentInternal, name: string, publicId: string = '',
     systemId: string = ''): DocumentTypeInternal {
-    return DocumentTypeImpl._create(document, name, publicId, systemId)
+    return DocumentType._create(document, name, publicId, systemId)
   }
 
   /** @inheritdoc */
   element(document: DocumentInternal, localName: string, namespace: string | null = null,
     prefix: string | null = null): ElementInternal {
-    return ElementImpl._create(document, localName, namespace, prefix)
+    return Element._create(document, localName, namespace, prefix)
   }
 
   /** @inheritdoc */
   htmlElement(document: DocumentInternal, localName: string, namespace: string | null = null,
     prefix: string | null = null): ElementInternal {
     // TODO: Implement in HTML DOM
-    return ElementImpl._create(document, localName, namespace, prefix)
+    return Element._create(document, localName, namespace, prefix)
   }  
 
   /** @inheritdoc */
   htmlUnknownElement(document: DocumentInternal, localName: string, namespace: string | null = null,
     prefix: string | null = null): ElementInternal {
     // TODO: Implement in HTML DOM
-    return ElementImpl._create(document, localName, namespace, prefix)
+    return Element._create(document, localName, namespace, prefix)
   }
 
   /** @inheritdoc */
   documentFragment(document: DocumentInternal): DocumentFragmentInternal {
-    return DocumentFragmentImpl._create(document)
+    return DocumentFragment._create(document)
   }
 
   /** @inheritdoc */
   shadowRoot(document: DocumentInternal, host: ElementInternal): ShadowRootInternal {
-    return ShadowRootImpl._create(document, host)
+    return ShadowRoot._create(document, host)
   }
 
   /** @inheritdoc */
   attr(document: DocumentInternal, localName: string): AttrInternal {
-    return AttrImpl._create(document, localName)
+    return Attr._create(document, localName)
   }
 
   /** @inheritdoc */
   text(document: DocumentInternal, data: string = ''): TextInternal {
-    return TextImpl._create(document, data)
+    return Text._create(document, data)
   }
 
   /** @inheritdoc */
   cdataSection(document: DocumentInternal, data: string = ''): CDATASectionInternal {
-    return CDATASectionImpl._create(document, data)
+    return CDATASection._create(document, data)
   }
 
   /** @inheritdoc */
   comment(document: DocumentInternal, data: string = ''): CommentInternal {
-    return CommentImpl._create(document, data)
+    return Comment._create(document, data)
   }
 
   /** @inheritdoc */
   processingInstruction(document: DocumentInternal, target: string,
     data: string = ''): ProcessingInstructionInternal {
-    return ProcessingInstructionImpl._create(document, target, data)
+    return ProcessingInstruction._create(document, target, data)
   }
 
   /** @inheritdoc */
   htmlCollection(root: NodeInternal,
     filter: ((element: ElementInternal) => any) = (() => true)): HTMLCollectionInternal {
-    return HTMLCollectionImpl._create(root, filter)
+    return HTMLCollection._create(root, filter)
   }
 
   /** @inheritdoc */
   nodeList(root: NodeInternal): NodeListInternal {
-    return NodeListImpl._create(root)
+    return NodeList._create(root)
   }
 
   /** @inheritdoc */
   nodeListStatic(root: NodeInternal, items: NodeInternal[]): NodeListInternal {
-    return NodeListStaticImpl._create(root, items)
+    return NodeListStatic._create(root, items)
   }
 
   /** @inheritdoc */
   namedNodeMap(element: ElementInternal): NamedNodeMapInternal {
-    return NamedNodeMapImpl._create(element)
+    return NamedNodeMap._create(element)
   }
 
   /** @inheritdoc */
   range(start?: BoundaryPoint, end?: BoundaryPoint): RangeInternal {
-    return RangeImpl._create(start, end)
+    return Range._create(start, end)
   }
 
   /** @inheritdoc */
   nodeIterator(root: NodeInternal, reference: NodeInternal,
     pointerBeforeReference: boolean): NodeIteratorInternal {
 
-    return NodeIteratorImpl._create(root, reference, pointerBeforeReference)
+    return NodeIterator._create(root, reference, pointerBeforeReference)
   }
 
   /** @inheritdoc */
   treeWalker(root: NodeInternal, current: NodeInternal): TreeWalkerInternal {
-    return TreeWalkerImpl._create(root, current)
+    return TreeWalker._create(root, current)
   }
 
   /** @inheritdoc */
   nodeFilter(): NodeFilterInternal {
-    return NodeFilterImpl._create()
+    return NodeFilter._create()
   }
 
   /** @inheritdoc */
@@ -176,13 +176,13 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
     nextSibling: NodeInternal | null, attributeName: string | null,
     attributeNamespace: string | null, oldValue: string | null): MutationRecordInternal {
 
-    return MutationRecordImpl._create(type, target, addedNodes, removedNodes,
+    return MutationRecord._create(type, target, addedNodes, removedNodes,
       previousSibling, nextSibling, attributeName, attributeNamespace, oldValue)
   }
 
   /** @inheritdoc */
   domTokenList(element: ElementInternal, attribute: AttrInternal): DOMTokenListInternal {
-    return DOMTokenListImpl._create(element, attribute)
+    return DOMTokenList._create(element, attribute)
   }
 
   /** @inheritdoc */
