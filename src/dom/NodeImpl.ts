@@ -39,9 +39,9 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
 
   protected _childNodes: NodeList
 
-  _nodeDocumentOverwrite: DocumentInternal | null = null
-  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverwrite || globalStore.window.document as DocumentInternal }
-  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverwrite = val }
+  private _nodeDocumentOverride: DocumentInternal | undefined = undefined
+  get _nodeDocument(): DocumentInternal { return this._nodeDocumentOverride || globalStore.window._associatedDocument }
+  set _nodeDocument(val: DocumentInternal) { this._nodeDocumentOverride = val }
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
 
@@ -58,7 +58,7 @@ export abstract class NodeImpl extends EventTargetImpl implements NodeInternal {
    */
   protected constructor() {
     super()
-
+    
     this._childNodes = this._algo.create.nodeList(this)
   }
 

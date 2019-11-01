@@ -1,5 +1,5 @@
-import { WindowInternal } from "../html/interfacesInternal"
-import { HTMLAlgorithm } from "../html/algorithm/interfaces"
+import { WindowInternal } from "../dom/interfacesInternal"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 
 /**
  * Represents a global data store.
@@ -7,7 +7,7 @@ import { HTMLAlgorithm } from "../html/algorithm/interfaces"
 export class GlobalStore {
   private static _instance: GlobalStore
   
-  private _algorithm: HTMLAlgorithm | null = null
+  private _algorithm: DOMAlgorithm | null = null
   private _window: WindowInternal | null = null
 
   /**
@@ -18,13 +18,13 @@ export class GlobalStore {
   /**
    * Gets or sets the DOM algorithm.
    */
-  get algorithm(): HTMLAlgorithm {
+  get algorithm(): DOMAlgorithm {
     if (this._algorithm === null) {
-      throw new Error("HTML algorithm instance is null.")
+      throw new Error("DOM algorithm instance is null.")
     }
     return this._algorithm 
   }
-  set algorithm(val: HTMLAlgorithm) { this._algorithm = val }
+  set algorithm(val: DOMAlgorithm) { this._algorithm = val }
 
   /**
    * Gets or sets the global window object.

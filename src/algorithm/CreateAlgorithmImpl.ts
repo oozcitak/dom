@@ -7,7 +7,7 @@ import {
   DocumentTypeInternal, RangeInternal, NodeListInternal, NamedNodeMapInternal,
   NodeIteratorInternal, TreeWalkerInternal, NodeFilterInternal,
   MutationRecordInternal, XMLDocumentInternal, DOMTokenListInternal,
-  ShadowRootInternal, AbortControllerInternal, AbortSignalInternal
+  ShadowRootInternal, AbortControllerInternal, AbortSignalInternal, WindowInternal
 } from '../dom/interfacesInternal'
 import {
   TextImpl, CDATASectionImpl, ProcessingInstructionImpl, DOMImplementationImpl,
@@ -15,7 +15,7 @@ import {
   NamedNodeMapImpl, ElementImpl, DocumentTypeImpl, AttrImpl, NodeListImpl,
   NodeListStaticImpl, RangeImpl, NodeIteratorImpl, TreeWalkerImpl,
   NodeFilterImpl, MutationRecordImpl, XMLDocumentImpl, DOMTokenListImpl, 
-  ShadowRootImpl, AbortControllerImpl, AbortSignalImpl
+  ShadowRootImpl, AbortControllerImpl, AbortSignalImpl, WindowImpl
 } from '../dom'
 import { BoundaryPoint } from '../dom/interfaces'
 import { URLRecord, URLAlgorithm } from '@oozcitak/url'
@@ -39,6 +39,11 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
     return DOMImplementationImpl._create(document)
   }
 
+  /** @inheritdoc */
+  window(): WindowInternal {
+    return WindowImpl._create()
+  }
+  
   /** @inheritdoc */
   xmlDocument(): XMLDocumentInternal {
     return new XMLDocumentImpl()

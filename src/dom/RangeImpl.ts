@@ -6,7 +6,6 @@ import { AbstractRangeImpl } from './AbstractRangeImpl'
 import { DOMException } from './DOMException'
 import { RangeInternal, NodeInternal } from './interfacesInternal'
 import { globalStore, Guard } from '../util'
-import { WindowInternal } from '../html/interfacesInternal'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 
 /**
@@ -34,10 +33,9 @@ export class RangeImpl extends AbstractRangeImpl implements RangeInternal {
      * The Range() constructor, when invoked, must return a new live range with
      * (current global object’s associated Document, 0) as its start and end.
      */
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.algorithm
 
-    const window = globalStore.window as WindowInternal
-    const doc = window.document
+    const doc = globalStore.window._associatedDocument
 
     this._start = [doc, 0]
     this._end = [doc, 0]

@@ -12,6 +12,11 @@ export interface Window extends EventTarget {
    * Window.event is not accurate for events dispatched within shadow trees.
    */
   readonly event?: Event
+
+  /**
+   * Returns the associated Document.
+   */
+  readonly document: Document
 }
 
 /**
@@ -2002,6 +2007,18 @@ export interface Range extends AbstractRange {
    * @param node - the node to check
    */
   intersectsNode(node: Node): boolean
+}
+
+/**
+* Represents a html element node.
+*/
+export interface HTMLElement extends Element {
+}
+
+/**
+ * Represents a `<slot>` element.
+ */
+export interface HTMLSlotElement extends HTMLElement {
 }
 
 /**

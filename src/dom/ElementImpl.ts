@@ -1,13 +1,14 @@
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node,
-  Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition
+  Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
+  HTMLSlotElement
 } from './interfaces'
 import { NodeImpl } from './NodeImpl'
 import { DOMException } from './DOMException'
 import {
-  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal, SlotInternal
+  ElementInternal, AttrInternal, DocumentInternal, NamedNodeMapInternal,
+  SlotInternal
 } from './interfacesInternal'
-import { HTMLSlotElement } from '../html/interfaces'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
 import { AttributeChangeStep } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'

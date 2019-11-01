@@ -24,6 +24,8 @@ export interface WindowInternal extends Window, EventTargetInternal {
   _mutationObserverMicrotaskQueued: boolean
   _mutationObservers: Set<MutationObserver>
   
+  _associatedDocument: DocumentInternal
+  
   _rangeList: DOMObjectCache<RangeInternal>
   _iteratorList: DOMObjectCache<NodeIteratorInternal>
 }

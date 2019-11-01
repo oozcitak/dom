@@ -7,7 +7,8 @@ import {
   TreeWalkerInternal, NodeFilterInternal, EventInternal, EventTargetInternal,
   AbortSignalInternal, SlotableInternal, SlotInternal, MutationRecordInternal,
   CharacterDataInternal, XMLDocumentInternal, DOMTokenListInternal, 
-  ShadowRootInternal, AbstractRangeInternal, AbortControllerInternal
+  ShadowRootInternal, AbstractRangeInternal, AbortControllerInternal,
+  WindowInternal
 } from "../dom/interfacesInternal"
 import {
   AddEventListenerOptions, EventListenerOptions, EventListenerEntry,
@@ -1455,6 +1456,11 @@ export interface CreateAlgorithm extends SubAlgorithm {
    */
   domImplementation(document: DocumentInternal): DOMImplementationInternal
 
+  /** 
+   * Creates a `Window` node.
+   */
+  window(): WindowInternal
+  
   /** 
    * Creates a `Document` node.
    */

@@ -1,7 +1,7 @@
 import { SlotableInternal, SlotInternal } from './interfacesInternal'
-import { HTMLSlotElement } from '../html/interfaces'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore } from '../util'
+import { HTMLSlotElement } from './interfaces'
 
 /**
  * Represents a mixin that allows nodes to become the contents of
