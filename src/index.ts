@@ -9,3 +9,6 @@ export const window = globalStore.window
 
 // DOMParser
 export { DOMParser, MimeType } from './parser'
+
+// XMLSerializer
+export { XMLSerializer, PreSerializer } from './serializer'

@@ -77,4 +77,3 @@ export {
   StaticRangeImpl, TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl,
   XMLDocumentImpl
 }
-export { XMLSerializer, PreSerializer } from './serializer'

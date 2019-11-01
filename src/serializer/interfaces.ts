@@ -1,4 +1,4 @@
-import { Node, Attr } from "../interfaces"
+import { Node, Attr } from "../dom/interfaces"
 
 /**
  * Represents an XML serializer.

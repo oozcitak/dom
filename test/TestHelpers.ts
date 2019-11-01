@@ -10,11 +10,14 @@ import {
   ProcessingInstructionImpl, ShadowRootImpl, StaticRangeImpl, TextImpl,
   XMLDocumentImpl, RangeImpl
 } from '../src/dom'
+// DOMParser
 import { DOMParser, MimeType } from '../src/parser'
 import { XMLStringLexer } from '../src/parser/XMLStringLexer'
 import * as Token from '../src/parser/XMLToken'
-import { XMLSerializer } from '../src/dom/serializer'
-import { TupleSet } from '../src/dom/serializer/TupleSet'
+// XMLSerializer
+import { XMLSerializer } from '../src/serializer'
+import { TupleSet } from '../src/serializer/TupleSet'
+
 import { WhatToShow, FilterResult } from '../src/dom/interfaces'
 import { DOMAlgorithmImpl } from '../src/dom/algorithm/DOMAlgorithmImpl'
 import { ElementInternal } from "../src/dom/interfacesInternal"

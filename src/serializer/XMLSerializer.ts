@@ -4,7 +4,7 @@ import {
 import {
   Node, NodeType, Document, DocumentType, Comment, ProcessingInstruction,
   DocumentFragment, Text, Element, CDATASection
-} from "../interfaces"
+} from "../dom/interfaces"
 import { PreSerializer } from "./PreSerializer"
 
 /**

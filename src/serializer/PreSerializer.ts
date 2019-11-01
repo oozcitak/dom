@@ -1,14 +1,14 @@
 import {
   Node, Element, NodeType, Document, Comment, Text, DocumentFragment,
   DocumentType, ProcessingInstruction, CDATASection
-} from "../../dom/interfaces"
+} from "../dom/interfaces"
 import { TupleSet } from "./TupleSet"
 import { NamespacePrefixMap } from './NamespacePrefixMap'
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
-import { DOMException } from "../DOMException"
+import { DOMException } from "../dom/DOMException"
 import { namespace as infraNamespace } from '@oozcitak/infra'
-import { DOMAlgorithm } from "../algorithm/interfaces"
-import { globalStore } from "../../util"
+import { DOMAlgorithm } from "../dom/algorithm/interfaces"
+import { globalStore } from "../util"
 
 /**
  * Stores the last generated prefix. An object is used instead of a number so
