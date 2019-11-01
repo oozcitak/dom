@@ -77,5 +77,4 @@ export {
   StaticRangeImpl, TextImpl, TraverserImpl, TreeWalkerImpl, WindowImpl,
   XMLDocumentImpl
 }
-export { DOMParser, MimeType } from './parser'
 export { XMLSerializer, PreSerializer } from './serializer'

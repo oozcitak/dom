@@ -1,12 +1,12 @@
 import { XMLStringLexer } from "./XMLStringLexer"
 import { TokenType } from './interfaces'
-import { Document, Node } from "../interfaces"
+import { Document, Node } from "../dom/interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
-import { globalStore } from "../../util"
-import { DOMAlgorithm } from "../algorithm/interfaces"
+import { globalStore } from "../util"
+import { DOMAlgorithm } from "../dom/algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
