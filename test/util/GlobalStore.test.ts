@@ -1,6 +1,6 @@
 import $$ from '../TestHelpers'
 
-describe('GlobalStore without DOM', () => {
+describe('GlobalStore', () => {
 
   test('algorithm', () => {
     const store = $$.util.globalStore
@@ -13,8 +13,8 @@ describe('GlobalStore without DOM', () => {
   })
 
   test('instance', () => {
-    const store1 = $$.util.globalStore
-    const store2 = $$.util.globalStore
+    const store1 = $$.util.GlobalStore.instance
+    const store2 = $$.util.GlobalStore.instance
     expect(store1).toBe(store2)
   })
 
