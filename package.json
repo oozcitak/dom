@@ -49,6 +49,7 @@
     "compile": "rm -rf lib && tsc",
     "test": "npm run compile && jest",
     "testChanged": "npm run compile && jest --onlyChanged",
-    "cover": "npm run compile && jest --coverage"
+    "cover": "npm run compile && jest --coverage",
+    "publish-public": "npm run test && npm publish --access public"
   }
 }
