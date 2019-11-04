@@ -56,6 +56,23 @@ describe('Text', () => {
     expect(node.wholeText).toBe('peace')
   })
 
+  test('splitText() updates live ranges', () => {
+    const ele = $$.newDoc
+    const txt = new $$.Text("hello beautiful world")
+    ele.appendChild(txt)
+    const range = new $$.Range()
+    range.setStart(txt, 6)
+    range.setEnd(txt, 15)
+    expect(range.cloneContents().textContent).toBe("beautiful")
+    
+    const txt2 = txt.splitText(10)
+    expect(range.startContainer).toBe(txt)
+    expect(range.startOffset).toBe(6)
+    expect(range.endContainer).toBe(txt2)
+    expect(range.endOffset).toBe(5)
+    expect(range.cloneContents().textContent).toBe("beautiful")
+  })
+
   test('cloneNode()', () => {
     const clonedNode = <any>node1.cloneNode()
     expect(clonedNode).not.toBe(node)
