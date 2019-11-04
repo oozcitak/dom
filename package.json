@@ -46,10 +46,9 @@
     ]
   },
   "scripts": {
-    "compile": "tsc",
-    "init": "tsc ./src/url/IDNAMappingTableCreate.ts && node ./src/url/IDNAMappingTableCreate.js",
-    "test": "tsc && jest",
-    "testChanged": "tsc && jest --onlyChanged",
-    "cover": "tsc && jest --coverage"
+    "compile": "rm -rf lib && tsc",
+    "test": "npm run compile && jest",
+    "testChanged": "npm run compile && jest --onlyChanged",
+    "cover": "npm run compile && rm -rf coverage && jest --clearCache && jest --coverage"
   }
 }
