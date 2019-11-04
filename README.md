@@ -5,7 +5,7 @@ A Javascript implementation of the [DOM Living Standard](https://dom.spec.whatwg
 [![NPM Version](http://img.shields.io/npm/v/@oozcitak/dom.svg?style=flat-square)](https://www.npmjs.com/package/@oozcitak/dom)
 
 [![Travis Build Status](http://img.shields.io/travis/oozcitak/dom.svg?style=flat-square)](http://travis-ci.org/oozcitak/dom)
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/vmmfuvai1o3yips8?svg=true)](https://ci.appveyor.com/project/oozcitak/dom)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/j0oai7effi49w2rf?svg=true)](https://ci.appveyor.com/project/oozcitak/dom)
 [![Dev Dependency Status](http://img.shields.io/david/dev/oozcitak/dom.svg?style=flat-square)](https://david-dm.org/oozcitak/dom)
 [![Code Coverage](https://img.shields.io/codecov/c/github/oozcitak/dom?style=flat-square)](https://codecov.io/gh/oozcitak/dom)
 
