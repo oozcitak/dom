@@ -6,6 +6,7 @@ export { NodeCompareCache } from './NodeCompareCache'
 
 // Export interfaces
 import * as Interfaces from './interfaces'
+export { GlobalStore }
 export { Interfaces }
 
 /**
