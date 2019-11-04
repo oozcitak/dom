@@ -41,7 +41,7 @@ describe('NodeIterator', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -52,7 +52,7 @@ describe('NodeIterator', () => {
     const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -67,7 +67,7 @@ describe('NodeIterator', () => {
 
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
@@ -78,11 +78,11 @@ describe('NodeIterator', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()
-    while(node) {
+    while (node) {
       node = iter.nextNode()
     }
     node = iter.previousNode()
-    while(node) {
+    while (node) {
       str += ':' + node.nodeName
       node = iter.previousNode()
     }
