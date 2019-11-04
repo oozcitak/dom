@@ -5,7 +5,7 @@ import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
-import { globalStore, foreachObject } from "../util"
+import { globalStore, forEachObject } from "../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
@@ -69,7 +69,7 @@ export class DOMParser {
 
             // override namespace if there is a namespace declaration
             // attribute
-            for (let [attName, attValue] of foreachObject(element.attributes)) {
+            for (let [attName, attValue] of forEachObject(element.attributes)) {
               if (attName === "xmlns") {
                 namespace = attValue
               } else {
@@ -88,7 +88,7 @@ export class DOMParser {
             context.appendChild(elementNode)
 
             // assign attributes
-            for (let [attName, attValue] of foreachObject(element.attributes)) {
+            for (let [attName, attValue] of forEachObject(element.attributes)) {
               // skip the default namespace declaration attribute
               if (attName === "xmlns") {
                 continue

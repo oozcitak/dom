@@ -31,17 +31,16 @@ export function applyMixin(baseClass: any, mixinClass: any): void {
 }
 
 /**
- * Deep clones the given object.
+ * Iterates over key/value pairs of a map or object.
  * 
- * @param obj - an object
+ * @param obj - map or object to iterate
  */
-export function *foreachObject<T extends Object>(obj: T): IterableIterator<[keyof T, any]> {
+export function* forEachObject<T>(obj: { [key: string]: T }):
+  IterableIterator<[string, T]> {
   for (const key in obj) {
     /* istanbul ignore next */
-    if (obj.hasOwnProperty(key)) {
-      const val = obj[key]
-      yield [key, val]
-    }
+    if (!obj.hasOwnProperty(key)) continue
+    yield [key, obj[key]]
   }
 }
 
