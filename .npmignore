@@ -1,4 +1,5 @@
 .travis.yml
+appveyor.yml
 src
 test
 coverage
