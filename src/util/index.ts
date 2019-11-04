@@ -35,6 +35,21 @@ export function applyMixin(baseClass: any, mixinClass: any): void {
  * 
  * @param obj - an object
  */
+export function *foreachObject<T extends Object>(obj: T): IterableIterator<[keyof T, any]> {
+  for (const key in obj) {
+    /* istanbul ignore next */
+    if (obj.hasOwnProperty(key)) {
+      const val = obj[key]
+      yield [key, val]
+    }
+  }
+}
+
+/**
+ * Deep clones the given object.
+ * 
+ * @param obj - an object
+ */
 export function clone<T extends Function | any[] | Object>(obj: T): T {
   if (isFunction(obj)) {
     return obj

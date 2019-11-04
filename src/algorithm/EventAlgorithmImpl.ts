@@ -4,7 +4,7 @@ import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
   EventHandler, Event, EventTarget
 } from '../dom/interfaces'
-import { Guard } from '../util'
+import { Guard, foreachObject } from '../util'
 import { CustomEvent as CustomEventImpl, DOMException, Event as EventImpl } from '../dom'
 
 /**
@@ -738,7 +738,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * _Note:_ This also allows for the isTrusted attribute to be set to false.
      */
     if (idlAttributes) {
-      for (const [key, value] of Object.entries(idlAttributes)) {
+      for (const [key, value] of foreachObject(idlAttributes)) {
         const idlObj = event as any
         idlObj[key] = value
       }
