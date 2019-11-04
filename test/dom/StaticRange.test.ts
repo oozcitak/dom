@@ -16,6 +16,10 @@ describe('StaticRange', () => {
 		expect(range.startOffset).toBe(1)
 		expect(range.endContainer).toBe(node2)
 		expect(range.endOffset).toBe(0)
+
+		const attrNode = root._nodeDocument.createAttribute('att')
+		node1.attributes.setNamedItem(attrNode)
+		expect(() => new $$.StaticRange({ startContainer: attrNode, startOffset: 0, endContainer: attrNode, endOffset: 1 })).toThrow()
   })
 
 })
