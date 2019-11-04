@@ -1,5 +1,5 @@
 import dedent from "dedent"
-import { window } from '../src/index'
+import { window, implementation } from '../src'
 import {
   AbortController, AbortSignal, Attr, CDATASection, 
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -21,7 +21,6 @@ import { TupleSet } from '../src/serializer/TupleSet'
 import { DOMAlgorithmImpl } from '../src/algorithm/DOMAlgorithmImpl'
 
 import { WhatToShow, FilterResult } from '../src/dom/interfaces'
-import { ElementInternal } from "../src/dom/interfacesInternal"
 import * as util from '../src/util'
 
 export default class TestHelpers {
@@ -151,17 +150,17 @@ export default class TestHelpers {
   /**
    * Returns the DOM implementation object.
    */
-  static dom = window.document.implementation
+  static dom = implementation
   /**
    * Returns the root element of a new document.
    */
-  static get newDoc(): ElementInternal {
+  static get newDoc(): Element {
     const doc = window.document.implementation.createDocument('ns', 'root')
 
     if (!doc.documentElement)
       throw new Error("documentElement is null")
   
-    return doc.documentElement as ElementInternal
+    return doc.documentElement as Element
   }
   
   static util = util
