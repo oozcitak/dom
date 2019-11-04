@@ -1,21 +1,21 @@
 {
-  "name": "livedom",
+  "name": "@oozcitak/dom",
   "version": "0.0.1",
   "keywords": [
     "dom",
     "whatwg"
   ],
-  "homepage": "http://github.com/oozcitak/livedom",
+  "homepage": "http://github.com/oozcitak/dom",
   "description": "A modern DOM implementation",
   "author": "Ozgur Ozcitak <oozcitak@gmail.com>",
   "contributors": [],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/oozcitak/livedom.git"
+    "url": "git://github.com/oozcitak/dom.git"
   },
   "bugs": {
-    "url": "http://github.com/oozcitak/livedom/issues"
+    "url": "http://github.com/oozcitak/dom/issues"
   },
   "main": "./lib/index",
   "engines": {
