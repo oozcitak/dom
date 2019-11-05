@@ -83,7 +83,7 @@ export function* forEachArray<T>(arr: Array<T>): IterableIterator<T> {
  * 
  * @param obj - map or object to iterate
  */
-export function* forEachObject<T>(obj: { [key: string]: T }):
+export function* forEachObject<T>(obj: Map<string, T> | { [key: string]: T }):
   IterableIterator<[string, T]> {
   if (isMap(obj)) {
     for (const [key, val] of obj.entries()) {
