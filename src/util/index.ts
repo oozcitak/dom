@@ -40,8 +40,6 @@ export function applyMixin(baseClass: any, mixinClass: any, ...overrides: string
   })
 }
 
-
-
 /**
  * Applies default values to the given object.
  * 
