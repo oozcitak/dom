@@ -8,7 +8,7 @@ import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
 import { globalStore, isFunction, isString, Guard } from '../util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
-import { URLRecord, URLAlgorithm } from '@oozcitak/url'
+import { URLAlgorithm, Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
  * Represents a document node.
@@ -22,7 +22,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
   }
   _contentType: string = 'application/xml'
-  _URL: URLRecord
+  _URL: URLInterfaces.URLRecord
   _origin: Origin = null
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"

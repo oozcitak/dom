@@ -8,7 +8,7 @@ import {
   NodeFilter, MutationRecord, XMLDocument, DOMTokenList, 
   ShadowRoot, AbortController, AbortSignal, Window, Interfaces
 } from '../dom'
-import { URLRecord, URLAlgorithm } from '@oozcitak/url'
+import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
 import { BoundaryPoint } from '../dom/interfaces'
 
 /**
@@ -176,7 +176,7 @@ export class CreateAlgorithmImpl extends SubAlgorithmImpl implements CreateAlgor
   }
 
   /** @inheritdoc */
-  urlRecord(url: string): URLRecord {
+  urlRecord(url: string): URLInterfaces.URLRecord {
     const urlRecord = new URLAlgorithm().basicURLParser(url)
     if (urlRecord === null) {
       throw new Error("Invalid URL.")

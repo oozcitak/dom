@@ -1,6 +1,6 @@
 import { DOMObjectCache } from "../util/interfaces"
 import { AttributeChangeStep } from "../algorithm/interfaces"
-import { URLRecord } from "@oozcitak/url"
+import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
  * Represents a window containing a DOM document.
@@ -987,7 +987,7 @@ export interface Document extends Node, NonElementParentNode,
 
   _encoding: { name: string, labels: string[] }
   _contentType: string
-  _URL: URLRecord
+  _URL: URLInterfaces.URLRecord
   _origin: Origin
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"  

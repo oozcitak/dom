@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@oozcitak/infra": "1.0.2",
-    "@oozcitak/url": "0.0.6"
+    "@oozcitak/url": "0.0.7"
   },
   "devDependencies": {
     "typescript": "*",

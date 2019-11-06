@@ -11,7 +11,7 @@ import {
 } from "../dom/interfaces"
 import { EventImpl } from "../dom/EventImpl"
 import { DOMObjectCache } from "../util/interfaces"
-import { URLRecord } from "@oozcitak/url"
+import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -1678,7 +1678,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * 
    * @param url - an URL string
    */
-  urlRecord(url: string): URLRecord
+  urlRecord(url: string): URLInterfaces.URLRecord
 
 }
 
