@@ -22,8 +22,8 @@
     "node": ">=6.0"
   },
   "dependencies": {
-    "@oozcitak/infra": "1.0.1",
-    "@oozcitak/url": "0.0.3"
+    "@oozcitak/infra": "1.0.2",
+    "@oozcitak/url": "0.0.6"
   },
   "devDependencies": {
     "typescript": "*",
