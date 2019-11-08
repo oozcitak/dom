@@ -6,7 +6,6 @@ import {
 import { EventTargetImpl } from './EventTargetImpl'
 import { globalStore, Guard } from '../util'
 import { DOMException } from './DOMException'
-import { NodeCompareCache } from '../util/NodeCompareCache'
 import { URLAlgorithm } from '@oozcitak/url'
 
 /**
@@ -526,7 +525,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        (NodeCompareCache.instance.check(this, other as Node) ? Position.Preceding : Position.Following)
+        (globalStore.compareCache.check(this, other as Node) ? Position.Preceding : Position.Following)
     }
 
     /**

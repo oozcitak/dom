@@ -6,9 +6,10 @@ import {
 } from './interfaces'
 import { DOMException } from './DOMException'
 import { NodeImpl } from './NodeImpl'
-import { globalStore, isFunction, isString, Guard } from '../util'
+import { globalStore, Guard } from '../util'
+import { isFunction, isString } from '@oozcitak/util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
-import { URLAlgorithm, Interfaces as URLInterfaces } from "@oozcitak/url"
+import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
 
 /**
  * Represents a document node.

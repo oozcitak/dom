@@ -10,7 +10,7 @@ import {
   EventHandler
 } from "../dom/interfaces"
 import { EventImpl } from "../dom/EventImpl"
-import { DOMObjectCache } from "../util/interfaces"
+import { ObjectCache } from "@oozcitak/util"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
@@ -1812,7 +1812,7 @@ export interface RangeAlgorithm extends SubAlgorithm {
   /**
    * Gets the global range list.
    */
-  readonly rangeList: DOMObjectCache<Range>
+  readonly rangeList: ObjectCache<Range>
 }
 
 /**
@@ -1849,7 +1849,7 @@ export interface NodeIteratorAlgorithm extends SubAlgorithm {
   /**
    * Gets the global iterator list.
    */
-  readonly iteratorList: DOMObjectCache<NodeIterator>
+  readonly iteratorList: ObjectCache<NodeIterator>
 }
 
 /**

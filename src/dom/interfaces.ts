@@ -1,4 +1,4 @@
-import { DOMObjectCache } from "../util/interfaces"
+import { ObjectCache } from "@oozcitak/util"
 import { AttributeChangeStep } from "../algorithm/interfaces"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
@@ -27,8 +27,8 @@ export interface Window extends EventTarget {
   
   _associatedDocument: Document
   
-  _rangeList: DOMObjectCache<Range>
-  _iteratorList: DOMObjectCache<NodeIterator>
+  _rangeList: ObjectCache<Range>
+  _iteratorList: ObjectCache<NodeIterator>
 }
 
 /**

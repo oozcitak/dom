@@ -1,7 +1,8 @@
 import { DOMAlgorithm, DocumentAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Attr, Element, Document, Node } from '../dom/interfaces'
-import { isString, Guard } from '../util'
+import { Guard } from '../util'
+import { isString } from '@oozcitak/util'
 import { Element as ElementImpl } from '../dom'
 
 /**

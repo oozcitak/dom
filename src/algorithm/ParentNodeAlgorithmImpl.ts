@@ -1,7 +1,7 @@
 import { ParentNodeAlgorithm, DOMAlgorithm } from './interfaces'
 import { Node, Document } from '../dom/interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { isString } from '../util'
+import { isString } from '@oozcitak/util'
 
 /**
  * Contains parent node algorithms.

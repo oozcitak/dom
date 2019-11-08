@@ -3,7 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import {
   EventListenerOptions, AddEventListenerOptions, EventListenerEntry, EventTarget
 } from '../dom/interfaces'
-import { isBoolean } from '../util'
+import { isBoolean } from '@oozcitak/util'
 
 /**
  * Contains event target algorithms.

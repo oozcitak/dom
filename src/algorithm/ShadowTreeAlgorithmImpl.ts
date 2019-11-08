@@ -1,7 +1,8 @@
 import { DOMAlgorithm, ShadowTreeAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Slotable, Slot, Element, ShadowRoot, Node } from '../dom/interfaces'
-import { isEmpty, globalStore, Cast, Guard } from '../util'
+import { globalStore, Cast, Guard } from '../util'
+import { isEmpty } from '@oozcitak/util'
 
 /**
  * Contains shadow tree algorithms.

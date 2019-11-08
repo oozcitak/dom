@@ -2,7 +2,7 @@ import {
   Event, Slot, MutationObserver, Document, Window, Range, NodeIterator
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
-import { DOMObjectCacheImpl } from '../util'
+import { ObjectCache } from '@oozcitak/util'
 
 /**
  * Represents a window containing a DOM document.
@@ -16,8 +16,8 @@ export class WindowImpl extends EventTargetImpl implements Window {
 
   _associatedDocument: Document
 
-  _rangeList = new DOMObjectCacheImpl<Range>()
-  _iteratorList = new DOMObjectCacheImpl<NodeIterator>()
+  _rangeList = new ObjectCache<Range>()
+  _iteratorList = new ObjectCache<NodeIterator>()
   
   /**
    * Initializes a new instance of `Window`.

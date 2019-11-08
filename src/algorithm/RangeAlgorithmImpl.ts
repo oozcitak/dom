@@ -6,7 +6,7 @@ import {
 } from '../dom/interfaces'
 import { DOMException } from '../dom/DOMException'
 import { globalStore, Guard } from '../util'
-import { DOMObjectCache } from '../util/interfaces'
+import { ObjectCache } from '@oozcitak/util'
 
 /**
  * Contains range algorithms.
@@ -697,7 +697,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  get rangeList(): DOMObjectCache<Range> {
+  get rangeList(): ObjectCache<Range> {
     return globalStore.window._rangeList
   }
 

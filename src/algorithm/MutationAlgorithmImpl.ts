@@ -2,7 +2,8 @@ import { MutationAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { DOMException } from '../dom/DOMException'
 import { NodeType, Node, Element, Slot } from '../dom/interfaces'
-import { isEmpty, Guard } from '../util'
+import { Guard } from '../util'
+import { isEmpty } from '@oozcitak/util'
 import { set as infraSet } from '@oozcitak/infra'
 
 /**

@@ -5,7 +5,8 @@ import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
-import { globalStore, forEachObject } from "../util"
+import { globalStore } from "../util"
+import { forEachObject } from "@oozcitak/util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 

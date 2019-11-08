@@ -4,7 +4,8 @@ import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
   EventHandler, Event, EventTarget
 } from '../dom/interfaces'
-import { Guard, forEachObject } from '../util'
+import { Guard } from '../util'
+import { forEachObject } from '@oozcitak/util'
 import { CustomEvent as CustomEventImpl, DOMException, Event as EventImpl } from '../dom'
 
 /**

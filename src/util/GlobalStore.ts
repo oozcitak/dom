@@ -1,5 +1,6 @@
-import { Window } from "../dom/interfaces"
+import { Window, Node } from "../dom/interfaces"
 import { DOMAlgorithm } from "../algorithm/interfaces"
+import { CompareCache } from "@oozcitak/util"
 
 /**
  * Represents a global data store.
@@ -9,6 +10,7 @@ export class GlobalStore {
   
   private _algorithm: DOMAlgorithm | null = null
   private _window: Window | null = null
+  private _compareCache: CompareCache<Node> | null = null
 
   /**
    * Initializes a new instance of `GlobalStore`.
@@ -37,6 +39,16 @@ export class GlobalStore {
   }
   set window(val: Window) { this._window = val }
 
+  /**
+   * Gets or sets the global window object.
+   */
+  get compareCache(): CompareCache<Node> {
+    if (this._compareCache === null) {
+      throw new Error("Global compare cache instance is null.")
+    }    
+    return this._compareCache 
+  }
+  set compareCache(val: CompareCache<Node>) { this._compareCache = val }
 
   /**
    * Returns the instance of `GlobalStore`. 

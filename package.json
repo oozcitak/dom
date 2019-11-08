@@ -25,8 +25,9 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@oozcitak/infra": "1.0.2",
-    "@oozcitak/url": "0.0.7"
+    "@oozcitak/util": "1.0.2",
+    "@oozcitak/infra": "1.0.4",
+    "@oozcitak/url": "0.0.8"
   },
   "devDependencies": {
     "typescript": "*",
@@ -49,7 +50,7 @@
     ]
   },
   "scripts": {
-    "compile": "rm -rf lib && tsc",
+    "compile": "rm -rf lib && tsc --version && tsc",
     "test": "npm run compile && jest",
     "testChanged": "npm run compile && jest --onlyChanged",
     "cover": "npm run compile && jest --coverage",

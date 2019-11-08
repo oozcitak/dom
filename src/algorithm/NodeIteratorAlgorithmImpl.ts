@@ -2,7 +2,7 @@ import { DOMAlgorithm, NodeIteratorAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { FilterResult, Node, NodeIterator } from '../dom/interfaces'
 import { globalStore } from '../util'
-import { DOMObjectCache } from '../util/interfaces'
+import { ObjectCache } from '@oozcitak/util'
 
 /**
  * Contains tree walker algorithms.
@@ -103,7 +103,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
   }
 
   /** @inheritdoc */
-  get iteratorList(): DOMObjectCache<NodeIterator> {
+  get iteratorList(): ObjectCache<NodeIterator> {
     return globalStore.window._iteratorList
   }
 

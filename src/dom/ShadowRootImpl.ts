@@ -2,7 +2,7 @@ import {
   Element, ShadowRootMode, Event, EventTarget, ShadowRoot, Document, Node
 } from "./interfaces"
 import { DocumentFragmentImpl } from "./DocumentFragmentImpl"
-import { isEmpty } from "../util"
+import { isEmpty } from "@oozcitak/util"
 
 /**
  * Represents a shadow root.

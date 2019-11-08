@@ -1,4 +1,4 @@
-import { applyMixin } from '../util'
+import { applyMixin } from '@oozcitak/util'
 
 // Import implementation classes
 import { AbortControllerImpl } from './AbortControllerImpl'
