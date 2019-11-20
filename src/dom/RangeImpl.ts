@@ -12,15 +12,15 @@ import { DOMAlgorithm } from '../algorithm/interfaces'
  */
 export class RangeImpl extends AbstractRangeImpl implements Range {
 
-  _algo: DOMAlgorithm
+  protected _algo: DOMAlgorithm
 
   _start: BoundaryPoint
   _end: BoundaryPoint
 
-  static readonly START_TO_START: number = 0
-  static readonly START_TO_END: number = 1
-  static readonly END_TO_END: number = 2
-  static readonly END_TO_START: number = 3
+  readonly START_TO_START: number = 0
+  readonly START_TO_END: number = 1
+  readonly END_TO_END: number = 2
+  readonly END_TO_START: number = 3
 
   /**
    * Initializes a new instance of `Range`.

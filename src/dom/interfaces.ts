@@ -35,6 +35,12 @@ export interface Window extends EventTarget {
  * Represents a DOM event.
  */
 export interface Event {
+  
+  readonly NONE: number
+  readonly CAPTURING_PHASE: number
+  readonly AT_TARGET: number
+  readonly BUBBLING_PHASE: number
+
   /**
    * Returns the type of event.
    */
@@ -393,6 +399,26 @@ export interface AbortSignal extends EventTarget {
  * Represents a generic XML node.
  */
 export interface Node extends EventTarget {
+
+  readonly ELEMENT_NODE: number
+  readonly ATTRIBUTE_NODE: number
+  readonly TEXT_NODE: number
+  readonly CDATA_SECTION_NODE: number
+  readonly ENTITY_REFERENCE_NODE: number
+  readonly ENTITY_NODE: number
+  readonly PROCESSING_INSTRUCTION_NODE: number
+  readonly COMMENT_NODE: number
+  readonly DOCUMENT_NODE: number
+  readonly DOCUMENT_TYPE_NODE: number
+  readonly DOCUMENT_FRAGMENT_NODE: number
+  readonly NOTATION_NODE: number
+
+  readonly DOCUMENT_POSITION_DISCONNECTED: number
+  readonly DOCUMENT_POSITION_PRECEDING: number
+  readonly DOCUMENT_POSITION_FOLLOWING: number
+  readonly DOCUMENT_POSITION_CONTAINS: number
+  readonly DOCUMENT_POSITION_CONTAINED_BY: number
+  readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number
 
   /** 
    * Returns the type of node. 
@@ -1744,6 +1770,25 @@ export interface NamedNodeMap extends Iterable<Attr> {
  * Represents a node filter.
  */
 export interface NodeFilter {
+
+  readonly FILTER_ACCEPT: number
+  readonly FILTER_REJECT: number
+  readonly FILTER_SKIP: number
+
+  readonly SHOW_ALL: number
+  readonly SHOW_ELEMENT: number
+  readonly SHOW_ATTRIBUTE: number
+  readonly SHOW_TEXT: number
+  readonly SHOW_CDATA_SECTION: number
+  readonly SHOW_ENTITY_REFERENCE: number
+  readonly SHOW_ENTITY: number
+  readonly SHOW_PROCESSING_INSTRUCTION: number
+  readonly SHOW_COMMENT: number
+  readonly SHOW_DOCUMENT: number
+  readonly SHOW_DOCUMENT_TYPE: number
+  readonly SHOW_DOCUMENT_FRAGMENT: number
+  readonly SHOW_NOTATION: number
+
   /** 
    * Callback function.
    */
@@ -2017,6 +2062,12 @@ export interface StaticRange extends AbstractRange { }
  * Represents a live range.
  */
 export interface Range extends AbstractRange {
+
+  readonly START_TO_START: number
+  readonly START_TO_END: number
+  readonly END_TO_END: number
+  readonly END_TO_START: number
+
   /**
    * Returns the node, furthest away from the document, that is an 
    * ancestor of both range's start node and end node.

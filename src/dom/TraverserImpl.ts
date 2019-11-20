@@ -8,7 +8,7 @@ import { globalStore } from "../util"
  */
 export abstract class TraverserImpl implements Traverser {
 
-  _algo: DOMAlgorithm
+  protected _algo: DOMAlgorithm
 
   _activeFlag: boolean
   _root: Node

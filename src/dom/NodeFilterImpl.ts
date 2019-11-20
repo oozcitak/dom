@@ -5,23 +5,23 @@ import { Node, FilterResult, NodeFilter } from "./interfaces"
  */
 export class NodeFilterImpl implements NodeFilter {
 
-  static readonly FILTER_ACCEPT: number = 1
-  static readonly FILTER_REJECT: number = 2
-  static readonly FILTER_SKIP: number = 3
+  readonly FILTER_ACCEPT: number = 1
+  readonly FILTER_REJECT: number = 2
+  readonly FILTER_SKIP: number = 3
 
-  static readonly SHOW_ALL: number = 0xffffffff
-  static readonly SHOW_ELEMENT: number = 0x1
-  static readonly SHOW_ATTRIBUTE: number = 0x2
-  static readonly SHOW_TEXT: number = 0x4
-  static readonly SHOW_CDATA_SECTION: number = 0x8
-  static readonly SHOW_ENTITY_REFERENCE: number = 0x10
-  static readonly SHOW_ENTITY: number = 0x20
-  static readonly SHOW_PROCESSING_INSTRUCTION: number = 0x40
-  static readonly SHOW_COMMENT: number = 0x80
-  static readonly SHOW_DOCUMENT: number = 0x100
-  static readonly SHOW_DOCUMENT_TYPE: number = 0x200
-  static readonly SHOW_DOCUMENT_FRAGMENT: number = 0x400
-  static readonly SHOW_NOTATION: number = 0x800
+  readonly SHOW_ALL: number = 0xffffffff
+  readonly SHOW_ELEMENT: number = 0x1
+  readonly SHOW_ATTRIBUTE: number = 0x2
+  readonly SHOW_TEXT: number = 0x4
+  readonly SHOW_CDATA_SECTION: number = 0x8
+  readonly SHOW_ENTITY_REFERENCE: number = 0x10
+  readonly SHOW_ENTITY: number = 0x20
+  readonly SHOW_PROCESSING_INSTRUCTION: number = 0x40
+  readonly SHOW_COMMENT: number = 0x80
+  readonly SHOW_DOCUMENT: number = 0x100
+  readonly SHOW_DOCUMENT_TYPE: number = 0x200
+  readonly SHOW_DOCUMENT_FRAGMENT: number = 0x400
+  readonly SHOW_NOTATION: number = 0x800
 
   /**
    * Initializes a new instance of `NodeFilter`.

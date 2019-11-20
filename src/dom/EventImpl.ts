@@ -9,10 +9,10 @@ import { globalStore } from '../util'
  */
 export class EventImpl implements Event {
 
-  static readonly NONE: number = 0
-  static readonly CAPTURING_PHASE: number = 1
-  static readonly AT_TARGET: number = 2
-  static readonly BUBBLING_PHASE: number = 3
+  readonly NONE: number = 0
+  readonly CAPTURING_PHASE: number = 1
+  readonly AT_TARGET: number = 2
+  readonly BUBBLING_PHASE: number = 3
 
   _target: PotentialEventTarget = null
   _relatedTarget: PotentialEventTarget = null

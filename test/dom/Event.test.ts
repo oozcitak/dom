@@ -29,7 +29,7 @@ describe('Event', () => {
       expect(e.isTrusted).toBe(false)
       expect(e.returnValue).toBe(true)
       expect(e.type).toBe("custom")
-      expect(e.eventPhase).toBe($$.Event.AT_TARGET)
+      expect(e.eventPhase).toBe(e.AT_TARGET)
       expect(e.target).toBe(ele)
       expect(e.srcElement).toBe(ele)
       expect(e.currentTarget).toBe(ele)
