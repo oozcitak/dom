@@ -1,6 +1,6 @@
 import { MutationAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { DOMException } from '../dom/DOMException'
+import { HierarchyRequestError, NotFoundError } from '../dom/DOMException'
 import { NodeType, Node, Element, Slot } from '../dom/interfaces'
 import { Guard } from '../util'
 import { isEmpty } from '@oozcitak/util'
@@ -29,21 +29,21 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     if (parent.nodeType !== NodeType.Document &&
       parent.nodeType !== NodeType.DocumentFragment &&
       parent.nodeType !== NodeType.Element)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Only document, document fragment and element nodes can contain child nodes. Parent node is ${parent.nodeName}.`)
 
     /**
      * 2. If node is a host-including inclusive ancestor of parent, throw a
      * "HierarchyRequestError" DOMException.
      */
     if (this.dom.tree.isAncestorOf(parent, node, true, true))
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
      * 3. If child is not null and its parent is not parent, then throw a
      * "NotFoundError" DOMException.
      */
     if (child !== null && child.parentNode !== parent)
-      throw DOMException.NotFoundError
+      throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
      * 4. If node is not a DocumentFragment, DocumentType, Element, Text, 
@@ -57,7 +57,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       node.nodeType !== NodeType.ProcessingInstruction &&
       node.nodeType !== NodeType.CData &&
       node.nodeType !== NodeType.Comment)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Only document fragment, document type, element, text, processing instruction, cdata section or comment nodes can be inserted. Node is ${node.nodeName}.`)
 
     /**
      * 5. If either node is a Text node and parent is a document, or node is a
@@ -66,11 +66,11 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     if (node.nodeType === NodeType.Text &&
       parent.nodeType === NodeType.Document)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Cannot insert a text node as a child of a document node. Node is ${node.nodeName}.`)
 
     if (node.nodeType === NodeType.DocumentType &&
       parent.nodeType !== NodeType.Document)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`A document type node can only be inserted under a document node. Parent node is ${parent.nodeName}.`)
 
     /**
      * 6. If parent is a document, and any of the statements below, switched on
@@ -94,26 +94,25 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
           if (childNode.nodeType === NodeType.Element)
             eleCount++
           else if (childNode.nodeType === NodeType.Text)
-            throw DOMException.HierarchyRequestError
-
-          if (eleCount > 1)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
         }
 
-        if (eleCount === 1) {
+        if (eleCount > 1) {
+          throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
+        } else if (eleCount === 1) {
           for (const ele of parent.childNodes) {
             if (ele.nodeType === NodeType.Element)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`The document node already has a document element node.`)
           }
 
           if (child) {
             if (child.nodeType === NodeType.DocumentType)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
 
             let doctypeChild = child.nextSibling
             while (doctypeChild) {
               if (doctypeChild.nodeType === NodeType.DocumentType)
-                throw DOMException.HierarchyRequestError
+                throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
               doctypeChild = doctypeChild.nextSibling
             }
           }
@@ -121,38 +120,38 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       } else if (node.nodeType === NodeType.Element) {
         for (const ele of parent.childNodes) {
           if (ele.nodeType === NodeType.Element)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
         }
 
         if (child) {
           if (child.nodeType === NodeType.DocumentType)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
 
           let doctypeChild = child.nextSibling
           while (doctypeChild) {
             if (doctypeChild.nodeType === NodeType.DocumentType)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
             doctypeChild = doctypeChild.nextSibling
           }
         }
       } else if (node.nodeType === NodeType.DocumentType) {
         for (const ele of parent.childNodes) {
           if (ele.nodeType === NodeType.DocumentType)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
         }
 
         if (child) {
           let elementChild = child.previousSibling
           while (elementChild) {
             if (elementChild.nodeType === NodeType.Element)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
             elementChild = elementChild.previousSibling
           }
         } else {
           let elementChild = parent.firstChild
           while (elementChild) {
             if (elementChild.nodeType === NodeType.Element)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
             elementChild = elementChild.nextSibling
           }
         }
@@ -386,21 +385,21 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     if (parent.nodeType !== NodeType.Document &&
       parent.nodeType !== NodeType.DocumentFragment &&
       parent.nodeType !== NodeType.Element)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Only document, document fragment and element nodes can contain child nodes. Parent node is ${parent.nodeName}.`)
 
     /**
      * 2. If node is a host-including inclusive ancestor of parent, throw a 
      * "HierarchyRequestError" DOMException.
      */
     if (this.dom.tree.isAncestorOf(parent, node, true, true))
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
      * 3. If child’s parent is not parent, then throw a "NotFoundError" 
      * DOMException.
      */
     if (child.parentNode !== parent)
-      throw DOMException.NotFoundError
+      throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
      * 4. If node is not a DocumentFragment, DocumentType, Element, Text, 
@@ -414,7 +413,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       node.nodeType !== NodeType.ProcessingInstruction &&
       node.nodeType !== NodeType.CData &&
       node.nodeType !== NodeType.Comment)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Only document fragment, document type, element, text, processing instruction, cdata section or comment nodes can be inserted. Node is ${node.nodeName}.`)
 
     /**
      * 5. If either node is a Text node and parent is a document, or node is a 
@@ -423,8 +422,12 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     if (node.nodeType === NodeType.Text &&
       parent.nodeType === NodeType.Document)
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError(`Cannot insert a text node as a child of a document node. Node is ${node.nodeName}.`)
 
+    if (node.nodeType === NodeType.DocumentType &&
+      parent.nodeType !== NodeType.Document)
+      throw new HierarchyRequestError(`A document type node can only be inserted under a document node. Parent node is ${parent.nodeName}.`)
+  
     /**
      * 6. If parent is a document, and any of the statements below, switched on 
      * node, are true, throw a "HierarchyRequestError" DOMException.
@@ -439,10 +442,6 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * parent has a doctype child that is not child, or an element is
      * preceding child.
      */
-    if (node.nodeType === NodeType.DocumentType &&
-      parent.nodeType !== NodeType.Document)
-      throw DOMException.HierarchyRequestError
-
     if (parent.nodeType === NodeType.Document) {
       if (node.nodeType === NodeType.DocumentFragment) {
         let eleCount = 0
@@ -450,47 +449,46 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
           if (childNode.nodeType === NodeType.Element)
             eleCount++
           else if (childNode.nodeType === NodeType.Text)
-            throw DOMException.HierarchyRequestError
-
-          if (eleCount > 1)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
         }
 
-        if (eleCount === 1) {
+        if (eleCount > 1) {
+          throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
+        } else if (eleCount === 1) {
           for (const ele of parent.childNodes) {
             if (ele.nodeType === NodeType.Element && ele !== child)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`The document node already has a document element node.`)
           }
 
           let doctypeChild = child.nextSibling
           while (doctypeChild) {
             if (doctypeChild.nodeType === NodeType.DocumentType)
-              throw DOMException.HierarchyRequestError
+              throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
             doctypeChild = doctypeChild.nextSibling
           }
         }
       } else if (node.nodeType === NodeType.Element) {
         for (const ele of parent.childNodes) {
           if (ele.nodeType === NodeType.Element && ele !== child)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
         }
 
         let doctypeChild = child.nextSibling
         while (doctypeChild) {
           if (doctypeChild.nodeType === NodeType.DocumentType)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
           doctypeChild = doctypeChild.nextSibling
         }
       } else if (node.nodeType === NodeType.DocumentType) {
         for (const ele of parent.childNodes) {
           if (ele.nodeType === NodeType.DocumentType && ele !== child)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
         }
 
         let elementChild = child.previousSibling
         while (elementChild) {
           if (elementChild.nodeType === NodeType.Element)
-            throw DOMException.HierarchyRequestError
+            throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
           elementChild = elementChild.previousSibling
         }
       }
@@ -622,7 +620,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. Return child.
      */
     if (child.parentNode !== parent)
-      throw DOMException.NotFoundError
+      throw new NotFoundError(`The child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     this.remove(child, parent)
 

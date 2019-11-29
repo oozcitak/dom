@@ -47,3 +47,30 @@ export class DOMException extends Error {
   static DataCloneError = new DOMException("DataCloneError", "The object can not be cloned.")
   static NotImplementedError = new DOMException("NotImplementedError", "The DOM method is not implemented by this module.")
 }
+
+export class HierarchyRequestError extends DOMException {
+  /**
+   * @param message - error message
+   */
+  constructor(message = "The operation would yield an incorrect node tree.") {
+    super("HierarchyRequestError", message)
+  }
+}
+
+export class NotFoundError extends DOMException {
+  /**
+   * @param message - error message
+   */
+  constructor(message = "The object can not be found here.") {
+    super("NotFoundError", message)
+  }
+}
+
+export class IndexSizeError extends DOMException {
+  /**
+   * @param message - error message
+   */
+  constructor(message = "The index is not in the allowed range.") {
+    super("NotFoundError", message)
+  }
+}

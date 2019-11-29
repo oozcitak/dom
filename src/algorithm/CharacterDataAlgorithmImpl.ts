@@ -1,8 +1,8 @@
 import { DOMAlgorithm, CharacterDataAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { CharacterData, Node } from '../dom/interfaces'
-import { DOMException } from '../dom/DOMException'
 import { Guard } from '../util'
+import { IndexSizeError } from '../dom/DOMException'
 
 /**
  * Contains character data algorithms.
@@ -32,7 +32,7 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
     const length = this.dom.tree.nodeLength(node)
 
     if (offset > length) {
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError(`Offset exceeds character data length. Offset: ${offset}, Length: ${length}, Node is ${node.nodeName}.`)
     }
 
     if (offset + count > length) {
@@ -109,7 +109,7 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
     const length = this.dom.tree.nodeLength(node)
 
     if (offset > length) {
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError(`Offset exceeds character data length. Offset: ${offset}, Length: ${length}, Node is ${node.nodeName}.`)
     }
 
     if (offset + count > length) {
