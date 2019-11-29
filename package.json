@@ -30,14 +30,23 @@
     "@oozcitak/url": "0.0.8"
   },
   "devDependencies": {
-    "typescript": "*",
-    "jest": "*",
-    "ts-jest": "*",
+    "@types/dedent": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
+    "@types/xmldom": "*",
+    "@types/jsdom": "*",
+    "@types/benchmark": "*",
+    "@types/chalk": "*",
     "dedent": "*",
     "glob": "*",
-    "@types/node": "*",
-    "@types/jest": "*",
-    "@types/dedent": "*"
+    "jest": "*",
+    "jsdom": "*",
+    "ts-jest": "*",
+    "typescript": "*",
+    "xmldom": "*",
+    "benchmark": "*",
+    "ts-node": "*",
+    "chalk": "*"
   },
   "jest": {
     "transform": {
@@ -52,6 +61,7 @@
   "scripts": {
     "compile": "rm -rf lib && tsc --version && tsc",
     "test": "npm run compile && jest --coverage",
+    "perf": "ts-node ./perf/perf.ts",
     "publish-public": "npm run test && npm publish --access public"
   }
 }
