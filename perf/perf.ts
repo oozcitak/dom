@@ -3,7 +3,7 @@ import { DOMImplementation as XMLDOMImplementation } from "xmldom"
 import { JSDOM } from "jsdom"
 import { Suite } from "benchmark"
 import { printBenchmark } from "./"
-/*
+
 (function () {
   const suite = new Suite("createDocument")
 
@@ -22,8 +22,8 @@ import { printBenchmark } from "./"
     jsdomImpl.createDocument(null, "", null)
   })
 
+  suite.on("complete", () => printBenchmark(suite))
   suite.run()
-  printBenchmark(suite)
 
 })();
 
@@ -46,34 +46,33 @@ import { printBenchmark } from "./"
     jsdomDoc.createElement("node")
   })
 
+  suite.on("complete", () => printBenchmark(suite))
   suite.run()
-  printBenchmark(suite)
 
 })();
-*/
+
 (function () {
-  const suite = new Suite("appendChild")
-  
-  const doc = impl.createDocument(null, "", null)
-  const node = doc.createElement("node")
-  const xmldomDoc = new XMLDOMImplementation().createDocument(null, "", null)
-  const xmldomNode = xmldomDoc.createElement("node")
-  const jsdomDoc = new JSDOM().window.document.implementation.createDocument(null, "", null)
-  const jsdomNode = jsdomDoc.createElement("node")
-  
+  const suite = new Suite("createDocument + createElement + appendChild")
+   
   suite.add("dom", () => {
-    doc.appendChild(node)
+    const doc = impl.createDocument(null, "root", null)
+    const root = doc.documentElement as any
+    root.appendChild(doc.createElement("node"))
   })
 
   suite.add("xmldom", () => {
-    xmldomDoc.appendChild(xmldomNode)
+    const doc = new XMLDOMImplementation().createDocument(null, "", null)
+    const root = doc.documentElement as any
+    root.appendChild(doc.createElement("node"))
   })
 
   suite.add("jsdom", () => {
-    jsdomDoc.appendChild(jsdomNode)
+    const doc = new JSDOM().window.document.implementation.createDocument(null, "", null)
+    const root = doc.documentElement as any
+    root.appendChild(doc.createElement("node"))
   })
 
+  suite.on("complete", () => printBenchmark(suite))
   suite.run()
-  printBenchmark(suite)
 
 })();

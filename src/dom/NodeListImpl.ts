@@ -1,5 +1,4 @@
 import { Node, NodeList } from "./interfaces"
-import { set as infraSet } from '@oozcitak/infra'
 import { globalStore } from "../util"
 
 /**
@@ -9,7 +8,7 @@ export class NodeListImpl implements NodeList {
 
   _live: boolean = true
   _root: Node
-  _filter: ((node: Node) => any) = (() => true)
+  _filter: ((node: Node) => any) | null = null
   _length = 0
 
   /**
@@ -27,7 +26,7 @@ export class NodeListImpl implements NodeList {
      * The length attribute must return the number of nodes represented 
      * by the collection.
      */
-    return infraSet.size(this._root._children)
+    return this._root._children.size
   }
 
   /** @inheritdoc */

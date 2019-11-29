@@ -23,7 +23,18 @@ export class DocumentImpl extends NodeImpl implements Document {
     labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
   }
   _contentType: string = 'application/xml'
-  _URL: URLInterfaces.URLRecord
+  _URL: URLInterfaces.URLRecord = {
+    scheme: "about",
+    username: "",
+    password: "",
+    host: null,
+    port: null,
+    path: ["blank"],
+    query: null,
+    fragment: null,
+    _cannotBeABaseURLFlag: true,
+    _blobURLEntry: null
+  }
   _origin: Origin = null
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
@@ -41,7 +52,6 @@ export class DocumentImpl extends NodeImpl implements Document {
     super()
 
     this._implementation = this._algo.create.domImplementation(this)
-    this._URL = this._algo.create.urlRecord('about:blank')
   }
 
   /** @inheritdoc */
