@@ -85,35 +85,6 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
   }
 
 	/** @inheritdoc */
-	*getDescendantNodes2(node: Node, self: boolean = false,
-		shadow: boolean = false, filter?:
-			((childNode: Node) => boolean)):
-		IterableIterator<Node> {
-
-		if (self && (filter === undefined || filter(node)))
-			yield node
-
-		// traverse shadow tree
-		if (shadow && Guard.isElementNode(node)) {
-			if (node.shadowRoot) {
-				const shadowRoot = node.shadowRoot as ShadowRoot as DocumentFragment as Node
-				let child = shadowRoot._firstChild as Node | null
-				while (child) {
-					yield* this.getDescendantNodes(child, true, shadow, filter)
-					child = child._nextSibling as Node | null
-				}
-			}
-		}
-
-		// traverse child nodes
-		let child = node._firstChild as Node | null
-		while (child) {
-			yield* this.getDescendantNodes(child, true, shadow, filter)
-			child = child._nextSibling as Node | null
-		}
-	}
-
-	/** @inheritdoc */
 	*getDescendantElements(node: Node, self: boolean = false,
 		shadow: boolean = false, filter?:
 			((childNode: Element) => boolean)):
