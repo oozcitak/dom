@@ -246,17 +246,17 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       return this.dom.create.htmlCollection(root, function (ele) {
         if (ele._namespace === infraNamespace.HTML &&
           ele._qualifiedName === qualifiedName.toLowerCase()) {
-          return ele
+          return true
         } else if (ele._namespace !== infraNamespace.HTML &&
           ele._qualifiedName === qualifiedName) {
-          return ele
+          return true
+        } else {
+          return false
         }
       })
     } else {
       return this.dom.create.htmlCollection(root, function (ele) {
-        if (ele._qualifiedName === qualifiedName) {
-          return ele
-        }
+        return (ele._qualifiedName === qualifiedName)
       })
     }
 
@@ -285,21 +285,15 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       return this.dom.create.htmlCollection(root)
     } else if (namespace === "*") {
       return this.dom.create.htmlCollection(root, function (ele) {
-        if (ele._localName === localName) {
-          return ele
-        }
+        return (ele._localName === localName)
       })
     } else if (localName === "*") {
       return this.dom.create.htmlCollection(root, function (ele) {
-        if (ele._namespace === namespace) {
-          return ele
-        }
+        return (ele._namespace === namespace)
       })
     } else {
       return this.dom.create.htmlCollection(root, function (ele) {
-        if (ele._localName === localName && ele._namespace === namespace) {
-          return ele
-        }
+        return (ele._localName === localName && ele._namespace === namespace)
       })
     }
   }

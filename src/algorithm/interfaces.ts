@@ -289,7 +289,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getDescendantNodes(node: Node, self?: boolean, shadow?: boolean,
-    filter?: (childNode: Node) => any): IterableIterator<Node>
+    filter?: (childNode: Node) => boolean): Iterable<Node>
 
   /**
    * Traverses through all descendant element nodes of the tree rooted at
@@ -301,7 +301,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getDescendantElements(node: Node, self?: boolean, shadow?: boolean,
-    filter?: (childNode: Element) => any): IterableIterator<Element>
+    filter?: (childNode: Element) => boolean): IterableIterator<Element>
 
   /**
    * Traverses through all sibling nodes of `node`.
@@ -311,7 +311,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getSiblingNodes(node: Node, self?: boolean,
-    filter?: (childNode: Node) => any): IterableIterator<Node>
+    filter?: (childNode: Node) => boolean): IterableIterator<Node>
 
   /**
    * Traverses through all ancestor nodes `node` in reverse tree order.
@@ -321,7 +321,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getAncestorNodes(node: Node, self?: boolean,
-    filter?: (ancestorNode: Node) => any): IterableIterator<Node>
+    filter?: (ancestorNode: Node) => boolean): IterableIterator<Node>
 
   /**
    * Returns the common ancestor of the given nodes.
@@ -1583,7 +1583,7 @@ export interface CreateAlgorithm extends SubAlgorithm {
    * @param filter - node filter
    */
   htmlCollection(root: Node,
-    filter?: ((element: Element) => any)): HTMLCollection
+    filter?: ((element: Element) => boolean)): HTMLCollection
 
   /**
    * Creates a new live `NodeList`.

@@ -10,7 +10,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
 
   _live: boolean = true
   _root: Node
-  _filter: ((element: Element) => any)
+  _filter: ((element: Element) => boolean)
 
   protected static reservedNames = ['_root', '_live', '_filter', 'length',
     'item', 'namedItem', 'get']
@@ -21,7 +21,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
    * @param root - root node
    * @param filter - node filter
    */
-  private constructor(root: Node, filter: ((element: Element) => any)) {
+  private constructor(root: Node, filter: ((element: Element) => boolean)) {
     this._root = root
     this._filter = filter
 
@@ -72,15 +72,13 @@ export class HTMLCollectionImpl implements HTMLCollection {
     if (key === '') return null
 
     for (const ele of this) {
-      const eleInt = ele as Element
-      if (eleInt._uniqueIdentifier === key) {
-        return eleInt
-      } else if (eleInt._namespace === infraNamespace.HTML) {
-        for (const attr of eleInt._attributeList) {
-          const attrInt = attr as Attr
-          if (attrInt._localName === "name" && attrInt._namespace === null &&
-            attrInt._namespacePrefix === null && attrInt._value === key)
-            return eleInt
+      if (ele._uniqueIdentifier === key) {
+        return ele
+      } else if (ele._namespace === infraNamespace.HTML) {
+        for (const attr of ele._attributeList) {
+          if (attr._localName === "name" && attr._namespace === null &&
+            attr._namespacePrefix === null && attr._value === key)
+            return ele
         }
       }
     }
@@ -91,8 +89,8 @@ export class HTMLCollectionImpl implements HTMLCollection {
   /** @inheritdoc */
   *[Symbol.iterator](): IterableIterator<Element> {
     const algo = globalStore.algorithm as DOMAlgorithm
-    yield* algo.tree.getDescendantElements(this._root as Node, false, false,
-      (ele) => { return !!this._filter(ele as Element) })
+    yield* algo.tree.getDescendantElements(this._root, false, false,
+      (ele) => { return !!this._filter(ele) })
   }
 
   /** @inheritdoc */
@@ -124,7 +122,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
    * @param filter - node filter
    */
   static _create(root: Node,
-    filter: ((element: Element) => any) = (() => true)): HTMLCollectionImpl {
+    filter: ((element: Element) => boolean) = (() => true)): HTMLCollectionImpl {
     return new HTMLCollectionImpl(root, filter)
   }
 }

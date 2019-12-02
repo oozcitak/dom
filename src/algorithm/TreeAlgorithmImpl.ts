@@ -17,13 +17,80 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 		super(algorithm)
 	}
 
+	private _getNextDescendantNode(root: Node, node: Node, shadow: boolean = false): Node | null {
+		// traverse shadow tree
+		if (shadow && Guard.isElementNode(node) && Guard.isShadowRoot(node.shadowRoot)) {
+			const child = node.shadowRoot._firstChild
+			if (child) return child
+		}
+
+		// traverse child nodes
+		const child = node._firstChild
+		if (child) return child
+
+		// traverse siblings
+		if (node !== root) {
+		  const sibling = node._nextSibling
+		  if (sibling) return sibling
+		}
+
+		// traverse parent's next sibling
+		if (node !== root) {
+			let parent = node._parent
+		  while (parent && parent !== root) {
+			  const parentSibling = parent._nextSibling
+			  if (parentSibling) return parentSibling
+			  parent = parent._parent
+		  }
+	  }
+
+		return null
+	}
+
 	/** @inheritdoc */
-	*getDescendantNodes(node: Node, self: boolean = false,
-		shadow: boolean = false, filter:
-			((childNode: Node) => any) = () => true):
+  getDescendantNodes(node: Node, self: boolean = false,
+    shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
+		Iterable<Node> {
+
+	  const getNextDescendantNode = this._getNextDescendantNode
+
+    return {
+      [Symbol.iterator]() {
+
+        let currentNode: Node | null = (self ? node : getNextDescendantNode(node, node, shadow))
+        
+        return {
+          next() {
+						while (currentNode && filter && !filter(currentNode)) {
+							currentNode = getNextDescendantNode(node, currentNode, shadow)
+						}
+
+            if (currentNode === null) {
+              return {
+                done: true,
+                value: null
+              }
+            } else {
+              const result = {
+                done: false,
+                value: currentNode
+              }
+              currentNode = getNextDescendantNode(node, currentNode, shadow)
+              return result
+            }
+          }
+        }
+      }
+    }
+  }
+
+	/** @inheritdoc */
+	*getDescendantNodes2(node: Node, self: boolean = false,
+		shadow: boolean = false, filter?:
+			((childNode: Node) => boolean)):
 		IterableIterator<Node> {
 
-		if (self && filter(node))
+		if (self && (filter === undefined || filter(node)))
 			yield node
 
 		// traverse shadow tree
@@ -48,28 +115,28 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 	/** @inheritdoc */
 	*getDescendantElements(node: Node, self: boolean = false,
-		shadow: boolean = false, filter:
-			((childNode: Element) => any) = (() => true)):
+		shadow: boolean = false, filter?:
+			((childNode: Element) => boolean)):
 		IterableIterator<Element> {
 
 		for (const child of this.getDescendantNodes(node, self, shadow,
 			(node) => { return Guard.isElementNode(node) })) {
 			const ele = child as Element
-			if (filter(ele))
+			if (filter === undefined || filter(ele))
 				yield ele
 		}
 	}
 
 	/** @inheritdoc */
 	*getSiblingNodes(node: Node, self: boolean = false,
-		filter: ((childNode: Node) => any) = (() => true)):
+		filter?: ((childNode: Node) => boolean)):
 		IterableIterator<Node> {
 
 		if (node._parent) {
 			const parent = node._parent as Node
 			let child = parent._firstChild as Node | null
 			while (child) {
-				if (!filter || !!filter(child)) {
+				if (filter === undefined || !!filter(child)) {
 					if (child === node) {
 						if (self) yield child
 					} else {
@@ -83,15 +150,15 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 	/** @inheritdoc */
 	*getAncestorNodes(node: Node, self: boolean = false,
-		filter: ((ancestorNode: Node) => any) = (() => true)):
+		filter?: ((ancestorNode: Node) => boolean)):
 		IterableIterator<Node> {
 
-		if (self && filter(node))
+		if (self && (filter === undefined || filter(node)))
 			yield node
 
 		let parent = node._parent as Node | null
 		while (parent !== null) {
-			if (filter(parent))
+			if (filter === undefined || filter(parent))
 				yield parent
 			parent = parent._parent as Node | null
 		}
@@ -292,7 +359,6 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			* 
 			* An inclusive ancestor is an object or one of its ancestors.
 			*/
-
 		return this.isDescendantOf(other, node, self, shadow)
 	}
 

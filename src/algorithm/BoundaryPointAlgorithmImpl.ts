@@ -19,9 +19,9 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
   /** @inheritdoc */
   position(bp: BoundaryPoint, relativeTo: BoundaryPoint): BoundaryPosition {
 
-    const nodeA = bp[0] as Node
+    const nodeA = bp[0]
     const offsetA = bp[1]
-    const nodeB = relativeTo[0] as Node
+    const nodeB = relativeTo[0]
     const offsetB = relativeTo[1]
 
     /**
@@ -75,7 +75,7 @@ export class BoundaryPointAlgorithmImpl extends SubAlgorithmImpl implements Boun
         if (child._parent === null) {
           throw new Error("Node has no parent node.")
         } else {
-          child = child._parent as Node
+          child = child._parent
         }
       }
 
