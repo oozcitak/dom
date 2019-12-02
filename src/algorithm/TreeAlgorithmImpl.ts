@@ -66,15 +66,9 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 						}
 
             if (currentNode === null) {
-              return {
-                done: true,
-                value: null
-              }
+              return { done: true, value: null }
             } else {
-              const result = {
-                done: false,
-                value: currentNode
-              }
+              const result = { done: false, value: currentNode }
               currentNode = getNextDescendantNode(node, currentNode, shadow)
               return result
             }
@@ -85,17 +79,34 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
   }
 
 	/** @inheritdoc */
-	*getDescendantElements(node: Node, self: boolean = false,
-		shadow: boolean = false, filter?:
-			((childNode: Element) => boolean)):
-		IterableIterator<Element> {
+	getDescendantElements(node: Node, self: boolean = false, 
+		shadow: boolean = false, filter?:	((childNode: Element) => boolean)):
+		Iterable<Element> {
 
-		for (const child of this.getDescendantNodes(node, self, shadow,
-			(node) => { return Guard.isElementNode(node) })) {
-			const ele = child as Element
-			if (filter === undefined || filter(ele))
-				yield ele
-		}
+    const it = this.getDescendantNodes(node, self, shadow, (e) => Guard.isElementNode(e))[Symbol.iterator]()
+    
+    return {
+      [Symbol.iterator]() {
+
+        let currentNode: Element | null = it.next().value
+        
+        return {
+          next() {
+            while (currentNode && filter && !filter(currentNode)) {
+							currentNode = it.next().value
+            }
+            
+            if (currentNode === null) {
+              return { done: true, value: null }
+            } else {
+              const result = { done: false, value: currentNode }
+              currentNode = it.next().value
+              return result
+            }
+          }
+        }
+      }
+    }
 	}
 
 	/** @inheritdoc */

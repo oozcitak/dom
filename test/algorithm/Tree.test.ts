@@ -44,7 +44,7 @@ describe('Tree', () => {
     shadowRoot.appendChild(doc.createElement('sh2'))
 
     let str = ''
-    for (const childNode of $$.algo.tree.getDescendantElements(doc as any, true, true, (node) => { return node.nodeName.startsWith('s') })) {
+    for (const childNode of $$.algo.tree.getDescendantElements(doc, true, true, (node) => { return node.nodeName.startsWith('s') })) {
         str += childNode.nodeName + ' '
     }
     expect(str).toBe('sele sh1 sh2 ')

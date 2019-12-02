@@ -301,7 +301,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getDescendantElements(node: Node, self?: boolean, shadow?: boolean,
-    filter?: (childNode: Element) => boolean): IterableIterator<Element>
+    filter?: (childNode: Element) => boolean): Iterable<Element>
 
   /**
    * Traverses through all sibling nodes of `node`.
