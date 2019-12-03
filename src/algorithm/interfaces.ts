@@ -1283,8 +1283,7 @@ export interface TextAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param self - whether to include node itself
    */
-  contiguousTextNodes(node: Text, self?: boolean):
-    IterableIterator<Text>
+  contiguousTextNodes(node: Text, self?: boolean): Iterable<Text>
 
   /**
    * Returns node with its adjacent text node siblings.
@@ -1292,8 +1291,7 @@ export interface TextAlgorithm extends SubAlgorithm {
    * @param node - a node
    * @param self - whether to include node itself
    */
-  contiguousExclusiveTextNodes(node: Text, self?: boolean):
-    IterableIterator<Text>
+  contiguousExclusiveTextNodes(node: Text, self?: boolean): Iterable<Text>
 
   /**
    * Returns the concatenation of the data of all the Text node descendants of

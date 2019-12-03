@@ -18,58 +18,90 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
     super(algorithm)
   }
 
-  /** @inheritdoc */
-  *contiguousTextNodes(node: Text, self: boolean = false): 
-    IterableIterator<Text> {
+	/** @inheritdoc */
+  contiguousTextNodes(node: Text, self: boolean = false): Iterable<Text> {
     /**
      * The contiguous Text nodes of a node node are node, node’s previous
      * sibling Text node, if any, and its contiguous Text nodes, and node’s next
      * sibling Text node, if any, and its contiguous Text nodes, avoiding any
      * duplicates.
      */
-    let sibling = node
-    while (sibling._previousSibling !== null && Guard.isTextNode(sibling._previousSibling)) {
-      sibling = sibling._previousSibling
-    }
-    while (true) {
-      if (sibling === node) {
-        if (self) yield sibling
-      } else {
-        yield sibling
-      }
+    return {
+      [Symbol.iterator](): Iterator<Text> {
 
-      if (sibling._nextSibling !== null && Guard.isTextNode(sibling._nextSibling)) {
-        sibling = sibling._nextSibling
-      } else {
-        break
+        let currentNode: Text | null = node
+        while (currentNode && Guard.isTextNode(currentNode._previousSibling)) {
+          currentNode = currentNode._previousSibling
+        }
+        
+        return {
+          next() {
+            if (currentNode && (!self && currentNode === node)) {
+              if (Guard.isTextNode(currentNode._nextSibling)) {
+                currentNode = currentNode._nextSibling
+              } else {
+                currentNode = null
+              }
+            }
+  
+            if (currentNode === null) {
+              return { done: true, value: null }
+            } else {
+              const result = { done: false, value: currentNode }
+              if (Guard.isTextNode(currentNode._nextSibling)) {
+                currentNode = currentNode._nextSibling
+              } else {
+                currentNode = null
+              }
+      
+              return result
+            }
+          }
+        }
       }
     }
   }
-
+  
   /** @inheritdoc */
-  * contiguousExclusiveTextNodes(node: Text, self: boolean = false):
-    IterableIterator<Text> {
+  contiguousExclusiveTextNodes(node: Text, self: boolean = false): Iterable<Text> {
     /**
      * The contiguous exclusive Text nodes of a node node are node, node’s 
      * previous sibling exclusive Text node, if any, and its contiguous 
      * exclusive Text nodes, and node’s next sibling exclusive Text node, 
      * if any, and its contiguous exclusive Text nodes, avoiding any duplicates.
      */
-    let sibling = node
-    while (sibling._previousSibling !== null && Guard.isExclusiveTextNode(sibling._previousSibling)) {
-      sibling = sibling._previousSibling
-    }
-    while (true) {
-      if (sibling === node) {
-        if (self) yield sibling
-      } else {
-        yield sibling
-      }
+    return {
+      [Symbol.iterator](): Iterator<Text> {
 
-      if (sibling._nextSibling !== null && Guard.isExclusiveTextNode(sibling._nextSibling)) {
-        sibling = sibling._nextSibling
-      } else {
-        break
+        let currentNode: Text | null = node
+        while (currentNode && Guard.isExclusiveTextNode(currentNode._previousSibling)) {
+          currentNode = currentNode._previousSibling
+        }
+        
+        return {
+          next() {
+            if (currentNode && (!self && currentNode === node)) {
+              if (Guard.isExclusiveTextNode(currentNode._nextSibling)) {
+                currentNode = currentNode._nextSibling
+              } else {
+                currentNode = null
+              }
+            }
+  
+            if (currentNode === null) {
+              return { done: true, value: null }
+            } else {
+              const result = { done: false, value: currentNode }
+              if (Guard.isExclusiveTextNode(currentNode._nextSibling)) {
+                currentNode = currentNode._nextSibling
+              } else {
+                currentNode = null
+              }
+      
+              return result
+            }
+          }
+        }
       }
     }
   }
