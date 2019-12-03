@@ -20,29 +20,23 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	private _getNextDescendantNode(root: Node, node: Node, shadow: boolean = false): Node | null {
 		// traverse shadow tree
 		if (shadow && Guard.isElementNode(node) && Guard.isShadowRoot(node.shadowRoot)) {
-			const child = node.shadowRoot._firstChild
-			if (child) return child
+			if (node.shadowRoot._firstChild) return node.shadowRoot._firstChild
 		}
 
 		// traverse child nodes
-		const child = node._firstChild
-		if (child) return child
+		if(node._firstChild) return node._firstChild
+
+		if (node === root) return null
 
 		// traverse siblings
-		if (node !== root) {
-		  const sibling = node._nextSibling
-		  if (sibling) return sibling
-		}
+		if(node._nextSibling) return node._nextSibling
 
 		// traverse parent's next sibling
-		if (node !== root) {
-			let parent = node._parent
-		  while (parent && parent !== root) {
-			  const parentSibling = parent._nextSibling
-			  if (parentSibling) return parentSibling
-			  parent = parent._parent
-		  }
-	  }
+	  let parent = node._parent
+    while (parent && parent !== root) {
+	    if (parent._nextSibling) return parent._nextSibling
+	    parent = parent._parent
+    }
 
 		return null
 	}
