@@ -1817,17 +1817,17 @@ export interface NodeList extends Collection, Iterable<Node> {
   /**
    * Returns an iterator for node indices.
    */
-  keys(): IterableIterator<number>
+  keys(): Iterable<number>
 
   /**
    * Returns an iterator for nodes.
    */
-  values(): IterableIterator<Node>
+  values(): Iterable<Node>
 
   /**
    * Returns an iterator for indices and nodes.
    */
-  entries(): IterableIterator<[number, Node]>
+  entries(): Iterable<[number, Node]>
 
   /** 
    * Returns the node with index `index` from the collection.
@@ -1839,7 +1839,7 @@ export interface NodeList extends Collection, Iterable<Node> {
   /**
    * Returns an iterator for the node list.
    */
-  [Symbol.iterator](): IterableIterator<Node>
+  [Symbol.iterator](): Iterator<Node>
 
   /**
    * Calls the callback function for each node in the list. The callback

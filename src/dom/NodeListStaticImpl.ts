@@ -46,29 +46,71 @@ export class NodeListStaticImpl implements NodeList {
   }
 
   /** @inheritdoc */
-  *keys(): IterableIterator<number> {
-    for (let index = 0; index < this._items.length; index++) {
-      yield index
+  keys(): Iterable<number> {
+    return {
+      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<number> {
+        let index = 0
+        const len = this.length
+    
+        return {
+          next(): IteratorResult<number> {
+            if (index === len) {
+              return { done: true, value: null }
+            } else {
+              return { done: false, value: index++ }
+            }
+          }
+        }
+      }.bind(this)
     }
   }
 
   /** @inheritdoc */
-  *values(): IterableIterator<Node> {
-    yield* this
-  }
+  values(): Iterable<Node> {
+    return {
+      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<Node> {
 
-  /** @inheritdoc */
-  *entries(): IterableIterator<[number, Node]> {
-    let index = 0
-    for (const child of this._items) {
-      yield [index++, child]
+        const it = this[Symbol.iterator]()
+    
+        return {
+          next(): IteratorResult<Node> {
+            return it.next()
+          }
+        }
+      }.bind(this)
     }
   }
 
   /** @inheritdoc */
-  *[Symbol.iterator](): IterableIterator<Node> {
-    for (const node of this._items) {
-      yield node
+  entries(): Iterable<[number, Node]> {
+    return {
+      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<[number, Node]> {
+        
+        const it = this[Symbol.iterator]()
+        let index = 0
+    
+        return {
+          next(): IteratorResult<[number, Node]> {
+            const itResult = it.next()
+            if (itResult.done) {
+              return { done: true, value: null }
+            } else {
+              return { done: false, value: [index++, itResult.value] }
+            }
+          }
+        }
+      }.bind(this)
+    }
+  }
+
+  /** @inheritdoc */
+  [Symbol.iterator](): Iterator<Node> {
+    const it = this._items[Symbol.iterator]()
+
+    return {
+      next(): IteratorResult<Node> {
+        return it.next()
+      }
     }
   }
 
