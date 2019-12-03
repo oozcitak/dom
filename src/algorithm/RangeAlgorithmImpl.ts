@@ -679,20 +679,62 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  *getContainedNodes(range: Range): IterableIterator<Node> {
+  getContainedNodes(range: Range): Iterable<Node> {
+    const algo = this
     const container = range.commonAncestorContainer as Node
+    const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
+    
+    return {
+      [Symbol.iterator]() {
 
-    for (const node of this.dom.tree.getDescendantNodes(container)) {
-      if (this.isContained(node, range)) yield node
+        let currentNode: Node | null = it.next().value
+        
+        return {
+          next() {
+            while (currentNode && !algo.isContained(currentNode, range)) {
+							currentNode = it.next().value
+            }
+            
+            if (currentNode === null) {
+              return { done: true, value: null }
+            } else {
+              const result = { done: false, value: currentNode }
+              currentNode = it.next().value
+              return result
+            }
+          }
+        }
+      }
     }
   }
 
   /** @inheritdoc */
-  *getPartiallyContainedNodes(range: Range): IterableIterator<Node> {
+  getPartiallyContainedNodes(range: Range): Iterable<Node> {
+    const algo = this
     const container = range.commonAncestorContainer as Node
+    const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
+    
+    return {
+      [Symbol.iterator]() {
 
-    for (const node of this.dom.tree.getDescendantNodes(container)) {
-      if (this.isPartiallyContained(node, range)) yield node
+        let currentNode: Node | null = it.next().value
+        
+        return {
+          next() {
+            while (currentNode && !algo.isPartiallyContained(currentNode, range)) {
+							currentNode = it.next().value
+            }
+            
+            if (currentNode === null) {
+              return { done: true, value: null }
+            } else {
+              const result = { done: false, value: currentNode }
+              currentNode = it.next().value
+              return result
+            }
+          }
+        }
+      }
     }
   }
 

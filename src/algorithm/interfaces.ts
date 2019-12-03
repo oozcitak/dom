@@ -1800,14 +1800,14 @@ export interface RangeAlgorithm extends SubAlgorithm {
    * 
    * @param range - a range
    */
-  getContainedNodes(range: AbstractRange): IterableIterator<Node>
+  getContainedNodes(range: AbstractRange): Iterable<Node>
 
   /**
    * Traverses through all partially contained nodes of a range.
    * 
    * @param range - a range
    */
-  getPartiallyContainedNodes(range: AbstractRange): IterableIterator<Node>
+  getPartiallyContainedNodes(range: AbstractRange): Iterable<Node>
 
   /**
    * Gets the global range list.
