@@ -139,18 +139,31 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	}
 
 	/** @inheritdoc */
-	*getAncestorNodes(node: Node, self: boolean = false,
+	getAncestorNodes(node: Node, self: boolean = false,
 		filter?: ((ancestorNode: Node) => boolean)):
-		IterableIterator<Node> {
+		Iterable<Node> {
 
-		if (self && (filter === undefined || filter(node)))
-			yield node
+		return {
+			[Symbol.iterator]() {
 
-		let parent = node._parent as Node | null
-		while (parent !== null) {
-			if (filter === undefined || filter(parent))
-				yield parent
-			parent = parent._parent as Node | null
+				let currentNode = self ? node : node._parent
+				
+				return {
+					next() {
+						while (currentNode && (filter && !filter(currentNode))) {
+							currentNode = currentNode._parent
+						}
+						
+						if (currentNode === null) {
+							return { done: true, value: null }
+						} else {
+							const result = { done: false, value: currentNode }
+							currentNode = currentNode._parent
+							return result
+						}
+					}
+				}
+			}
 		}
 	}
 

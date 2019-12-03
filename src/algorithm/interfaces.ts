@@ -321,7 +321,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getAncestorNodes(node: Node, self?: boolean,
-    filter?: (ancestorNode: Node) => boolean): IterableIterator<Node>
+    filter?: (ancestorNode: Node) => boolean): Iterable<Node>
 
   /**
    * Returns the common ancestor of the given nodes.
