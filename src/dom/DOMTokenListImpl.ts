@@ -246,9 +246,17 @@ export class DOMTokenListImpl implements DOMTokenList {
       this._attribute.localName, value)
   }
 
-  /** @inheritdoc */
-  *[Symbol.iterator](): IterableIterator<string> {
-    yield* this._tokenSet
+  /**
+   * Returns an iterator for the token set.
+   */
+  [Symbol.iterator](): Iterator<string> {
+    const it = this._tokenSet[Symbol.iterator]()
+
+    return {
+      next(): IteratorResult<string> {
+        return it.next()
+      }
+    }
   }
 
   /**
