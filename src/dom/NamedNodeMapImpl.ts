@@ -111,10 +111,16 @@ export class NamedNodeMapImpl implements NamedNodeMap {
   }
 
   /**
-   * Returns an iterator for nodes.
+   * Returns an iterator for attributes.
    */
-  *[Symbol.iterator](): IterableIterator<Attr> {
-    yield* this._attributeList
+  [Symbol.iterator](): Iterator<Attr> {
+    const it = this._attributeList[Symbol.iterator]()
+
+    return {
+      next(): IteratorResult<Attr> {
+        return it.next()
+      }
+    }
   }
 
   /**
