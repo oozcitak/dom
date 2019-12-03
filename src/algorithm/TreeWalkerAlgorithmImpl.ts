@@ -24,7 +24,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
      * if type is last.
      * 3. While node is non-null:
      */
-    let node = (first ? walker._current.firstChild : walker._current.lastChild)
+    let node = (first ? walker._current._firstChild : walker._current._lastChild)
     while (node !== null) {
       /**
        * 3.1. Let result be the result of filtering node within walker.
@@ -45,7 +45,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
          * last child if type is last.
          * 3.3.2. If child is non-null, then set node to child and continue.
          */
-        const child = (first ? node.firstChild : node.lastChild)
+        const child = (first ? node._firstChild : node._lastChild)
         if (child !== null) {
           node = child
           continue
@@ -61,7 +61,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
          * node’s previous sibling if type is last.
          * 3.4.2. If sibling is non-null, then set node to sibling and break.
          */
-        const sibling = (first ? node.nextSibling : node.previousSibling)
+        const sibling = (first ? node._nextSibling : node._previousSibling)
         if (sibling !== null) {
           node = sibling
           break
@@ -72,7 +72,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
          * 3.4.4. If parent is null, walker’s root, or walker’s current, then
          * return null.
          */
-        const parent: Node | null = node.parentNode
+        const parent: Node | null = node._parent
         if (parent === null || parent === walker._root || parent === walker._current) {
           return null
         }
@@ -96,7 +96,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
      * 2. If node is root, then return null.
      * 3. While node is non-null:
      */
-    let node: Node | null = walker._current
+    let node = walker._current
     if (node === walker._root) return null
 
     while (true) {
@@ -105,7 +105,7 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
        * previous sibling if type is previous.
        * 3.2. While sibling is non-null:
        */
-      let sibling: Node | null = (next ? node.nextSibling : node.previousSibling)
+      let sibling = (next ? node._nextSibling : node._previousSibling)
 
       while (sibling) {
         /**
@@ -128,9 +128,9 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
          * sibling to node’s next sibling if type is next, and node’s previous
          * sibling if type is previous.
          */
-        sibling = (next ? node.firstChild : node.lastChild)
+        sibling = (next ? node._firstChild : node._lastChild)
         if (result === FilterResult.Reject || sibling === null) {
-          sibling = (next ? node.nextSibling : node.previousSibling)
+          sibling = (next ? node._nextSibling : node._previousSibling)
         }
       }
 
@@ -138,8 +138,11 @@ export class TreeWalkerAlgorithmImpl extends SubAlgorithmImpl implements TreeWal
        * 3.3. Set node to node’s parent.
        * 3.4. If node is null or walker’s root, then return null.
        */
-      node = node.parentNode
-      if (node === null || node === walker._root) {
+      if (node._parent === null) {
+        return null
+      }
+      node = node._parent
+      if (node === walker._root) {
         return null
       }
 

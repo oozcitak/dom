@@ -118,8 +118,8 @@ export class DOMParser {
             if (closingTag.name !== context.nodeName) {
               throw new Error('Closing tag name does not match opening tag name.')
             }
-            if (context.parentNode) {
-              context = context.parentNode
+            if (context._parent) {
+              context = context._parent
             }
             break
         }

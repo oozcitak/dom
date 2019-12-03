@@ -15,22 +15,22 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
     const context = Cast.asNode(this)
-    const parent = context.parentNode
+    const parent = context._parent
     if (parent === null) return
 
     /**
      * 3. Let viablePreviousSibling be context object’s first preceding
      * sibling not in nodes, and null otherwise.
      */
-    let viablePreviousSibling = context.previousSibling
+    let viablePreviousSibling = context._previousSibling
     let flag = true
     while (flag && viablePreviousSibling) {
       flag = false
       for (const child of nodes) {
         if (child === viablePreviousSibling) {
-          viablePreviousSibling = viablePreviousSibling.previousSibling
+          viablePreviousSibling = viablePreviousSibling._previousSibling
           flag = true
           break
         }
@@ -49,9 +49,9 @@ export class ChildNodeImpl implements ChildNode {
      * and to viablePreviousSibling’s next sibling otherwise.
      */
     if (viablePreviousSibling === null)
-      viablePreviousSibling = parent.firstChild
+      viablePreviousSibling = parent._firstChild
     else
-      viablePreviousSibling = viablePreviousSibling.nextSibling
+      viablePreviousSibling = viablePreviousSibling._nextSibling
 
     /**
      * 6. Pre-insert node into parent before viablePreviousSibling.
@@ -66,7 +66,7 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
     const context = Cast.asNode(this)
     const parent = context.parentNode
     if (!parent) return
@@ -75,13 +75,13 @@ export class ChildNodeImpl implements ChildNode {
      * 3. Let viableNextSibling be context object’s first following sibling not 
      * in nodes, and null otherwise.
      */
-    let viableNextSibling = context.nextSibling
+    let viableNextSibling = context._nextSibling
     let flag = true
     while (flag && viableNextSibling) {
       flag = false
       for (const child of nodes) {
         if (child === viableNextSibling) {
-          viableNextSibling = viableNextSibling.nextSibling
+          viableNextSibling = viableNextSibling._nextSibling
           flag = true
           break
         }
@@ -108,22 +108,22 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
     const context = Cast.asNode(this)
-    const parent = context.parentNode
+    const parent = context._parent
     if (!parent) return
 
     /**
      * 3. Let viableNextSibling be context object’s first following sibling not 
      * in nodes, and null otherwise.
      */
-    let viableNextSibling = context.nextSibling
+    let viableNextSibling = context._nextSibling
     let flag = true
     while (flag && viableNextSibling) {
       flag = false
       for (const child of nodes) {
         if (child === viableNextSibling) {
-          viableNextSibling = viableNextSibling.nextSibling
+          viableNextSibling = viableNextSibling._nextSibling
           flag = true
           break
         }
@@ -143,7 +143,7 @@ export class ChildNodeImpl implements ChildNode {
      * _Note:_ Context object could have been inserted into node.
      * 6. Otherwise, pre-insert node into parent before viableNextSibling.
      */
-    if (context.parentNode === parent)
+    if (context._parent === parent)
       algo.mutation.replace(context, node, parent)
     else
       algo.mutation.preInsert(node, parent, viableNextSibling)
@@ -155,9 +155,9 @@ export class ChildNodeImpl implements ChildNode {
      * 1. If context object’s parent is null, then return.
      * 2. Remove the context object from context object’s parent.
      */
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
     const context = Cast.asNode(this)
-    const parent = context.parentNode
+    const parent = context._parent
     if (!parent) return
 
     algo.mutation.remove(context, parent)

@@ -64,7 +64,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
        * observers whose observer is mo from node’s registered observer list.
        */
       for (const nodeItem of mo._nodeList) {
-        const node = nodeItem as Node
+        const node = nodeItem
         infraList.remove(node._registeredObserverList, (observer) => {
           return Guard.isTransientRegisteredObserver(observer) && observer.observer === mo
         })

@@ -167,7 +167,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	/** @inheritdoc */
 	getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
 		if(nodeA === nodeB){
-			return nodeA._parent as Node | null
+			return nodeA._parent
     }
 
     // lists of parent nodes
@@ -193,16 +193,16 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	/** @inheritdoc */
 	getFollowingNode(root: Node, node: Node): Node | null {
 		if (node._firstChild) {
-			return node._firstChild as Node
+			return node._firstChild
 		} else if (node._nextSibling) {
-			return node._nextSibling as Node
+			return node._nextSibling
 		} else {
 			while (true) {
-				const parent = node._parent as Node | null
+				const parent = node._parent
 				if (parent === null || parent === root) {
 					return null
 				} else if (parent._nextSibling) {
-					return parent._nextSibling as Node
+					return parent._nextSibling
 				} else {
 					node = parent
 				}
@@ -216,14 +216,14 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			return null
 		}
 		if (node._previousSibling) {
-			node = node._previousSibling as Node
+			node = node._previousSibling
 			if (node._lastChild) {
-				return node._lastChild as Node
+				return node._lastChild
 			} else {
 				return node
 			}
 		} else {
-			return node._parent as Node | null
+			return node._parent
 		}
 	}
 
@@ -233,7 +233,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			case NodeType.Document:
 				let hasDocType = false
 				let hasElement = false
-				for (const childNode of node.childNodes) {
+				for (const childNode of node._children) {
 					switch (childNode.nodeType) {
 						case NodeType.ProcessingInstruction:
 						case NodeType.Comment:
@@ -253,7 +253,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 				break
 			case NodeType.DocumentFragment:
 			case NodeType.Element:
-				for (const childNode of node.childNodes) {
+				for (const childNode of node._children) {
 					switch (childNode.nodeType) {
 						case NodeType.Element:
 						case NodeType.Text:
@@ -276,7 +276,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 		for (const childNode of node._children) {
 			// recursively check child nodes
-			if (!this.isConstrained(childNode as Node))
+			if (!this.isConstrained(childNode))
 				return false
 		}
 		return true
@@ -322,14 +322,14 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 		if (shadow) {
 			const root = this.rootNode(node, false)
 			if (Guard.isShadowRoot(root))
-				return this.rootNode(root._host as Element, true)
+				return this.rootNode(root._host, true)
 			else
 				return root
 		} else {
 			if (!node._parent)
 				return node
 			else
-				return this.rootNode(node._parent as Node)
+				return this.rootNode(node._parent)
 		}
 	}
 
@@ -440,7 +440,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			* The previous sibling of an object is its first preceding sibling or null 
 			* if it has no preceding sibling.
 			*/
-		return node._previousSibling as Node | null
+		return node._previousSibling
 	}
 
 	/** @inheritdoc */
@@ -449,7 +449,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			* The next sibling of an object is its first following sibling or null 
 			* if it has no following sibling.
 			*/
-		return node._nextSibling as Node | null
+		return node._nextSibling
 	}
 
 	/** @inheritdoc */
@@ -458,7 +458,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			* The first child of an object is its first child or null if it has no 
 			* children.
 			*/
-		return node._firstChild as Node | null
+		return node._firstChild
 	}
 
 	/** @inheritdoc */
@@ -467,7 +467,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 			* The last child of an object is its last child or null if it has no 
 			* children.
 			*/
-		return node._lastChild as Node | null
+		return node._lastChild
 	}
 
 	/** @inheritdoc */
@@ -493,7 +493,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 
 		while (node._previousSibling !== null) {
 			n++
-			node = node._previousSibling as Node
+			node = node._previousSibling
 		}
 
 		return n

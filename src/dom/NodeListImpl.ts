@@ -40,18 +40,18 @@ export class NodeListImpl implements NodeList {
 
     if (index < this.length / 2) {
       let i = 0
-      let node = this._root.firstChild
+      let node = this._root._firstChild
       while (node !== null && i !== index) {
-        node = node.nextSibling
+        node = node._nextSibling
         i++
       }
       return node
     }
     else {
       let i = this.length - 1
-      let node = this._root.lastChild
+      let node = this._root._lastChild
       while (node !== null && i !== index) {
-        node = node.previousSibling
+        node = node._previousSibling
         i--
       }
       return node

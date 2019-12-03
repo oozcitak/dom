@@ -24,7 +24,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
      * 1. Let node be iterator’s reference.
      * 2. Let beforeNode be iterator’s pointer before reference.
      */
-    let node = iterator._reference as Node
+    let node = iterator._reference
     let beforeNode = iterator._pointerBeforeReference
 
     /**
@@ -44,8 +44,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
            * node in iterator’s iterator collection. If there is no such node, 
            * then return null.
            */
-          const nextNode = this.dom.tree.getFollowingNode(
-            iterator._root as Node, node)
+          const nextNode = this.dom.tree.getFollowingNode(iterator._root, node)
           if (nextNode) {
             node = nextNode
           } else {
@@ -67,8 +66,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
            * node in iterator’s iterator collection. If there is no such node,
            * then return null.
            */
-          const prevNode = this.dom.tree.getPrecedingNode(
-            iterator.root as Node, node as Node)
+          const prevNode = this.dom.tree.getPrecedingNode(iterator.root, node)
           if (prevNode) {
             node = prevNode
           } else {

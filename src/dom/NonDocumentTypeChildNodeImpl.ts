@@ -14,12 +14,12 @@ export class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
      * The previousElementSibling attribute’s getter must return the first 
      * preceding sibling that is an element, and null otherwise.
      */
-    let node = Cast.asNode(this).previousSibling
+    let node = Cast.asNode(this)._previousSibling
     while (node) {
       if (Guard.isElementNode(node))
         return node
       else
-        node = node.previousSibling
+        node = node._previousSibling
     }
     return null
   }
@@ -30,12 +30,12 @@ export class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
      * The nextElementSibling attribute’s getter must return the first 
      * following sibling that is an element, and null otherwise.
      */
-    let node = Cast.asNode(this).nextSibling
+    let node = Cast.asNode(this)._nextSibling
     while (node) {
       if (Guard.isElementNode(node))
         return node
       else
-        node = node.nextSibling
+        node = node._nextSibling
     }
     return null
   }

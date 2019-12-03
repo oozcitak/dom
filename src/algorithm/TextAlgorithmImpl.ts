@@ -145,13 +145,12 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
     const count = length - offset
     const newData = this.dom.characterData.substringData(node, offset, count)
     const newNode = this.dom.create.text(node._nodeDocument, newData)
-    const parent = node.parentNode
+    const parent = node._parent
     if (parent !== null) {
       /**
        * 7.1. Insert new node into parent before node’s next sibling.
        */
-      this.dom.mutation.insert(newNode, parent as Node,
-        node.nextSibling as Node | null)
+      this.dom.mutation.insert(newNode, parent, node._nextSibling)
 
       /**
        * 7.2. For each live range whose start node is node and start offset is

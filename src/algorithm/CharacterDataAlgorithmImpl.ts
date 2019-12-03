@@ -89,8 +89,8 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * 12. If node is a Text node and its parent is not null, run the child 
      * text content change steps for node’s parent.
      */
-    if (Guard.isTextNode(node) && node.parentNode !== null) {
-      this.dom.runChildTextContentChangeSteps(node.parentNode as Node)
+    if (Guard.isTextNode(node) && node._parent !== null) {
+      this.dom.runChildTextContentChangeSteps(node._parent)
     }
   }
 

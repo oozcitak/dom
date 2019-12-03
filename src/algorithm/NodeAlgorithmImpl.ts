@@ -140,8 +140,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * flag being set.
      */
     if (cloneChildrenFlag) {
-      for (const child of node.childNodes) {
-        const childCopy = this.clone(child as Node, document, true)
+      for (const child of node._children) {
+        const childCopy = this.clone(child, document, true)
         this.dom.mutation.append(childCopy, copy)
       }
     }
@@ -212,12 +212,17 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * 4. A and B have the same number of children.
      * 5. Each child of A equals the child of B at the identical index.
      */
-    if (a.childNodes.length !== b.childNodes.length) return false
-    for (let i = 0; i < a.childNodes.length; i++) {
-      const child1 = a.childNodes.item(i) as Node | null
-      const child2 = b.childNodes.item(i) as Node | null
-      if (child1 === null || child2 === null) return false
+    if (a._children.size !== b._children.size) return false
+    const itA = a._children[Symbol.iterator]()
+    const itB = b._children[Symbol.iterator]()
+    let resultA = itA.next()
+    let resultB = itB.next()
+    while (!resultA.done && !resultB.done) {
+      const child1 = resultA.value
+      const child2 = resultB.value
       if (!this.equals(child1, child2)) return false
+      resultA = itA.next()
+      resultB = itB.next()
     }
 
     return true

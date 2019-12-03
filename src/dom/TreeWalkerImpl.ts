@@ -35,9 +35,9 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * returns FILTER_ACCEPT, then set the context object’s current to node
        * and return node.
        */
-      node = node.parentNode
+      node = node._parent
       if (node !== null &&
-        this._algo.traversal.filter(this, node as Node) === FilterResult.Accept) {
+        this._algo.traversal.filter(this, node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -89,7 +89,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * 2.1. Let sibling be node’s previous sibling.
        * 2.2. While sibling is non-null:
        */
-      let sibling: Node | null = node.previousSibling
+      let sibling: Node | null = node._previousSibling
       while (sibling) {
         /**
          * 2.2.1. Set node to sibling.
@@ -97,19 +97,19 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
          * object.
          */
         node = sibling
-        let result = this._algo.traversal.filter(this, node as Node)
+        let result = this._algo.traversal.filter(this, node)
 
         /**
          * 2.2.3. While result is not FILTER_REJECT and node has a child:
          */
-        while (result !== FilterResult.Reject && node.lastChild) {
+        while (result !== FilterResult.Reject && node._lastChild) {
           /**
            * 2.2.3.1. Set node to node’s last child.
            * 2.2.3.2. Set result to the result of filtering node within the
            * context object.
            */
-          node = node.lastChild
-          result = this._algo.traversal.filter(this, node as Node)
+          node = node._lastChild
+          result = this._algo.traversal.filter(this, node)
         }
 
         /**
@@ -124,28 +124,28 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
         /**
          * 2.2.5. Set sibling to node’s previous sibling.
          */
-        sibling = node.previousSibling
+        sibling = node._previousSibling
       }
 
       /**
        * 2.3. If node is the context object’s root or node’s parent is null, 
        * then return null.
        */
-      if (node === this.root || !node.parentNode) {
+      if (node === this.root || node._parent === null) {
         return null
       }
 
       /**
        * 2.4. Set node to node’s parent.
        */
-      node = node.parentNode
+      node = node._parent
 
       /**
        * 2.5. If the return value of filtering node within the context object is
        * FILTER_ACCEPT, then set the context object’s current to node and
        * return node.
        */
-      if (this._algo.traversal.filter(this, node as Node) === FilterResult.Accept) {
+      if (this._algo.traversal.filter(this, node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -180,7 +180,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
       /**
        * 3.1. While result is not FILTER_REJECT and node has a child:
        */
-      while (result !== FilterResult.Reject && node.firstChild) {
+      while (result !== FilterResult.Reject && node._firstChild) {
         /**
          * 3.1.1. Set node to its first child.
          * 3.1.2. Set result to the result of filtering node within the context 
@@ -188,8 +188,8 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
          * 3.1.3. If result is FILTER_ACCEPT, then set the context object’s 
          * current to node and return node.
          */
-        node = node.firstChild
-        result = this._algo.traversal.filter(this, node as Node)
+        node = node._firstChild
+        result = this._algo.traversal.filter(this, node)
         if (result === FilterResult.Accept) {
           this._current = node
           return node
@@ -214,7 +214,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
          * 3.4.2. Set sibling to temporary’s next sibling.
          * 3.4.3. If sibling is non-null, then break.
          */
-        sibling = temporary.nextSibling
+        sibling = temporary._nextSibling
         if (sibling !== null) {
           node = sibling
           break
@@ -222,7 +222,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
         /**
          * 3.4.4. Set temporary to temporary’s parent.
          */
-        temporary = temporary.parentNode
+        temporary = temporary._parent
       }
 
       /**
@@ -230,7 +230,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * 3.6. If result is FILTER_ACCEPT, then set the context object’s current 
        * to node and return node.
        */
-      result = this._algo.traversal.filter(this, node as Node)
+      result = this._algo.traversal.filter(this, node)
       if (result === FilterResult.Accept) {
         this._current = node
         return node

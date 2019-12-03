@@ -77,7 +77,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * 4. For each slotable child of host, slotable, in tree order:
      */
     const host = root._host
-    for (const slotable of host.childNodes) {
+    for (const slotable of host._children) {
       if (Guard.isSlotable(slotable)) {
         /**
          * 4.1. Let foundSlot be the result of finding a slot given slotable.
@@ -113,7 +113,7 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      */
     const slotables = this.findSlotables(slot)
     if (isEmpty(slotables)) {
-      for (const slotable of slot.childNodes) {
+      for (const slotable of slot._children) {
         if (Guard.isSlotable(slotable)) {
           slotables.push(slotable)
         }
@@ -185,10 +185,8 @@ export class ShadowTreeAlgorithmImpl extends SubAlgorithmImpl implements ShadowT
      * To assign slotables for a tree, given a node root, run assign slotables
      * for each slot slot in root’s inclusive descendants, in tree order.
      */
-    for (const slot of this.dom.tree.getDescendantNodes(root, true)) {
-      if (Guard.isSlot(slot)) {
-        this.assignSlotables(slot)
-      }
+    for (const slot of this.dom.tree.getDescendantNodes(root, true, false, (e: Node) => Guard.isSlot(e))) {
+      this.assignSlotables(slot as Slot)
     }
   }
 

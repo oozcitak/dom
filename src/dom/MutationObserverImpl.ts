@@ -86,7 +86,7 @@ export class MutationObserverImpl implements MutationObserver {
          * registered observer list.
          */
         for (const node of this._nodeList) {
-          infraList.remove((node as Node)._registeredObserverList, (ob) => 
+          infraList.remove((node)._registeredObserverList, (ob) => 
             Guard.isTransientRegisteredObserver(ob) && ob.source === registered
           )
         }
@@ -117,7 +117,7 @@ export class MutationObserverImpl implements MutationObserver {
      * context object is the observer.
      */
     for (const node of this._nodeList) {
-      infraList.remove((node as Node)._registeredObserverList, (ob) =>
+      infraList.remove((node)._registeredObserverList, (ob) =>
         ob.observer === this
       )
     }

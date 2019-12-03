@@ -62,8 +62,8 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
      */
     const oldDocument = node._nodeDocument
 
-    if (node.parentNode)
-      this.dom.mutation.remove(node, node.parentNode as Node)
+    if (node._parent)
+      this.dom.mutation.remove(node, node._parent)
 
     /**
      * 3. If document is not oldDocument, then:

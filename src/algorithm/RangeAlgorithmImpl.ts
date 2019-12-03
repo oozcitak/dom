@@ -75,7 +75,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * node’s root, set range’s end to bp.
      * 4.2. Set range’s start to bp.
      */
-    if (Guard.isDocumentTypeNode(node.nodeType)) {
+    if (Guard.isDocumentTypeNode(node)) {
       throw DOMException.InvalidNodeTypeError
     }
     if (offset > this.dom.tree.nodeLength(node)) {
@@ -104,7 +104,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * to node’s root, set range’s start to bp.
      * 4.2. Set range’s end to bp.
      */
-    if (Guard.isDocumentTypeNode(node.nodeType)) {
+    if (Guard.isDocumentTypeNode(node)) {
       throw DOMException.InvalidNodeTypeError
     }
     if (offset > this.dom.tree.nodeLength(node)) {
@@ -197,7 +197,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       if (commonAncestor._parent === null) {
         throw new Error("Parent node  is null.")
       }
-      commonAncestor = commonAncestor._parent as Node
+      commonAncestor = commonAncestor._parent
     }
 
     /**
@@ -209,8 +209,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     let firstPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
       for (const node of commonAncestor._children) {
-        if (this.isPartiallyContained(node as Node, range)) {
-          firstPartiallyContainedChild = node as Node
+        if (this.isPartiallyContained(node, range)) {
+          firstPartiallyContainedChild = node
           break
         }
       }
@@ -227,8 +227,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       const children = [...commonAncestor._children]
       for (let i = children.length - 1; i > 0; i--) {
         const node = children[i]
-        if (this.isPartiallyContained(node as Node, range)) {
-          lastPartiallyContainedChild = node as Node
+        if (this.isPartiallyContained(node, range)) {
+          lastPartiallyContainedChild = node
           break
         }
       }
@@ -242,11 +242,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     const containedChildren: Node[] = []
     for (const child of commonAncestor._children) {
-      if (this.isContained(child as Node, range)) {
+      if (this.isContained(child, range)) {
         if (Guard.isDocumentTypeNode(child)) {
           throw DOMException.HierarchyRequestError
         }
-        containedChildren.push(child as Node)
+        containedChildren.push(child)
       }
     }
 
@@ -271,8 +271,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
        */
       let referenceNode = originalStartNode
       while (referenceNode._parent !== null &&
-        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parent as Node)) {
-        referenceNode = referenceNode._parent as Node
+        !this.dom.tree.isAncestorOf(originalEndNode, referenceNode._parent)) {
+        referenceNode = referenceNode._parent
       }
       /* istanbul ignore next */
       if (referenceNode._parent === null) {
@@ -283,7 +283,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
          */
         throw new Error("Parent node is null.")
       }
-      newNode = referenceNode._parent as Node
+      newNode = referenceNode._parent
       newOffset = 1 + this.dom.tree.index(referenceNode)
     }
 
@@ -432,7 +432,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       if (commonAncestor._parent === null) {
         throw new Error("Parent node  is null.")
       }
-      commonAncestor = commonAncestor._parent as Node
+      commonAncestor = commonAncestor._parent
     }
 
     /**
@@ -444,8 +444,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     let firstPartiallyContainedChild: Node | null = null
     if (!this.dom.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
       for (const node of commonAncestor._children) {
-        if (this.isPartiallyContained(node as Node, range)) {
-          firstPartiallyContainedChild = node as Node
+        if (this.isPartiallyContained(node, range)) {
+          firstPartiallyContainedChild = node
           break
         }
       }
@@ -462,8 +462,8 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       const children = [...commonAncestor._children]
       for (let i = children.length - 1; i > 0; i--) {
         const node = children[i]
-        if (this.isPartiallyContained(node as Node, range)) {
-          lastPartiallyContainedChild = node as Node
+        if (this.isPartiallyContained(node, range)) {
+          lastPartiallyContainedChild = node
           break
         }
       }
@@ -477,11 +477,11 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     const containedChildren: Node[] = []
     for (const child of commonAncestor._children) {
-      if (this.isContained(child as Node, range)) {
+      if (this.isContained(child, range)) {
         if (Guard.isDocumentTypeNode(child)) {
           throw DOMException.HierarchyRequestError
         }
-        containedChildren.push(child as Node)
+        containedChildren.push(child)
       }
     }
 
@@ -600,7 +600,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       let index = 0
       for (const child of range._startNode._children) {
         if (index === range._startOffset) {
-          referenceNode = child as Node
+          referenceNode = child
           break
         }
         index++
@@ -618,7 +618,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       if (referenceNode._parent === null) {
         throw new Error("Parent node is null.")
       }
-      parent = referenceNode._parent as Node
+      parent = referenceNode._parent
     }
 
     /**
@@ -638,14 +638,14 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 8. If node is referenceNode, set referenceNode to its next sibling.
      */
     if (node === referenceNode) {
-      referenceNode = node.nextSibling as Node | null
+      referenceNode = node._nextSibling
     }
 
     /**
      * 9. If node’s parent is not null, remove node from its parent.
      */
     if (node._parent !== null) {
-      this.dom.mutation.remove(node, node._parent as Node)
+      this.dom.mutation.remove(node, node._parent)
     }
 
     /**
@@ -683,7 +683,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     return {
       [Symbol.iterator]: function(this: RangeAlgorithmImpl): Iterator<Node> {
 
-        const container = range.commonAncestorContainer as Node
+        const container = range.commonAncestorContainer
         const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()            
         let currentNode: Node | null = it.next().value
         
@@ -711,7 +711,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     return {
       [Symbol.iterator]: function(this: RangeAlgorithmImpl): Iterator<Node> {
 
-        const container = range.commonAncestorContainer as Node
+        const container = range.commonAncestorContainer
         const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
         let currentNode: Node | null = it.next().value
         

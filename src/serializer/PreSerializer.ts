@@ -425,7 +425,7 @@ export class PreSerializer {
      * providing inherited ns, map, prefix index, and the require well-formed 
      * flag.
      */
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children) {
       children.push(this._serializeNode(childNode, inheritedNS, map,
         prefixIndex, requireWellFormed, level + 1))
     }
@@ -484,7 +484,7 @@ export class PreSerializer {
      * 3. Return the value of serialized document.
     */
     const children: PreSerializedNode<Node>[] = []
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children) {
       children.push(this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed, level))
     }
@@ -595,7 +595,7 @@ export class PreSerializer {
      * 3. Return the value of markup.
      */
     const children: PreSerializedNode<Node>[] = []
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children) {
       children.push(this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed, level))
     }

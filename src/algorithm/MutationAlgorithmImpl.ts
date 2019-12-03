@@ -42,7 +42,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. If child is not null and its parent is not parent, then throw a
      * "NotFoundError" DOMException.
      */
-    if (child !== null && child.parentNode !== parent)
+    if (child !== null && child._parent !== parent)
       throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
@@ -90,7 +90,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     if (parent.nodeType === NodeType.Document) {
       if (node.nodeType === NodeType.DocumentFragment) {
         let eleCount = 0
-        for (const childNode of node.childNodes) {
+        for (const childNode of node._children) {
           if (childNode.nodeType === NodeType.Element)
             eleCount++
           else if (childNode.nodeType === NodeType.Text)
@@ -100,7 +100,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
         if (eleCount > 1) {
           throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
         } else if (eleCount === 1) {
-          for (const ele of parent.childNodes) {
+          for (const ele of parent._children) {
             if (ele.nodeType === NodeType.Element)
               throw new HierarchyRequestError(`The document node already has a document element node.`)
           }
@@ -109,16 +109,16 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
             if (child.nodeType === NodeType.DocumentType)
               throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
 
-            let doctypeChild = child.nextSibling
+            let doctypeChild = child._nextSibling
             while (doctypeChild) {
               if (doctypeChild.nodeType === NodeType.DocumentType)
                 throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
-              doctypeChild = doctypeChild.nextSibling
+              doctypeChild = doctypeChild._nextSibling
             }
           }
         }
       } else if (node.nodeType === NodeType.Element) {
-        for (const ele of parent.childNodes) {
+        for (const ele of parent._children) {
           if (ele.nodeType === NodeType.Element)
             throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
         }
@@ -127,32 +127,32 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
           if (child.nodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
 
-          let doctypeChild = child.nextSibling
+          let doctypeChild = child._nextSibling
           while (doctypeChild) {
             if (doctypeChild.nodeType === NodeType.DocumentType)
               throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
-            doctypeChild = doctypeChild.nextSibling
+            doctypeChild = doctypeChild._nextSibling
           }
         }
       } else if (node.nodeType === NodeType.DocumentType) {
-        for (const ele of parent.childNodes) {
+        for (const ele of parent._children) {
           if (ele.nodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
         }
 
         if (child) {
-          let elementChild = child.previousSibling
+          let elementChild = child._previousSibling
           while (elementChild) {
             if (elementChild.nodeType === NodeType.Element)
               throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
-            elementChild = elementChild.previousSibling
+            elementChild = elementChild._previousSibling
           }
         } else {
-          let elementChild = parent.firstChild
+          let elementChild = parent._firstChild
           while (elementChild) {
             if (elementChild.nodeType === NodeType.Element)
               throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
-            elementChild = elementChild.nextSibling
+            elementChild = elementChild._nextSibling
           }
         }
       }
@@ -174,7 +174,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
 
     let referenceChild = child
     if (referenceChild === node)
-      referenceChild = node.nextSibling as Node | null
+      referenceChild = node._nextSibling
 
     this.dom.document.adopt(node, parent._nodeDocument)
     this.insert(node, parent, referenceChild)
@@ -191,7 +191,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * DocumentFragment node, and one otherwise.
      */
     const count = (node.nodeType === NodeType.DocumentFragment ?
-      node.childNodes.length : 1)
+      node._children.size : 1)
 
     /**
      * 2. If child is non-null, then:
@@ -224,12 +224,12 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     const nodes: Node[] = []
     if (node.nodeType === NodeType.DocumentFragment) {
-      for (const childNode of node.childNodes) {
-        nodes.push(childNode as Node)
+      for (const childNode of node._children) {
+        nodes.push(childNode)
       }
       // remove child nodes
-      while (node.firstChild) {
-        this.remove(node.firstChild as Node, node, true)
+      while (node._firstChild) {
+        this.remove(node._firstChild, node, true)
       }
     } else {
       nodes.push(node)
@@ -247,7 +247,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 6. Let previousSibling be child’s previous sibling or parent’s last 
      * child if child is null.
      */
-    const previousSibling = (child ? child.previousSibling : parent.lastChild) as Node | null
+    const previousSibling = (child ? child._previousSibling : parent._lastChild)
 
     let index = child === null ? -1 : this.dom.tree.index(child)
     /**
@@ -270,14 +270,14 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
         }
 
         // assign siblings and children for quick lookups
-        if (parent.firstChild === null) {
+        if (parent._firstChild === null) {
           node._previousSibling = null
           node._nextSibling = null
 
           parent._firstChild = node
           parent._lastChild = node
         } else {
-          const prev = (child ? child.previousSibling : parent.lastChild) as Node | null
+          const prev = (child ? child._previousSibling : parent._lastChild)
           const next = (child ? child : null)
 
           node._previousSibling = prev
@@ -398,7 +398,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 3. If child’s parent is not parent, then throw a "NotFoundError" 
      * DOMException.
      */
-    if (child.parentNode !== parent)
+    if (child._parent !== parent)
       throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     /**
@@ -445,7 +445,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     if (parent.nodeType === NodeType.Document) {
       if (node.nodeType === NodeType.DocumentFragment) {
         let eleCount = 0
-        for (const childNode of node.childNodes) {
+        for (const childNode of node._children) {
           if (childNode.nodeType === NodeType.Element)
             eleCount++
           else if (childNode.nodeType === NodeType.Text)
@@ -455,41 +455,41 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
         if (eleCount > 1) {
           throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
         } else if (eleCount === 1) {
-          for (const ele of parent.childNodes) {
+          for (const ele of parent._children) {
             if (ele.nodeType === NodeType.Element && ele !== child)
               throw new HierarchyRequestError(`The document node already has a document element node.`)
           }
 
-          let doctypeChild = child.nextSibling
+          let doctypeChild = child._nextSibling
           while (doctypeChild) {
             if (doctypeChild.nodeType === NodeType.DocumentType)
               throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
-            doctypeChild = doctypeChild.nextSibling
+            doctypeChild = doctypeChild._nextSibling
           }
         }
       } else if (node.nodeType === NodeType.Element) {
-        for (const ele of parent.childNodes) {
+        for (const ele of parent._children) {
           if (ele.nodeType === NodeType.Element && ele !== child)
             throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
         }
 
-        let doctypeChild = child.nextSibling
+        let doctypeChild = child._nextSibling
         while (doctypeChild) {
           if (doctypeChild.nodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
-          doctypeChild = doctypeChild.nextSibling
+          doctypeChild = doctypeChild._nextSibling
         }
       } else if (node.nodeType === NodeType.DocumentType) {
-        for (const ele of parent.childNodes) {
+        for (const ele of parent._children) {
           if (ele.nodeType === NodeType.DocumentType && ele !== child)
             throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
         }
 
-        let elementChild = child.previousSibling
+        let elementChild = child._previousSibling
         while (elementChild) {
           if (elementChild.nodeType === NodeType.Element)
             throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
-          elementChild = elementChild.previousSibling
+          elementChild = elementChild._previousSibling
         }
       }
     }
@@ -499,28 +499,28 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. If reference child is node, set it to node’s next sibling.
      * 8. Let previousSibling be child’s previous sibling.
      */
-    let referenceChild = child.nextSibling as Node | null
-    if (referenceChild === node) referenceChild = node.nextSibling as Node | null
-    let previousSibling = child.previousSibling as Node | null
+    let referenceChild = child._nextSibling
+    if (referenceChild === node) referenceChild = node._nextSibling
+    let previousSibling = child._previousSibling
 
     /**
      * 10. Adopt node into parent’s node document.
      * 11. Let removedNodes be the empty list.
      */
-    this.dom.document.adopt(node, (parent as Node)._nodeDocument)
+    this.dom.document.adopt(node, parent._nodeDocument)
     const removedNodes: Node[] = []
 
     /**
      * 12. If child’s parent is not null, then:
      */
-    if (child.parentNode !== null) {
+    if (child._parent !== null) {
       /**
        * 12.1. Set removedNodes to [child].
        * 12.2. Remove child from its parent with the suppress observers flag 
        * set.
        */
       removedNodes.push(child)
-      this.remove(child, parent, true)
+      this.remove(child, child._parent, true)
     }
 
     /**
@@ -529,8 +529,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     const nodes: Node[] = []
     if (node.nodeType === NodeType.DocumentFragment) {
-      for (const childNode of node.childNodes) {
-        nodes.push(childNode as Node)
+      for (const childNode of node._children) {
+        nodes.push(childNode)
       }
     } else {
       nodes.push(node)
@@ -568,8 +568,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 2. Let removedNodes be parent’s children.
      */
     const removedNodes: Node[] = []
-    for (const childNode of parent.childNodes) {
-      removedNodes.push(childNode as Node)
+    for (const childNode of parent._children) {
+      removedNodes.push(childNode)
     }
 
     /**
@@ -580,8 +580,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      */
     const addedNodes: Node[] = []
     if (node && node.nodeType === NodeType.DocumentFragment) {
-      for (const childNode of node.childNodes) {
-        addedNodes.push(childNode as Node)
+      for (const childNode of node._children) {
+        addedNodes.push(childNode)
       }
     } else if (node !== null) {
       addedNodes.push(node)
@@ -619,7 +619,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 2. Remove child from parent.
      * 3. Return child.
      */
-    if (child.parentNode !== parent)
+    if (child._parent !== parent)
       throw new NotFoundError(`The child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
     this.remove(child, parent)
@@ -641,10 +641,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * node, set its end to (parent, index).
      */
     for (const range of this.dom.range.rangeList) {
-      if (this.dom.tree.isDescendantOf(node, range._start[0] as Node, true)) {
+      if (this.dom.tree.isDescendantOf(node, range._start[0], true)) {
         range._start = [parent, index]
       }
-      if (this.dom.tree.isDescendantOf(node, range._end[0] as Node, true)) {
+      if (this.dom.tree.isDescendantOf(node, range._end[0], true)) {
         range._end = [parent, index]
       }
       if (range._start[0] === parent && range._start[1] > index) {
@@ -676,7 +676,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * and iterator.
      */
     for (const iterator of this.dom.nodeIterator.iteratorList) {
-      if ((iterator._root as Node)._nodeDocument === node._nodeDocument) {
+      if (iterator._root._nodeDocument === node._nodeDocument) {
         this.dom.runNodeIteratorPreRemovingSteps(iterator, node)
       }
     }
@@ -685,8 +685,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 7. Let oldPreviousSibling be node’s previous sibling.
      * 8. Let oldNextSibling be node’s next sibling.
      */
-    const oldPreviousSibling = node.previousSibling as Node | null
-    const oldNextSibling = node.nextSibling as Node | null
+    const oldPreviousSibling = node._previousSibling
+    const oldNextSibling = node._nextSibling
 
     /**
      * 9. Remove node from its parent’s children.
@@ -695,8 +695,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     parent._children.delete(node)
 
     // assign siblings and children for quick lookups
-    const prev = node.previousSibling as Node | null
-    const next = node.nextSibling as Node | null
+    const prev = node._previousSibling
+    const next = node._nextSibling
 
     node._previousSibling = null
     node._nextSibling = null
@@ -711,8 +711,8 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 10. If node is assigned, then run assign slotables for node’s assigned 
      * slot.
      */
-    if (Guard.isSlotable(node) && this.dom.shadowTree.isAssigned(node)) {
-      this.dom.shadowTree.assignSlotables(node._assignedSlot as Slot)
+    if (Guard.isSlotable(node) && node._assignedSlot !== null && this.dom.shadowTree.isAssigned(node)) {
+      this.dom.shadowTree.assignSlotables(node._assignedSlot)
     }
 
     /**

@@ -120,7 +120,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The doctype attribute’s getter must return the child of the document 
      * that is a doctype, and null otherwise.
      */
-    for (const child of this.childNodes) {
+    for (const child of this._children) {
       if (Guard.isDocumentTypeNode(child))
         return child
     }
@@ -132,7 +132,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     /**
      * The documentElement attribute’s getter must return the document element.
      */
-    for (const child of this.childNodes) {
+    for (const child of this._children) {
       if (Guard.isElementNode(child))
         return child
     }

@@ -265,7 +265,7 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
      * reference, or toBeRemovedNode is nodeIterator’s root, then return.
      */
     if (toBeRemovedNode === nodeIterator._root ||
-      !this.tree.isAncestorOf(nodeIterator._reference as Node, toBeRemovedNode, true)) {
+      !this.tree.isAncestorOf(nodeIterator._reference, toBeRemovedNode, true)) {
       return
     }
 
@@ -279,9 +279,9 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
        * descendant of toBeRemovedNode, and null if there is no such node.
        */
       while (true) {
-        const nextNode = this.tree.getFollowingNode(nodeIterator._root as Node, toBeRemovedNode)
+        const nextNode = this.tree.getFollowingNode(nodeIterator._root, toBeRemovedNode)
         if (nextNode !== null &&
-          this.tree.isDescendantOf(nodeIterator._root as Node, nextNode, true) &&
+          this.tree.isDescendantOf(nodeIterator._root, nextNode, true) &&
           !this.tree.isDescendantOf(toBeRemovedNode, nextNode, true)) {
           /**
            * 2.2. If next is non-null, then set nodeIterator’s reference to next 
@@ -305,13 +305,13 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
      * descendant of toBeRemovedNode’s previous sibling that appears last in 
      * tree order otherwise.
      */
-    if (toBeRemovedNode.previousSibling === null) {
-      if (toBeRemovedNode.parentNode !== null) {
-        nodeIterator._reference = toBeRemovedNode.parentNode
+    if (toBeRemovedNode._previousSibling === null) {
+      if (toBeRemovedNode._parent !== null) {
+        nodeIterator._reference = toBeRemovedNode._parent
       }
     } else {
-      let childNode: Node = toBeRemovedNode.previousSibling as Node
-      for (childNode of this.tree.getDescendantElements(toBeRemovedNode.previousSibling as Node, true)) {
+      let childNode = toBeRemovedNode._previousSibling
+      for (childNode of this.tree.getDescendantElements(toBeRemovedNode._previousSibling, true)) {
         // loop through to get the last descendant node
       }
       nodeIterator._reference = childNode

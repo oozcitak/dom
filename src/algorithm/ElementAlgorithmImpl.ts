@@ -525,17 +525,16 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
     switch (where.toLowerCase()) {
       case 'beforebegin':
         if (element._parent === null) return null
-        return this.dom.mutation.preInsert(node, element._parent as Node,
+        return this.dom.mutation.preInsert(node, element._parent,
           element)
       case 'afterbegin':
-        return this.dom.mutation.preInsert(node, element,
-          element.firstChild as Node | null)
+        return this.dom.mutation.preInsert(node, element, element._firstChild)
       case 'beforeend':
         return this.dom.mutation.preInsert(node, element, null)
       case 'afterend':
         if (element._parent === null) return null
-        return this.dom.mutation.preInsert(node, element._parent as Node,
-          element.nextSibling as Node | null)
+        return this.dom.mutation.preInsert(node, element._parent,
+          element._nextSibling)
       default:
         throw DOMException.SyntaxError
     }

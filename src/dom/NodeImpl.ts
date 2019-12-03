@@ -182,7 +182,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The hasChildNodes() method, when invoked, must return true if the context
      * object has children, and false otherwise.
      */
-    return (this.firstChild !== null)
+    return (this._firstChild !== null)
   }
 
   /** 
@@ -347,7 +347,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 5. Let currentNode be node’s next sibling.
        * 6. While currentNode is an exclusive Text node:
        */
-      let currentNode = node.nextSibling
+      let currentNode = node._nextSibling
       while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
         /**
          * 6.1. For each live range whose start node is currentNode, add length
@@ -385,7 +385,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
          * 6.6. Set currentNode to its next sibling.
          */
         length += algo.tree.nodeLength(currentNode)
-        currentNode = currentNode.nextSibling
+        currentNode = currentNode._nextSibling
       }
 
       /**
