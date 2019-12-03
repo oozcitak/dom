@@ -50,16 +50,15 @@ export class NodeListStaticImpl implements NodeList {
     return {
       [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<number> {
         let index = 0
-        const len = this.length
     
         return {
-          next(): IteratorResult<number> {
-            if (index === len) {
+          next: function(this: NodeListStaticImpl): IteratorResult<number> {
+            if (index === this.length) {
               return { done: true, value: null }
             } else {
               return { done: false, value: index++ }
             }
-          }
+          }.bind(this)
         }
       }.bind(this)
     }

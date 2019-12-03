@@ -679,19 +679,17 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
   }
 
   /** @inheritdoc */
-  getContainedNodes(range: Range): Iterable<Node> {
-    const algo = this
-    const container = range.commonAncestorContainer as Node
-    const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
-    
+  getContainedNodes(range: Range): Iterable<Node> {   
     return {
-      [Symbol.iterator]() {
+      [Symbol.iterator]: function(this: RangeAlgorithmImpl): Iterator<Node> {
 
+        const container = range.commonAncestorContainer as Node
+        const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()            
         let currentNode: Node | null = it.next().value
         
         return {
-          next() {
-            while (currentNode && !algo.isContained(currentNode, range)) {
+          next: function(this: RangeAlgorithmImpl): IteratorResult<Node> {
+            while (currentNode && !this.isContained(currentNode, range)) {
 							currentNode = it.next().value
             }
             
@@ -702,26 +700,24 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
               currentNode = it.next().value
               return result
             }
-          }
+          }.bind(this)
         }
-      }
+      }.bind(this)
     }
   }
 
   /** @inheritdoc */
-  getPartiallyContainedNodes(range: Range): Iterable<Node> {
-    const algo = this
-    const container = range.commonAncestorContainer as Node
-    const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
-    
+  getPartiallyContainedNodes(range: Range): Iterable<Node> {   
     return {
-      [Symbol.iterator]() {
+      [Symbol.iterator]: function(this: RangeAlgorithmImpl): Iterator<Node> {
 
+        const container = range.commonAncestorContainer as Node
+        const it = this.dom.tree.getDescendantNodes(container)[Symbol.iterator]()
         let currentNode: Node | null = it.next().value
         
         return {
-          next() {
-            while (currentNode && !algo.isPartiallyContained(currentNode, range)) {
+          next: function(this: RangeAlgorithmImpl): IteratorResult<Node> {
+            while (currentNode && !this.isPartiallyContained(currentNode, range)) {
 							currentNode = it.next().value
             }
             
@@ -732,9 +728,9 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
               currentNode = it.next().value
               return result
             }
-          }
+          }.bind(this)
         }
-      }
+      }.bind(this)
     }
   }
 

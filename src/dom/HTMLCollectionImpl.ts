@@ -87,10 +87,24 @@ export class HTMLCollectionImpl implements HTMLCollection {
   }
 
   /** @inheritdoc */
-  *[Symbol.iterator](): IterableIterator<Element> {
+  [Symbol.iterator](): Iterator<Element> {
     const algo = globalStore.algorithm as DOMAlgorithm
-    yield* algo.tree.getDescendantElements(this._root, false, false,
-      (ele) => { return !!this._filter(ele) })
+
+    const it = algo.tree.getDescendantElements(this._root, false, false,
+      (ele) => { return !!this._filter(ele) })[Symbol.iterator]()
+    let currentNode: Element | null = it.next().value
+
+    return {
+      next(): IteratorResult<Element> {
+        if (currentNode === null) {
+          return { done: true, value: null }
+        } else {
+          const result = { done: false, value: currentNode }
+          currentNode = it.next().value
+          return result
+        }
+      }
+    }
   }
 
   /** @inheritdoc */

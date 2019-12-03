@@ -63,16 +63,15 @@ export class NodeListImpl implements NodeList {
     return {
       [Symbol.iterator]: function(this: NodeListImpl): Iterator<number> {
         let index = 0
-        const len = this.length
     
         return {
-          next(): IteratorResult<number> {
-            if (index === len) {
+          next: function(this: NodeListImpl): IteratorResult<number> {
+            if (index === this.length) {
               return { done: true, value: null }
             } else {
               return { done: false, value: index++ }
             }
-          }
+          }.bind(this)
         }
       }.bind(this)
     }

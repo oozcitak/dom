@@ -52,29 +52,27 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
     shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
 		Iterable<Node> {
 
-	  const getNextDescendantNode = this._getNextDescendantNode
-
     return {
-      [Symbol.iterator]() {
+      [Symbol.iterator]: function(this: TreeAlgorithmImpl): Iterator<Node> {
 
-        let currentNode: Node | null = (self ? node : getNextDescendantNode(node, node, shadow))
+        let currentNode: Node | null = (self ? node : this._getNextDescendantNode(node, node, shadow))
         
         return {
-          next() {
+          next: function(this: TreeAlgorithmImpl): IteratorResult<Node> {
 						while (currentNode && filter && !filter(currentNode)) {
-							currentNode = getNextDescendantNode(node, currentNode, shadow)
+							currentNode = this._getNextDescendantNode(node, currentNode, shadow)
 						}
 
             if (currentNode === null) {
               return { done: true, value: null }
             } else {
               const result = { done: false, value: currentNode }
-              currentNode = getNextDescendantNode(node, currentNode, shadow)
+              currentNode = this._getNextDescendantNode(node, currentNode, shadow)
               return result
             }
-          }
+          }.bind(this)
         }
-      }
+      }.bind(this)
     }
   }
 
@@ -82,13 +80,12 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
 	getDescendantElements(node: Node, self: boolean = false, 
 		shadow: boolean = false, filter?:	((childNode: Element) => boolean)):
 		Iterable<Element> {
-
-    const it = this.getDescendantNodes(node, self, shadow, (e) => Guard.isElementNode(e))[Symbol.iterator]()
-    
+   
     return {
-      [Symbol.iterator]() {
+      [Symbol.iterator]: function(this: TreeAlgorithmImpl): Iterator<Element> {
 
-        let currentNode: Element | null = it.next().value
+        const it = this.getDescendantNodes(node, self, shadow, (e: Node) => Guard.isElementNode(e))[Symbol.iterator]()
+		    let currentNode: Element | null = it.next().value
         
         return {
           next() {
@@ -105,7 +102,7 @@ export class TreeAlgorithmImpl extends SubAlgorithmImpl implements TreeAlgorithm
             }
           }
         }
-      }
+      }.bind(this)
     }
 	}
 
