@@ -22,7 +22,7 @@ export class DOMParser {
    * @param mimeType - the mime type of the document
    */
   parseFromString(source: string, mimeType: MimeType): Document {
-    if (mimeType === MimeType.HTML) {
+    if (mimeType === "text/html") {
       throw new Error('HTML parser not implemented.')
     } else {
       const lexer = new XMLStringLexer(source)
@@ -132,10 +132,5 @@ export class DOMParser {
 /**
  * Defines the mime type of the document.
  */
-export enum MimeType {
-  HTML = 'text/html',
-  TextXML = 'text/xml',
-  XML = 'application/xml',
-  XHTML = 'application/xhtml+xml',
-  SVG = 'image/svg+xml'
-}
+export type MimeType = 'text/html' | 'text/xml' | 'application/xml' | 
+  'application/xhtml+xml' | 'image/svg+xml'
