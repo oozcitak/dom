@@ -517,16 +517,18 @@ export class XMLStringLexer implements XMLLexer {
   /**
    * Returns an iterator for the lexer.
    */
-  *[Symbol.iterator](): IterableIterator<XMLToken> {
+  [Symbol.iterator](): Iterator<XMLToken> {
     this.reset()
-    let flag = true
-    while (flag) {
-      const token = this.nextToken()
-      if (token.type === TokenType.EOF) {
-        flag = false
-      } else {
-        yield token
-      }
+
+    return {
+      next: function(this: XMLStringLexer): IteratorResult<XMLToken> {
+        const token = this.nextToken()
+        if (token.type === TokenType.EOF) {
+          return { done: true, value: null }
+        } else {
+          return { done: false, value: token }
+        }
+      }.bind(this)
     }
   }
 
