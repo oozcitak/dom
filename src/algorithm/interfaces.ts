@@ -311,7 +311,7 @@ export interface TreeAlgorithm extends SubAlgorithm {
    * @param filter - a function to filter nodes
    */
   getSiblingNodes(node: Node, self?: boolean,
-    filter?: (childNode: Node) => boolean): IterableIterator<Node>
+    filter?: (childNode: Node) => boolean): Iterable<Node>
 
   /**
    * Traverses through all ancestor nodes `node` in reverse tree order.
