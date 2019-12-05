@@ -1,0 +1,228 @@
+Statistical profiling result from isolate-v8.log, (1809 ticks, 16 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+    998   55.2%          C:\Program Files\nodejs\node.exe
+     58    3.2%          C:\WINDOWS\SYSTEM32\ntdll.dll
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+    198   10.9%   26.3%  LazyCompile: *createAnElement c:\Users\PC\Source\Repos\dom\lib\algorithm\ElementAlgorithmImpl.js:280:20
+    148    8.2%   19.7%  LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     93    5.1%   12.4%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\lib\algorithm\TreeAlgorithmImpl.js:47:36
+     82    4.5%   10.9%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     79    4.4%   10.5%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\lib\algorithm\TreeAlgorithmImpl.js:44:41
+     68    3.8%    9.0%  LazyCompile: *ensurePreInsertionValidity c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:22:31
+     54    3.0%    7.2%  RegExp: ^([:A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])([\x2D\.0-:A-Z_a-z\xB7\xC0-\xD6\xD8-\xF6\xF8-\u037D\u037F-\u1FFF\u200C\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])*$
+      9    0.5%    1.2%  LazyCompile: *adopt c:\Users\PC\Source\Repos\dom\lib\algorithm\DocumentAlgorithmImpl.js:47:10
+      5    0.3%    0.7%  LazyCompile: *DocumentImpl c:\Users\PC\Source\Repos\dom\lib\dom\DocumentImpl.js:17:16
+      1    0.1%    0.1%  LazyCompile: *preInsert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:152:14
+
+ [C++]:
+   ticks  total  nonlib   name
+
+ [Summary]:
+   ticks  total  nonlib   name
+    737   40.7%   97.9%  JavaScript
+      0    0.0%    0.0%  C++
+    163    9.0%   21.6%  GC
+   1056   58.4%          Shared libraries
+     16    0.9%          Unaccounted
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+    998   55.2%  C:\Program Files\nodejs\node.exe
+    350   35.1%    C:\Program Files\nodejs\node.exe
+    182   52.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+    182  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+    182  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+    182  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     63   18.0%      LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     63  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     63  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     63  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     63   18.0%      C:\Program Files\nodejs\node.exe
+     61   96.8%        LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     61  100.0%          LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     61  100.0%            LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1    1.6%        LazyCompile: ~debuglogImpl internal/util/debuglog.js:34:22
+      1  100.0%          LazyCompile: ~<anonymous> internal/util/debuglog.js:57:18
+      1  100.0%            LazyCompile: ~Module._resolveLookupPaths internal/modules/cjs/loader.js:625:38
+      1    1.6%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     14    4.0%      LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+     14  100.0%        LazyCompile: ~nativeModuleRequire internal/bootstrap/loaders.js:183:29
+      3   21.4%          Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      2   14.3%          LazyCompile: ~setupPrepareStackTrace internal/bootstrap/node.js:300:32
+      2  100.0%            Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      1    7.1%          LazyCompile: ~setupBuffer internal/bootstrap/node.js:403:21
+      1  100.0%            Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      1    7.1%          Eval: ~<anonymous> internal/url.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> internal/source_map/source_map_cache.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> internal/modules/cjs/helpers.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> internal/main/run_main_module.js:1:1
+      1    7.1%          Eval: ~<anonymous> internal/console/global.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> fs.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> events.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      1    7.1%          Eval: ~<anonymous> buffer.js:1:1
+      1  100.0%            LazyCompile: ~NativeModule.compile internal/bootstrap/loaders.js:272:42
+      5    1.4%      LazyCompile: *createAnElement c:\Users\PC\Source\Repos\dom\lib\algorithm\ElementAlgorithmImpl.js:280:20
+      5  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      5  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      5  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      4    1.1%      LazyCompile: ~openSync fs.js:431:18
+      4  100.0%        LazyCompile: ~readFileSync fs.js:339:22
+      4  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      4  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+    241   24.1%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+    241  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+    241  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+    241  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+    241  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+    142   14.2%    LazyCompile: *createAnElement c:\Users\PC\Source\Repos\dom\lib\algorithm\ElementAlgorithmImpl.js:280:20
+    142  100.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+    142  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+    142  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+    142  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     84    8.4%    LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     83   98.8%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     83  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     83  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     83  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      1    1.2%      LazyCompile: *preInsert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:152:14
+      1  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     34    3.4%    LazyCompile: *ensurePreInsertionValidity c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:22:31
+     33   97.1%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     33  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     33  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     33  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      1    2.9%      LazyCompile: ~preInsert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:152:14
+      1  100.0%        LazyCompile: ~append c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:353:11
+      1  100.0%          LazyCompile: ~appendChild c:\Users\PC\Source\Repos\dom\lib\dom\NodeImpl.js:683:16
+      1  100.0%            Eval: ~<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     20    2.0%    LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     20  100.0%      LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     20  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     20  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     20  100.0%            LazyCompile: ~Module.runMain internal/modules/cjs/loader.js:1033:26
+
+    198   10.9%  LazyCompile: *createAnElement c:\Users\PC\Source\Repos\dom\lib\algorithm\ElementAlgorithmImpl.js:280:20
+    188   94.9%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+    188  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+    188  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+    188  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+    188  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     10    5.1%    LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     10  100.0%      LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     10  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     10  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     10  100.0%            LazyCompile: ~Module.runMain internal/modules/cjs/loader.js:1033:26
+
+    148    8.2%  LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+    142   95.9%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+    142  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+    142  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+    142  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+    142  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+      5    3.4%    LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      5  100.0%      LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      5  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      5  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+      5  100.0%            LazyCompile: ~Module.runMain internal/modules/cjs/loader.js:1033:26
+
+     93    5.1%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\lib\algorithm\TreeAlgorithmImpl.js:47:36
+     47   50.5%    LazyCompile: *ensurePreInsertionValidity c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:22:31
+     47  100.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     47  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     47  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     47  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     40   43.0%    LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     40  100.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     40  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     40  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     40  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      6    6.5%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      6  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      6  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      6  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      6  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+
+     82    4.5%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     82  100.0%    LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     82  100.0%      LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     82  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     82  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     82  100.0%            LazyCompile: ~Module.runMain internal/modules/cjs/loader.js:1033:26
+
+     79    4.4%  LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\lib\algorithm\TreeAlgorithmImpl.js:44:41
+     43   54.4%    LazyCompile: *ensurePreInsertionValidity c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:22:31
+     43  100.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     43  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     43  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     43  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     35   44.3%    LazyCompile: *insert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:170:11
+     34   97.1%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     34  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     34  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     34  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      1    2.9%      LazyCompile: *preInsert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:152:14
+      1  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      1    1.3%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      1  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      1  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      1  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+
+     68    3.8%  LazyCompile: *ensurePreInsertionValidity c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:22:31
+     56   82.4%    LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     56  100.0%      LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     56  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     56  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     56  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     11   16.2%    LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     11  100.0%      LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+     11  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+     11  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+     11  100.0%            LazyCompile: ~Module.runMain internal/modules/cjs/loader.js:1033:26
+      1    1.5%    LazyCompile: *preInsert c:\Users\PC\Source\Repos\dom\lib\algorithm\MutationAlgorithmImpl.js:152:14
+      1  100.0%      LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      1  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      1  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      1  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+
+     58    3.2%  C:\WINDOWS\SYSTEM32\ntdll.dll
+      3    5.2%    C:\Program Files\nodejs\node.exe
+      2   66.7%      C:\Program Files\nodejs\node.exe
+      2  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+      2  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+      2  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      1   33.3%      LazyCompile: ~readFileSync fs.js:339:22
+      1  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+      1  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:807:33
+      1  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:671:24
+
+     54    3.0%  RegExp: ^([:A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])([\x2D\.0-:A-Z_a-z\xB7\xC0-\xD6\xD8-\xF6\xF8-\u037D\u037F-\u1FFF\u200C\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])*$
+     54  100.0%    C:\Program Files\nodejs\node.exe
+     54  100.0%      C:\Program Files\nodejs\node.exe
+     54  100.0%        LazyCompile: *<anonymous> c:\Users\PC\Source\Repos\dom\perf\prof.js:1:1
+     54  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:868:37
+     54  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:968:37
+
