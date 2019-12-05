@@ -19,7 +19,7 @@ export class AbortControllerImpl implements AbortController {
      * 2. Let controller be a new AbortController object whose signal is signal.
      * 3. Return controller.
      */
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.algorithm
     this._signal = this._algo.create.abortSignal()
   }
 

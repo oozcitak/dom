@@ -44,7 +44,7 @@ export class DOMTokenListAlgorithmImpl extends SubAlgorithmImpl implements DOMTo
       tokenList._tokenSet.size === 0) {
       return
     }
-    this.dom.element.setAnAttributeValue(tokenList._element as Element,
+    this.dom.element.setAnAttributeValue(tokenList._element,
       tokenList._attribute._localName, this.dom.orderedSet.serialize(tokenList._tokenSet))
   }
 
@@ -56,7 +56,7 @@ export class DOMTokenListAlgorithmImpl extends SubAlgorithmImpl implements DOMTo
      * associated attribute’s local name.
      */
     return this.dom.element.getAnAttributeValue(
-      tokenList._element as Element, tokenList._attribute._localName)
+      tokenList._element, tokenList._attribute._localName)
   }
 
 }

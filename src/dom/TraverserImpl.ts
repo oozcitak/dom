@@ -21,7 +21,7 @@ export abstract class TraverserImpl implements Traverser {
    * @param root - root node
    */
   protected constructor(root: Node) {
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.algorithm
 
     this._activeFlag = false
     this._root = root

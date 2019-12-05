@@ -170,12 +170,12 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
         activationTarget = target
       }
 
-      let slotable: EventTarget | null =
+      let slotable =
         (Guard.isSlotable(target) && this.dom.shadowTree.isAssigned(target)) ?
           target : null
 
       let slotInClosedTree = false
-      let parent: EventTarget | null = target._getTheParent(event) as EventTarget | null
+      let parent = target._getTheParent(event)
 
       /**
        * 5.9. While parent is non-null:
@@ -267,7 +267,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * 5.9.10. Set slot-in-closed-tree to false.
          */
         if (parent !== null) {
-          parent = parent._getTheParent(event) as EventTarget | null
+          parent = parent._getTheParent(event)
         }
         slotInClosedTree = false
       }
@@ -317,10 +317,9 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
        * legacy-pre-activation behavior, then run activationTarget's
        * legacy-pre-activation behavior.
        */
-      const atImpl = activationTarget as EventTarget
       if (activationTarget !== null &&
-        atImpl._legacyPreActivationBehavior !== undefined) {
-        atImpl._legacyPreActivationBehavior(event)
+        activationTarget._legacyPreActivationBehavior !== undefined) {
+          activationTarget._legacyPreActivationBehavior(event)
       }
 
       /**
@@ -534,7 +533,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
     event._touchTargetList = struct.touchTargetList
     if (event._stopPropagationFlag) return
     event._currentTarget = struct.invocationTarget
-    const currentTarget = event._currentTarget as EventTarget
+    const currentTarget = event._currentTarget
     const targetListeners: EventListenerEntry[] = currentTarget._eventListenerList
     let listeners: EventListenerEntry[] = new Array(...targetListeners)
 
@@ -626,7 +625,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
          * currentTarget attribute value's event listener list.
          */
         if (listener.once && event.currentTarget !== null) {
-          const impl = event.currentTarget as EventTarget
+          const impl = event.currentTarget
           let index = -1
           for (let i = 0; i < impl._eventListenerList.length; i++) {
             if (impl._eventListenerList[i] === listener) {

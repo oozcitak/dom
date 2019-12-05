@@ -206,10 +206,9 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
       qualifiedName = qualifiedName.toLowerCase()
     }
 
-    for (const attr of (element._attributeList as NamedNodeMap)._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._qualifiedName === qualifiedName) {
-        return attrInt
+    for (const attr of (element._attributeList)._attributeList) {
+      if (attr._qualifiedName === qualifiedName) {
+        return attr
       }
     }
     return null
@@ -224,10 +223,9 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * namespace and local name is localName, if any, and null otherwise.
      */
     const ns: string | null = namespace || null
-    for (const attr of (element._attributeList as NamedNodeMap)._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._namespace === ns && attrInt._localName === localName) {
-        return attrInt
+    for (const attr of (element._attributeList)._attributeList) {
+      if (attr._namespace === ns && attr._localName === localName) {
+        return attr
       }
     }
     return null

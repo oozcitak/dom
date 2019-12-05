@@ -51,8 +51,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
     /**
      * 5. For each mo of notifySet:
      */
-    for (const moItem of notifySet) {
-      const mo = moItem as MutationObserver
+    for (const mo of notifySet) {
       /**
        * 5.1. Let records be a clone of mo’s record queue.
        * 5.2. Empty mo’s record queue.
@@ -136,7 +135,7 @@ export class MutationObserverAlgorithmImpl extends SubAlgorithmImpl
          * characterDataOldValue is true, then set interestedObservers[mo] 
          * to oldValue.
          */
-        const mo = registered.observer as MutationObserver
+        const mo = registered.observer
         if (!interestedObservers.has(mo)) {
           interestedObservers.set(mo, null)
         }

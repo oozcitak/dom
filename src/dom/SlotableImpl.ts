@@ -20,7 +20,7 @@ export class SlotableImpl implements Slotable {
 
   /** @inheritdoc */
   get assignedSlot(): HTMLSlotElement | null {
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
     return algo.shadowTree.findASlot(this, true) as HTMLSlotElement | null
   }
 

@@ -24,7 +24,7 @@ export class DOMParser {
    * enabled by default unless explicity disabled.
    */
   constructor (features?: Partial<DOMFeatures> | boolean) {
-    this.algo = globalStore.algorithm as DOMAlgorithm
+    this.algo = globalStore.algorithm
     if (features !== undefined) {
       this.algo.setFeatures(features)
     }

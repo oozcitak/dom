@@ -196,12 +196,10 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
     if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
       if (a._attributeList.length !== b._attributeList.length) return false
       const attrMap = new Map<string, Attr>()
-      for (const attr of a._attributeList) {
-        const attrA = attr as Attr
+      for (const attrA of a._attributeList) {
         attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
       }
-      for (const attr of b._attributeList) {
-        const attrB = attr as Attr
+      for (const attrB of b._attributeList) {
         const attrA = attrMap.get((attrB._namespace || '') + attrB._localName + attrB._value)
         if (!attrA) return false
         if (!this.equals(attrA, attrB)) return false
@@ -326,7 +324,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
     const caseSensitive = (root._nodeDocument._mode !== "quirks")
     const algo = this
     return this.dom.create.htmlCollection(root, function (ele) {
-      const eleClasses = ele.classList as DOMTokenList
+      const eleClasses = ele.classList
       return algo.dom.orderedSet.contains(eleClasses._tokenSet, classes,
         caseSensitive)
     })
@@ -350,9 +348,8 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * local name.
      */
     for (const attr of element._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._namespacePrefix === "xmlns" && attrInt._value === namespace) {
-        return attrInt._localName
+      if (attr._namespacePrefix === "xmlns" && attr._value === namespace) {
+        return attr._localName
       }
     }
 
@@ -361,8 +358,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
      * running locate a namespace prefix on that element using namespace.
      */
     if (element.parentElement) {
-      return this.locateANamespacePrefix(element.parentElement as Element,
-        namespace)
+      return this.locateANamespacePrefix(element.parentElement, namespace)
     }
 
 
@@ -390,15 +386,14 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * value if it is not the empty string, and null otherwise.
        */
       for (const attr of node._attributeList) {
-        const attrInt = attr as Attr
-        if (attrInt._namespace === infraNamespace.XMLNS &&
-          attrInt._namespacePrefix === "xmlns" &&
-          attrInt._localName === prefix) {
-          return attrInt._value || null
+        if (attr._namespace === infraNamespace.XMLNS &&
+          attr._namespacePrefix === "xmlns" &&
+          attr._localName === prefix) {
+          return attr._value || null
         }
-        if (prefix === null && attrInt._namespace === infraNamespace.XMLNS &&
-          attrInt._namespacePrefix === null && attrInt._localName === "xmlns") {
-          return attrInt._value || null
+        if (prefix === null && attr._namespace === infraNamespace.XMLNS &&
+          attr._namespacePrefix === null && attr._localName === "xmlns") {
+          return attr._value || null
         }
       }
 
@@ -411,7 +406,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * 4. Return the result of running locate a namespace on its parent
        * element using prefix.
        */
-      return this.locateANamespace(node.parentElement as Element, prefix)
+      return this.locateANamespace(node.parentElement, prefix)
     } else if (Guard.isDocumentNode(node)) {
       /**
        * 1. If its document element is null, then return null.
@@ -419,7 +414,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * element using prefix.
        */
       if (node.documentElement === null) return null
-      return this.locateANamespace(node.documentElement as Element, prefix)
+      return this.locateANamespace(node.documentElement, prefix)
     } else if (Guard.isDocumentTypeNode(node) || Guard.isDocumentFragmentNode(node)) {
       return null
     } else if (Guard.isAttrNode(node)) {
@@ -429,7 +424,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * using prefix.
        */
       if (node._element === null) return null
-      return this.locateANamespace(node._element as Element, prefix)
+      return this.locateANamespace(node._element, prefix)
     } else {
       /**
        * 1. If its parent element is null, then return null.
@@ -437,7 +432,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
        * element using prefix.
        */
       if (node.parentElement === null) return null
-      return this.locateANamespace(node.parentElement as Element, prefix)
+      return this.locateANamespace(node.parentElement, prefix)
     }
 
   }

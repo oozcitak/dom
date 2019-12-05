@@ -23,7 +23,7 @@ export class DOMTokenListImpl implements DOMTokenList {
    */
   private constructor(element: Element, attribute: Attr) {
 
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.algorithm
 
     /**
      * 1. Let element be associated element.

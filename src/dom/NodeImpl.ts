@@ -324,7 +324,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        */
       let length = algo.tree.nodeLength(node)
       if (length === 0) {
-        algo.mutation.remove(node, node._parent as Node)
+        algo.mutation.remove(node, node._parent)
         continue
       }
       /**
@@ -396,7 +396,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        */
       for (const sibling of textSiblings) {
         if (sibling._parent === null) continue
-        algo.mutation.remove(sibling, sibling._parent as Node)
+        algo.mutation.remove(sibling, sibling._parent)
       }
     }
   }
@@ -434,7 +434,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * otherNode is non-null and context object equals otherNode, and false 
      * otherwise.
      */
-    return (node !== null && this._algo.node.equals(this, node as Node))
+    return (node !== null && this._algo.node.equals(this, node))
   }
 
   /**
@@ -465,8 +465,8 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      */
     if (other === this) return 0
 
-    let node1: Node | null = other as Node | null
-    let node2: Node | null = this as Node | null
+    let node1: Node | null = other
+    let node2: Node | null = this
 
     let attr1: Attr | null = null
     let attr2: Attr | null = null
@@ -477,7 +477,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      */
     if (Guard.isAttrNode(node1)) {
       attr1 = node1
-      node1 = attr1._element as Element | null
+      node1 = attr1._element
     }
 
     /**
@@ -488,7 +488,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 5.1. Set attr2 to node2 and node2 to attr2’s element.
        */
       attr2 = node2
-      node2 = attr2._element as Element | null
+      node2 = attr2._element
 
       /**
        * 5.2. If attr1 and node1 are non-null, and node2 is node1, then:
@@ -506,9 +506,9 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
            * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and 
            * DOCUMENT_POSITION_FOLLOWING.
            */
-          if (algo.node.equals(attr as Attr, attr1)) {
+          if (algo.node.equals(attr, attr1)) {
             return Position.ImplementationSpecific | Position.Preceding
-          } else if (algo.node.equals(attr as Attr, attr2)) {
+          } else if (algo.node.equals(attr, attr2)) {
             return Position.ImplementationSpecific | Position.Following
           }
         }
@@ -527,7 +527,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        (globalStore.compareCache.check(this, other as Node) ? Position.Preceding : Position.Following)
+        (globalStore.compareCache.check(this, other) ? Position.Preceding : Position.Following)
     }
 
     /**
@@ -575,7 +575,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * when other is null).
      */
     if (other === null) return false
-    return this._algo.tree.isDescendantOf(this, other as Node, true)
+    return this._algo.tree.isDescendantOf(this, other, true)
   }
 
   /**
@@ -604,8 +604,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       if (this.documentElement === null) {
         return null
       } else {
-        return this._algo.node.locateANamespacePrefix(
-          this.documentElement as Element, namespace)
+        return this._algo.node.locateANamespacePrefix(this.documentElement, namespace)
       }
     } else if (Guard.isDocumentTypeNode(this) || Guard.isDocumentFragmentNode(this)) {
       return null
@@ -617,8 +616,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       if (this._element === null) {
         return null
       } else {
-        return this._algo.node.locateANamespacePrefix(
-          this._element as Element, namespace)
+        return this._algo.node.locateANamespacePrefix(this._element, namespace)
       }
     } else {
       /**
@@ -628,8 +626,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       if (this.parentElement === null) {
         return null
       } else {
-        return this._algo.node.locateANamespacePrefix(
-          this.parentElement as Element, namespace)
+        return this._algo.node.locateANamespacePrefix(this.parentElement, namespace)
       }
     }
   }
@@ -688,8 +685,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The insertBefore(node, child) method, when invoked, must return the 
      * result of pre-inserting node into context object before child.
      */
-    return this._algo.mutation.preInsert(newChild as Node, this,
-      refChild as Node | null)
+    return this._algo.mutation.preInsert(newChild, this, refChild)
   }
 
   /**
@@ -710,7 +706,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The appendChild(node) method, when invoked, must return the result of 
      * appending node to context object.
      */
-    return this._algo.mutation.append(newChild as Node, this)
+    return this._algo.mutation.append(newChild, this)
   }
 
   /**
@@ -728,8 +724,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The replaceChild(node, child) method, when invoked, must return the 
      * result of replacing child with node within context object.
      */
-    return this._algo.mutation.replace(oldChild as Node,
-      newChild as Node, this)
+    return this._algo.mutation.replace(oldChild,newChild, this)
   }
 
   /**
@@ -745,7 +740,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The removeChild(child) method, when invoked, must return the result of 
      * pre-removing child from context object.
      */
-    return this._algo.mutation.preRemove(oldChild as Node, this)
+    return this._algo.mutation.preRemove(oldChild, this)
   }
 
   /**

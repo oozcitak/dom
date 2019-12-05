@@ -111,8 +111,7 @@ export class ElementImpl extends NodeImpl implements Element {
     const names: string[] = []
 
     for (const attr of this._attributeList) {
-      const attrInt = attr as Attr
-      names.push(attrInt._qualifiedName)
+      names.push(attr._qualifiedName)
     }
 
     return names
@@ -166,9 +165,8 @@ export class ElementImpl extends NodeImpl implements Element {
      */
     let attribute: Attr | null = null
     for (const attr of this._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._qualifiedName === qualifiedName) {
-        attribute = attrInt
+      if (attr._qualifiedName === qualifiedName) {
+        attribute = attr
         break
       }
     }
@@ -241,8 +239,7 @@ export class ElementImpl extends NodeImpl implements Element {
     }
     
     for (const attr of this._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._qualifiedName === qualifiedName) {
+      if (attr._qualifiedName === qualifiedName) {
         return true
       }
     }
@@ -274,9 +271,8 @@ export class ElementImpl extends NodeImpl implements Element {
      */
     let attribute: Attr | null = null
     for (const attr of this._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._qualifiedName === qualifiedName) {
-        attribute = attrInt
+      if (attr._qualifiedName === qualifiedName) {
+        attribute = attr
         break
       }
     }
@@ -322,8 +318,7 @@ export class ElementImpl extends NodeImpl implements Element {
     const ns = namespace || null
 
     for (const attr of this._attributeList) {
-      const attrInt = attr as Attr
-      if (attrInt._namespace === ns && attrInt._localName === localName) {
+      if (attr._namespace === ns && attr._localName === localName) {
         return true
       }
     }
@@ -358,12 +353,12 @@ export class ElementImpl extends NodeImpl implements Element {
      * invoked, must return the result of setting an attribute given attr and 
      * the context object.
      */
-    return this._algo.element.setAnAttribute(attr as Attr, this)
+    return this._algo.element.setAnAttribute(attr, this)
   }
 
   /** @inheritdoc */
   setAttributeNodeNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr as Attr, this)
+    return this._algo.element.setAnAttribute(attr, this)
   }
 
   /** @inheritdoc */
@@ -384,7 +379,7 @@ export class ElementImpl extends NodeImpl implements Element {
     if (!found)
       throw DOMException.NotFoundError
 
-    this._algo.element.remove(attr as Attr, this)
+    this._algo.element.remove(attr, this)
     return attr
   }
 
@@ -528,8 +523,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * return the result of running insert adjacent, given context object,
      *  where, and element.
      */
-    return this._algo.element.insertAdjacent(this, where,
-      element as Element) as Element | null
+    return this._algo.element.insertAdjacent(this, where, element) as Element | null
   }
 
   /** @inheritdoc */
@@ -716,7 +710,6 @@ export class ElementImpl extends NodeImpl implements Element {
     node._localName = localName
     node._namespace = namespace
     node._namespacePrefix = namespacePrefix
-    node._attributeList = node._algo.create.namedNodeMap(node)
 
     node._nodeDocument = document
     return node

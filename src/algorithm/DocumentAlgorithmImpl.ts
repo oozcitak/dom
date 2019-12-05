@@ -85,7 +85,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
 
         if (Guard.isElementNode(inclusiveDescendant)) {
           for (const attr of inclusiveDescendant.attributes) {
-            (attr as Attr)._nodeDocument = document
+            attr._nodeDocument = document
           }
         }
 

@@ -88,7 +88,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
 
   /** @inheritdoc */
   [Symbol.iterator](): Iterator<Element> {
-    const algo = globalStore.algorithm as DOMAlgorithm
+    const algo = globalStore.algorithm
 
     const it = algo.tree.getDescendantElements(this._root, false, false,
       (ele) => { return !!this._filter(ele) })[Symbol.iterator]()

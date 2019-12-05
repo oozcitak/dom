@@ -25,7 +25,7 @@ export class AttrAlgorithmImpl extends SubAlgorithmImpl implements AttrAlgorithm
     if(attribute._element === null) {
       attribute._value = value
     } else {
-      this.dom.element.change(attribute, attribute._element as Element, value)
+      this.dom.element.change(attribute, attribute._element, value)
     }
   }
 

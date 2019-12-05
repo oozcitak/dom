@@ -79,8 +79,7 @@ export class ParentNodeImpl implements ParentNode {
     const algo = globalStore.algorithm
     const node = Cast.asNode(this)
 
-    const childNode = algo.parentNode.convertNodesIntoANode(
-      nodes as (Node | string)[], node._nodeDocument)
+    const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
     algo.mutation.preInsert(childNode, node, node._firstChild)
   }
 
@@ -94,8 +93,7 @@ export class ParentNodeImpl implements ParentNode {
     const algo = globalStore.algorithm
     const node = Cast.asNode(this)
 
-    const childNode = algo.parentNode.convertNodesIntoANode(
-      nodes as (Node | string)[], node._nodeDocument)
+    const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
     algo.mutation.append(childNode, node)
   }
 

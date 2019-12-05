@@ -19,9 +19,9 @@ export class NamedNodeMapImpl implements NamedNodeMap {
    * @param element - parent element
    */
   private constructor(element: Element) {
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.algorithm
 
-    this._element = element as Element
+    this._element = element
   }
 
   /** @inheritdoc */
@@ -69,12 +69,12 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * The setNamedItem(attr) and setNamedItemNS(attr) methods, when invoked, 
      * must return the result of setting an attribute given attr and element.
      */
-    return this._algo.element.setAnAttribute(attr as Attr, this._element)
+    return this._algo.element.setAnAttribute(attr, this._element)
   }
 
   /** @inheritdoc */
   setNamedItemNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr as Attr, this._element)
+    return this._algo.element.setAnAttribute(attr, this._element)
   }
 
   /** @inheritdoc */

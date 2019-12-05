@@ -43,9 +43,8 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRoot {
      * event’s path’s first struct’s invocation target, and shadow root’s host
      * otherwise.
      */
-    const eventInt = event as Event
-    if (!eventInt._composedFlag && !isEmpty(eventInt._path) &&
-      this._algo.tree.rootNode(eventInt._path[0].invocationTarget as Node) === this) {
+    if (!event._composedFlag && !isEmpty(event._path) &&
+      this._algo.tree.rootNode(event._path[0].invocationTarget as Node) === this) {
       return null
     } else {
       return this._host
