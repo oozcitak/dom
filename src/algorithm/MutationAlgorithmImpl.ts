@@ -205,13 +205,15 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * offset is greater than child's index, increase its end 
        * offset by count.
        */
-      const index = this.dom.tree.index(child)
-      for (const range of this.dom.range.rangeList) {
-        if (range._start[0] === parent && range._start[1] > index) {
-          range._start[1] += count
-        }
-        if (range._end[0] === parent && range._end[1] > index) {
-          range._end[1] += count
+      if (this.dom.range.rangeList.length !== 0) {
+        const index = this.dom.tree.index(child)
+        for (const range of this.dom.range.rangeList) {
+          if (range._start[0] === parent && range._start[1] > index) {
+            range._start[1] += count
+          }
+          if (range._end[0] === parent && range._end[1] > index) {
+            range._end[1] += count
+          }
         }
       }
     }
@@ -239,8 +241,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. If node is a DocumentFragment node, then queue a tree mutation record 
      * for node with « », nodes, null, and null.
      */
-    if (Guard.isDocumentFragmentNode(node)) {
-      this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
+    if (this.dom.features.mutationObservers) {
+      if (Guard.isDocumentFragmentNode(node)) {
+        this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
+      }
     }
 
     /**
@@ -260,7 +264,6 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * index.
        */
       if (!parent._children.has(node)) {
-
         node._parent = parent
         if (child === null) {
           infraSet.append(parent._children, node)
@@ -295,8 +298,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * 7.3. If parent is a shadow host and node is a slotable, then 
        * assign a slot for node.
        */
-      if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
-        this.dom.shadowTree.assignASlot(node)
+      if (this.dom.features.slots) {
+        if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
+          this.dom.shadowTree.assignASlot(node)
+        }
       }
 
       /**
@@ -312,15 +317,19 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * whose assigned nodes is the empty list, then run signal
        * a slot change for parent.
        */
-      if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
-        Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
-        this.dom.shadowTree.signalASlotChange(parent)
+      if (this.dom.features.slots) {
+        if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
+          Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
+          this.dom.shadowTree.signalASlotChange(parent)
+        }
       }
 
       /**
        * 7.6. Run assign slotables for a tree with node's root.
        */
-      this.dom.shadowTree.assignSlotablesForATree(this.dom.tree.rootNode(node))
+      if (this.dom.features.slots) {
+        this.dom.shadowTree.assignSlotablesForATree(this.dom.tree.rootNode(node))
+      }
 
       /**
        * 7.7. For each shadow-including inclusive descendant 
@@ -333,25 +342,27 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
          */
         this.dom.runInsertionSteps(inclusiveDescendant)
 
-        /**
-         * 7.7.2. If inclusiveDescendant is connected, then:
-         */
-        if (Guard.isElementNode(inclusiveDescendant) && 
-          this.dom.shadowTree.isConnected(inclusiveDescendant)) {
-          if (Guard.isCustomElementNode(inclusiveDescendant)) {
-            /**
-             * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
-             * element callback reaction with inclusiveDescendant, callback name 
-             * "connectedCallback", and an empty argument list.
-             */
-            this.dom.customElement.enqueueACustomElementCallbackReaction(
-              inclusiveDescendant, "connectedCallback", [])
-          } else {
-            /**
-             * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
-             */
-            this.dom.customElement.tryToUpgrade(inclusiveDescendant)
-          }      
+        if (this.dom.features.customElements) {
+          /**
+           * 7.7.2. If inclusiveDescendant is connected, then:
+           */
+          if (Guard.isElementNode(inclusiveDescendant) && 
+            this.dom.shadowTree.isConnected(inclusiveDescendant)) {
+            if (Guard.isCustomElementNode(inclusiveDescendant)) {
+              /**
+               * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
+               * element callback reaction with inclusiveDescendant, callback name 
+               * "connectedCallback", and an empty argument list.
+               */
+              this.dom.customElement.enqueueACustomElementCallbackReaction(
+                inclusiveDescendant, "connectedCallback", [])
+            } else {
+              /**
+               * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
+               */
+              this.dom.customElement.tryToUpgrade(inclusiveDescendant)
+            }      
+          }
         }
       }
     }
@@ -360,9 +371,11 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. If suppress observers flag is unset, then queue a tree mutation record
      * for parent with nodes, « », previousSibling, and child.
      */
-    if (!suppressObservers) {
-      this.dom.observer.queueTreeMutationRecord(parent, nodes, [],
-        previousSibling, child)
+    if (this.dom.features.mutationObservers) {
+      if (!suppressObservers) {
+        this.dom.observer.queueTreeMutationRecord(parent, nodes, [],
+          previousSibling, child)
+      }
     }
   }
 
@@ -546,8 +559,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 15. Queue a tree mutation record for parent with nodes, removedNodes, 
      * previousSibling, and reference child.
      */
-    this.dom.observer.queueTreeMutationRecord(parent, nodes, removedNodes,
-      previousSibling, referenceChild)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueTreeMutationRecord(parent, nodes, removedNodes,
+        previousSibling, referenceChild)
+    }
 
     /**
      * 16. Return child.
@@ -607,8 +622,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. Queue a tree mutation record for parent with addedNodes, removedNodes, 
      * null, and null.
      */
-    this.dom.observer.queueTreeMutationRecord(parent, addedNodes, removedNodes,
-      null, null)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueTreeMutationRecord(parent, addedNodes, removedNodes,
+        null, null)
+    }
   }
 
   /** @inheritdoc */
@@ -629,44 +646,47 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
 
   /** @inheritdoc */
   remove(node: Node, parent: Node, suppressObservers?: boolean): void {
-    /**
-     * 1. Let index be node’s index.
-     */
-    const index = this.dom.tree.index(node)
 
-    /**
-     * 2. For each live range whose start node is an inclusive descendant of 
-     * node, set its start to (parent, index).
-     * 3. For each live range whose end node is an inclusive descendant of 
-     * node, set its end to (parent, index).
-     */
-    for (const range of this.dom.range.rangeList) {
-      if (this.dom.tree.isDescendantOf(node, range._start[0], true)) {
-        range._start = [parent, index]
+    if (this.dom.range.rangeList.length !== 0) {
+      /**
+       * 1. Let index be node’s index.
+       */
+      const index = this.dom.tree.index(node)
+  
+      /**
+       * 2. For each live range whose start node is an inclusive descendant of 
+       * node, set its start to (parent, index).
+       * 3. For each live range whose end node is an inclusive descendant of 
+       * node, set its end to (parent, index).
+       */
+      for (const range of this.dom.range.rangeList) {
+        if (this.dom.tree.isDescendantOf(node, range._start[0], true)) {
+          range._start = [parent, index]
+        }
+        if (this.dom.tree.isDescendantOf(node, range._end[0], true)) {
+          range._end = [parent, index]
+        }
+        if (range._start[0] === parent && range._start[1] > index) {
+          range._start[1]--
+        }
+        if (range._end[0] === parent && range._end[1] > index) {
+          range._end[1]--
+        }
       }
-      if (this.dom.tree.isDescendantOf(node, range._end[0], true)) {
-        range._end = [parent, index]
-      }
-      if (range._start[0] === parent && range._start[1] > index) {
-        range._start[1]--
-      }
-      if (range._end[0] === parent && range._end[1] > index) {
-        range._end[1]--
-      }
-    }
-
-    /**
-     * 4. For each live range whose start node is parent and start offset is 
-     * greater than index, decrease its start offset by 1.
-     * 5. For each live range whose end node is parent and end offset is greater 
-     * than index, decrease its end offset by 1.
-     */
-    for (const range of this.dom.range.rangeList) {
-      if (range._start[0] === parent && range._start[1] > index) {
-        range._start[1] -= 1
-      }
-      if (range._end[0] === parent && range._end[1] > index) {
-        range._end[1] -= 1
+  
+      /**
+       * 4. For each live range whose start node is parent and start offset is 
+       * greater than index, decrease its start offset by 1.
+       * 5. For each live range whose end node is parent and end offset is greater 
+       * than index, decrease its end offset by 1.
+       */
+      for (const range of this.dom.range.rangeList) {
+        if (range._start[0] === parent && range._start[1] > index) {
+          range._start[1] -= 1
+        }
+        if (range._end[0] === parent && range._end[1] > index) {
+          range._end[1] -= 1
+        }
       }
     }
 
@@ -711,8 +731,10 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 10. If node is assigned, then run assign slotables for node’s assigned 
      * slot.
      */
-    if (Guard.isSlotable(node) && node._assignedSlot !== null && this.dom.shadowTree.isAssigned(node)) {
-      this.dom.shadowTree.assignSlotables(node._assignedSlot)
+    if (this.dom.features.slots) {
+      if (Guard.isSlotable(node) && node._assignedSlot !== null && this.dom.shadowTree.isAssigned(node)) {
+        this.dom.shadowTree.assignSlotables(node._assignedSlot)
+      }
     }
 
     /**
@@ -720,9 +742,11 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * assigned nodes is the empty list, then run signal a slot change for 
      * parent.
      */
-    if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
-      Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
-      this.dom.shadowTree.signalASlotChange(parent)
+    if (this.dom.features.slots) {
+      if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
+        Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
+        this.dom.shadowTree.signalASlotChange(parent)
+      }
     }
 
     /**
@@ -730,16 +754,18 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 12.1. Run assign slotables for a tree with parent's root.
      * 12.2. Run assign slotables for a tree with node.
      */
-    let hasSlotDescendant = false
-    for (const descendant of this.dom.tree.getDescendantElements(node, true)) {
-      if (Guard.isSlot(descendant)) {
-        hasSlotDescendant = true
-        break
+    if (this.dom.features.slots) {
+      let hasSlotDescendant = false
+      for (const descendant of this.dom.tree.getDescendantElements(node, true)) {
+        if (Guard.isSlot(descendant)) {
+          hasSlotDescendant = true
+          break
+        }
       }
-    }
-    if (hasSlotDescendant) {
-      this.dom.shadowTree.assignSlotablesForATree(this.dom.tree.rootNode(parent))
-      this.dom.shadowTree.assignSlotablesForATree(node)
+      if (hasSlotDescendant) {
+        this.dom.shadowTree.assignSlotablesForATree(this.dom.tree.rootNode(parent))
+        this.dom.shadowTree.assignSlotablesForATree(node)
+      }
     }
 
     /**
@@ -752,9 +778,11 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * reaction with node, callback name "disconnectedCallback", 
      * and an empty argument list.
      */
-    if (Guard.isCustomElementNode(node)) {
-      this.dom.customElement.enqueueACustomElementCallbackReaction(
-        node, "disconnectedCallback", [])
+    if (this.dom.features.customElements) {
+      if (Guard.isCustomElementNode(node)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          node, "disconnectedCallback", [])
+      }
     }
 
     /**
@@ -772,10 +800,12 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * callback reaction with descendant, callback name 
        * "disconnectedCallback", and an empty argument list.
        */
-      if (Guard.isCustomElementNode(descendant)) {
-        this.dom.customElement.enqueueACustomElementCallbackReaction(
-          descendant, "disconnectedCallback", [])
-      }  
+      if (this.dom.features.customElements) {
+        if (Guard.isCustomElementNode(descendant)) {
+          this.dom.customElement.enqueueACustomElementCallbackReaction(
+            descendant, "disconnectedCallback", [])
+        }
+      }
     }
 
     /**
@@ -787,14 +817,16 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * options, and source is registered to node's registered
      * observer list.
      */
-    for (const inclusiveAncestor of this.dom.tree.getAncestorNodes(parent, true)) {
-      for (const registered of inclusiveAncestor._registeredObserverList) {
-        if (registered.options.subtree) {
-          node._registeredObserverList.push({
-            observer: registered.observer,
-            options: registered.options,
-            source: registered
-          })
+    if (this.dom.features.mutationObservers) {
+      for (const inclusiveAncestor of this.dom.tree.getAncestorNodes(parent, true)) {
+        for (const registered of inclusiveAncestor._registeredObserverList) {
+          if (registered.options.subtree) {
+            node._registeredObserverList.push({
+              observer: registered.observer,
+              options: registered.options,
+              source: registered
+            })
+          }
         }
       }
     }
@@ -804,9 +836,11 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * record for parent with « », « node », oldPreviousSibling, and 
      * oldNextSibling.
      */
-    if (!suppressObservers) {
-      this.dom.observer.queueTreeMutationRecord(parent, [], [node],
-        oldPreviousSibling, oldNextSibling)
+    if (this.dom.features.mutationObservers) {
+      if (!suppressObservers) {
+        this.dom.observer.queueTreeMutationRecord(parent, [], [node],
+          oldPreviousSibling, oldNextSibling)
+      }
     }
 
     /**

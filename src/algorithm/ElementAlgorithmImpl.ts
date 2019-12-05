@@ -36,8 +36,10 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
      */
-    this.dom.observer.queueAttributeMutationRecord(element,
-      attribute._localName, attribute._namespace, attribute._value)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueAttributeMutationRecord(element,
+        attribute._localName, attribute._namespace, attribute._value)
+    }
 
     /**
      * 2. If element is custom, then enqueue a custom element callback reaction
@@ -45,10 +47,12 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, attribute’s value, value, and
      * attribute’s namespace.
      */
-    if (Guard.isCustomElementNode(element)) {
-      this.dom.customElement.enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
-        [attribute._localName, attribute._value, value, attribute._namespace])
+    if (this.dom.features.customElements) {
+      if (Guard.isCustomElementNode(element)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          element, "attributeChangedCallback", 
+          [attribute._localName, attribute._value, value, attribute._namespace])
+      }
     }
 
     /**
@@ -68,8 +72,10 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s
      * local name, attribute’s namespace, and null.
      */
-    this.dom.observer.queueAttributeMutationRecord(element,
-      attribute._localName, attribute._namespace, null)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueAttributeMutationRecord(element,
+        attribute._localName, attribute._namespace, null)
+    }
 
     /**
      * 2. If element is custom, then enqueue a custom element callback reaction
@@ -77,10 +83,12 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, null, attribute’s value, and
      * attribute’s namespace.
      */
-    if (Guard.isCustomElementNode(element)) {
-      this.dom.customElement.enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
-        [attribute._localName, null, attribute._value, attribute._namespace])
+    if (this.dom.features.customElements) {
+      if (Guard.isCustomElementNode(element)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          element, "attributeChangedCallback", 
+          [attribute._localName, null, attribute._value, attribute._namespace])
+      }
     }
 
     /**
@@ -105,8 +113,10 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
      */
-    this.dom.observer.queueAttributeMutationRecord(element,
-      attribute._localName, attribute._namespace, attribute._value)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueAttributeMutationRecord(element,
+        attribute._localName, attribute._namespace, attribute._value)
+    }
 
     /**
      * 2. If element is custom, then enqueue a custom element callback reaction
@@ -114,10 +124,12 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, attribute’s value, null,
      * and attribute’s namespace.
      */
-    if (Guard.isCustomElementNode(element)) {
-      this.dom.customElement.enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
-        [attribute._localName, attribute._value, null, attribute._namespace])
+    if (this.dom.features.customElements) {
+      if (Guard.isCustomElementNode(element)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          element, "attributeChangedCallback", 
+          [attribute._localName, attribute._value, null, attribute._namespace])
+      }
     }
 
     /**
@@ -143,8 +155,10 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with oldAttr’s 
      * local name, oldAttr’s namespace, and oldAttr’s value.
      */
-    this.dom.observer.queueAttributeMutationRecord(element,
-      oldAttr._localName, oldAttr._namespace, oldAttr._value)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueAttributeMutationRecord(element,
+        oldAttr._localName, oldAttr._namespace, oldAttr._value)
+    }
 
     /**
      * 2. If element is custom, then enqueue a custom element callback reaction 
@@ -152,10 +166,12 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing oldAttr’s local name, oldAttr’s value, newAttr’s value, 
      * and oldAttr’s namespace.
      */
-    if (Guard.isCustomElementNode(element)) {
-      this.dom.customElement.enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
-        [oldAttr._localName, oldAttr._value, newAttr._value, oldAttr._namespace])
+    if (this.dom.features.customElements) {
+      if (Guard.isCustomElementNode(element)) {
+        this.dom.customElement.enqueueACustomElementCallbackReaction(
+          element, "attributeChangedCallback", 
+          [oldAttr._localName, oldAttr._value, newAttr._value, oldAttr._namespace])
+      }
     }
 
     /**
@@ -336,6 +352,15 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      */
     let result: Element | null = null
 
+    if (!this.dom.features.customElements) {
+      result = this.dom.create.element(document, localName, namespace, prefix)
+      result._customElementState = "uncustomized"
+      result._customElementDefinition = null
+      result._is = is
+      
+      return result
+    }
+
     /**
      * 4. Let definition be the result of looking up a custom element definition
      * given document, namespace, localName, and is.
@@ -470,7 +495,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
        * "uncustomized", custom element definition set to null, is value set to
        * is, and node document set to document.
        */
-      const elementInterface = this.dom.document.elementInterface(localName, infraNamespace.HTML)
+      const elementInterface = this.dom.document.elementInterface(localName, namespace)
       result = new elementInterface()
       result._localName = localName
       result._namespace = namespace

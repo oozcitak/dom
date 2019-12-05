@@ -8,7 +8,7 @@ import {
   NodeAlgorithm, DocumentAlgorithm, BoundaryPointAlgorithm, RangeAlgorithm,
   TraversalAlgorithm, NodeIteratorAlgorithm, TreeWalkerAlgorithm,
   NodeIteratorPreRemovingStep, DOMTokenListAlgorithm, EventConstructingStep,
-  CustomElementAlgorithm, XMLAlgorithm
+  CustomElementAlgorithm, XMLAlgorithm, DOMFeatures
 } from './interfaces'
 import { Document, Element, Node, NodeIterator, Event } from '../dom/interfaces'
 import { TreeAlgorithmImpl } from './TreeAlgorithmImpl'
@@ -37,6 +37,7 @@ import { TreeWalkerAlgorithmImpl } from './TreeWalkerAlgorithmImpl'
 import { DOMTokenListAlgorithmImpl } from './DOMTokenListAlgorithmImpl'
 import { CustomElementAlgorithmImpl } from './CustomElementAlgorithmImpl'
 import { XMLAlgorithmImpl } from './XMLAlgorithmImpl'
+import { isObject } from '@oozcitak/util'
 
 /**
  * Contains DOM manipulation algorithms as described in the 
@@ -71,6 +72,12 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   protected _customElement: CustomElementAlgorithm
   protected _xml: XMLAlgorithm
 
+  features: DOMFeatures = {
+    mutationObservers: true,
+    customElements: true,
+    slots: true
+  }
+
   protected removingSteps: RemovingStep[] = []
   protected cloningSteps: CloningStep[] = []
   protected adoptingSteps: AdoptingStep[] = []
@@ -84,7 +91,8 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
   /**
    * Initializes a new instance of `DOMAlgorithm`.
    */
-  public constructor() {
+  public constructor(features?: Partial<DOMFeatures> | boolean) {
+
     this._tree = new TreeAlgorithmImpl(this)
     this._orderedSet = new OrderedSetAlgorithmImpl(this)
     this._namespace = new NamespaceAlgorithmImpl(this)
@@ -111,6 +119,10 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
     this._tokenList = new DOMTokenListAlgorithmImpl(this)
     this._customElement = new CustomElementAlgorithmImpl(this)
     this._xml = new XMLAlgorithmImpl(this)
+
+    if (features !== undefined) {
+      this.setFeatures(features)
+    }
 
     this.supportedTokens = new Map()
 
@@ -194,6 +206,20 @@ export class DOMAlgorithmImpl implements DOMAlgorithm {
 
   /** @inheritdoc */
   get xml(): XMLAlgorithm { return this._xml }
+
+  /** @inheritdoc */
+  setFeatures(features: Partial<DOMFeatures> | boolean): void {
+    if (isObject(features)) {
+      for (const key in features) {
+        (this.features as any)[key] = (features as any)[key]
+      }
+    } else {
+      // enable/disable all features
+      for (const key in this.features) {
+        (this.features as any)[key] = features
+      }
+    }
+  }
 
   /** @inheritdoc */
   runRemovingSteps(thisObj: any, removedNode: Node,

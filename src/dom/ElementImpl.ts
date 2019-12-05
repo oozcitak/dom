@@ -239,7 +239,7 @@ export class ElementImpl extends NodeImpl implements Element {
     if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
-
+    
     for (const attr of this._attributeList) {
       const attrInt = attr as Attr
       if (attrInt._qualifiedName === qualifiedName) {

@@ -2405,7 +2405,7 @@ export type EventHandler = EventHandlerNonNull | null
  * Defines a struct containing an event handler.
  */
 export type EventHandlerEntry = {
-  value: EventHandler,
+  value: EventHandler
   listener: EventListenerEntry | null
 }
 
@@ -2438,7 +2438,7 @@ export type MutationCallback = (mutations: MutationRecord[], observer: MutationO
  * Represents a registered observer associated with a node.
  */
 export type RegisteredObserver = {
-  observer: MutationObserver,
+  observer: MutationObserver
   options: MutationObserverInit
 }
 

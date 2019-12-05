@@ -1,6 +1,6 @@
 import { TreeAlgorithm, DOMAlgorithm } from './interfaces'
 import { Guard } from '../util'
-import { NodeType, Element, Node, ShadowRoot, DocumentFragment } from '../dom/interfaces'
+import { NodeType, Element, Node } from '../dom/interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 
 /**

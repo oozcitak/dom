@@ -3,7 +3,7 @@ import {
 } from "./interfaces"
 import { globalStore } from "../util"
 import { DOMAlgorithm } from "../algorithm/interfaces"
-import { namespace as infraNamespace } from '@oozcitak/infra'
+import { namespace as infraNamespace } from "@oozcitak/infra"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -81,11 +81,11 @@ export class DOMImplementationImpl implements DOMImplementation {
      * application/xml
      */
     if (namespace === infraNamespace.HTML)
-      document._contentType = 'application/xhtml+xml'
+      document._contentType = "application/xhtml+xml"
     else if (namespace === infraNamespace.SVG)
-      document._contentType = 'image/svg+xml'
+      document._contentType = "image/svg+xml"
     else
-      document._contentType = 'application/xml'
+      document._contentType = "application/xml"
 
     /**
      * 8. Return document.
@@ -101,26 +101,26 @@ export class DOMImplementationImpl implements DOMImplementation {
      */
     const doc = this._algo.create.document()
     doc._type = "html"
-    doc._contentType = 'text/html'
+    doc._contentType = "text/html"
 
     /**
      * 3. Append a new doctype, with "html" as its name and with its node 
      * document set to doc, to doc.
      */
-    doc.appendChild(this._algo.create.documentType(doc, 'html', '', ''))
+    doc.appendChild(this._algo.create.documentType(doc, "html", "", ""))
 
     /**
      * 4. Append the result of creating an element given doc, html, and the 
      * HTML namespace, to doc.
      */
-    const htmlElement = this._algo.element.createAnElement(doc, 'html', infraNamespace.HTML)
+    const htmlElement = this._algo.element.createAnElement(doc, "html", infraNamespace.HTML)
     doc.appendChild(htmlElement)
 
     /**
      * 5. Append the result of creating an element given doc, head, and the 
      * HTML namespace, to the html element created earlier.
      */
-    const headElement = this._algo.element.createAnElement(doc, 'head', infraNamespace.HTML)
+    const headElement = this._algo.element.createAnElement(doc, "head", infraNamespace.HTML)
     htmlElement.appendChild(headElement)
 
     /**
@@ -132,7 +132,7 @@ export class DOMImplementationImpl implements DOMImplementation {
      * element created earlier.
      */
     if (title !== undefined) {
-      const titleElement = this._algo.element.createAnElement(doc, 'title', infraNamespace.HTML)
+      const titleElement = this._algo.element.createAnElement(doc, "title", infraNamespace.HTML)
       headElement.appendChild(titleElement)
       const textElement = this._algo.create.text(doc, title)
       titleElement.appendChild(textElement)
@@ -142,7 +142,7 @@ export class DOMImplementationImpl implements DOMImplementation {
      * 7. Append the result of creating an element given doc, body, and the 
      * HTML namespace, to the html element created earlier.
      */
-    const bodyElement = this._algo.element.createAnElement(doc, 'body', infraNamespace.HTML)
+    const bodyElement = this._algo.element.createAnElement(doc, "body", infraNamespace.HTML)
     htmlElement.appendChild(bodyElement)
 
     /**

@@ -1,5 +1,5 @@
 // Export classes
-export { DOMParser, MimeType } from './DOMParser'
+export { DOMParser } from './DOMParser'
 
 // Export interfaces
 import * as Interfaces from './interfaces'

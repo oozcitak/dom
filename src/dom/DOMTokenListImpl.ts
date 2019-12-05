@@ -1,4 +1,4 @@
-import { DOMException } from "./DOMException"
+import { SyntaxError, InvalidCharacterError } from "./DOMException"
 import { DOMTokenList, Element, Attr } from "./interfaces"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
@@ -111,7 +111,7 @@ export class DOMTokenListImpl implements DOMTokenList {
       if (token === '') {
         throw new SyntaxError("Cannot add an empty token.")
       } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
-        throw DOMException.InvalidCharacterError
+        throw new InvalidCharacterError("Token cannot contain whitespace.")
       } else {
         this._tokenSet.add(token)
       }
@@ -134,7 +134,7 @@ export class DOMTokenListImpl implements DOMTokenList {
       if (token === '') {
         throw new SyntaxError("Cannot remove an empty token.")
       } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
-        throw DOMException.InvalidCharacterError
+        throw new InvalidCharacterError("Token cannot contain whitespace.")
       } else {
         this._tokenSet.delete(token)
       }
@@ -152,7 +152,7 @@ export class DOMTokenListImpl implements DOMTokenList {
     if (token === '') {
       throw new SyntaxError("Cannot toggle an empty token.")
     } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError("Token cannot contain whitespace.")
     }
 
     /**
@@ -200,7 +200,7 @@ export class DOMTokenListImpl implements DOMTokenList {
     if (token === '' || newToken === '') {
       throw new SyntaxError("Cannot replace an empty token.")
     } else if (infraCodePoint.ASCIIWhiteSpace.test(token) || infraCodePoint.ASCIIWhiteSpace.test(newToken)) {
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError("Token cannot contain whitespace.")
     }
 
     /**

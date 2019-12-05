@@ -1,5 +1,5 @@
 import dedent from "dedent"
-import { window, implementation } from '../src'
+import { DOM } from '../src'
 import {
   AbortController, AbortSignal, Attr, CDATASection, 
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -11,14 +11,12 @@ import {
   XMLDocument, Range
 } from '../src/dom'
 // DOMParser
-import { DOMParser, MimeType } from '../src/parser'
+import { DOMParser } from '../src/parser'
 import { XMLStringLexer } from '../src/parser/XMLStringLexer'
 import * as Token from '../src/parser/XMLToken'
 // XMLSerializer
 import { XMLSerializer } from '../src/serializer'
 import { TupleSet } from '../src/serializer/TupleSet'
-// DOMAlgorithm
-import { DOMAlgorithmImpl } from '../src/algorithm/DOMAlgorithmImpl'
 
 import { WhatToShow, FilterResult } from '../src/dom/interfaces'
 import * as util from '../src/util'
@@ -138,23 +136,25 @@ export default class TestHelpers {
   static WhatToShow = WhatToShow
   static FilterResult = FilterResult
 
+  static domObject = new DOM()
+
   /**
    * Returns the algorithm object.
    */
-  static algo = new DOMAlgorithmImpl()
+  static algo = TestHelpers.domObject.algorithm
   /**
    * Returns the window object.
    */
-  static window = window
+  static window = TestHelpers.domObject.window
   /**
    * Returns the DOM implementation object.
    */
-  static dom = implementation
+  static dom = TestHelpers.domObject.implementation
   /**
    * Returns the root element of a new document.
    */
   static get newDoc(): Element {
-    const doc = window.document.implementation.createDocument('ns', 'root')
+    const doc = TestHelpers.dom.createDocument('ns', 'root')
 
     if (!doc.documentElement)
       throw new Error("documentElement is null")

@@ -74,3 +74,21 @@ export class IndexSizeError extends DOMException {
     super("NotFoundError", message)
   }
 }
+
+export class SyntaxError extends DOMException {
+  /**
+   * @param message - error message
+   */
+  constructor(message = "The string did not match the expected pattern.") {
+    super("SyntaxError", message)
+  }
+}
+
+export class InvalidCharacterError extends DOMException {
+  /**
+   * @param message - error message
+   */
+  constructor(message = "The string contains invalid characters.") {
+    super("InvalidCharacterError", message)
+  }
+}

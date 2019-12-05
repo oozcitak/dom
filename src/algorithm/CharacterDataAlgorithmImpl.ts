@@ -43,8 +43,10 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * 4. Queue a mutation record of "characterData" for node with null, null, 
      * node’s data, « », « », null, and null.
      */
-    this.dom.observer.queueMutationRecord("characterData", node, null, null,
-      node.data, [], [], null, null)
+    if (this.dom.features.mutationObservers) {
+      this.dom.observer.queueMutationRecord("characterData", node, null, null,
+        node.data, [], [], null, null)
+    }
 
     /**
      * 5. Insert data into node’s data after offset code units.

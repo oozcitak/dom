@@ -347,45 +347,47 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 5. Let currentNode be node’s next sibling.
        * 6. While currentNode is an exclusive Text node:
        */
-      let currentNode = node._nextSibling
-      while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
-        /**
-         * 6.1. For each live range whose start node is currentNode, add length
-         * to its start offset and set its start node to node.
-         * 6.2. For each live range whose end node is currentNode, add length to
-         * its end offset and set its end node to node.
-         * 6.3. For each live range whose start node is currentNode’s parent and
-         * start offset is currentNode’s index, set its start node to node and
-         * its start offset to length.
-         * 6.4. For each live range whose end node is currentNode’s parent and
-         * end offset is currentNode’s index, set its end node to node and its
-         * end offset to length.
-         */
-        const index = algo.tree.index(currentNode)
-        for (const range of algo.range.rangeList) {
-          if (range._start[0] === currentNode) {
-            range._start[0] = node
-            range._start[1] += length
+      if (this._algo.range.rangeList.length !== 0) {
+        let currentNode = node._nextSibling
+        while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
+          /**
+           * 6.1. For each live range whose start node is currentNode, add length
+           * to its start offset and set its start node to node.
+           * 6.2. For each live range whose end node is currentNode, add length to
+           * its end offset and set its end node to node.
+           * 6.3. For each live range whose start node is currentNode’s parent and
+           * start offset is currentNode’s index, set its start node to node and
+           * its start offset to length.
+           * 6.4. For each live range whose end node is currentNode’s parent and
+           * end offset is currentNode’s index, set its end node to node and its
+           * end offset to length.
+           */
+          const index = algo.tree.index(currentNode)
+          for (const range of algo.range.rangeList) {
+            if (range._start[0] === currentNode) {
+              range._start[0] = node
+              range._start[1] += length
+            }
+            if (range._end[0] === currentNode) {
+              range._end[0] = node
+              range._end[1] += length
+            }
+            if (range._start[0] === currentNode._parent && range._start[1] === index) {
+              range._start[0] = node
+              range._start[1] = length
+            }
+            if (range._end[0] === currentNode._parent && range._end[1] === index) {
+              range._end[0] = node
+              range._end[1] = length
+            }
           }
-          if (range._end[0] === currentNode) {
-            range._end[0] = node
-            range._end[1] += length
-          }
-          if (range._start[0] === currentNode._parent && range._start[1] === index) {
-            range._start[0] = node
-            range._start[1] = length
-          }
-          if (range._end[0] === currentNode._parent && range._end[1] === index) {
-            range._end[0] = node
-            range._end[1] = length
-          }
+          /**
+           * 6.5. Add currentNode’s length to length.
+           * 6.6. Set currentNode to its next sibling.
+           */
+          length += algo.tree.nodeLength(currentNode)
+          currentNode = currentNode._nextSibling
         }
-        /**
-         * 6.5. Add currentNode’s length to length.
-         * 6.6. Set currentNode to its next sibling.
-         */
-        length += algo.tree.nodeLength(currentNode)
-        currentNode = currentNode._nextSibling
       }
 
       /**

@@ -59,7 +59,7 @@ export class NodeAlgorithmImpl extends SubAlgorithmImpl implements NodeAlgorithm
       copy = this.dom.element.createAnElement(document, node._localName,
         node._namespace, node._namespacePrefix, node._is, false)
       for (const attribute of node._attributeList) {
-        const copyAttribute = this.clone(attribute as Attr, document)
+        const copyAttribute = this.clone(attribute, document)
         this.dom.element.append(copyAttribute as Attr, copy as Element)
       }
     } else {

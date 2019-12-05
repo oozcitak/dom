@@ -1,4 +1,4 @@
-import { implementation as impl, parser } from "../lib"
+import { DOM } from "../lib"
 import { DOMParser } from "../lib/parser"
 import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
 import { JSDOM } from "jsdom"
@@ -8,6 +8,7 @@ import { printBenchmark } from "./"
 (function () {
   const suite = new Suite("createDocument")
 
+  const domImpl = new DOM(false).implementation
   const xmldomImpl = new XMLDOMImplementation()
   const jsdomImpl = new JSDOM().window.document.implementation
   
@@ -15,7 +16,7 @@ import { printBenchmark } from "./"
     dom.createDocument(null, "", null)
   }
 
-  suite.add("dom", () => test(impl))
+  suite.add("dom", () => test(domImpl))
   suite.add("xmldom", () => test(xmldomImpl))
   suite.add("jsdom", () => test(jsdomImpl))
 
@@ -27,7 +28,7 @@ import { printBenchmark } from "./"
 (function () {
   const suite = new Suite("createElement")
   
-  const doc = impl.createDocument(null, "", null)
+  const doc = new DOM(false).implementation.createDocument(null, "", null)
   const xmldomDoc = new XMLDOMImplementation().createDocument(null, "", null)
   const jsdomDoc = new JSDOM().window.document.implementation.createDocument(null, "", null)
   
@@ -57,10 +58,11 @@ import { printBenchmark } from "./"
     }
   }
 
+  const domImpl = new DOM(false).implementation
   const xmldomImpl = new XMLDOMImplementation()
   const jsdomImpl = new JSDOM().window.document.implementation
 
-  suite.add("dom", () => test(impl))
+  suite.add("dom", () => test(domImpl))
   suite.add("xmldom", () => test(xmldomImpl))
   suite.add("jsdom", () => test(jsdomImpl))
 
@@ -87,7 +89,7 @@ import { printBenchmark } from "./"
   </topgun>  
   `
 
-  suite.add("dom", () => new DOMParser().parseFromString(xml, "application/xml"))
+  suite.add("dom", () => new DOMParser(false).parseFromString(xml, "application/xml"))
   suite.add("xmldom", () => new XMLDOMParser().parseFromString(xml, "application/xml"))
   suite.add("jsdom", () => JSDOM.fragment(xml))
 

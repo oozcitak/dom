@@ -7,13 +7,28 @@ import {
 } from "./XMLToken"
 import { globalStore } from "../util"
 import { forEachObject } from "@oozcitak/util"
-import { DOMAlgorithm } from "../algorithm/interfaces"
+import { DOMAlgorithm, DOMFeatures } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
  * Represents a parser for XML and HTML content.
  */
 export class DOMParser {
+
+  private algo: DOMAlgorithm
+
+  /**
+   * Initializes a new instance of `DOMParser`.
+   * 
+   * @param features - DOM features supported by algorithms. All features are
+   * enabled by default unless explicity disabled.
+   */
+  constructor (features?: Partial<DOMFeatures> | boolean) {
+    this.algo = globalStore.algorithm as DOMAlgorithm
+    if (features !== undefined) {
+      this.algo.setFeatures(features)
+    }
+  }
 
   /**
    * Parses the given string and returns a document object.
@@ -26,11 +41,10 @@ export class DOMParser {
       throw new Error('HTML parser not implemented.')
     } else {
       const lexer = new XMLStringLexer(source)
-      const algo = globalStore.algorithm as DOMAlgorithm
 
       lexer.skipWhitespaceOnlyText = true
 
-      const doc = algo.create.document()
+      const doc = this.algo.create.document()
       doc._contentType = mimeType
 
       let context: Node = doc
@@ -65,7 +79,7 @@ export class DOMParser {
             const element = <ElementToken>token
 
             // inherit namespace from parent
-            const [prefix, localName] = algo.namespace.extractQName(element.name)
+            const [prefix, localName] = this.algo.namespace.extractQName(element.name)
             let namespace = context.lookupNamespaceURI(prefix)
 
             // override namespace if there is a namespace declaration
@@ -74,7 +88,7 @@ export class DOMParser {
               if (attName === "xmlns") {
                 namespace = attValue
               } else {
-                const [attPrefix, attLocalName] = algo.namespace.extractQName(attName)
+                const [attPrefix, attLocalName] = this.algo.namespace.extractQName(attName)
                 if (attPrefix === "xmlns" && attLocalName === prefix) {
                   namespace = attValue
                 }
@@ -95,7 +109,7 @@ export class DOMParser {
                 continue
               }
 
-              const [attPrefix, attLocalName] = algo.namespace.extractQName(attName)
+              const [attPrefix, attLocalName] = this.algo.namespace.extractQName(attName)
               if (attPrefix === "xmlns") {
                 // prefixed namespace declaration attribute
                 elementNode.setAttributeNS(infraNamespace.XMLNS, attName, attValue)

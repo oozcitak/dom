@@ -58,14 +58,11 @@ export class ParentNodeImpl implements ParentNode {
      * The childElementCount attribute’s getter must return the number of 
      * children of context object that are elements.
      */
-    let node = Cast.asNode(this)._firstChild
+    const node = Cast.asNode(this)
     let count = 0
-
-    while (node) {
-      if (Guard.isElementNode(node))
+    for (const childNode of node._children) {
+      if (Guard.isElementNode(childNode))
         count++
-
-      node = node._nextSibling
     }
 
     return count

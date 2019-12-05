@@ -96,10 +96,12 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
          * callback name "adoptedCallback", and an argument list 
          * containing oldDocument and document.
          */
-        if (Guard.isElementNode(inclusiveDescendant) && 
-          inclusiveDescendant._customElementState === "custom") {
-          this.dom.customElement.enqueueACustomElementCallbackReaction(
-            inclusiveDescendant, "adoptedCallback", [oldDocument, document])
+        if (this.dom.features.customElements) {
+          if (Guard.isElementNode(inclusiveDescendant) && 
+            inclusiveDescendant._customElementState === "custom") {
+            this.dom.customElement.enqueueACustomElementCallbackReaction(
+              inclusiveDescendant, "adoptedCallback", [oldDocument, document])
+          }
         }
 
         /**
