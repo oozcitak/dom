@@ -128,7 +128,6 @@ export default class TestHelpers {
   static XMLDocument = XMLDocument
 
   static DOMParser = DOMParser
-  static MimeType = MimeType
   static XMLSerializer = XMLSerializer
 
   static XMLStringLexer = XMLStringLexer

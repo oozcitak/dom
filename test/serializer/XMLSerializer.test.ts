@@ -52,7 +52,7 @@ describe('XMLSerializer', () => {
 
       const serializer = new $$.XMLSerializer()
       const parser = new $$.DOMParser()
-      expect(serializer.serializeToString(parser.parseFromString(xmlStr, $$.MimeType.XML))).toBe(xmlStr)
+      expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
   })
 
   test('default namespace', () => {

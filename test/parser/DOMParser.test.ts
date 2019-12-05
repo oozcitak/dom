@@ -4,7 +4,7 @@ describe('DOMParser - XML', () => {
 
   test('HTML parser not yet supported', () => {
     const parser = new $$.DOMParser()
-    expect(() => parser.parseFromString('', $$.MimeType.HTML)).toThrow()
+    expect(() => parser.parseFromString('', "text/html")).toThrow()
   })
 
   test('basic', () => {
@@ -22,7 +22,7 @@ describe('DOMParser - XML', () => {
       </root>
       `
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
       !DOCTYPE root PUBLIC pubid sysid
@@ -46,14 +46,14 @@ describe('DOMParser - XML', () => {
       `
 
     const parser = new $$.DOMParser()
-    expect(() => parser.parseFromString(xmlStr, $$.MimeType.XML)).toThrow()
+    expect(() => parser.parseFromString(xmlStr, "application/xml")).toThrow()
   })
 
   test('default namespace', () => {
     const xmlStr = '<root xmlns="uri:myns"><node1><node2>text</node2></node1></root>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
       root (ns:uri:myns)
@@ -70,7 +70,7 @@ describe('DOMParser - XML', () => {
       '</root>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
   
     expect($$.printTree(doc)).toBe($$.t`
       root (ns:uri:myns) xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" (ns:http://www.w3.org/2000/xmlns/) xsi:schemaLocation="uri:myschema.xsd" (ns:http://www.w3.org/2001/XMLSchema-instance)
@@ -87,7 +87,7 @@ describe('DOMParser - XML', () => {
       '</svg>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
   
     expect($$.printTree(doc)).toBe($$.t`
       svg (ns:http://www.w3.org/2000/svg) xmlns:xlink="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
@@ -102,7 +102,7 @@ describe('DOMParser - XML', () => {
       '</svg>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
   
     expect($$.printTree(doc)).toBe($$.t`
       svg (ns:http://www.w3.org/2000/svg)
@@ -117,7 +117,7 @@ describe('DOMParser - XML', () => {
       '</svg>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
   
     expect($$.printTree(doc)).toBe($$.t`
       svg (ns:http://www.w3.org/2000/svg)
@@ -134,7 +134,7 @@ describe('DOMParser - XML', () => {
       '</p:root>'
 
     const parser = new $$.DOMParser()
-    const doc = parser.parseFromString(xmlStr, $$.MimeType.XML)
+    const doc = parser.parseFromString(xmlStr, "application/xml")
   
     expect($$.printTree(doc)).toBe($$.t`
       p:root (ns:uri:my ns1) xmlns:p="uri:my ns1" (ns:http://www.w3.org/2000/xmlns/)
