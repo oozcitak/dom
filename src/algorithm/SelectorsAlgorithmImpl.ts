@@ -1,6 +1,6 @@
 import { SelectorsAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { DOMException } from '../dom/DOMException'
+import { NotSupportedError } from '../dom/DOMException'
 import { Element, Node } from '../dom/interfaces'
 
 /**
@@ -27,7 +27,7 @@ export class SelectorsAlgorithmImpl extends SubAlgorithmImpl implements Selector
      * 3. Return the result of match a selector against a tree with s and node’s 
      * root using scoping root node. [SELECTORS4].
      */
-    throw DOMException.NotSupportedError
+    throw new NotSupportedError()
   }
 
 }

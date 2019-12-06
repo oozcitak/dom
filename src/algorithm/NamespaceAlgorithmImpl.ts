@@ -1,6 +1,6 @@
 import { NamespaceAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
-import { DOMException } from '../dom/DOMException'
+import { InvalidCharacterError, NamespaceError } from '../dom/DOMException'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
@@ -25,10 +25,10 @@ export class NamespaceAlgorithmImpl extends SubAlgorithmImpl implements Namespac
      * production.
      */
     if (!this.dom.xml.isName(qualifiedName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     if (!this.dom.xml.isQName(qualifiedName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
   }
 
   /** @inheritdoc */
@@ -61,18 +61,18 @@ export class NamespaceAlgorithmImpl extends SubAlgorithmImpl implements Namespac
     const localName = (parts.length === 2 ? parts[1] : qualifiedName)
 
     if (prefix && namespace === null)
-      throw DOMException.NamespaceError
+      throw new NamespaceError()
 
     if (prefix === "xml" && namespace !== infraNamespace.XML)
-      throw DOMException.NamespaceError
+      throw new NamespaceError()
 
     if (namespace !== infraNamespace.XMLNS &&
       (prefix === "xmlns" || qualifiedName === "xmlns"))
-      throw DOMException.NamespaceError
+      throw new NamespaceError()
 
     if (namespace === infraNamespace.XMLNS &&
       (prefix !== "xmlns" && qualifiedName !== "xmlns"))
-      throw DOMException.NamespaceError
+      throw new NamespaceError()
 
     return [namespace, prefix, localName]
   }

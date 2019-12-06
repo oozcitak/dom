@@ -5,7 +5,7 @@ import {
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
 import { globalStore, Guard } from '../util'
-import { DOMException } from './DOMException'
+import { NotSupportedError } from './DOMException'
 import { URLAlgorithm } from '@oozcitak/url'
 
 /**
@@ -418,7 +418,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * if deep is true.
      */
     if (Guard.isShadowRoot(this))
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     return this._algo.node.clone(this, null, deep)
   }

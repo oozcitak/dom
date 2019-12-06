@@ -4,7 +4,9 @@ import {
   Node, AbstractRange, DocumentFragment, CharacterData, Range, BoundaryPoint, 
   BoundaryPosition
 } from '../dom/interfaces'
-import { DOMException } from '../dom/DOMException'
+import { 
+  InvalidNodeTypeError, IndexSizeError, HierarchyRequestError
+} from '../dom/DOMException'
 import { globalStore, Guard } from '../util'
 import { ObjectCache } from '@oozcitak/util'
 
@@ -76,10 +78,10 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 4.2. Set range’s start to bp.
      */
     if (Guard.isDocumentTypeNode(node)) {
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     }
     if (offset > this.dom.tree.nodeLength(node)) {
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError()
     }
 
     const bp: BoundaryPoint = [node, offset]
@@ -105,10 +107,10 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      * 4.2. Set range’s end to bp.
      */
     if (Guard.isDocumentTypeNode(node)) {
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     }
     if (offset > this.dom.tree.nodeLength(node)) {
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError()
     }
 
     const bp: BoundaryPoint = [node, offset]
@@ -129,7 +131,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
      */
     const parent = node._parent
     if (parent === null)
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     /**
      * 3. Let index be node’s index.
@@ -244,7 +246,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     for (const child of commonAncestor._children) {
       if (this.isContained(child, range)) {
         if (Guard.isDocumentTypeNode(child)) {
-          throw DOMException.HierarchyRequestError
+          throw new HierarchyRequestError()
         }
         containedChildren.push(child)
       }
@@ -479,7 +481,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
     for (const child of commonAncestor._children) {
       if (this.isContained(child, range)) {
         if (Guard.isDocumentTypeNode(child)) {
-          throw DOMException.HierarchyRequestError
+          throw new HierarchyRequestError()
         }
         containedChildren.push(child)
       }
@@ -583,7 +585,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
       Guard.isCommentNode(range._startNode) ||
       (Guard.isTextNode(range._startNode) && range._startNode._parent === null) ||
       range._startNode === node) {
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError()
     }
 
     /**

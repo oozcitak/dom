@@ -1,5 +1,5 @@
 import { Element, Attr, NamedNodeMap } from "./interfaces"
-import { DOMException } from "./DOMException"
+import { NotFoundError } from "./DOMException"
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
@@ -88,7 +88,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
     const attr = this._algo.element.removeAnAttributeByName(qualifiedName, this._element)
 
     if (attr === null)
-      throw DOMException.NotFoundError
+      throw new NotFoundError()
 
     return attr
   }
@@ -105,7 +105,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
       namespace || '', localName, this._element)
 
     if (attr === null)
-      throw DOMException.NotFoundError
+      throw new NotFoundError()
 
     return attr
   }

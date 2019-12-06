@@ -4,7 +4,9 @@ import {
   ProcessingInstruction, Comment, CDATASection, NodeIterator, TreeWalker,
   FilterResult, Range, Event, EventTarget, Origin, Document
 } from './interfaces'
-import { DOMException } from './DOMException'
+import { 
+  NotSupportedError, InvalidCharacterError, HierarchyRequestError 
+} from './DOMException'
 import { NodeImpl } from './NodeImpl'
 import { globalStore, Guard } from '../util'
 import { isFunction, isString } from '@oozcitak/util'
@@ -186,7 +188,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      */
 
     if (!this._algo.xml.isName(localName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     if (this._type === "html") localName = localName.toLowerCase()
 
@@ -248,10 +250,10 @@ export class DocumentImpl extends NodeImpl implements Document {
      * document set to the context object.
      */
     if (this._type === "html")
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     if (data.includes(']]>'))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     return this._algo.create.cdataSection(this, data)
   }
@@ -277,10 +279,10 @@ export class DocumentImpl extends NodeImpl implements Document {
      */
 
     if (!this._algo.xml.isName(target))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     if (data.includes("?>"))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     return this._algo.create.processingInstruction(this, target, data)
   }
@@ -291,7 +293,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 1. If node is a document or shadow root, then throw a "NotSupportedError" DOMException.
      */
     if (Guard.isDocumentNode(node) || Guard.isShadowRoot(node))
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 2. Return a clone of node, with context object and the clone children flag set if deep is true.
@@ -305,13 +307,13 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 1. If node is a document, then throw a "NotSupportedError" DOMException.
      */
     if (Guard.isDocumentNode(node))
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 2. If node is a shadow root, then throw a "HierarchyRequestError" DOMException.
      */
     if (Guard.isShadowRoot(node))
-      throw DOMException.HierarchyRequestError
+      throw new HierarchyRequestError()
 
     /**
      * 3. Adopt node into the context object.
@@ -332,7 +334,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * is context object.
      */
     if (!this._algo.xml.isName(localName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     if (this._type === "html") {
       localName = localName.toLowerCase()

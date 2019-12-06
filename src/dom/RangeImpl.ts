@@ -1,9 +1,12 @@
 import {
-  Node, Range, NodeType, BoundaryPosition, HowToCompare, DocumentFragment,
+  Node, Range, BoundaryPosition, HowToCompare, DocumentFragment,
   BoundaryPoint
 } from './interfaces'
 import { AbstractRangeImpl } from './AbstractRangeImpl'
-import { DOMException } from './DOMException'
+import { 
+  InvalidNodeTypeError, NotSupportedError, WrongDocumentError, 
+  InvalidStateError, IndexSizeError 
+} from './DOMException'
 import { globalStore, Guard } from '../util'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 
@@ -89,7 +92,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     let parent = node._parent
     if (parent === null)
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     this._algo.range.setTheStart(this, parent,
       this._algo.tree.index(node))
@@ -105,7 +108,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     let parent = node._parent
     if (parent === null)
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     this._algo.range.setTheStart(this, parent,
       this._algo.tree.index(node) + 1)
@@ -121,7 +124,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     let parent = node._parent
     if (parent === null)
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     this._algo.range.setTheEnd(this, parent,
       this._algo.tree.index(node))
@@ -137,7 +140,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     let parent = node._parent
     if (parent === null)
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     this._algo.range.setTheEnd(this, parent,
       this._algo.tree.index(node) + 1)
@@ -174,7 +177,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 4. Set end to the boundary point (node, length).
      */
     if (Guard.isDocumentTypeNode(node))
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
 
     const length = this._algo.tree.nodeLength(node)
     this._start = [node, 0]
@@ -193,14 +196,14 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     if (how !== HowToCompare.StartToStart && how !== HowToCompare.StartToEnd &&
       how !== HowToCompare.EndToEnd && how !== HowToCompare.EndToStart)
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 2. If context object’s root is not the same as sourceRange’s root, 
      * then throw a "WrongDocumentError" DOMException.
      */
     if (this._algo.range.root(this) !== this._algo.range.root(sourceRange))
-      throw DOMException.WrongDocumentError
+      throw new WrongDocumentError()
 
     /**
      * 3. If how is:
@@ -239,7 +242,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
         break
       /* istanbul ignore next */
       default:
-        throw DOMException.NotSupportedError
+        throw new NotSupportedError()
     }
 
     /**
@@ -413,7 +416,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     for (const node of this._algo.range.getPartiallyContainedNodes(this)) {
       if (!Guard.isTextNode(node)) {
-        throw DOMException.InvalidStateError
+        throw new InvalidStateError()
       }
     }
 
@@ -424,7 +427,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (Guard.isDocumentNode(newParent) ||
       Guard.isDocumentTypeNode(newParent) ||
       Guard.isDocumentFragmentNode(newParent)) {
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     }
 
     /**
@@ -486,9 +489,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * "IndexSizeError" DOMException.
      */
     if (Guard.isDocumentTypeNode(node))
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     if (offset > this._algo.tree.nodeLength(node))
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError()
 
     /**
      * 4. If (node, offset) is before start or after end, return false.
@@ -515,11 +518,11 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * "IndexSizeError" DOMException.
      */
     if (this._algo.tree.rootNode(node) !== this._algo.range.root(this))
-      throw DOMException.WrongDocumentError
+      throw new WrongDocumentError()
     if (Guard.isDocumentTypeNode(node))
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     if (offset > this._algo.tree.nodeLength(node))
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError()
 
     /**
      * 4. If (node, offset) is before start, return −1.

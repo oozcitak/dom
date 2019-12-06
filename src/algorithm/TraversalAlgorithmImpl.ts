@@ -1,7 +1,7 @@
 import { DOMAlgorithm, TraversalAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { FilterResult, NodeIterator, Node, TreeWalker } from '../dom/interfaces'
-import { DOMException } from '../dom/DOMException'
+import { InvalidStateError } from '../dom/DOMException'
 
 /**
  * Contains traversal algorithms.
@@ -25,7 +25,7 @@ export class TraversalAlgorithmImpl extends SubAlgorithmImpl implements Traversa
      * DOMException.
      */
     if (traverser._activeFlag) {
-      throw DOMException.InvalidStateError
+      throw new InvalidStateError()
     }
 
     /**

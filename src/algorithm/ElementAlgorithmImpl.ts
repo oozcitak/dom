@@ -1,9 +1,9 @@
 import { DOMAlgorithm, ElementAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Attr, Element, Document, NamedNodeMap, Node } from '../dom/interfaces'
-import { DOMException } from '../dom'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
 import { Guard, globalStore } from '../util'
+import { SyntaxError, InUseAttributeError, NotSupportedError } from '../dom/DOMException'
 
 /**
  * Contains element algorithms.
@@ -261,7 +261,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 6. Return oldAttr.
      */
     if (attr._element !== null && attr._element !== element)
-      throw DOMException.InUseAttributeError
+      throw new InUseAttributeError()
 
     const oldAttr = this.getAnAttributeByNamespaceAndLocalName(attr._namespace || '',
       attr.localName, element)
@@ -435,11 +435,11 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
            * 6.1.9. If result’s local name is not equal to localName, then throw 
            * a "NotSupportedError" DOMException.
            */
-          if (result._attributeList.length !== 0) throw DOMException.NotSupportedError
-          if (result._children.size !== 0) throw DOMException.NotSupportedError
-          if (result._parent !== null) throw DOMException.NotSupportedError
-          if (result._nodeDocument !== document) throw DOMException.NotSupportedError
-          if (result._localName !== localName) throw DOMException.NotSupportedError
+          if (result._attributeList.length !== 0) throw new NotSupportedError()
+          if (result._children.size !== 0) throw new NotSupportedError()
+          if (result._parent !== null) throw new NotSupportedError()
+          if (result._nodeDocument !== document) throw new NotSupportedError()
+          if (result._localName !== localName) throw new NotSupportedError()
 
           /**
            * 6.1.10. Set result’s namespace prefix to prefix.
@@ -559,7 +559,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
         return this.dom.mutation.preInsert(node, element._parent,
           element._nextSibling)
       default:
-        throw DOMException.SyntaxError
+        throw new SyntaxError()
     }
   }
 }

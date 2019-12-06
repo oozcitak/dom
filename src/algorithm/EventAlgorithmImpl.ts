@@ -6,7 +6,8 @@ import {
 } from '../dom/interfaces'
 import { Guard } from '../util'
 import { forEachObject } from '@oozcitak/util'
-import { CustomEvent as CustomEventImpl, DOMException, Event as EventImpl } from '../dom'
+import { CustomEvent as CustomEventImpl, Event as EventImpl } from '../dom'
+import { NotSupportedError } from '../dom/DOMException'
 
 /**
  * Contains event algorithms.
@@ -838,7 +839,7 @@ export class EventAlgorithmImpl extends SubAlgorithmImpl implements EventAlgorit
      * 3. If constructor is null, then throw a "NotSupportedError" DOMException.
      */
     if(constructor === null) {
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
     }
 
     /**

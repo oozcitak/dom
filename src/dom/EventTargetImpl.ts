@@ -2,7 +2,7 @@ import {
   Event, EventListener, EventTarget, AddEventListenerOptions,
   EventListenerOptions, EventListenerEntry, EventHandlerEntry
 } from './interfaces'
-import { DOMException } from './DOMException'
+import { InvalidStateError } from './DOMException'
 import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
 
@@ -106,7 +106,7 @@ export abstract class EventTargetImpl implements EventTarget {
      * 3. Return the result of dispatching event to the context object.
      */
     if (event._dispatchFlag || !event._initializedFlag) {
-      throw DOMException.InvalidStateError
+      throw new InvalidStateError()
     }
     event._isTrusted = false
 

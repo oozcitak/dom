@@ -1,5 +1,5 @@
 import { AbstractRangeImpl } from './AbstractRangeImpl'
-import { DOMException } from './DOMException'
+import { InvalidNodeTypeError } from './DOMException'
 import { BoundaryPoint, StaticRangeInit, StaticRange } from './interfaces'
 import { Guard } from '../util'
 
@@ -26,7 +26,7 @@ export class StaticRangeImpl extends AbstractRangeImpl implements StaticRange {
      */
     if (Guard.isDocumentTypeNode(init.startContainer) || Guard.isAttrNode(init.startContainer) ||
       Guard.isDocumentTypeNode(init.endContainer) || Guard.isAttrNode(init.endContainer)) {
-      throw DOMException.InvalidNodeTypeError
+      throw new InvalidNodeTypeError()
     }
     this._start = [init.startContainer, init.startOffset]
     this._end = [init.endContainer, init.endOffset]

@@ -5,7 +5,7 @@ import {
 import { TupleSet } from "./TupleSet"
 import { NamespacePrefixMap } from './NamespacePrefixMap'
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
-import { DOMException } from "../dom/DOMException"
+import { DOMException, InvalidStateError } from "../dom/DOMException"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
@@ -78,7 +78,7 @@ export class PreSerializer {
       return this._serializeNode(node, namespace, prefixMap, prefixIndex,
         requireWellFormed)
     } catch {
-      throw DOMException.InvalidStateError
+      throw new InvalidStateError()
     }
   }
 

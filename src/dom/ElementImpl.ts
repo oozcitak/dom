@@ -4,7 +4,9 @@ import {
   HTMLSlotElement, Slot
 } from './interfaces'
 import { NodeImpl } from './NodeImpl'
-import { DOMException } from './DOMException'
+import { 
+  InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
+} from './DOMException'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
 import { AttributeChangeStep } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
@@ -148,7 +150,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * throw an "InvalidCharacterError" DOMException.
      */
     if (!this._algo.xml.isName(qualifiedName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     /**
      * 2. If the context object is in the HTML namespace and its node document 
@@ -254,7 +256,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * throw an "InvalidCharacterError" DOMException.
      */
     if (!this._algo.xml.isName(qualifiedName))
-      throw DOMException.InvalidCharacterError
+      throw new InvalidCharacterError()
 
     /**
      * 2. If the context object is in the HTML namespace and its node document
@@ -377,7 +379,7 @@ export class ElementImpl extends NodeImpl implements Element {
       }
     }
     if (!found)
-      throw DOMException.NotFoundError
+      throw new NotFoundError()
 
     this._algo.element.remove(attr, this)
     return attr
@@ -390,7 +392,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * "NotSupportedError" DOMException.
      */
     if (this._namespace !== infraNamespace.HTML)
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 2. If context object’s local name is not a valid custom element name, 
@@ -400,7 +402,7 @@ export class ElementImpl extends NodeImpl implements Element {
      */
     if (!this._algo.customElement.isValidCustomElementName(this._localName) &&
       !this._algo.customElement.isValidShadowHostName(this._localName))
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 3. If context object’s local name is a valid custom element name, 
@@ -415,7 +417,7 @@ export class ElementImpl extends NodeImpl implements Element {
       const definition = this._algo.customElement.lookUpACustomElementDefinition(
         this._nodeDocument, this._namespace, this._localName, this._is)
       if (definition !== null && definition.disableShadow === true) {
-        throw DOMException.NotSupportedError
+        throw new NotSupportedError()
       }
     }
 
@@ -424,7 +426,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * DOMException.
      */
     if (this._shadowRoot !== null)
-      throw DOMException.NotSupportedError
+      throw new NotSupportedError()
 
     /**
      * 5. Let shadow be a new shadow root whose node document is context 
@@ -465,7 +467,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * return element. [SELECTORS4]
      * 5. Return null.
      */
-    throw DOMException.NotImplementedError
+    throw new NotImplementedError()
   }
 
   /** @inheritdoc */
@@ -478,7 +480,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * using s, element, and :scope element context object, returns success,
      * and false otherwise. [SELECTORS4]
      */
-    throw DOMException.NotImplementedError
+    throw new NotImplementedError()
   }
 
   /** @inheritdoc */

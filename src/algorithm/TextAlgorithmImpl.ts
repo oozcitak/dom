@@ -2,7 +2,7 @@ import { DOMAlgorithm, TextAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Node, Text } from '../dom/interfaces'
 import { Guard } from '../util'
-import { DOMException } from '../dom/DOMException'
+import { IndexSizeError } from '../dom/DOMException'
 
 /**
  * Contains text algorithms.
@@ -130,7 +130,7 @@ export class TextAlgorithmImpl extends SubAlgorithmImpl implements TextAlgorithm
      */
     const length = node.data.length
     if (offset > length) {
-      throw DOMException.IndexSizeError
+      throw new IndexSizeError()
     }
 
     /**
