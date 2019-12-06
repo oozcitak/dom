@@ -43,7 +43,7 @@ export class EventImpl implements Event {
    */
   public constructor(type: string, eventInit?: EventInit) {
 
-    this._algo = globalStore.algorithm
+    this._algo = globalStore.dom.algorithm
 
     /**
      * When a constructor of the Event interface, or of an interface that

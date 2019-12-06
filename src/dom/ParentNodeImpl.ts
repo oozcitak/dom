@@ -14,7 +14,7 @@ export class ParentNodeImpl implements ParentNode {
      * The children attribute’s getter must return an HTMLCollection collection 
      * rooted at context object matching only element children.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     return algo.create.htmlCollection(Cast.asNode(this))
   }
 
@@ -76,7 +76,7 @@ export class ParentNodeImpl implements ParentNode {
      * 2. Pre-insert node into context object before the context object’s first 
      * child.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
     const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
@@ -90,7 +90,7 @@ export class ParentNodeImpl implements ParentNode {
      * and context object’s node document.
      * 2. Append node to context object.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
     const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
@@ -104,7 +104,7 @@ export class ParentNodeImpl implements ParentNode {
      * result of running scope-match a selectors string selectors against
      * context object, if the result is not an empty list, and null otherwise.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
     const result = algo.selectors.scopeMatchASelectorsString(selectors, node)
@@ -118,7 +118,7 @@ export class ParentNodeImpl implements ParentNode {
      * static result of running scope-match a selectors string selectors against
      * context object.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
     const result = algo.selectors.scopeMatchASelectorsString(selectors, node)

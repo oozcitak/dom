@@ -15,7 +15,7 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (parent === null) return
@@ -66,7 +66,7 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context.parentNode
     if (!parent) return
@@ -108,7 +108,7 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (!parent) return
@@ -155,7 +155,7 @@ export class ChildNodeImpl implements ChildNode {
      * 1. If context object’s parent is null, then return.
      * 2. Remove the context object from context object’s parent.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (!parent) return

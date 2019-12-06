@@ -20,7 +20,7 @@ export abstract class EventTargetImpl implements EventTarget {
    * Initializes a new instance of `EventTarget`.
    */
   public constructor() {
-    this._algo = globalStore.algorithm
+    this._algo = globalStore.dom.algorithm
   }
 
   /** @inheritdoc */

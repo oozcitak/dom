@@ -19,7 +19,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
    * @param element - parent element
    */
   private constructor(element: Element) {
-    this._algo = globalStore.algorithm
+    this._algo = globalStore.dom.algorithm
 
     this._element = element
   }

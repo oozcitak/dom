@@ -15,7 +15,7 @@ export class NonElementParentNodeImpl implements NonElementParentNode {
      * element, in tree order, within the context object’s descendants, 
      * whose ID is elementId, and null if there is no such element otherwise.
      */
-    const algo = globalStore.algorithm
+    const algo = globalStore.dom.algorithm
     for (const ele of algo.tree.getDescendantElements(Cast.asNode(this))) {
       if (ele._uniqueIdentifier === id) {
         return ele

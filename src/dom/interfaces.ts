@@ -1,6 +1,31 @@
-import { ObjectCache } from "@oozcitak/util"
-import { AttributeChangeStep } from "../algorithm/interfaces"
+import { ObjectCache, CompareCache } from "@oozcitak/util"
+import { AttributeChangeStep, DOMAlgorithm } from "../algorithm/interfaces"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
+
+/**
+ * Represents an object implementing DOM algorithms.
+ */
+export interface DOM {
+  /**
+   * Gets DOM algorithms.
+   */
+  readonly algorithm: DOMAlgorithm
+
+  /**
+   * Gets the DOM window.
+   */
+  readonly window: Window
+
+  /**
+   * Gets the DOM implementation.
+   */
+  readonly implementation: DOMImplementation
+
+  /**
+   * Gets the node compare cache.
+   */
+  readonly compareCache: CompareCache<Node>
+}
 
 /**
  * Represents a window containing a DOM document.

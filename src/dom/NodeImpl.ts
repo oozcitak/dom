@@ -36,7 +36,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   protected _childNodes: NodeList
 
   private _nodeDocumentOverride: Document | undefined = undefined
-  get _nodeDocument(): Document { return this._nodeDocumentOverride || globalStore.window._associatedDocument }
+  get _nodeDocument(): Document { return this._nodeDocumentOverride || globalStore.dom.window._associatedDocument }
   set _nodeDocument(val: Document) { this._nodeDocumentOverride = val }
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
@@ -527,7 +527,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        (globalStore.compareCache.check(this, other) ? Position.Preceding : Position.Following)
+        (globalStore.dom.compareCache.check(this, other) ? Position.Preceding : Position.Following)
     }
 
     /**

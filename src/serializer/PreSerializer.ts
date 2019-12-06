@@ -31,7 +31,7 @@ export class PreSerializer {
    */
   constructor(xmlVersion: "1.0" | "1.1") {
     this._xmlVersion = xmlVersion
-    this._algo = globalStore.algorithm as DOMAlgorithm
+    this._algo = globalStore.dom.algorithm as DOMAlgorithm
   }
 
   /**

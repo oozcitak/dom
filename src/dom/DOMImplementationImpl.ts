@@ -21,7 +21,7 @@ export class DOMImplementationImpl implements DOMImplementation {
   private constructor(document: Document) {
     this._associatedDocument = document
 
-    this._algo = globalStore.algorithm
+    this._algo = globalStore.dom.algorithm
   }
 
   /** @inheritdoc */

@@ -7,7 +7,7 @@ import {
 } from "./XMLToken"
 import { globalStore } from "../util"
 import { forEachObject } from "@oozcitak/util"
-import { DOMAlgorithm, DOMFeatures } from "../algorithm/interfaces"
+import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 
 /**
@@ -19,15 +19,9 @@ export class DOMParser {
 
   /**
    * Initializes a new instance of `DOMParser`.
-   * 
-   * @param features - DOM features supported by algorithms. All features are
-   * enabled by default unless explicity disabled.
    */
-  constructor (features?: Partial<DOMFeatures> | boolean) {
-    this.algo = globalStore.algorithm
-    if (features !== undefined) {
-      this.algo.setFeatures(features)
-    }
+  constructor () {
+    this.algo = globalStore.dom.algorithm
   }
 
   /**

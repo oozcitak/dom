@@ -32,9 +32,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The Range() constructor, when invoked, must return a new live range with
      * (current global object’s associated Document, 0) as its start and end.
      */
-    this._algo = globalStore.algorithm
+    this._algo = globalStore.dom.algorithm
 
-    const doc = globalStore.window._associatedDocument
+    const doc = globalStore.dom.window._associatedDocument
 
     this._start = [doc, 0]
     this._end = [doc, 0]

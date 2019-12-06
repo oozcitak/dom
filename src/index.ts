@@ -1,44 +1,49 @@
-import * as algorithm from "./algorithm"
-import * as dom from "./dom"
-import * as parser from "./parser"
-import * as serializer from "./serializer"
-import * as util from "./util"
 import { CompareCache } from "@oozcitak/util"
-import { Node } from "./dom/interfaces"
-
-export { algorithm, dom, parser, serializer, util }
+import { Node, DOM, Window, DOMImplementation } from "./dom/interfaces"
+import { DOMAlgorithm, DOMFeatures } from "./algorithm/interfaces"
+import { DOMAlgorithmImpl } from "./algorithm/DOMAlgorithmImpl"
+import { globalStore } from "./util"
 
 /**
  * Represents an object implementing DOM algorithms.
  */
-export class DOM {
+class DOMImpl implements DOM {
+  
+  private _algorithm: DOMAlgorithm
+  private _window: Window | null = null
+  private _compareCache: CompareCache<Node>
+  
   /**
    * Initializes a new instance of `DOM`.
    * 
    * @param features - DOM features supported by algorithms. All features are
    * enabled by default unless explicity disabled.
    */
-  constructor (features?: Partial<algorithm.Interfaces.DOMFeatures> | boolean) {
-    const algo = new algorithm.DOMAlgorithm(features)
-    util.globalStore.algorithm = algo
-    util.globalStore.window = algo.create.window()
-    util.globalStore.compareCache = new CompareCache<Node>()    
+  constructor (features?: Partial<DOMFeatures> | boolean) {
+    this._algorithm = new DOMAlgorithmImpl(features)
+    this._compareCache = new CompareCache<Node>()    
+
+    globalStore.dom = this
   }
 
-  /**
-   * Gets DOM algorithms.
-   */
-  get algorithm(): algorithm.Interfaces.DOMAlgorithm { return util.globalStore.algorithm }
+  /** @inheritdoc */
+  get algorithm(): DOMAlgorithm { return this._algorithm }
 
-  /**
-   * Gets the DOM window.
-   */
-  get window(): dom.Interfaces.Window { return util.globalStore.window }
-
-  /**
-   * Gets the DOM implementation.
-   */
-  get implementation(): dom.Interfaces.DOMImplementation { 
-    return util.globalStore.window.document.implementation 
+  /** @inheritdoc */
+  get window(): Window {
+    if (this._window === null) {
+      this._window = this._algorithm.create.window()
+    }
+    return this._window
   }
+
+  /** @inheritdoc */
+  get implementation(): DOMImplementation { return this.window.document.implementation }
+
+  /** @inheritdoc */
+  get compareCache(): CompareCache<Node> { return this._compareCache }
 }
+
+export { DOMImpl as DOM }
+export { DOMParser } from "./parser"
+export { XMLSerializer } from "./serializer"

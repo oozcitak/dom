@@ -634,7 +634,7 @@ export class ElementImpl extends NodeImpl implements Element {
         element._name = value
       }
 
-      const algo = globalStore.algorithm
+      const algo = globalStore.dom.algorithm
       algo.shadowTree.assignSlotablesForATree(algo.tree.rootNode(element))
     }
   }
@@ -667,7 +667,7 @@ export class ElementImpl extends NodeImpl implements Element {
         element._name = value
       }
 
-      const algo = globalStore.algorithm
+      const algo = globalStore.dom.algorithm
       if (algo.shadowTree.isAssigned(element)) {
         algo.shadowTree.assignSlotables(element._assignedSlot as Slot)
       }

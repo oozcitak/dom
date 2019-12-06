@@ -437,7 +437,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     if (event.type === "load") {
       return null
     } else {
-      return globalStore["window"]
+      return globalStore.dom.window
     }
   }
 

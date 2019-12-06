@@ -117,7 +117,7 @@ export class NodeListStaticImpl implements NodeList {
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
     thisArg?: any): void {
     if (thisArg === undefined) {
-      thisArg = globalStore.window
+      thisArg = globalStore.dom.window
     }
 
     for (const [index, node] of this.entries()) {

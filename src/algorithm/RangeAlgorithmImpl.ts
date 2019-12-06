@@ -736,7 +736,7 @@ export class RangeAlgorithmImpl extends SubAlgorithmImpl implements RangeAlgorit
 
   /** @inheritdoc */
   get rangeList(): ObjectCache<Range> {
-    return globalStore.window._rangeList
+    return globalStore.dom.window._rangeList
   }
 
 }

@@ -1,6 +1,4 @@
-import { Window, Node } from "../dom/interfaces"
-import { DOMAlgorithm } from "../algorithm/interfaces"
-import { CompareCache } from "@oozcitak/util"
+import { DOM } from "../dom/interfaces"
 
 /**
  * Represents a global data store.
@@ -8,9 +6,7 @@ import { CompareCache } from "@oozcitak/util"
 export class GlobalStore {
   private static _instance: GlobalStore
   
-  private _algorithm: DOMAlgorithm | null = null
-  private _window: Window | null = null
-  private _compareCache: CompareCache<Node> | null = null
+  private _dom: DOM | null = null
 
   /**
    * Initializes a new instance of `GlobalStore`.
@@ -18,37 +14,15 @@ export class GlobalStore {
   private constructor() { }
 
   /**
-   * Gets or sets the DOM algorithm.
+   * Gets or sets the DOM container class.
    */
-  get algorithm(): DOMAlgorithm {
-    if (this._algorithm === null) {
-      throw new Error("DOM algorithm instance is null.")
+  get dom(): DOM {
+    if (this._dom === null) {
+      throw new Error("DOM container class instance is null.")
     }
-    return this._algorithm 
+    return this._dom
   }
-  set algorithm(val: DOMAlgorithm) { this._algorithm = val }
-
-  /**
-   * Gets or sets the global window object.
-   */
-  get window(): Window {
-    if (this._window === null) {
-      throw new Error("Global window instance is null.")
-    }    
-    return this._window 
-  }
-  set window(val: Window) { this._window = val }
-
-  /**
-   * Gets or sets the global window object.
-   */
-  get compareCache(): CompareCache<Node> {
-    if (this._compareCache === null) {
-      throw new Error("Global compare cache instance is null.")
-    }    
-    return this._compareCache 
-  }
-  set compareCache(val: CompareCache<Node>) { this._compareCache = val }
+  set dom(val: DOM) { this._dom = val }
 
   /**
    * Returns the instance of `GlobalStore`. 

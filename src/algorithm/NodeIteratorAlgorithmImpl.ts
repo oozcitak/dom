@@ -102,7 +102,7 @@ export class NodeIteratorAlgorithmImpl extends SubAlgorithmImpl implements NodeI
 
   /** @inheritdoc */
   get iteratorList(): ObjectCache<NodeIterator> {
-    return globalStore.window._iteratorList
+    return globalStore.dom.window._iteratorList
   }
 
 }

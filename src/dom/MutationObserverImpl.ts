@@ -26,7 +26,7 @@ export class MutationObserverImpl implements MutationObserver {
      * 3. Return mo.
      */
     this._callback = callback
-    const window = globalStore.window
+    const window = globalStore.dom.window
     infraSet.append(window._mutationObservers, this)
   }
 

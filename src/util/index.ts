@@ -1,5 +1,4 @@
 import { GlobalStore } from './GlobalStore'
-export { GlobalStore }
 export { Cast } from './Cast'
 export { Guard } from './Guard'
 
