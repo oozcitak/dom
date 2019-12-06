@@ -221,20 +221,18 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
     /**
      * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
      * otherwise « node ».
+     */
+    const nodes = node.nodeType === NodeType.DocumentFragment ? 
+      new Array<Node>(...node._children) : [node]
+
+    /**
      * 4. If node is a DocumentFragment node, remove its children with the 
      * suppress observers flag set.
      */
-    const nodes: Node[] = []
     if (node.nodeType === NodeType.DocumentFragment) {
-      for (const childNode of node._children) {
-        nodes.push(childNode)
-      }
-      // remove child nodes
       while (node._firstChild) {
         this.remove(node._firstChild, node, true)
       }
-    } else {
-      nodes.push(node)
     }
 
     /**
@@ -242,7 +240,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * for node with « », nodes, null, and null.
      */
     if (globalStore.dom.features.mutationObservers) {
-      if (Guard.isDocumentFragmentNode(node)) {
+      if (node.nodeType === NodeType.DocumentFragment) {
         this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
       }
     }
