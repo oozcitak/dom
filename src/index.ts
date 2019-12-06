@@ -1,6 +1,6 @@
-import { CompareCache } from "@oozcitak/util"
-import { Node, DOM, Window, DOMImplementation } from "./dom/interfaces"
-import { DOMAlgorithm, DOMFeatures } from "./algorithm/interfaces"
+import { CompareCache, isObject } from "@oozcitak/util"
+import { Node, DOM, Window, DOMImplementation, DOMFeatures } from "./dom/interfaces"
+import { DOMAlgorithm } from "./algorithm/interfaces"
 import { DOMAlgorithmImpl } from "./algorithm/DOMAlgorithmImpl"
 import { globalStore } from "./util"
 
@@ -9,6 +9,11 @@ import { globalStore } from "./util"
  */
 class DOMImpl implements DOM {
   
+  private _features: DOMFeatures = {
+    mutationObservers: true,
+    customElements: true,
+    slots: true
+  }
   private _algorithm: DOMAlgorithm
   private _window: Window | null = null
   private _compareCache: CompareCache<Node>
@@ -20,11 +25,25 @@ class DOMImpl implements DOM {
    * enabled by default unless explicity disabled.
    */
   constructor (features?: Partial<DOMFeatures> | boolean) {
-    this._algorithm = new DOMAlgorithmImpl(features)
+    if (isObject(features)) {
+      for (const key in features) {
+        (this._features as any)[key] = (features as any)[key]
+      }
+    } else {
+      // enable/disable all features
+      for (const key in this._features) {
+        (this._features as any)[key] = features
+      }
+    }
+    
+    this._algorithm = new DOMAlgorithmImpl()
     this._compareCache = new CompareCache<Node>()    
 
     globalStore.dom = this
   }
+
+  /** @inheritdoc */
+  get features(): DOMFeatures { return this._features }
 
   /** @inheritdoc */
   get algorithm(): DOMAlgorithm { return this._algorithm }

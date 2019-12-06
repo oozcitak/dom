@@ -14,24 +14,10 @@ import { ObjectCache } from "@oozcitak/util"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
- * Represents DOM features supported by algorithms.
- */
-export type DOMFeatures = {
-  mutationObservers: boolean
-  customElements: boolean
-  slots: boolean
-}
-
-/**
  * Contains DOM manipulation algorithms as described in the 
  * [DOM Living Standard](https://dom.spec.whatwg.org).
  */
 export interface DOMAlgorithm {
-
-  /**
-   * Gets DOM features supported by algorithms.
-   */
-  readonly features: DOMFeatures
 
   /**
    * Contains tree manipulation algorithms.
@@ -162,14 +148,6 @@ export interface DOMAlgorithm {
    * Contains XML algorithms.
    */
   readonly xml: XMLAlgorithm
-
-  /**
-   * Sets the DOM features supported by algorithms. All features are enabled
-   * by default unless explicity disabled by this method.
-   * 
-   * @param features - the features to enable or disable
-   */
-  setFeatures(features: Partial<DOMFeatures> | boolean): void
 
   /**
    * Runs removing steps for node.

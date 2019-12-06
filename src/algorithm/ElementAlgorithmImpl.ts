@@ -3,7 +3,7 @@ import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Attr, Element, Document, NamedNodeMap, Node } from '../dom/interfaces'
 import { DOMException } from '../dom'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
-import { Guard } from '../util'
+import { Guard, globalStore } from '../util'
 
 /**
  * Contains element algorithms.
@@ -36,7 +36,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueAttributeMutationRecord(element,
         attribute._localName, attribute._namespace, attribute._value)
     }
@@ -47,7 +47,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, attribute’s value, value, and
      * attribute’s namespace.
      */
-    if (this.dom.features.customElements) {
+    if (globalStore.dom.features.customElements) {
       if (Guard.isCustomElementNode(element)) {
         this.dom.customElement.enqueueACustomElementCallbackReaction(
           element, "attributeChangedCallback", 
@@ -72,7 +72,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s
      * local name, attribute’s namespace, and null.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueAttributeMutationRecord(element,
         attribute._localName, attribute._namespace, null)
     }
@@ -83,7 +83,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, null, attribute’s value, and
      * attribute’s namespace.
      */
-    if (this.dom.features.customElements) {
+    if (globalStore.dom.features.customElements) {
       if (Guard.isCustomElementNode(element)) {
         this.dom.customElement.enqueueACustomElementCallbackReaction(
           element, "attributeChangedCallback", 
@@ -113,7 +113,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with attribute’s 
      * local name, attribute’s namespace, and attribute’s value.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueAttributeMutationRecord(element,
         attribute._localName, attribute._namespace, attribute._value)
     }
@@ -124,7 +124,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing attribute’s local name, attribute’s value, null,
      * and attribute’s namespace.
      */
-    if (this.dom.features.customElements) {
+    if (globalStore.dom.features.customElements) {
       if (Guard.isCustomElementNode(element)) {
         this.dom.customElement.enqueueACustomElementCallbackReaction(
           element, "attributeChangedCallback", 
@@ -155,7 +155,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * 1. Queue an attribute mutation record for element with oldAttr’s 
      * local name, oldAttr’s namespace, and oldAttr’s value.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueAttributeMutationRecord(element,
         oldAttr._localName, oldAttr._namespace, oldAttr._value)
     }
@@ -166,7 +166,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      * list containing oldAttr’s local name, oldAttr’s value, newAttr’s value, 
      * and oldAttr’s namespace.
      */
-    if (this.dom.features.customElements) {
+    if (globalStore.dom.features.customElements) {
       if (Guard.isCustomElementNode(element)) {
         this.dom.customElement.enqueueACustomElementCallbackReaction(
           element, "attributeChangedCallback", 
@@ -350,7 +350,7 @@ export class ElementAlgorithmImpl extends SubAlgorithmImpl implements ElementAlg
      */
     let result: Element | null = null
 
-    if (!this.dom.features.customElements) {
+    if (!globalStore.dom.features.customElements) {
       result = this.dom.create.element(document, localName, namespace, prefix)
       result._customElementState = "uncustomized"
       result._customElementDefinition = null

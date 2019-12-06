@@ -1,7 +1,7 @@
 import { DOMAlgorithm, DocumentAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { Attr, Element, Document, Node } from '../dom/interfaces'
-import { Guard } from '../util'
+import { Guard, globalStore } from '../util'
 import { isString } from '@oozcitak/util'
 import { Element as ElementImpl } from '../dom'
 
@@ -96,7 +96,7 @@ export class DocumentAlgorithmImpl extends SubAlgorithmImpl implements DocumentA
          * callback name "adoptedCallback", and an argument list 
          * containing oldDocument and document.
          */
-        if (this.dom.features.customElements) {
+        if (globalStore.dom.features.customElements) {
           if (Guard.isElementNode(inclusiveDescendant) && 
             inclusiveDescendant._customElementState === "custom") {
             this.dom.customElement.enqueueACustomElementCallbackReaction(

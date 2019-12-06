@@ -1,7 +1,7 @@
 import { DOMAlgorithm, CharacterDataAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { CharacterData, Node } from '../dom/interfaces'
-import { Guard } from '../util'
+import { Guard, globalStore } from '../util'
 import { IndexSizeError } from '../dom/DOMException'
 
 /**
@@ -43,7 +43,7 @@ export class CharacterDataAlgorithmImpl extends SubAlgorithmImpl implements Char
      * 4. Queue a mutation record of "characterData" for node with null, null, 
      * node’s data, « », « », null, and null.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueMutationRecord("characterData", node, null, null,
         node.data, [], [], null, null)
     }

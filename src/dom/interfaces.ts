@@ -9,6 +9,11 @@ export interface DOM {
   /**
    * Gets DOM algorithms.
    */
+  readonly features: DOMFeatures
+
+  /**
+   * Gets DOM algorithms.
+   */
   readonly algorithm: DOMAlgorithm
 
   /**
@@ -25,6 +30,15 @@ export interface DOM {
    * Gets the node compare cache.
    */
   readonly compareCache: CompareCache<Node>
+}
+
+/**
+ * Defines DOM features supported by algorithms.
+ */
+export type DOMFeatures = {
+  mutationObservers: boolean
+  customElements: boolean
+  slots: boolean
 }
 
 /**

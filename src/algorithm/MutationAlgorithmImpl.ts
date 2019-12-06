@@ -2,7 +2,7 @@ import { MutationAlgorithm, DOMAlgorithm } from './interfaces'
 import { SubAlgorithmImpl } from './SubAlgorithmImpl'
 import { HierarchyRequestError, NotFoundError } from '../dom/DOMException'
 import { NodeType, Node, Element, Slot } from '../dom/interfaces'
-import { Guard } from '../util'
+import { Guard, globalStore } from '../util'
 import { isEmpty } from '@oozcitak/util'
 import { set as infraSet } from '@oozcitak/infra'
 
@@ -241,7 +241,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 5. If node is a DocumentFragment node, then queue a tree mutation record 
      * for node with « », nodes, null, and null.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       if (Guard.isDocumentFragmentNode(node)) {
         this.dom.observer.queueTreeMutationRecord(node, [], nodes, null, null)
       }
@@ -298,7 +298,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * 7.3. If parent is a shadow host and node is a slotable, then 
        * assign a slot for node.
        */
-      if (this.dom.features.slots) {
+      if (globalStore.dom.features.slots) {
         if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
           this.dom.shadowTree.assignASlot(node)
         }
@@ -317,7 +317,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * whose assigned nodes is the empty list, then run signal
        * a slot change for parent.
        */
-      if (this.dom.features.slots) {
+      if (globalStore.dom.features.slots) {
         if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
           Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
           this.dom.shadowTree.signalASlotChange(parent)
@@ -327,7 +327,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
       /**
        * 7.6. Run assign slotables for a tree with node's root.
        */
-      if (this.dom.features.slots) {
+      if (globalStore.dom.features.slots) {
         this.dom.shadowTree.assignSlotablesForATree(this.dom.tree.rootNode(node))
       }
 
@@ -342,7 +342,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
          */
         this.dom.runInsertionSteps(inclusiveDescendant)
 
-        if (this.dom.features.customElements) {
+        if (globalStore.dom.features.customElements) {
           /**
            * 7.7.2. If inclusiveDescendant is connected, then:
            */
@@ -371,7 +371,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. If suppress observers flag is unset, then queue a tree mutation record
      * for parent with nodes, « », previousSibling, and child.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       if (!suppressObservers) {
         this.dom.observer.queueTreeMutationRecord(parent, nodes, [],
           previousSibling, child)
@@ -559,7 +559,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 15. Queue a tree mutation record for parent with nodes, removedNodes, 
      * previousSibling, and reference child.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueTreeMutationRecord(parent, nodes, removedNodes,
         previousSibling, referenceChild)
     }
@@ -622,7 +622,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 8. Queue a tree mutation record for parent with addedNodes, removedNodes, 
      * null, and null.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       this.dom.observer.queueTreeMutationRecord(parent, addedNodes, removedNodes,
         null, null)
     }
@@ -731,7 +731,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 10. If node is assigned, then run assign slotables for node’s assigned 
      * slot.
      */
-    if (this.dom.features.slots) {
+    if (globalStore.dom.features.slots) {
       if (Guard.isSlotable(node) && node._assignedSlot !== null && this.dom.shadowTree.isAssigned(node)) {
         this.dom.shadowTree.assignSlotables(node._assignedSlot)
       }
@@ -742,7 +742,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * assigned nodes is the empty list, then run signal a slot change for 
      * parent.
      */
-    if (this.dom.features.slots) {
+    if (globalStore.dom.features.slots) {
       if (Guard.isShadowRoot(this.dom.tree.rootNode(parent)) &&
         Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
         this.dom.shadowTree.signalASlotChange(parent)
@@ -754,7 +754,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * 12.1. Run assign slotables for a tree with parent's root.
      * 12.2. Run assign slotables for a tree with node.
      */
-    if (this.dom.features.slots) {
+    if (globalStore.dom.features.slots) {
       let hasSlotDescendant = false
       for (const descendant of this.dom.tree.getDescendantElements(node, true)) {
         if (Guard.isSlot(descendant)) {
@@ -778,7 +778,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * reaction with node, callback name "disconnectedCallback", 
      * and an empty argument list.
      */
-    if (this.dom.features.customElements) {
+    if (globalStore.dom.features.customElements) {
       if (Guard.isCustomElementNode(node)) {
         this.dom.customElement.enqueueACustomElementCallbackReaction(
           node, "disconnectedCallback", [])
@@ -800,7 +800,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
        * callback reaction with descendant, callback name 
        * "disconnectedCallback", and an empty argument list.
        */
-      if (this.dom.features.customElements) {
+      if (globalStore.dom.features.customElements) {
         if (Guard.isCustomElementNode(descendant)) {
           this.dom.customElement.enqueueACustomElementCallbackReaction(
             descendant, "disconnectedCallback", [])
@@ -817,7 +817,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * options, and source is registered to node's registered
      * observer list.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       for (const inclusiveAncestor of this.dom.tree.getAncestorNodes(parent, true)) {
         for (const registered of inclusiveAncestor._registeredObserverList) {
           if (registered.options.subtree) {
@@ -836,7 +836,7 @@ export class MutationAlgorithmImpl extends SubAlgorithmImpl implements MutationA
      * record for parent with « », « node », oldPreviousSibling, and 
      * oldNextSibling.
      */
-    if (this.dom.features.mutationObservers) {
+    if (globalStore.dom.features.mutationObservers) {
       if (!suppressObservers) {
         this.dom.observer.queueTreeMutationRecord(parent, [], [node],
           oldPreviousSibling, oldNextSibling)
