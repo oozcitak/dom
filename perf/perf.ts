@@ -1,49 +1,8 @@
-import { DOM } from "../lib"
-import { DOMParser } from "../lib/parser"
+import { DOM, DOMParser } from "../lib"
 import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
 import { JSDOM } from "jsdom"
 import { Suite } from "benchmark"
 import { printBenchmark } from "./"
-
-(function () {
-  const suite = new Suite("createDocument")
-
-  const domImpl = new DOM(false).implementation
-  const xmldomImpl = new XMLDOMImplementation()
-  const jsdomImpl = new JSDOM().window.document.implementation
-  
-  function test(dom: any) {
-    dom.createDocument(null, "", null)
-  }
-
-  suite.add("dom", () => test(domImpl))
-  suite.add("xmldom", () => test(xmldomImpl))
-  suite.add("jsdom", () => test(jsdomImpl))
-
-  suite.on("complete", () => printBenchmark(suite))
-  suite.run()
-
-})();
-
-(function () {
-  const suite = new Suite("createElement")
-  
-  const doc = new DOM(false).implementation.createDocument(null, "", null)
-  const xmldomDoc = new XMLDOMImplementation().createDocument(null, "", null)
-  const jsdomDoc = new JSDOM().window.document.implementation.createDocument(null, "", null)
-  
-  function test(doc: any) {
-    doc.createElement("node")
-  }
-
-  suite.add("dom", () => test(doc))
-  suite.add("xmldom", () => test(xmldomDoc))
-  suite.add("jsdom", () => test(jsdomDoc))
-
-  suite.on("complete", () => printBenchmark(suite))
-  suite.run()
-
-})();
 
 (function () {
   const suite = new Suite("createDocument + createElement + appendChild")
@@ -89,9 +48,14 @@ import { printBenchmark } from "./"
   </topgun>  
   `
 
-  suite.add("dom", () => new DOMParser(false).parseFromString(xml, "application/xml"))
-  suite.add("xmldom", () => new XMLDOMParser().parseFromString(xml, "application/xml"))
-  suite.add("jsdom", () => JSDOM.fragment(xml))
+  const domImpl = new DOM(false)
+  const domParser = new DOMParser()
+  const xmldomParser = new XMLDOMParser()
+  const jsdomParser = JSDOM.fragment
+
+  suite.add("dom", () => domParser.parseFromString(xml, "application/xml"))
+  suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
+  suite.add("jsdom", () => jsdomParser(xml))
 
   suite.on("complete", () => printBenchmark(suite))
   suite.run()
