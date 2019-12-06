@@ -25,6 +25,8 @@ class DOMImpl implements DOM {
    * enabled by default unless explicity disabled.
    */
   constructor (features?: Partial<DOMFeatures> | boolean) {
+    if (features === undefined) features = true
+    
     if (isObject(features)) {
       for (const key in features) {
         (this._features as any)[key] = (features as any)[key]
