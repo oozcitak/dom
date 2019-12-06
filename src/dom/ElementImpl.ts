@@ -44,8 +44,10 @@ export class ElementImpl extends NodeImpl implements Element {
 
     this._attributeList = this._algo.create.namedNodeMap(this)
     
-    this._attributeChangeSteps.push(this._updateASlotablesName)
-    this._attributeChangeSteps.push(this._updateASlotsName)
+    if (globalStore.dom.features.slots) {
+      this._attributeChangeSteps.push(this._updateASlotablesName)
+      this._attributeChangeSteps.push(this._updateASlotsName)
+    }
     this._attributeChangeSteps.push(this._updateAnElementID)
   }
 
@@ -708,6 +710,7 @@ export class ElementImpl extends NodeImpl implements Element {
   static _create(document: Document, localName: string,
     namespace: string | null = null,
     namespacePrefix: string | null = null): ElementImpl {
+
     const node = new ElementImpl()
     node._localName = localName
     node._namespace = namespace
