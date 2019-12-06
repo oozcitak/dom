@@ -4,4 +4,4 @@ coverage/
 .vs/
 .vscode/
 .nyc_output/
-.log
+*.log
