@@ -215,8 +215,8 @@ export class HierarchyRequestError extends DOMException {
   /**
    * @param message - error message
    */
-  constructor(message = "The operation would yield an incorrect node tree.") {
-    super("HierarchyRequestError", message || "")
+  constructor(message?: string) {
+    super("HierarchyRequestError", "The operation would yield an incorrect node tree. " + message || "")
   }
 }
 
@@ -224,8 +224,8 @@ export class NotFoundError extends DOMException {
   /**
    * @param message - error message
    */
-  constructor(message = "The object can not be found here.") {
-    super("NotFoundError", message || "")
+  constructor(message?: string) {
+    super("NotFoundError", "The object can not be found here. " + message || "")
   }
 }
 
@@ -233,8 +233,8 @@ export class IndexSizeError extends DOMException {
   /**
    * @param message - error message
    */
-  constructor(message = "The index is not in the allowed range.") {
-    super("NotFoundError", message || "")
+  constructor(message?: string) {
+    super("NotFoundError", "The index is not in the allowed range. " + message || "")
   }
 }
 
@@ -242,8 +242,8 @@ export class SyntaxError extends DOMException {
   /**
    * @param message - error message
    */
-  constructor(message = "The string did not match the expected pattern.") {
-    super("SyntaxError", message || "")
+  constructor(message?: string) {
+    super("SyntaxError", "The string did not match the expected pattern. " + message || "")
   }
 }
 
@@ -251,7 +251,7 @@ export class InvalidCharacterError extends DOMException {
   /**
    * @param message - error message
    */
-  constructor(message = "The string contains invalid characters.") {
-    super("InvalidCharacterError", message || "")
+  constructor(message?: string) {
+    super("InvalidCharacterError", "The string contains invalid characters. " + message || "")
   }
 }
