@@ -62,27 +62,27 @@ export class XMLAlgorithmImpl extends SubAlgorithmImpl implements XMLAlgorithm {
 
   /** @inheritdoc */
   isName(name: string): boolean {
-    return (!!name.match(XMLAlgorithmImpl.Name))
+    return XMLAlgorithmImpl.Name.test(name)
   }
 
   /** @inheritdoc */
   isQName(name: string): boolean {
-    return (!!name.match(XMLAlgorithmImpl.QName))
+    return XMLAlgorithmImpl.QName.test(name)
   }
 
   /** @inheritdoc */
   isLegalChar(chars: string, xmlVersion: "1.0" | "1.1" = "1.0"): boolean {
     if (xmlVersion === "1.0") {
-      return (!chars.match(XMLAlgorithmImpl.InvalidChar_10))
+      return (!XMLAlgorithmImpl.InvalidChar_10.test(chars))
     } else {
-      return (!chars.match(XMLAlgorithmImpl.InvalidChar_11))
+      return (!XMLAlgorithmImpl.InvalidChar_11.test(chars))
     }
   }
 
 
   /** @inheritdoc */
   isPubidChar(chars: string): boolean {
-    return (!!chars.match(XMLAlgorithmImpl.PubidChar))
+    return XMLAlgorithmImpl.PubidChar.test(chars)
   }
 
 }

@@ -80,6 +80,8 @@ export class DocTypeToken extends XMLTokenBase {
 abstract class CharacterDataToken extends XMLTokenBase {
   data: string
 
+  protected static WhiteSpace = /^[\t\n\f\r ]*$/
+
   /**
    * Initializes a new instance of `CharacterDataToken`.
    */
@@ -93,7 +95,7 @@ abstract class CharacterDataToken extends XMLTokenBase {
    * Determines if the token contents are entirely whitespace characters.
    */
   get isWhitespace(): boolean {
-    return !!this.data.match(/^[\t\n\f\r ]*$/)
+    return CharacterDataToken.WhiteSpace.test(this.data)
   }
 }
 
