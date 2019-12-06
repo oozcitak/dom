@@ -17,6 +17,7 @@ export class GlobalStore {
    * Gets or sets the DOM container class.
    */
   get dom(): DOM {
+    /* istanbul ignore next */
     if (this._dom === null) {
       throw new Error("DOM container class instance is null.")
     }
