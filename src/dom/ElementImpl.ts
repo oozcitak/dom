@@ -52,10 +52,8 @@ export class ElementImpl extends NodeImpl implements Element {
 
     this._attributeList = create_namedNodeMap(this)
     
-    if (dom.features.slots) {
-      this._attributeChangeSteps.push(this._updateASlotablesName)
-      this._attributeChangeSteps.push(this._updateASlotsName)
-    }
+    this._attributeChangeSteps.push(this._updateASlotablesName)
+    this._attributeChangeSteps.push(this._updateASlotsName)
     this._attributeChangeSteps.push(this._updateAnElementID)
   }
 
@@ -625,6 +623,9 @@ export class ElementImpl extends NodeImpl implements Element {
    */
   private _updateASlotsName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
+
+    if (!dom.features.slots) return
+
     /**
      * 1. If element is a slot, localName is name, and namespace is null, then:
      * 1.1. If value is oldValue, then return.
@@ -655,6 +656,9 @@ export class ElementImpl extends NodeImpl implements Element {
    */
   private _updateASlotablesName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
+
+    if (!dom.features.slots) return
+    
     /**
      * 1. If localName is slot and namespace is null, then:
      * 1.1. If value is oldValue, then return.
