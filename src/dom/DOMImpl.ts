@@ -11,7 +11,8 @@ export class DOMImpl {
   private _features: DOMFeatures = {
     mutationObservers: true,
     customElements: true,
-    slots: true
+    slots: true,
+    steps: true
   }
   private _window: Window | null = null
   private _compareCache: CompareCache<Node>

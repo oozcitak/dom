@@ -319,8 +319,10 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * 7.4. If node is a Text node, run the child text content change 
      * steps for parent.
      */
-    if (Guard.isTextNode(node)) {
-      dom_runChildTextContentChangeSteps(parent)
+    if (dom.features.steps) {
+      if (Guard.isTextNode(node)) {
+        dom_runChildTextContentChangeSteps(parent)
+      }
     }
 
     /**
@@ -351,7 +353,9 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
       /**
        * 7.7.1. Run the insertion steps with inclusiveDescendant.
        */
-      dom_runInsertionSteps(inclusiveDescendant)
+      if (dom.features.steps) {
+        dom_runInsertionSteps(inclusiveDescendant)
+      }
 
       if (dom.features.customElements) {
         /**
@@ -734,9 +738,11 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * node’s node document, run the NodeIterator pre-removing steps given node
    * and iterator.
    */
-  for (const iterator of nodeIterator_iteratorList()) {
-    if (iterator._root._nodeDocument === node._nodeDocument) {
-      dom_runNodeIteratorPreRemovingSteps(iterator, node)
+  if (dom.features.steps) {
+    for (const iterator of nodeIterator_iteratorList()) {
+      if (iterator._root._nodeDocument === node._nodeDocument) {
+        dom_runNodeIteratorPreRemovingSteps(iterator, node)
+      }
     }
   }
 
@@ -810,7 +816,9 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   /**
    * 13. Run the removing steps with node and parent.
    */
-  dom_runRemovingSteps(node, parent)
+  if (dom.features.steps) {
+    dom_runRemovingSteps(node, parent)
+  }
 
   /**
    * 14. If node is custom, then enqueue a custom element callback 
@@ -832,7 +840,9 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
     /**
      * 15.1. Run the removing steps with descendant.
      */
-    dom_runRemovingSteps(descendant)
+    if (dom.features.steps) {
+      dom_runRemovingSteps(descendant)
+    }
 
     /**
      * 15.2. If descendant is custom, then enqueue a custom element 
@@ -886,7 +896,9 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * 18. If node is a Text node, then run the child text content change steps 
    * for parent.
    */
-  if (Guard.isTextNode(node)) {
-    dom_runChildTextContentChangeSteps(parent)
+  if (dom.features.steps) {
+    if (Guard.isTextNode(node)) {
+      dom_runChildTextContentChangeSteps(parent)
+    }
   }
 }

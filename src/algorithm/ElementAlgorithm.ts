@@ -63,8 +63,10 @@ export function element_change(attribute: Attr, element: Element, value: string)
    * attribute’s value, value, and attribute’s namespace.
    * 4. Set attribute’s value to value.
    */
-  dom_runAttributeChangeSteps(element, attribute._localName,
-    attribute._value, value, attribute._namespace)
+  if (dom.features.steps) {
+    dom_runAttributeChangeSteps(element, attribute._localName,
+      attribute._value, value, attribute._namespace)
+  }
 
   attribute._value = value
 }
@@ -103,8 +105,10 @@ export function element_append(attribute: Attr, element: Element): void {
    * 3. Run the attribute change steps with element, attribute’s local name,
    * null, attribute’s value, and attribute’s namespace.
    */
-  dom_runAttributeChangeSteps(element, attribute.localName, null,
-    attribute._value, attribute._namespace)
+  if (dom.features.steps) {
+    dom_runAttributeChangeSteps(element, attribute.localName, null,
+      attribute._value, attribute._namespace)
+  }
 
   /**
    * 4. Append attribute to element’s attribute list.
@@ -149,8 +153,10 @@ export function element_remove(attribute: Attr, element: Element): void {
    * 3. Run the attribute change steps with element, attribute’s local name,
    * attribute’s value, null, and attribute’s namespace.
    */
-  dom_runAttributeChangeSteps(element, attribute.localName,
-    attribute._value, null, attribute._namespace)
+  if (dom.features.steps) {
+    dom_runAttributeChangeSteps(element, attribute.localName,
+      attribute._value, null, attribute._namespace)
+  }
 
   /**
    * 3. Remove attribute from element’s attribute list.
@@ -197,8 +203,10 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * 3. Run the attribute change steps with element, oldAttr’s local name, 
    * oldAttr’s value, newAttr’s value, and oldAttr’s namespace.
    */
-  dom_runAttributeChangeSteps(element, oldAttr.localName,
-    oldAttr._value, newAttr._value, oldAttr._namespace)
+  if (dom.features.steps) {
+    dom_runAttributeChangeSteps(element, oldAttr.localName,
+      oldAttr._value, newAttr._value, oldAttr._namespace)
+  }
 
   /**
    * 4. Replace oldAttr by newAttr in element’s attribute list.

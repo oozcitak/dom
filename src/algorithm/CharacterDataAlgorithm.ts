@@ -86,8 +86,10 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    * 12. If node is a Text node and its parent is not null, run the child 
    * text content change steps for node’s parent.
    */
-  if (Guard.isTextNode(node) && node._parent !== null) {
-    dom_runChildTextContentChangeSteps(node._parent)
+  if (dom.features.steps) {
+    if (Guard.isTextNode(node) && node._parent !== null) {
+      dom_runChildTextContentChangeSteps(node._parent)
+    }
   }
 }
 

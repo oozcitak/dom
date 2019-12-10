@@ -1,3 +1,4 @@
+import { dom } from '../'
 import {
   Attr, Element, Node, Document, HTMLCollection
 } from '../dom/interfaces'
@@ -132,7 +133,9 @@ export function node_clone(node: Node, document: Document | null = null,
    * specifications and pass copy, node, document and the clone children flag
    * if set, as parameters.
    */
-  dom_runCloningSteps(copy, node, document, cloneChildrenFlag)
+  if (dom.features.steps) {
+    dom_runCloningSteps(copy, node, document, cloneChildrenFlag)
+  }
 
   /**
    * 6. If the clone children flag is set, clone all the children of node and

@@ -5,9 +5,22 @@ import { Interfaces as URLInterfaces } from "@oozcitak/url"
  * Defines DOM features supported by algorithms.
  */
 export type DOMFeatures = {
+  /**
+   * Enables or disables mutation observer algorithms.
+   */
   mutationObservers: boolean
+  /**
+   * Enables or disables custom element algorithms.
+   */
   customElements: boolean
+  /**
+   * Enables or disables slot algorithms.
+   */
   slots: boolean
+  /**
+   * Enables or disables various run steps defined in algorithms.
+   */
+  steps: boolean
 }
 
 /**

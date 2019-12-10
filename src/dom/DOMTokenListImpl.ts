@@ -1,3 +1,4 @@
+import { dom } from "../"
 import { SyntaxError, InvalidCharacterError } from "./DOMException"
 import { DOMTokenList, Element, Attr } from "./interfaces"
 import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
@@ -58,7 +59,9 @@ export class DOMTokenListImpl implements DOMTokenList {
     // add the closure to the associated element's attribute change steps
     this._element._attributeChangeSteps.push(updateTokenSet)
 
-    dom_runAttributeChangeSteps(element, localName, value, value, null)
+    if (dom.features.steps) {
+      dom_runAttributeChangeSteps(element, localName, value, value, null)
+    }
   }
 
   /** @inheritdoc */

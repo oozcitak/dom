@@ -1,3 +1,4 @@
+import { dom } from '../'
 import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
   EventHandler, Event, EventTarget
@@ -109,7 +110,9 @@ export function event_innerEventCreationSteps(eventInterface: typeof EventImpl, 
   event._initializedFlag = true
   event._timeStamp = time.getTime()
   Object.assign(event, dictionary)
-  dom_runEventConstructingSteps(event)
+  if (dom.features.steps) {
+    dom_runEventConstructingSteps(event)
+  }
 
   return event
 }

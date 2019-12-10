@@ -119,7 +119,9 @@ export function document_adopt(node: Node, document: Document): void {
        * inclusive descendants, in shadow-including tree order, run the 
        * adopting steps with inclusiveDescendant and oldDocument.
        */
-      dom_runAdoptingSteps(inclusiveDescendant, oldDocument)
+      if (dom.features.steps) {
+        dom_runAdoptingSteps(inclusiveDescendant, oldDocument)
+      }
     }
   }
 }
