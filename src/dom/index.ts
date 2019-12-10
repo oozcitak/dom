@@ -14,7 +14,6 @@ import { DocumentFragmentImpl } from './DocumentFragmentImpl'
 import { DocumentImpl } from './DocumentImpl'
 import { DocumentOrShadowRootImpl } from './DocumentOrShadowRootImpl'
 import { DocumentTypeImpl } from './DocumentTypeImpl'
-import { DOMException } from './DOMException'
 import { DOMImplementationImpl } from './DOMImplementationImpl'
 import { DOMTokenListImpl } from './DOMTokenListImpl'
 import { ElementImpl } from './ElementImpl'
@@ -78,7 +77,6 @@ export {
   DocumentFragmentImpl as DocumentFragment,
   DocumentImpl as Document,
   DocumentTypeImpl as DocumentType,
-  DOMException as DOMExcep,
   DOMImplementationImpl as DOMImplementation,
   DOMTokenListImpl as DOMTokenList,
   ElementImpl as Element,
@@ -104,8 +102,3 @@ export {
   XMLDocumentImpl as XMLDocument
 }
 
-export { DOMException }
-
-// Export interfaces
-import * as Interfaces from './interfaces'
-export { Interfaces }

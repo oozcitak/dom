@@ -3,7 +3,7 @@ import { DOM } from '../src'
 import {
   AbortController, AbortSignal, Attr, CDATASection, 
   CharacterData, Comment, CustomEvent, DocumentFragment,
-  Document, DocumentType, DOMException, DOMImplementation,
+  Document, DocumentType, DOMImplementation,
   DOMTokenList, Element, Event, HTMLCollection, 
   MutationObserver, MutationRecord,
   NamedNodeMap, NodeFilter, Node, NodeList,
@@ -106,7 +106,6 @@ export default class TestHelpers {
   static DocumentFragment = DocumentFragment
   static Document = Document
   static DocumentType = DocumentType
-  static DOMException = DOMException
   static DOMImplementation = DOMImplementation
   static DOMTokenList = DOMTokenList
   static Element = Element
