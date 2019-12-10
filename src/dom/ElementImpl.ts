@@ -52,9 +52,9 @@ export class ElementImpl extends NodeImpl implements Element {
 
     this._attributeList = create_namedNodeMap(this)
     
-    this._attributeChangeSteps.push(this._updateASlotablesName)
-    this._attributeChangeSteps.push(this._updateASlotsName)
-    this._attributeChangeSteps.push(this._updateAnElementID)
+    this._attributeChangeSteps.push(ElementImpl._updateASlotablesName)
+    this._attributeChangeSteps.push(ElementImpl._updateASlotsName)
+    this._attributeChangeSteps.push(ElementImpl._updateAnElementID)
   }
 
   /** @inheritdoc */
@@ -621,7 +621,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /**
    * Defines attribute change steps to update a slot’s name.
    */
-  private _updateASlotsName(element: Element, localName: string,
+  private static _updateASlotsName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
 
     if (!dom.features.slots) return
@@ -654,7 +654,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /**
    * Defines attribute change steps to update a slotable’s name.
    */
-  private _updateASlotablesName(element: Element, localName: string,
+  private static _updateASlotablesName(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
 
     if (!dom.features.slots) return
@@ -693,7 +693,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /**
    * Defines attribute change steps to update an element's ID.
    */
-  private _updateAnElementID(element: Element, localName: string,
+  private static _updateAnElementID(element: Element, localName: string,
     oldValue: string | null, value: string | null, namespace: string | null): void {
     /**
      * 1. If localName is id, namespace is null, and value is null or the empty
