@@ -2,7 +2,21 @@ import { DOM, DOMParser } from "../lib"
 import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
 import { JSDOM } from "jsdom"
 import { Suite } from "benchmark"
-import { printBenchmark } from "./"
+import { processBenchmark } from "./"
+
+(function () {
+  const suite = new Suite("createDocument")
+   
+  const domImpl = new DOM(false).implementation
+  const xmldomImpl = new XMLDOMImplementation()
+
+  suite.add("dom", () => domImpl.createDocument(null, "", null))
+  suite.add("xmldom", () => xmldomImpl.createDocument(null, "", null))
+
+  suite.on("complete", () => processBenchmark(suite, "dom"))
+  suite.run()
+
+})();
 
 (function () {
   const suite = new Suite("createDocument + createElement + appendChild")
@@ -25,7 +39,7 @@ import { printBenchmark } from "./"
   suite.add("xmldom", () => test(xmldomImpl))
   suite.add("jsdom", () => test(jsdomImpl))
 
-  suite.on("complete", () => printBenchmark(suite))
+  suite.on("complete", () => processBenchmark(suite, "dom"))
   suite.run()
 
 })();
@@ -57,7 +71,7 @@ import { printBenchmark } from "./"
   suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
   suite.add("jsdom", () => jsdomParser(xml))
 
-  suite.on("complete", () => printBenchmark(suite))
+  suite.on("complete", () => processBenchmark(suite, "dom"))
   suite.run()
 
 })();

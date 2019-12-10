@@ -1,0 +1,34 @@
+{
+  "1.0.0": {
+    "createDocument": {
+      "xmldom": 895647478.0233461,
+      "dom": 4818814.82943642
+    },
+    "createDocument + createElement + appendChild": {
+      "xmldom": 118539.39681855193,
+      "dom": 14483.487854626761,
+      "jsdom": 1717.837850672606
+    },
+    "parser": {
+      "xmldom": 40004.41752481707,
+      "dom": 22926.76212482121,
+      "jsdom": 3337.754155450832
+    }
+  },
+  "1.0.0*": {
+    "createDocument": {
+      "xmldom": 893943304.8922086,
+      "dom": 4685655.239580726
+    },
+    "createDocument + createElement + appendChild": {
+      "xmldom": 118107.42425917926,
+      "dom": 15263.369842496,
+      "jsdom": 1746.472138475045
+    },
+    "parser": {
+      "xmldom": 39517.806792752825,
+      "dom": 22812.76473940382,
+      "jsdom": 3262.5142425389336
+    }
+  }
+}

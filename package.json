@@ -30,23 +30,24 @@
     "@oozcitak/url": "0.0.8"
   },
   "devDependencies": {
-    "@types/dedent": "*",
-    "@types/jest": "*",
-    "@types/node": "*",
-    "@types/xmldom": "*",
-    "@types/jsdom": "*",
     "@types/benchmark": "*",
     "@types/chalk": "*",
+    "@types/dedent": "*",
+    "@types/jest": "*",
+    "@types/jsdom": "*",
+    "@types/node": "^12.12.16",
+    "@types/xmldom": "*",
+    "benchmark": "*",
+    "chalk": "^3.0.0",
     "dedent": "*",
+    "git-state": "*",
     "glob": "*",
     "jest": "*",
     "jsdom": "*",
     "ts-jest": "*",
-    "typescript": "*",
-    "xmldom": "*",
-    "benchmark": "*",
-    "ts-node": "*",
-    "chalk": "*"
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3",
+    "xmldom": "*"
   },
   "jest": {
     "transform": {
