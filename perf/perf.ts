@@ -5,25 +5,10 @@ import { Suite } from "benchmark"
 import { processBenchmark } from "./"
 
 (function () {
-  const suite = new Suite("createDocument")
-   
-  dom.setFeatures(false)
-  const domImpl = new DOMImplementation()
-  const xmldomImpl = new XMLDOMImplementation()
-
-  suite.add("dom", () => domImpl.createDocument(null, "", null))
-  suite.add("xmldom", () => xmldomImpl.createDocument(null, "", null))
-
-  suite.on("complete", () => processBenchmark(suite, "dom"))
-  suite.run()
-
-})();
-
-(function () {
   const suite = new Suite("createDocument + createElement + appendChild")
    
-  function test(dom: any) {
-    const doc = dom.createDocument(null, "", null)
+  function test(impl: any) {
+    const doc = impl.createDocument(null, "", null)
     const root = doc.createElement("root")
     doc.appendChild(root)
     for (let i = 0; i < 100; i++) {
