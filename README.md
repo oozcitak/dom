@@ -10,7 +10,7 @@ A Javascript implementation of the [DOM Living Standard](https://dom.spec.whatwg
 [![Code Coverage](https://img.shields.io/codecov/c/github/oozcitak/dom?logo=codecov&style=flat-square)](https://codecov.io/gh/oozcitak/dom)
 
 # Version
-Current version implements the standard as of commit [57512fa](https://dom.spec.whatwg.org/commit-snapshots/57512fac17cf2f1c4c85be4aec178c8086ee5ee4/).
+Current version implements the standard as of commit [57512fa](https://dom.spec.whatwg.org/commit-snapshots/57512fac17cf2f1c4c85be4aec178c8086ee5ee4/) (Last Updated 24 September 2019).
 
 # Usage
 Create an instance of the `DOMImplementation` class to construct the DOM tree.
