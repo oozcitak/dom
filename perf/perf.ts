@@ -1,4 +1,4 @@
-import { DOM, DOMParser } from "../lib"
+import { dom, DOMParser, DOMImplementation } from "../lib"
 import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
 import { JSDOM } from "jsdom"
 import { Suite } from "benchmark"
@@ -7,7 +7,8 @@ import { processBenchmark } from "./"
 (function () {
   const suite = new Suite("createDocument")
    
-  const domImpl = new DOM(false).implementation
+  dom.setFeatures(false)
+  const domImpl = new DOMImplementation()
   const xmldomImpl = new XMLDOMImplementation()
 
   suite.add("dom", () => domImpl.createDocument(null, "", null))
@@ -31,7 +32,8 @@ import { processBenchmark } from "./"
     }
   }
 
-  const domImpl = new DOM(false).implementation
+  dom.setFeatures(false)
+  const domImpl = new DOMImplementation()
   const xmldomImpl = new XMLDOMImplementation()
   const jsdomImpl = new JSDOM().window.document.implementation
 
@@ -62,7 +64,7 @@ import { processBenchmark } from "./"
   </topgun>  
   `
 
-  const domImpl = new DOM(false)
+  dom.setFeatures(false)
   const domParser = new DOMParser()
   const xmldomParser = new XMLDOMParser()
   const jsdomParser = JSDOM.fragment

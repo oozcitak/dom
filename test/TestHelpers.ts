@@ -142,7 +142,7 @@ export default class TestHelpers {
   /**
    * Returns the DOM implementation object.
    */
-  static dom = dom.implementation
+  static dom = new DOMImplementation()
   /**
    * Returns the root element of a new document.
    */

@@ -6,6 +6,7 @@ import { create_documentType, create_xmlDocument, create_document, create_text }
 import { namespace_validate } from "../algorithm/NamespaceAlgorithm"
 import { document_internalCreateElementNS } from "../algorithm/DocumentAlgorithm"
 import { element_createAnElement } from "../algorithm/ElementAlgorithm"
+import { DOMImpl } from "./DOMImpl"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -17,9 +18,11 @@ export class DOMImplementationImpl implements DOMImplementation {
 
   /**
    * Initializes a new instance of `DOMImplementation`.
+   * 
+   * @param document - the associated document
    */
-  private constructor(document: Document) {
-    this._associatedDocument = document
+  constructor(document?: Document) {
+    this._associatedDocument = document || DOMImpl.instance.window.document
   }
 
   /** @inheritdoc */

@@ -31,7 +31,7 @@ export class DOMImpl {
    * @param features - DOM features supported by algorithms. All features are
    * enabled by default unless explicity disabled.
    */
-  setFeatures(features?: Partial<DOMFeatures> | boolean) {
+  setFeatures(features?: Partial<DOMFeatures> | boolean): void {
     if (features === undefined) features = true
     
     if (isObject(features)) {
@@ -43,7 +43,7 @@ export class DOMImpl {
       for (const key in this._features) {
         (this._features as any)[key] = features
       }
-    }    
+    }
   }
 
   /**
@@ -60,11 +60,6 @@ export class DOMImpl {
     }
     return this._window
   }
-
-  /**
-   * Gets the DOM implementation.
-   */
-  get implementation(): DOMImplementation { return this.window.document.implementation }
 
   /**
    * Gets the global node compare cache.
