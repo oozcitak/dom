@@ -1,56 +1,79 @@
-import {
-  Text, CDATASection, ProcessingInstruction, DOMImplementation,
-  Comment, Document, DocumentFragment, HTMLCollection,
-  NamedNodeMap, Element, DocumentType, Attr, Node, NodeList,
-  NodeListStatic, Range, NodeIterator, TreeWalker,
-  NodeFilter, MutationRecord, XMLDocument, DOMTokenList, 
-  ShadowRoot, AbortController, AbortSignal, Window, Interfaces
-} from '../dom'
 import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
-import { BoundaryPoint } from '../dom/interfaces'
+import { 
+  Document, DOMImplementation, Window, XMLDocument, AbortController, 
+  AbortSignal, DocumentType, Element, DocumentFragment, ShadowRoot, Attr, Text, 
+  CDATASection, Comment, ProcessingInstruction, Node, HTMLCollection, NodeList, 
+  NamedNodeMap, BoundaryPoint, Range, NodeIterator, TreeWalker, NodeFilter, 
+  MutationRecord, DOMTokenList
+} from '../dom/interfaces'
+import { DOMImplementationImpl } from '../dom/DOMImplementationImpl'
+import { WindowImpl } from '../dom/WindowImpl'
+import { XMLDocumentImpl } from '../dom/XMLDocumentImpl'
+import { DocumentImpl } from '../dom/DocumentImpl'
+import { AbortControllerImpl } from '../dom/AbortControllerImpl'
+import { AbortSignalImpl } from '../dom/AbortSignalImpl'
+import { DocumentTypeImpl } from '../dom/DocumentTypeImpl'
+import { ElementImpl } from '../dom/ElementImpl'
+import { DocumentFragmentImpl } from '../dom/DocumentFragmentImpl'
+import { ShadowRootImpl } from '../dom/ShadowRootImpl'
+import { AttrImpl } from '../dom/AttrImpl'
+import { TextImpl } from '../dom/TextImpl'
+import { CDATASectionImpl } from '../dom/CDATASectionImpl'
+import { CommentImpl } from '../dom/CommentImpl'
+import { ProcessingInstructionImpl } from '../dom/ProcessingInstructionImpl'
+import { HTMLCollectionImpl } from '../dom/HTMLCollectionImpl'
+import { NodeListImpl } from '../dom/NodeListImpl'
+import { NodeListStaticImpl } from '../dom/NodeListStaticImpl'
+import { NamedNodeMapImpl } from '../dom/NamedNodeMapImpl'
+import { RangeImpl } from '../dom/RangeImpl'
+import { NodeIteratorImpl } from '../dom/NodeIteratorImpl'
+import { TreeWalkerImpl } from '../dom/TreeWalkerImpl'
+import { NodeFilterImpl } from '../dom/NodeFilterImpl'
+import { MutationRecordImpl } from '../dom/MutationRecordImpl'
+import { DOMTokenListImpl } from '../dom/DOMTokenListImpl'
 
 /** 
  * Creates a `DOMImplementation`.
  * 
  * @param document - associated document
  */
-export function create_domImplementation(document: Interfaces.Document): DOMImplementation {
-  return DOMImplementation._create(document)
+export function create_domImplementation(document: Document): DOMImplementation {
+  return DOMImplementationImpl._create(document)
 }
 
 /** 
  * Creates a `Window` node.
  */
 export function create_window(): Window {
-  return Window._create()
+  return WindowImpl._create()
 }
 
 /** 
  * Creates an `XMLDocument` node.
  */
 export function create_xmlDocument(): XMLDocument {
-  return new XMLDocument()
+  return new XMLDocumentImpl()
 }
 
 /** 
  * Creates a `Document` node.
  */
 export function create_document(): Document {
-  return new Document()
+  return new DocumentImpl()
 }
 
 /** 
  * Creates an `AbortController`.
  */
 export function create_abortController(): AbortController {
-  return new AbortController()
+  return new AbortControllerImpl()
 }
 
 /** 
  * Creates an `AbortSignal`.
  */
 export function create_abortSignal(): AbortSignal {
-  return AbortSignal._create()
+  return AbortSignalImpl._create()
 }
 
 /** 
@@ -61,9 +84,9 @@ export function create_abortSignal(): AbortSignal {
  * @param publicId - `PUBLIC` identifier
  * @param systemId - `SYSTEM` identifier
  */
-export function create_documentType(document: Interfaces.Document, name: string, publicId: string = '',
+export function create_documentType(document: Document, name: string, publicId: string = '',
   systemId: string = ''): DocumentType {
-  return DocumentType._create(document, name, publicId, systemId)
+  return DocumentTypeImpl._create(document, name, publicId, systemId)
 }
 
 /**
@@ -74,9 +97,9 @@ export function create_documentType(document: Interfaces.Document, name: string,
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_element(document: Interfaces.Document, localName: string, namespace: string | null = null,
-  prefix: string | null = null): Interfaces.Element {
-  return Element._create(document, localName, namespace, prefix)
+export function create_element(document: Document, localName: string, namespace: string | null = null,
+  prefix: string | null = null): Element {
+  return ElementImpl._create(document, localName, namespace, prefix)
 }
 
 /**
@@ -87,10 +110,10 @@ export function create_element(document: Interfaces.Document, localName: string,
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_htmlElement(document: Interfaces.Document, localName: string, namespace: string | null = null,
+export function create_htmlElement(document: Document, localName: string, namespace: string | null = null,
   prefix: string | null = null): Element {
   // TODO: Implement in HTML DOM
-  return Element._create(document, localName, namespace, prefix)
+  return ElementImpl._create(document, localName, namespace, prefix)
 }  
 
 /**
@@ -101,10 +124,10 @@ export function create_htmlElement(document: Interfaces.Document, localName: str
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_htmlUnknownElement(document: Interfaces.Document, localName: string, namespace: string | null = null,
+export function create_htmlUnknownElement(document: Document, localName: string, namespace: string | null = null,
   prefix: string | null = null): Element {
   // TODO: Implement in HTML DOM
-  return Element._create(document, localName, namespace, prefix)
+  return ElementImpl._create(document, localName, namespace, prefix)
 }
 
 /**
@@ -112,8 +135,8 @@ export function create_htmlUnknownElement(document: Interfaces.Document, localNa
  * 
  * @param document - owner document
  */
-export function create_documentFragment(document: Interfaces.Document): DocumentFragment {
-  return DocumentFragment._create(document)
+export function create_documentFragment(document: Document): DocumentFragment {
+  return DocumentFragmentImpl._create(document)
 }
 
 /**
@@ -122,8 +145,8 @@ export function create_documentFragment(document: Interfaces.Document): Document
  * @param document - owner document
  * @param host - shadow root's host element node
  */
-export function create_shadowRoot(document: Interfaces.Document, host: Element): ShadowRoot {
-  return ShadowRoot._create(document, host)
+export function create_shadowRoot(document: Document, host: Element): ShadowRoot {
+  return ShadowRootImpl._create(document, host)
 }
 
 /**
@@ -132,8 +155,8 @@ export function create_shadowRoot(document: Interfaces.Document, host: Element):
  * @param document - owner document
  * @param localName - local name
  */
-export function create_attr(document: Interfaces.Document, localName: string): Attr {
-  return Attr._create(document, localName)
+export function create_attr(document: Document, localName: string): Attr {
+  return AttrImpl._create(document, localName)
 }
 
 /**
@@ -142,8 +165,8 @@ export function create_attr(document: Interfaces.Document, localName: string): A
  * @param document - owner document
  * @param data - node contents
  */
-export function create_text(document: Interfaces.Document, data: string = ''): Text {
-  return Text._create(document, data)
+export function create_text(document: Document, data: string = ''): Text {
+  return TextImpl._create(document, data)
 }
 
 /**
@@ -152,8 +175,8 @@ export function create_text(document: Interfaces.Document, data: string = ''): T
  * @param document - owner document
  * @param data - node contents
  */
-export function create_cdataSection(document: Interfaces.Document, data: string = ''): CDATASection {
-  return CDATASection._create(document, data)
+export function create_cdataSection(document: Document, data: string = ''): CDATASection {
+  return CDATASectionImpl._create(document, data)
 }
 
 /**
@@ -162,8 +185,8 @@ export function create_cdataSection(document: Interfaces.Document, data: string 
  * @param document - owner document
  * @param data - node contents
  */
-export function create_comment(document: Interfaces.Document, data: string = ''): Comment {
-  return Comment._create(document, data)
+export function create_comment(document: Document, data: string = ''): Comment {
+  return CommentImpl._create(document, data)
 }
 
 /**
@@ -173,9 +196,9 @@ export function create_comment(document: Interfaces.Document, data: string = '')
  * @param target - instruction target
  * @param data - node contents
  */
-export function create_processingInstruction(document: Interfaces.Document, target: string,
+export function create_processingInstruction(document: Document, target: string,
   data: string = ''): ProcessingInstruction {
-  return ProcessingInstruction._create(document, target, data)
+  return ProcessingInstructionImpl._create(document, target, data)
 }
 
 /**
@@ -184,9 +207,9 @@ export function create_processingInstruction(document: Interfaces.Document, targ
  * @param root - root node
  * @param filter - node filter
  */
-export function create_htmlCollection(root: Interfaces.Node,
-  filter: ((element: Interfaces.Element) => any) = (() => true)): HTMLCollection {
-  return HTMLCollection._create(root, filter)
+export function create_htmlCollection(root: Node,
+  filter: ((element: Element) => any) = (() => true)): HTMLCollection {
+  return HTMLCollectionImpl._create(root, filter)
 }
 
 /**
@@ -194,8 +217,8 @@ export function create_htmlCollection(root: Interfaces.Node,
  * 
  * @param root - root node
  */
-export function create_nodeList(root: Interfaces.Node): NodeList {
-  return NodeList._create(root)
+export function create_nodeList(root: Node): NodeList {
+  return NodeListImpl._create(root)
 }
 
 /**
@@ -204,8 +227,8 @@ export function create_nodeList(root: Interfaces.Node): NodeList {
  * @param root - root node
  * @param items - a list of items to initialize the list
  */
-export function create_nodeListStatic(root: Interfaces.Node, items: Interfaces.Node[]): NodeList {
-  return NodeListStatic._create(root, items)
+export function create_nodeListStatic(root: Node, items: Node[]): NodeList {
+  return NodeListStaticImpl._create(root, items)
 }
 
 /**
@@ -213,8 +236,8 @@ export function create_nodeListStatic(root: Interfaces.Node, items: Interfaces.N
  * 
  * @param element - parent element
  */
-export function create_namedNodeMap(element: Interfaces.Element): NamedNodeMap {
-  return NamedNodeMap._create(element)
+export function create_namedNodeMap(element: Element): NamedNodeMap {
+  return NamedNodeMapImpl._create(element)
 }
 
 /**
@@ -223,8 +246,8 @@ export function create_namedNodeMap(element: Interfaces.Element): NamedNodeMap {
  * @param start - start point
  * @param end - end point
  */
-export function create_range(start?: Interfaces.BoundaryPoint, end?: Interfaces.BoundaryPoint): Range {
-  return Range._create(start, end)
+export function create_range(start?: BoundaryPoint, end?: BoundaryPoint): Range {
+  return RangeImpl._create(start, end)
 }
 
 /**
@@ -235,9 +258,9 @@ export function create_range(start?: Interfaces.BoundaryPoint, end?: Interfaces.
  * @param pointerBeforeReference - whether the iterator is before or after the
  * reference node 
  */
-export function create_nodeIterator(root: Interfaces.Node, reference: Interfaces.Node,
+export function create_nodeIterator(root: Node, reference: Node,
   pointerBeforeReference: boolean): NodeIterator {
-  return NodeIterator._create(root, reference, pointerBeforeReference)
+  return NodeIteratorImpl._create(root, reference, pointerBeforeReference)
 }
 
 /**
@@ -246,15 +269,15 @@ export function create_nodeIterator(root: Interfaces.Node, reference: Interfaces
  * @param root - iterator's root node
  * @param current - current node
  */
-export function create_treeWalker(root: Interfaces.Node, current: Interfaces.Node): TreeWalker {
-  return TreeWalker._create(root, current)
+export function create_treeWalker(root: Node, current: Node): TreeWalker {
+  return TreeWalkerImpl._create(root, current)
 }
 
 /**
  * Creates a new `NodeFilter`.
  */
 export function create_nodeFilter(): NodeFilter {
-  return NodeFilter._create()
+  return NodeFilterImpl._create()
 }
 
 /**
@@ -277,12 +300,12 @@ export function create_nodeFilter(): NodeFilter {
  * for a mutation to the tree of nodes.
  */
 export function create_mutationRecord(type: "attributes" | "characterData" | "childList",
-  target: Interfaces.Node, addedNodes: Interfaces.NodeList,
-  removedNodes: Interfaces.NodeList, previousSibling: Interfaces.Node | null,
-  nextSibling: Interfaces.Node | null, attributeName: string | null,
+  target: Node, addedNodes: NodeList,
+  removedNodes: NodeList, previousSibling: Node | null,
+  nextSibling: Node | null, attributeName: string | null,
   attributeNamespace: string | null, oldValue: string | null): MutationRecord {
 
-  return MutationRecord._create(type, target, addedNodes, removedNodes,
+  return MutationRecordImpl._create(type, target, addedNodes, removedNodes,
     previousSibling, nextSibling, attributeName, attributeNamespace, oldValue)
 }
 
@@ -292,9 +315,9 @@ export function create_mutationRecord(type: "attributes" | "characterData" | "ch
  * @param element - associated element
  * @param attribute - associated attribute
  */
-export function create_domTokenList(element: Interfaces.Element, 
-  attribute: Interfaces.Attr): DOMTokenList {
-  return DOMTokenList._create(element, attribute)
+export function create_domTokenList(element: Element, 
+  attribute: Attr): DOMTokenList {
+  return DOMTokenListImpl._create(element, attribute)
 }
 
 /** 
