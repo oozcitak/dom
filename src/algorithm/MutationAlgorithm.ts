@@ -274,35 +274,33 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * 7.2. Otherwise, insert node into parent’s children before child’s
      * index.
      */
-    if (!parent._children.has(node)) {
-      node._parent = parent
-      if (child === null) {
-        infraSet.append(parent._children, node)
-      } else {
-        infraSet.insert(parent._children, node, index)
-        index++
-      }
+    node._parent = parent
+    if (child === null) {
+      infraSet.append(parent._children, node)
+    } else {
+      infraSet.insert(parent._children, node, index)
+      index++
+    }
 
-      // assign siblings and children for quick lookups
-      if (parent._firstChild === null) {
-        node._previousSibling = null
-        node._nextSibling = null
+    // assign siblings and children for quick lookups
+    if (parent._firstChild === null) {
+      node._previousSibling = null
+      node._nextSibling = null
 
-        parent._firstChild = node
-        parent._lastChild = node
-      } else {
-        const prev = (child ? child._previousSibling : parent._lastChild)
-        const next = (child ? child : null)
+      parent._firstChild = node
+      parent._lastChild = node
+    } else {
+      const prev = (child ? child._previousSibling : parent._lastChild)
+      const next = (child ? child : null)
 
-        node._previousSibling = prev
-        node._nextSibling = next
+      node._previousSibling = prev
+      node._nextSibling = next
 
-        if (prev) prev._nextSibling = node
-        if (next) next._previousSibling = node
+      if (prev) prev._nextSibling = node
+      if (next) next._previousSibling = node
 
-        if (!prev) parent._firstChild = node
-        if (!next) parent._lastChild = node
-      }
+      if (!prev) parent._firstChild = node
+      if (!next) parent._lastChild = node
     }
 
     /**

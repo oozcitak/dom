@@ -1,14 +1,14 @@
 {
   "1.0.0": {
-    "createDocument + createElement + appendChild": {
-      "xmldom": 111379.19409198817,
-      "dom": 16656.970945128516,
-      "jsdom": 1604.9832706363084
-    },
     "parser": {
-      "xmldom": 39228.01619949279,
-      "dom": 24747.700693559822,
-      "jsdom": 3201.857591262596
+      "xmldom": 38107.79398375268,
+      "dom": 24167.539567679054,
+      "jsdom": 3208.603705931264
+    },
+    "createDocument + createElement + appendChild": {
+      "xmldom": 107000.16012796093,
+      "dom": 16919.095299837572,
+      "jsdom": 1625.5921309655998
     }
   }
 }
