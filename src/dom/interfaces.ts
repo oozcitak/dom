@@ -335,7 +335,7 @@ export interface EventTarget {
   dispatchEvent(event: Event): boolean
 
   _eventListenerList: EventListenerEntry[]
-  _eventHandlerMap: Map<string, EventHandlerEntry>
+  _eventHandlerMap: { [key: string]: EventHandlerEntry }
 
   /**
    * Gets the parent event target for the given event.

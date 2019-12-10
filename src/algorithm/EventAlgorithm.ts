@@ -956,7 +956,7 @@ export function event_setterEventHandlerIDLAttribute(thisObj: EventTarget,
     event_deactivateAnEventHandler(eventTarget, name)
   } else {
     const handlerMap = eventTarget._eventHandlerMap
-    const eventHandler = handlerMap.get("onabort")
+    const eventHandler = handlerMap["onabort"]
     if (eventHandler !== undefined) {
       eventHandler.value = value
     }

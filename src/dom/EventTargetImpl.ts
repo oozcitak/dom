@@ -13,7 +13,7 @@ import { event_dispatch } from '../algorithm/EventAlgorithm'
 export abstract class EventTargetImpl implements EventTarget {
 
   _eventListenerList: EventListenerEntry[] = []
-  _eventHandlerMap: Map<string, EventHandlerEntry> = new Map()
+  _eventHandlerMap: { [key: string]: EventHandlerEntry } = { }
 
   /**
    * Initializes a new instance of `EventTarget`.
