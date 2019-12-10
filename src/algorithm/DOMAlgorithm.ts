@@ -1,5 +1,8 @@
-import { Event, Node, Document, Element, NodeIterator } from "../dom/interfaces"
-import { tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf, tree_getDescendantElements } from "./TreeAlgorithm"
+import { dom } from "../"
+import { Event, Node, Document, Element, NodeIterator, Slot } from "../dom/interfaces"
+import { tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf, tree_getDescendantElements, tree_rootNode } from "./TreeAlgorithm"
+import { Guard } from "../util"
+import { shadowTree_assignSlotablesForATree, shadowTree_isAssigned, shadowTree_assignSlotables, shadowTree_assignASlot } from "./ShadowTreeAlgorithm"
 
 const supportedTokens = new Map()
 
@@ -48,6 +51,15 @@ export function dom_runAdoptingSteps(node: Node, oldDocument: Document): void {
 export function dom_runAttributeChangeSteps(element: Element, localName: string, 
   oldValue: string | null, value: string | null,
   namespace: string | null): void {
+
+  // run default steps
+  if (dom.features.slots) {
+    updateASlotablesName.call(element, element, localName, oldValue, value, namespace)
+    updateASlotsName.call(element, element, localName, oldValue, value, namespace)
+  }
+  updateAnElementID.call(element, element, localName, oldValue, value, namespace)
+
+  // run custom steps
   for (const attributeChangeStep of element._attributeChangeSteps) {
     attributeChangeStep.call(element, element, localName, oldValue, value, namespace)
   }
@@ -170,5 +182,90 @@ function removeNodeIterator(nodeIterator: NodeIterator,
       // loop through to get the last descendant node
     }
     nodeIterator._reference = childNode
+  }
+}
+
+/**
+ * Defines attribute change steps to update a slot’s name.
+ */
+function updateASlotsName(element: Element, localName: string,
+  oldValue: string | null, value: string | null, namespace: string | null): void {
+  /**
+   * 1. If element is a slot, localName is name, and namespace is null, then:
+   * 1.1. If value is oldValue, then return.
+   * 1.2. If value is null and oldValue is the empty string, then return.
+   * 1.3. If value is the empty string and oldValue is null, then return.
+   * 1.4. If value is null or the empty string, then set element’s name to the
+   * empty string.
+   * 1.5. Otherwise, set element’s name to value.
+   * 1.6. Run assign slotables for a tree with element’s root.
+   */
+  if (Guard.isSlot(element) && localName === "name" && namespace === null) {
+    if (value === oldValue) return
+    if (value === null && oldValue === '') return
+    if (value === '' && oldValue === null) return
+
+    if ((value === null || value === '')) {
+      element._name = ''
+    } else {
+      element._name = value
+    }
+
+    shadowTree_assignSlotablesForATree(tree_rootNode(element))
+  }
+}
+
+/**
+ * Defines attribute change steps to update a slotable’s name.
+ */
+function updateASlotablesName(element: Element, localName: string,
+  oldValue: string | null, value: string | null, namespace: string | null): void {  
+  /**
+   * 1. If localName is slot and namespace is null, then:
+   * 1.1. If value is oldValue, then return.
+   * 1.2. If value is null and oldValue is the empty string, then return.
+   * 1.3. If value is the empty string and oldValue is null, then return.
+   * 1.4. If value is null or the empty string, then set element’s name to 
+   * the empty string.
+   * 1.5. Otherwise, set element’s name to value.
+   * 1.6. If element is assigned, then run assign slotables for element’s 
+   * assigned slot.
+   * 1.7. Run assign a slot for element.
+   */
+  if (Guard.isSlotable(element) && localName === "slot" && namespace === null) {
+    if (value === oldValue) return
+    if (value === null && oldValue === '') return
+    if (value === '' && oldValue === null) return
+
+    if ((value === null || value === '')) {
+      element._name = ''
+    } else {
+      element._name = value
+    }
+
+    if (shadowTree_isAssigned(element)) {
+      shadowTree_assignSlotables(element._assignedSlot as Slot)
+    }
+
+    shadowTree_assignASlot(element)
+  }
+}
+
+/**
+ * Defines attribute change steps to update an element's ID.
+ */
+function updateAnElementID(element: Element, localName: string,
+  oldValue: string | null, value: string | null, namespace: string | null): void {
+  /**
+   * 1. If localName is id, namespace is null, and value is null or the empty
+   * string, then unset element’s ID.
+   * 2. Otherwise, if localName is id, namespace is null, then set element’s
+   * ID to value.
+   */
+  if (localName === "id" && namespace === null) {
+    if (!value)
+      element._uniqueIdentifier = undefined
+    else
+      element._uniqueIdentifier = value
   }
 }

@@ -115,7 +115,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * 5. Set attribute’s element to element.
    */
   infraList.append(
-    (element._attributeList as NamedNodeMap)._attributeList, attribute)
+    element._attributeList._attributeList, attribute)
   attribute._element = element
 }
 
@@ -163,7 +163,7 @@ export function element_remove(attribute: Attr, element: Element): void {
    * 5. Set attribute’s element to null.
    */
   infraList.remove(
-    (element._attributeList as NamedNodeMap)._attributeList, attribute)
+    element._attributeList._attributeList, attribute)
   attribute._element = null
 }
 
@@ -213,9 +213,7 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * 5. Set oldAttr’s element to null.
    * 6. Set newAttr’s element to element.
    */
-  infraList.replace(
-    (element._attributeList as NamedNodeMap)._attributeList,
-    oldAttr, newAttr)
+  infraList.replace(element._attributeList._attributeList, oldAttr, newAttr)
   oldAttr._element = null
   newAttr._element = element
 }

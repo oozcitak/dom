@@ -50,11 +50,7 @@ export class ElementImpl extends NodeImpl implements Element {
   constructor() {
     super()
 
-    this._attributeList = create_namedNodeMap(this)
-    
-    this._attributeChangeSteps.push(ElementImpl._updateASlotablesName)
-    this._attributeChangeSteps.push(ElementImpl._updateASlotsName)
-    this._attributeChangeSteps.push(ElementImpl._updateAnElementID)
+    this._attributeList = create_namedNodeMap(this)    
   }
 
   /** @inheritdoc */
@@ -104,8 +100,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
   /** @inheritdoc */
   hasAttributes(): boolean {
-    return !infraList.isEmpty(
-      (this._attributeList as NamedNodeMap)._attributeList)
+    return !infraList.isEmpty(this._attributeList._attributeList)
   }
 
   /** @inheritdoc */
@@ -617,97 +612,6 @@ export class ElementImpl extends NodeImpl implements Element {
   // MIXIN: Slotable
   /* istanbul ignore next */
   get assignedSlot(): HTMLSlotElement | null { throw new Error("Mixin: Slotable not implemented.") }
-
-  /**
-   * Defines attribute change steps to update a slot’s name.
-   */
-  private static _updateASlotsName(element: Element, localName: string,
-    oldValue: string | null, value: string | null, namespace: string | null): void {
-
-    if (!dom.features.slots) return
-
-    /**
-     * 1. If element is a slot, localName is name, and namespace is null, then:
-     * 1.1. If value is oldValue, then return.
-     * 1.2. If value is null and oldValue is the empty string, then return.
-     * 1.3. If value is the empty string and oldValue is null, then return.
-     * 1.4. If value is null or the empty string, then set element’s name to the
-     * empty string.
-     * 1.5. Otherwise, set element’s name to value.
-     * 1.6. Run assign slotables for a tree with element’s root.
-     */
-    if (Guard.isSlot(element) && localName === "name" && namespace === null) {
-      if (value === oldValue) return
-      if (value === null && oldValue === '') return
-      if (value === '' && oldValue === null) return
-
-      if ((value === null || value === '')) {
-        element._name = ''
-      } else {
-        element._name = value
-      }
-
-      shadowTree_assignSlotablesForATree(tree_rootNode(element))
-    }
-  }
-
-  /**
-   * Defines attribute change steps to update a slotable’s name.
-   */
-  private static _updateASlotablesName(element: Element, localName: string,
-    oldValue: string | null, value: string | null, namespace: string | null): void {
-
-    if (!dom.features.slots) return
-    
-    /**
-     * 1. If localName is slot and namespace is null, then:
-     * 1.1. If value is oldValue, then return.
-     * 1.2. If value is null and oldValue is the empty string, then return.
-     * 1.3. If value is the empty string and oldValue is null, then return.
-     * 1.4. If value is null or the empty string, then set element’s name to 
-     * the empty string.
-     * 1.5. Otherwise, set element’s name to value.
-     * 1.6. If element is assigned, then run assign slotables for element’s 
-     * assigned slot.
-     * 1.7. Run assign a slot for element.
-     */
-    if (Guard.isSlotable(element) && localName === "slot" && namespace === null) {
-      if (value === oldValue) return
-      if (value === null && oldValue === '') return
-      if (value === '' && oldValue === null) return
-
-      if ((value === null || value === '')) {
-        element._name = ''
-      } else {
-        element._name = value
-      }
-
-      if (shadowTree_isAssigned(element)) {
-        shadowTree_assignSlotables(element._assignedSlot as Slot)
-      }
-
-      shadowTree_assignASlot(element)
-    }
-  }
-
-  /**
-   * Defines attribute change steps to update an element's ID.
-   */
-  private static _updateAnElementID(element: Element, localName: string,
-    oldValue: string | null, value: string | null, namespace: string | null): void {
-    /**
-     * 1. If localName is id, namespace is null, and value is null or the empty
-     * string, then unset element’s ID.
-     * 2. Otherwise, if localName is id, namespace is null, then set element’s
-     * ID to value.
-     */
-    if (localName === "id" && namespace === null) {
-      if (!value)
-        element._uniqueIdentifier = undefined
-      else
-        element._uniqueIdentifier = value
-    }
-  }
 
   /**
    * Creates a new `Element`.
