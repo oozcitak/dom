@@ -1,7 +1,6 @@
 import {
   EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem, Event
 } from './interfaces'
-import { globalStore } from '../util'
 import { event_setTheCanceledFlag, event_initialize } from '../algorithm/EventAlgorithm'
 
 /**

@@ -1,5 +1,6 @@
+import { dom } from '../'
 import { Slotable, Slot, Element, ShadowRoot, Node } from '../dom/interfaces'
-import { globalStore, Cast, Guard } from '../util'
+import { Cast, Guard } from '../util'
 import { isEmpty } from '@oozcitak/util'
 import { tree_rootNode, tree_getDescendantElements, tree_getDescendantNodes } from './TreeAlgorithm'
 import { observer_queueAMutationObserverMicrotask } from './MutationObserverAlgorithm'
@@ -14,7 +15,7 @@ export function shadowTree_signalASlotChange(slot: Slot): void {
    * 1. Append slot to slot’s relevant agent’s signal slots.
    * 2. Queue a mutation observer microtask.
    */
-  const window = globalStore.dom.window
+  const window = dom.window
   window._signalSlots.add(slot)
   observer_queueAMutationObserverMicrotask()
 }

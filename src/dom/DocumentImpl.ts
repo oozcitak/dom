@@ -1,3 +1,4 @@
+import { dom } from '../'
 import {
   DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
   HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
@@ -8,7 +9,7 @@ import {
   NotSupportedError, InvalidCharacterError, HierarchyRequestError 
 } from './DOMException'
 import { NodeImpl } from './NodeImpl'
-import { globalStore, Guard } from '../util'
+import { Guard } from '../util'
 import { isFunction, isString } from '@oozcitak/util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
@@ -446,7 +447,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     if (event.type === "load") {
       return null
     } else {
-      return globalStore.dom.window
+      return dom.window
     }
   }
 

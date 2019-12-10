@@ -1,3 +1,4 @@
+import { dom } from '../'
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node, Document,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
@@ -8,7 +9,7 @@ import {
   InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
 } from './DOMException'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { globalStore, Guard } from '../util'
+import { Guard } from '../util'
 import { create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot, create_text } from '../algorithm/CreateAlgorithm'
 import { customElement_isValidCustomElementName, customElement_isValidShadowHostName, customElement_lookUpACustomElementDefinition } from '../algorithm/CustomElementAlgorithm'
 import { tree_rootNode } from '../algorithm/TreeAlgorithm'
@@ -51,7 +52,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
     this._attributeList = create_namedNodeMap(this)
     
-    if (globalStore.dom.features.slots) {
+    if (dom.features.slots) {
       this._attributeChangeSteps.push(this._updateASlotablesName)
       this._attributeChangeSteps.push(this._updateASlotsName)
     }

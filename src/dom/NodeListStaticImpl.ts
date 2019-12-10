@@ -1,5 +1,5 @@
+import { dom } from '../'
 import { Node, NodeList } from "./interfaces"
-import { globalStore } from "../util"
 
 /**
  * Represents an ordered list of nodes.
@@ -117,7 +117,7 @@ export class NodeListStaticImpl implements NodeList {
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
     thisArg?: any): void {
     if (thisArg === undefined) {
-      thisArg = globalStore.dom.window
+      thisArg = dom.window
     }
 
     for (const [index, node] of this.entries()) {

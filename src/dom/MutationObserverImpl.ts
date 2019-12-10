@@ -1,7 +1,8 @@
+import { dom } from '../'
 import {
   Node, MutationObserverInit, MutationRecord, MutationCallback, MutationObserver
 } from "./interfaces"
-import { globalStore, Guard } from "../util"
+import { Guard } from "../util"
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
 
 /**
@@ -26,7 +27,7 @@ export class MutationObserverImpl implements MutationObserver {
      * 3. Return mo.
      */
     this._callback = callback
-    const window = globalStore.dom.window
+    const window = dom.window
     infraSet.append(window._mutationObservers, this)
   }
 

@@ -1,35 +1,5 @@
-import { ObjectCache, CompareCache } from "@oozcitak/util"
+import { ObjectCache } from "@oozcitak/util"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
-
-/**
- * Represents an object implementing DOM algorithms.
- */
-export interface DOM {
-  /**
-   * Gets DOM algorithms.
-   */
-  readonly features: DOMFeatures
-
-  /**
-   * Gets the DOM window.
-   */
-  readonly window: Window
-
-  /**
-   * Gets the DOM implementation.
-   */
-  readonly implementation: DOMImplementation
-
-  /**
-   * Gets the node compare cache.
-   */
-  readonly compareCache: CompareCache<Node>
-
-  /**
-   * Gets the global range list.
-   */
-  readonly rangeList: ObjectCache<Range>
-}
 
 /**
  * Defines DOM features supported by algorithms.

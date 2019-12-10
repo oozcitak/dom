@@ -1,6 +1,7 @@
+import { dom } from '../'
 import { HierarchyRequestError, NotFoundError } from '../dom/DOMException'
 import { NodeType, Node, Element } from '../dom/interfaces'
-import { Guard, globalStore } from '../util'
+import { Guard } from '../util'
 import { isEmpty } from '@oozcitak/util'
 import { set as infraSet } from '@oozcitak/infra'
 import { customElement_enqueueACustomElementCallbackReaction, customElement_tryToUpgrade } from './CustomElementAlgorithm'
@@ -217,9 +218,9 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * offset is greater than child's index, increase its end 
      * offset by count.
      */
-    if (globalStore.dom.rangeList.length !== 0) {
+    if (dom.rangeList.length !== 0) {
       const index = tree_index(child)
-      for (const range of globalStore.dom.rangeList) {
+      for (const range of dom.rangeList) {
         if (range._start[0] === parent && range._start[1] > index) {
           range._start[1] += count
         }
@@ -251,7 +252,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * 5. If node is a DocumentFragment node, then queue a tree mutation record 
    * for node with « », nodes, null, and null.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     if (node.nodeType === NodeType.DocumentFragment) {
       observer_queueTreeMutationRecord(node, [], nodes, null, null)
     }
@@ -308,7 +309,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * 7.3. If parent is a shadow host and node is a slotable, then 
      * assign a slot for node.
      */
-    if (globalStore.dom.features.slots) {
+    if (dom.features.slots) {
       if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
         shadowTree_assignASlot(node)
       }
@@ -327,7 +328,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * whose assigned nodes is the empty list, then run signal
      * a slot change for parent.
      */
-    if (globalStore.dom.features.slots) {
+    if (dom.features.slots) {
       if (Guard.isShadowRoot(tree_rootNode(parent)) &&
         Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
         shadowTree_signalASlotChange(parent)
@@ -337,7 +338,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     /**
      * 7.6. Run assign slotables for a tree with node's root.
      */
-    if (globalStore.dom.features.slots) {
+    if (dom.features.slots) {
       shadowTree_assignSlotablesForATree(tree_rootNode(node))
     }
 
@@ -352,7 +353,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
        */
       dom_runInsertionSteps(inclusiveDescendant)
 
-      if (globalStore.dom.features.customElements) {
+      if (dom.features.customElements) {
         /**
          * 7.7.2. If inclusiveDescendant is connected, then:
          */
@@ -381,7 +382,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * 8. If suppress observers flag is unset, then queue a tree mutation record
    * for parent with nodes, « », previousSibling, and child.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     if (!suppressObservers) {
       observer_queueTreeMutationRecord(parent, nodes, [],
         previousSibling, child)
@@ -580,7 +581,7 @@ export function mutation_replace(child: Node, node: Node,
    * 15. Queue a tree mutation record for parent with nodes, removedNodes, 
    * previousSibling, and reference child.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueTreeMutationRecord(parent, nodes, removedNodes,
       previousSibling, referenceChild)
   }
@@ -648,7 +649,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
    * 8. Queue a tree mutation record for parent with addedNodes, removedNodes, 
    * null, and null.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueTreeMutationRecord(parent, addedNodes, removedNodes,
       null, null)
   }
@@ -685,7 +686,7 @@ export function mutation_preRemove(child: Node, parent: Node): Node {
  */
 export function mutation_remove(node: Node, parent: Node, suppressObservers?: boolean): void {
 
-  if (globalStore.dom.rangeList.length !== 0) {
+  if (dom.rangeList.length !== 0) {
     /**
      * 1. Let index be node’s index.
      */
@@ -697,7 +698,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
      * 3. For each live range whose end node is an inclusive descendant of 
      * node, set its end to (parent, index).
      */
-    for (const range of globalStore.dom.rangeList) {
+    for (const range of dom.rangeList) {
       if (tree_isDescendantOf(node, range._start[0], true)) {
         range._start = [parent, index]
       }
@@ -718,7 +719,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
      * 5. For each live range whose end node is parent and end offset is greater 
      * than index, decrease its end offset by 1.
      */
-    for (const range of globalStore.dom.rangeList) {
+    for (const range of dom.rangeList) {
       if (range._start[0] === parent && range._start[1] > index) {
         range._start[1] -= 1
       }
@@ -769,7 +770,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * 10. If node is assigned, then run assign slotables for node’s assigned 
    * slot.
    */
-  if (globalStore.dom.features.slots) {
+  if (dom.features.slots) {
     if (Guard.isSlotable(node) && node._assignedSlot !== null && shadowTree_isAssigned(node)) {
       shadowTree_assignSlotables(node._assignedSlot)
     }
@@ -780,7 +781,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * assigned nodes is the empty list, then run signal a slot change for 
    * parent.
    */
-  if (globalStore.dom.features.slots) {
+  if (dom.features.slots) {
     if (Guard.isShadowRoot(tree_rootNode(parent)) &&
       Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
       shadowTree_signalASlotChange(parent)
@@ -792,7 +793,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * 12.1. Run assign slotables for a tree with parent's root.
    * 12.2. Run assign slotables for a tree with node.
    */
-  if (globalStore.dom.features.slots) {
+  if (dom.features.slots) {
     let hasSlotDescendant = false
     for (const descendant of tree_getDescendantElements(node, true)) {
       if (Guard.isSlot(descendant)) {
@@ -816,7 +817,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * reaction with node, callback name "disconnectedCallback", 
    * and an empty argument list.
    */
-  if (globalStore.dom.features.customElements) {
+  if (dom.features.customElements) {
     if (Guard.isCustomElementNode(node)) {
       customElement_enqueueACustomElementCallbackReaction(
         node, "disconnectedCallback", [])
@@ -838,7 +839,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
      * callback reaction with descendant, callback name 
      * "disconnectedCallback", and an empty argument list.
      */
-    if (globalStore.dom.features.customElements) {
+    if (dom.features.customElements) {
       if (Guard.isCustomElementNode(descendant)) {
         customElement_enqueueACustomElementCallbackReaction(
           descendant, "disconnectedCallback", [])
@@ -855,7 +856,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * options, and source is registered to node's registered
    * observer list.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     for (const inclusiveAncestor of tree_getAncestorNodes(parent, true)) {
       for (const registered of inclusiveAncestor._registeredObserverList) {
         if (registered.options.subtree) {
@@ -874,7 +875,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * record for parent with « », « node », oldPreviousSibling, and 
    * oldNextSibling.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     if (!suppressObservers) {
       observer_queueTreeMutationRecord(parent, [], [node],
         oldPreviousSibling, oldNextSibling)

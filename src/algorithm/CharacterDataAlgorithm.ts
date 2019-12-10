@@ -1,5 +1,6 @@
-import { CharacterData, Node } from '../dom/interfaces'
-import { Guard, globalStore } from '../util'
+import { dom } from '../'
+import { CharacterData } from '../dom/interfaces'
+import { Guard } from '../util'
 import { IndexSizeError } from '../dom/DOMException'
 import { tree_nodeLength } from './TreeAlgorithm'
 import { observer_queueMutationRecord } from './MutationObserverAlgorithm'
@@ -37,7 +38,7 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    * 4. Queue a mutation record of "characterData" for node with null, null, 
    * node’s data, « », « », null, and null.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueMutationRecord("characterData", node, null, null,
       node.data, [], [], null, null)
   }
@@ -66,7 +67,7 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    * than offset plus count, increase its end offset by data’s length and 
    * decrease it by count.
    */
-  for (const range of globalStore.dom.rangeList) {
+  for (const range of dom.rangeList) {
     if (range._start[0] === node && range._start[1] > offset && range._start[1] <= offset + count) {
       range._start[1] += offset
     }

@@ -1,5 +1,6 @@
+import { dom } from '../'
 import { Element, Document, Node } from '../dom/interfaces'
-import { Guard, globalStore } from '../util'
+import { Guard } from '../util'
 import { isString } from '@oozcitak/util'
 import { Element as ElementImpl } from '../dom'
 import { customElement_enqueueACustomElementCallbackReaction } from './CustomElementAlgorithm'
@@ -105,7 +106,7 @@ export function document_adopt(node: Node, document: Document): void {
        * callback name "adoptedCallback", and an argument list 
        * containing oldDocument and document.
        */
-      if (globalStore.dom.features.customElements) {
+      if (dom.features.customElements) {
         if (Guard.isElementNode(inclusiveDescendant) && 
           inclusiveDescendant._customElementState === "custom") {
           customElement_enqueueACustomElementCallbackReaction(

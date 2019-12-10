@@ -1,5 +1,6 @@
+import { dom } from '../'
 import { MutationRecord, MutationObserver, Node, Slot } from '../dom/interfaces'
-import { globalStore, Guard } from '../util'
+import { Guard } from '../util'
 import { list as infraList, set as infraSet } from '@oozcitak/infra'
 import { create_mutationRecord, create_nodeListStatic } from './CreateAlgorithm'
 import { tree_getAncestorNodes } from './TreeAlgorithm'
@@ -16,7 +17,7 @@ export function observer_queueAMutationObserverMicrotask(): void {
    * 2. Set the surrounding agent’s mutation observer microtask queued to true.
    * 3. Queue a microtask to notify mutation observers.
    */
-  const window = globalStore.dom.window
+  const window = dom.window
 
   if (window._mutationObserverMicrotaskQueued) return
   window._mutationObserverMicrotaskQueued = true
@@ -33,7 +34,7 @@ export function observer_notifyMutationObservers(): void {
    * 3. Let signalSet be a clone of the surrounding agent’s signal slots.
    * 4. Empty the surrounding agent’s signal slots.
    */
-  const window = globalStore.dom.window
+  const window = dom.window
 
   window._mutationObserverMicrotaskQueued = false
   const notifySet = infraSet.clone(window._mutationObservers)
@@ -75,7 +76,7 @@ export function observer_notifyMutationObservers(): void {
    * 6. For each slot of signalSet, fire an event named slotchange, with its 
    * bubbles attribute set to true, at slot.
    */
-  if (globalStore.dom.features.slots) {
+  if (dom.features.slots) {
     for (const slot of signalSet) {
       event_fireAnEvent("slotchange", slot as Slot, undefined, { bubbles: true })
     }

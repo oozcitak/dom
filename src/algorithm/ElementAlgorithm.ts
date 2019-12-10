@@ -1,6 +1,7 @@
+import { dom } from '../'
 import { Attr, Element, Document, NamedNodeMap, Node } from '../dom/interfaces'
 import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
-import { Guard, globalStore } from '../util'
+import { Guard } from '../util'
 import { SyntaxError, InUseAttributeError, NotSupportedError } from '../dom/DOMException'
 import { create_attr, create_element, create_htmlUnknownElement, create_htmlElement } from "./CreateAlgorithm"
 import { customElement_enqueueACustomElementCallbackReaction, customElement_lookUpACustomElementDefinition, customElement_upgrade, customElement_enqueueACustomElementUpgradeReaction, customElement_isValidCustomElementName } from './CustomElementAlgorithm'
@@ -38,7 +39,7 @@ export function element_change(attribute: Attr, element: Element, value: string)
    * 1. Queue an attribute mutation record for element with attribute’s 
    * local name, attribute’s namespace, and attribute’s value.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueAttributeMutationRecord(element,
       attribute._localName, attribute._namespace, attribute._value)
   }
@@ -49,7 +50,7 @@ export function element_change(attribute: Attr, element: Element, value: string)
    * list containing attribute’s local name, attribute’s value, value, and
    * attribute’s namespace.
    */
-  if (globalStore.dom.features.customElements) {
+  if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
         element, "attributeChangedCallback", 
@@ -79,7 +80,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * 1. Queue an attribute mutation record for element with attribute’s
    * local name, attribute’s namespace, and null.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueAttributeMutationRecord(element,
       attribute._localName, attribute._namespace, null)
   }
@@ -90,7 +91,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * list containing attribute’s local name, null, attribute’s value, and
    * attribute’s namespace.
    */
-  if (globalStore.dom.features.customElements) {
+  if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
         element, "attributeChangedCallback", 
@@ -125,7 +126,7 @@ export function element_remove(attribute: Attr, element: Element): void {
    * 1. Queue an attribute mutation record for element with attribute’s 
    * local name, attribute’s namespace, and attribute’s value.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueAttributeMutationRecord(element,
       attribute._localName, attribute._namespace, attribute._value)
   }
@@ -136,7 +137,7 @@ export function element_remove(attribute: Attr, element: Element): void {
    * list containing attribute’s local name, attribute’s value, null,
    * and attribute’s namespace.
    */
-  if (globalStore.dom.features.customElements) {
+  if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
         element, "attributeChangedCallback", 
@@ -173,7 +174,7 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * 1. Queue an attribute mutation record for element with oldAttr’s 
    * local name, oldAttr’s namespace, and oldAttr’s value.
    */
-  if (globalStore.dom.features.mutationObservers) {
+  if (dom.features.mutationObservers) {
     observer_queueAttributeMutationRecord(element,
       oldAttr._localName, oldAttr._namespace, oldAttr._value)
   }
@@ -184,7 +185,7 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * list containing oldAttr’s local name, oldAttr’s value, newAttr’s value, 
    * and oldAttr’s namespace.
    */
-  if (globalStore.dom.features.customElements) {
+  if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
         element, "attributeChangedCallback", 
@@ -422,7 +423,7 @@ export function element_createAnElement(document: Document, localName: string,
    */
   let result: Element | null = null
 
-  if (!globalStore.dom.features.customElements) {
+  if (!dom.features.customElements) {
     result = create_element(document, localName, namespace, prefix)
     result._customElementState = "uncustomized"
     result._customElementDefinition = null

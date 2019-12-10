@@ -1,5 +1,4 @@
 import { Node, NodeFilter, WhatToShow, Traverser } from "./interfaces"
-import { globalStore } from "../util"
 
 /**
  * Represents an object which can be used to iterate through the nodes

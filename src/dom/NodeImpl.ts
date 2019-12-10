@@ -1,10 +1,11 @@
+import { dom } from '../'
 import {
   Node, NodeList, Element, Document, NodeType, Text, Attr, Position,
   GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
   Event, EventTarget
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
-import { globalStore, Guard } from '../util'
+import { Guard } from '../util'
 import { NotSupportedError } from './DOMException'
 import { URLAlgorithm } from '@oozcitak/url'
 import { create_nodeList } from '../algorithm/CreateAlgorithm'
@@ -44,7 +45,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   protected _childNodes: NodeList
 
   private _nodeDocumentOverride: Document | undefined = undefined
-  get _nodeDocument(): Document { return this._nodeDocumentOverride || globalStore.dom.window._associatedDocument }
+  get _nodeDocument(): Document { return this._nodeDocumentOverride || dom.window._associatedDocument }
   set _nodeDocument(val: Document) { this._nodeDocumentOverride = val }
   _registeredObserverList:
     Array<RegisteredObserver | TransientRegisteredObserver> = []
@@ -351,7 +352,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 5. Let currentNode be node’s next sibling.
        * 6. While currentNode is an exclusive Text node:
        */
-      if (globalStore.dom.rangeList.length !== 0) {
+      if (dom.rangeList.length !== 0) {
         let currentNode = node._nextSibling
         while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
           /**
@@ -367,7 +368,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
            * end offset to length.
            */
           const index = tree_index(currentNode)
-          for (const range of globalStore.dom.rangeList) {
+          for (const range of dom.rangeList) {
             if (range._start[0] === currentNode) {
               range._start[0] = node
               range._start[1] += length
@@ -529,7 +530,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       // nodes are disconnected
       // return a random result but cache the value for consistency
       return Position.Disconnected | Position.ImplementationSpecific |
-        (globalStore.dom.compareCache.check(this, other) ? Position.Preceding : Position.Following)
+        (dom.compareCache.check(this, other) ? Position.Preceding : Position.Following)
     }
 
     /**

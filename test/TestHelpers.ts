@@ -1,5 +1,5 @@
 import dedent from "dedent"
-import { DOM } from '../src'
+import { dom } from '../src'
 import {
   AbortController, AbortSignal, Attr, CDATASection, 
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -135,16 +135,14 @@ export default class TestHelpers {
   static WhatToShow = WhatToShow
   static FilterResult = FilterResult
 
-  static domObject = new DOM()
-
   /**
    * Returns the window object.
    */
-  static window = TestHelpers.domObject.window
+  static window = dom.window
   /**
    * Returns the DOM implementation object.
    */
-  static dom = TestHelpers.domObject.implementation
+  static dom = dom.implementation
   /**
    * Returns the root element of a new document.
    */

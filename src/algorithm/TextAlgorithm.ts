@@ -1,5 +1,6 @@
+import { dom } from '../'
 import { Node, Text } from '../dom/interfaces'
-import { Guard, globalStore } from '../util'
+import { Guard } from '../util'
 import { IndexSizeError } from '../dom/DOMException'
 import { create_text } from './CreateAlgorithm'
 import { tree_getDescendantNodes, tree_index } from './TreeAlgorithm'
@@ -173,7 +174,7 @@ export function text_split(node: Text, offset: number): Text {
      * 7.5. For each live range whose end node is parent and end offset is equal
      * to the index of node plus 1, increase its end offset by 1.
      */
-    for (const range of globalStore.dom.rangeList) {
+    for (const range of dom.rangeList) {
       if (range._start[0] === node && range._start[1] > offset) {
         range._start[0] = newNode
         range._start[1] -= offset

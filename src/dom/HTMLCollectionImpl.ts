@@ -1,5 +1,4 @@
 import { Node, Element, HTMLCollection, Attr } from "./interfaces"
-import { globalStore } from "../util"
 import { namespace as infraNamespace } from '@oozcitak/infra'
 import { tree_getDescendantElements } from "../algorithm/TreeAlgorithm"
 

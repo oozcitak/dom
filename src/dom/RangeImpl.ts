@@ -1,3 +1,4 @@
+import { dom } from '../'
 import {
   Node, Range, BoundaryPosition, HowToCompare, DocumentFragment,
   BoundaryPoint
@@ -7,13 +8,13 @@ import {
   InvalidNodeTypeError, NotSupportedError, WrongDocumentError, 
   InvalidStateError, IndexSizeError 
 } from './DOMException'
-import { globalStore, Guard } from '../util'
 import { create_range } from '../algorithm/CreateAlgorithm'
 import { tree_isAncestorOf, tree_index, tree_nodeLength, tree_rootNode } from '../algorithm/TreeAlgorithm'
 import { boundaryPoint_position } from '../algorithm/BoundaryPointAlgorithm'
 import { characterData_replaceData } from '../algorithm/CharacterDataAlgorithm'
 import { range_setTheStart, range_setTheEnd, range_select, range_root, range_collapsed, range_getContainedNodes, range_isContained, range_extract, range_cloneTheContents, range_insert, range_getPartiallyContainedNodes } from '../algorithm/RangeAlgorithm'
 import { mutation_remove, mutation_replaceAll, mutation_append } from '../algorithm/MutationAlgorithm'
+import { Guard } from '../util'
 
 /**
  * Represents a live range.
@@ -38,11 +39,11 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The Range() constructor, when invoked, must return a new live range with
      * (current global object’s associated Document, 0) as its start and end.
      */
-    const doc = globalStore.dom.window._associatedDocument
+    const doc = dom.window._associatedDocument
     this._start = [doc, 0]
     this._end = [doc, 0]
 
-    globalStore.dom.rangeList.add(this)
+    dom.rangeList.add(this)
   }
 
   /** @inheritdoc */
@@ -471,7 +472,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 
      * since JS lacks weak references, we still use detach
      */
-    globalStore.dom.rangeList.remove(this)
+    dom.rangeList.remove(this)
   }
 
   /** @inheritdoc */
