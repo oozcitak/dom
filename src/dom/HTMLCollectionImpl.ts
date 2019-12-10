@@ -1,7 +1,7 @@
 import { Node, Element, HTMLCollection, Attr } from "./interfaces"
 import { globalStore } from "../util"
-import { DOMAlgorithm } from "../algorithm/interfaces"
 import { namespace as infraNamespace } from '@oozcitak/infra'
+import { tree_getDescendantElements } from "../algorithm/TreeAlgorithm"
 
 /**
  * Represents a collection of elements.
@@ -88,9 +88,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
 
   /** @inheritdoc */
   [Symbol.iterator](): Iterator<Element> {
-    const algo = globalStore.dom.algorithm
-
-    const it = algo.tree.getDescendantElements(this._root, false, false,
+    const it = tree_getDescendantElements(this._root, false, false,
       (ele) => { return !!this._filter(ele) })[Symbol.iterator]()
     let currentNode: Element | null = it.next().value
 

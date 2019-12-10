@@ -1,5 +1,4 @@
 import { ObjectCache, CompareCache } from "@oozcitak/util"
-import { AttributeChangeStep, DOMAlgorithm } from "../algorithm/interfaces"
 import { Interfaces as URLInterfaces } from "@oozcitak/url"
 
 /**
@@ -10,11 +9,6 @@ export interface DOM {
    * Gets DOM algorithms.
    */
   readonly features: DOMFeatures
-
-  /**
-   * Gets DOM algorithms.
-   */
-  readonly algorithm: DOMAlgorithm
 
   /**
    * Gets the DOM window.
@@ -30,6 +24,11 @@ export interface DOM {
    * Gets the node compare cache.
    */
   readonly compareCache: CompareCache<Node>
+
+  /**
+   * Gets the global range list.
+   */
+  readonly rangeList: ObjectCache<Range>
 }
 
 /**
@@ -66,7 +65,6 @@ export interface Window extends EventTarget {
   
   _associatedDocument: Document
   
-  _rangeList: ObjectCache<Range>
   _iteratorList: ObjectCache<NodeIterator>
 }
 
@@ -1386,10 +1384,10 @@ export interface Element extends Node, ParentNode,
   readonly _htmlUppercasedQualifiedName: string
   
   _attributeList: NamedNodeMap
+
+  _attributeChangeSteps: AttributeChangeStep[]
   
   _uniqueIdentifier?: string
-  
-  _attributeChangeSteps: AttributeChangeStep[]  
 }
 
 /**
@@ -2587,3 +2585,10 @@ export type CustomElementDefinition = {
   disableInternals: boolean
   disableShadow: boolean
 }
+
+/**
+ * Defines an attribute change step.
+ */
+export type AttributeChangeStep = ((element: Element,
+  localName: string, oldValue: string | null, value: string | null,
+  namespace: string | null) => any)

@@ -1,6 +1,6 @@
 import { Element, NonElementParentNode } from './interfaces'
-import { globalStore, Cast } from '../util'
-import { DOMAlgorithm } from '../algorithm/interfaces'
+import { Cast } from '../util'
+import { tree_getDescendantElements } from '../algorithm/TreeAlgorithm'
 
 /**
  * Represents a mixin that extends non-element parent nodes. This mixin
@@ -15,8 +15,7 @@ export class NonElementParentNodeImpl implements NonElementParentNode {
      * element, in tree order, within the context object’s descendants, 
      * whose ID is elementId, and null if there is no such element otherwise.
      */
-    const algo = globalStore.dom.algorithm
-    for (const ele of algo.tree.getDescendantElements(Cast.asNode(this))) {
+    for (const ele of tree_getDescendantElements(Cast.asNode(this))) {
       if (ele._uniqueIdentifier === id) {
         return ele
       }

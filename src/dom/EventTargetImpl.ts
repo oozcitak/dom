@@ -3,8 +3,9 @@ import {
   EventListenerOptions, EventListenerEntry, EventHandlerEntry
 } from './interfaces'
 import { InvalidStateError } from './DOMException'
-import { DOMAlgorithm } from '../algorithm/interfaces'
-import { globalStore, Guard } from '../util'
+import { Guard } from '../util'
+import { eventTarget_removeEventListener, eventTarget_flatten, eventTarget_flattenMore, eventTarget_addEventListener } from '../algorithm/EventTargetAlgorithm'
+import { event_dispatch } from '../algorithm/EventAlgorithm'
 
 /**
  * Represents a target to which an event can be dispatched.
@@ -14,14 +15,10 @@ export abstract class EventTargetImpl implements EventTarget {
   _eventListenerList: EventListenerEntry[] = []
   _eventHandlerMap: Map<string, EventHandlerEntry> = new Map()
 
-  protected _algo: DOMAlgorithm
-
   /**
    * Initializes a new instance of `EventTarget`.
    */
-  public constructor() {
-    this._algo = globalStore.dom.algorithm
-  }
+  public constructor() { }
 
   /** @inheritdoc */
   addEventListener(type: string,
@@ -31,7 +28,7 @@ export abstract class EventTargetImpl implements EventTarget {
     /**
      * 1. Let capture, passive, and once be the result of flattening more options.
      */
-    const [capture, passive, once] = this._algo.eventTarget.flattenMore(options)
+    const [capture, passive, once] = eventTarget_flattenMore(options)
 
     // convert callback function to EventListener, return if null
     let listenerCallback: EventListener
@@ -48,7 +45,7 @@ export abstract class EventTargetImpl implements EventTarget {
      * whose type is type, callback is callback, capture is capture, passive is
      * passive, and once is once.
      */
-    this._algo.eventTarget.addEventListener(this, {
+    eventTarget_addEventListener(this, {
       type: type,
       callback: listenerCallback,
       capture: capture,
@@ -74,7 +71,7 @@ export abstract class EventTargetImpl implements EventTarget {
     /**
      * 2. Let capture be the result of flattening options.
      */
-    const capture = this._algo.eventTarget.flatten(options)
+    const capture = eventTarget_flatten(options)
 
     if (!callback) return
 
@@ -87,10 +84,10 @@ export abstract class EventTargetImpl implements EventTarget {
     for (const entry of this._eventListenerList) {
       if (entry.type !== type || entry.capture !== capture) continue
       if (Guard.isEventListener(callback) && entry.callback === callback) {
-        this._algo.eventTarget.removeEventListener(this, entry, i)
+        eventTarget_removeEventListener(this, entry, i)
         break
       } else if (callback && entry.callback.handleEvent === callback) {
-        this._algo.eventTarget.removeEventListener(this, entry, i)
+        eventTarget_removeEventListener(this, entry, i)
         break
       }
       i++
@@ -110,7 +107,7 @@ export abstract class EventTargetImpl implements EventTarget {
     }
     event._isTrusted = false
 
-    return this._algo.event.dispatch(event, this)
+    return event_dispatch(event, this)
   }
 
   /** @inheritdoc */

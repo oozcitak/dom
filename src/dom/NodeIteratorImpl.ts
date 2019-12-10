@@ -1,5 +1,6 @@
 import { Node, NodeIterator, Collection } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
+import { nodeIterator_iteratorList, nodeIterator_traverse } from "../algorithm/NodeIteratorAlgorithm"
 
 /**
  * Represents an object which can be used to iterate through the nodes
@@ -21,7 +22,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
     this._reference = reference
     this._pointerBeforeReference = pointerBeforeReference
 
-    this._algo.nodeIterator.iteratorList.add(this)
+    nodeIterator_iteratorList().add(this)
   }
 
   /** @inheritdoc */
@@ -36,7 +37,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
      * The nextNode() method, when invoked, must return the result of 
      * traversing with the context object and next.
      */
-    return this._algo.nodeIterator.traverse(this, true)
+    return nodeIterator_traverse(this, true)
   }
 
   /** @inheritdoc */
@@ -45,7 +46,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
      * The previousNode() method, when invoked, must return the result of 
      * traversing with the context object and previous.
      */
-    return this._algo.nodeIterator.traverse(this, false)
+    return nodeIterator_traverse(this, false)
   }
 
   /** @inheritdoc */
@@ -55,7 +56,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
      * 
      * since JS lacks weak references, we still use detach
      */
-    this._algo.nodeIterator.iteratorList.remove(this)    
+    nodeIterator_iteratorList().remove(this)    
    }
 
 

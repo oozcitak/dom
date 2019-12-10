@@ -1,6 +1,7 @@
 import { Node, ChildNode } from './interfaces'
-import { globalStore, Cast } from '../util'
-import { DOMAlgorithm } from '../algorithm/interfaces'
+import { Cast } from '../util'
+import { parentNode_convertNodesIntoANode } from '../algorithm/ParentNodeAlgorithm'
+import { mutation_preInsert, mutation_replace, mutation_remove } from '../algorithm/MutationAlgorithm'
 
 /**
  * Represents a mixin that extends child nodes that can have siblings
@@ -15,7 +16,6 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (parent === null) return
@@ -41,7 +41,7 @@ export class ChildNodeImpl implements ChildNode {
      * 4. Let node be the result of converting nodes into a node, given nodes
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(nodes,
+    const node = parentNode_convertNodesIntoANode(nodes,
       context._nodeDocument)
 
     /**
@@ -56,7 +56,7 @@ export class ChildNodeImpl implements ChildNode {
     /**
      * 6. Pre-insert node into parent before viablePreviousSibling.
      */
-    algo.mutation.preInsert(node, parent, viablePreviousSibling)
+    mutation_preInsert(node, parent, viablePreviousSibling)
   }
 
   /** @inheritdoc */
@@ -66,7 +66,6 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context.parentNode
     if (!parent) return
@@ -92,13 +91,13 @@ export class ChildNodeImpl implements ChildNode {
      * 4. Let node be the result of converting nodes into a node, given nodes 
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(nodes,
+    const node = parentNode_convertNodesIntoANode(nodes,
       context._nodeDocument)
 
     /**
      * 5. Pre-insert node into parent before viableNextSibling.
      */
-    algo.mutation.preInsert(node, parent, viableNextSibling)
+    mutation_preInsert(node, parent, viableNextSibling)
   }
 
   /** @inheritdoc */
@@ -108,7 +107,6 @@ export class ChildNodeImpl implements ChildNode {
      * 1. Let parent be context object’s parent.
      * 2. If parent is null, then return.
      */
-    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (!parent) return
@@ -134,7 +132,7 @@ export class ChildNodeImpl implements ChildNode {
      * 4. Let node be the result of converting nodes into a node, given nodes 
      * and context object’s node document.
      */
-    const node = algo.parentNode.convertNodesIntoANode(nodes,
+    const node = parentNode_convertNodesIntoANode(nodes,
       context._nodeDocument)
 
     /**
@@ -144,9 +142,9 @@ export class ChildNodeImpl implements ChildNode {
      * 6. Otherwise, pre-insert node into parent before viableNextSibling.
      */
     if (context._parent === parent)
-      algo.mutation.replace(context, node, parent)
+      mutation_replace(context, node, parent)
     else
-      algo.mutation.preInsert(node, parent, viableNextSibling)
+      mutation_preInsert(node, parent, viableNextSibling)
   }
 
   /** @inheritdoc */
@@ -155,12 +153,11 @@ export class ChildNodeImpl implements ChildNode {
      * 1. If context object’s parent is null, then return.
      * 2. Remove the context object from context object’s parent.
      */
-    const algo = globalStore.dom.algorithm
     const context = Cast.asNode(this)
     const parent = context._parent
     if (!parent) return
 
-    algo.mutation.remove(context, parent)
+    mutation_remove(context, parent)
   }
 
 }

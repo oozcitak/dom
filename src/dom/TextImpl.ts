@@ -1,5 +1,6 @@
 import { NodeType, Text, HTMLSlotElement, Document, Slot } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
+import { text_contiguousTextNodes, text_split } from "../algorithm/TextAlgorithm"
 
 /**
  * Represents a text node.
@@ -28,7 +29,7 @@ export class TextImpl extends CharacterDataImpl implements Text {
      */
     let text = ''
 
-    for (const node of this._algo.text.contiguousTextNodes(this, true)) {
+    for (const node of text_contiguousTextNodes(this, true)) {
       text = text + node.data
     }
 
@@ -41,7 +42,7 @@ export class TextImpl extends CharacterDataImpl implements Text {
      * The splitText(offset) method, when invoked, must split context object
      * with offset offset.
      */
-    return this._algo.text.split(this, offset)
+    return text_split(this, offset)
   }
 
   // MIXIN: Slotable

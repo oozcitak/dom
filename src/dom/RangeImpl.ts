@@ -8,14 +8,17 @@ import {
   InvalidStateError, IndexSizeError 
 } from './DOMException'
 import { globalStore, Guard } from '../util'
-import { DOMAlgorithm } from '../algorithm/interfaces'
+import { create_range } from '../algorithm/CreateAlgorithm'
+import { tree_isAncestorOf, tree_index, tree_nodeLength, tree_rootNode } from '../algorithm/TreeAlgorithm'
+import { boundaryPoint_position } from '../algorithm/BoundaryPointAlgorithm'
+import { characterData_replaceData } from '../algorithm/CharacterDataAlgorithm'
+import { range_setTheStart, range_setTheEnd, range_select, range_root, range_collapsed, range_getContainedNodes, range_isContained, range_extract, range_cloneTheContents, range_insert, range_getPartiallyContainedNodes } from '../algorithm/RangeAlgorithm'
+import { mutation_remove, mutation_replaceAll, mutation_append } from '../algorithm/MutationAlgorithm'
 
 /**
  * Represents a live range.
  */
 export class RangeImpl extends AbstractRangeImpl implements Range {
-
-  protected _algo: DOMAlgorithm
 
   _start: BoundaryPoint
   _end: BoundaryPoint
@@ -35,14 +38,11 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The Range() constructor, when invoked, must return a new live range with
      * (current global object’s associated Document, 0) as its start and end.
      */
-    this._algo = globalStore.dom.algorithm
-
     const doc = globalStore.dom.window._associatedDocument
-
     this._start = [doc, 0]
     this._end = [doc, 0]
 
-    this._algo.range.rangeList.add(this)
+    globalStore.dom.rangeList.add(this)
   }
 
   /** @inheritdoc */
@@ -54,7 +54,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 3. Return container.
      */
     let container = this._start[0]
-    while(!this._algo.tree.isAncestorOf(this._end[0], container, true)) {
+    while(!tree_isAncestorOf(this._end[0], container, true)) {
       if (container._parent === null) {
         throw new Error("Parent node  is null.")
       }
@@ -70,7 +70,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The setStart(node, offset) method, when invoked, must set the start of
      * context object to boundary point (node, offset).
      */
-    this._algo.range.setTheStart(this, node, offset)
+    range_setTheStart(this, node, offset)
   }
 
   /** @inheritdoc */
@@ -79,7 +79,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The setEnd(node, offset) method, when invoked, must set the end of
      * context object to boundary point (node, offset).
      */
-    this._algo.range.setTheEnd(this, node, offset)
+    range_setTheEnd(this, node, offset)
   }
 
   /** @inheritdoc */
@@ -94,8 +94,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (parent === null)
       throw new InvalidNodeTypeError()
 
-    this._algo.range.setTheStart(this, parent,
-      this._algo.tree.index(node))
+    range_setTheStart(this, parent,
+      tree_index(node))
   }
 
   /** @inheritdoc */
@@ -110,8 +110,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (parent === null)
       throw new InvalidNodeTypeError()
 
-    this._algo.range.setTheStart(this, parent,
-      this._algo.tree.index(node) + 1)
+    range_setTheStart(this, parent,
+      tree_index(node) + 1)
   }
 
   /** @inheritdoc */
@@ -126,8 +126,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (parent === null)
       throw new InvalidNodeTypeError()
 
-    this._algo.range.setTheEnd(this, parent,
-      this._algo.tree.index(node))
+    range_setTheEnd(this, parent,
+      tree_index(node))
   }
 
   /** @inheritdoc */
@@ -142,8 +142,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (parent === null)
       throw new InvalidNodeTypeError()
 
-    this._algo.range.setTheEnd(this, parent,
-      this._algo.tree.index(node) + 1)
+    range_setTheEnd(this, parent,
+      tree_index(node) + 1)
   }
 
   /** @inheritdoc */
@@ -165,7 +165,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The selectNode(node) method, when invoked, must select node within 
      * context object.
      */
-    this._algo.range.select(node, this)
+    range_select(node, this)
   }
 
   /** @inheritdoc */
@@ -179,7 +179,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     if (Guard.isDocumentTypeNode(node))
       throw new InvalidNodeTypeError()
 
-    const length = this._algo.tree.nodeLength(node)
+    const length = tree_nodeLength(node)
     this._start = [node, 0]
     this._end = [node, length]
   }
@@ -202,7 +202,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 2. If context object’s root is not the same as sourceRange’s root, 
      * then throw a "WrongDocumentError" DOMException.
      */
-    if (this._algo.range.root(this) !== this._algo.range.root(sourceRange))
+    if (range_root(this) !== range_root(sourceRange))
       throw new WrongDocumentError()
 
     /**
@@ -254,7 +254,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * - after
      * Return 1.
      */
-    const position = this._algo.boundaryPoint.position(thisPoint, otherPoint)
+    const position = boundaryPoint_position(thisPoint, otherPoint)
 
     if (position === BoundaryPosition.Before) {
       return -1
@@ -273,7 +273,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * and original end offset be the context object’s start node, 
      * start offset, end node, and end offset, respectively.
      */
-    if (this._algo.range.collapsed(this)) return
+    if (range_collapsed(this)) return
 
     const originalStartNode = this._startNode
     const originalStartOffset = this._startOffset
@@ -289,7 +289,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     if (originalStartNode === originalEndNode &&
       Guard.isCharacterDataNode(originalStartNode)) {
-      this._algo.characterData.replaceData(originalStartNode,
+      characterData_replaceData(originalStartNode,
         originalStartOffset, originalEndOffset - originalStartOffset, '')
       return
     }
@@ -300,9 +300,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * contained in the context object.
      */
     const nodesToRemove: Node[] = []
-    for (const node of this._algo.range.getContainedNodes(this)) {
+    for (const node of range_getContainedNodes(this)) {
       const parent = node._parent
-      if (parent !== null && this._algo.range.isContained(parent, this)) {
+      if (parent !== null && range_isContained(parent, this)) {
         continue
       }
       nodesToRemove.push(node)
@@ -311,7 +311,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     let newNode: Node
     let newOffset: number
 
-    if (this._algo.tree.isAncestorOf(originalEndNode, originalStartNode, true)) {
+    if (tree_isAncestorOf(originalEndNode, originalStartNode, true)) {
       /**
        * 5. If original start node is an inclusive ancestor of original end 
        * node, set new node to original start node and new offset to original
@@ -330,7 +330,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
        */
       let referenceNode = originalStartNode
       while (referenceNode._parent !== null &&
-        !this._algo.tree.isAncestorOf(originalEndNode, referenceNode._parent, true)) {
+        !tree_isAncestorOf(originalEndNode, referenceNode._parent, true)) {
         referenceNode = referenceNode._parent
       }
       /* istanbul ignore next */
@@ -338,7 +338,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
         throw new Error("Parent node is null.")
       }
       newNode = referenceNode._parent
-      newOffset = this._algo.tree.index(referenceNode) + 1
+      newOffset = tree_index(referenceNode) + 1
     }
 
     /**
@@ -348,9 +348,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * data the empty string.
      */
     if (Guard.isCharacterDataNode(originalStartNode)) {
-      this._algo.characterData.replaceData(originalStartNode,
+      characterData_replaceData(originalStartNode,
         originalStartOffset,
-        this._algo.tree.nodeLength(originalStartNode) - originalStartOffset, '')
+        tree_nodeLength(originalStartNode) - originalStartOffset, '')
     }
 
     /**
@@ -360,7 +360,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     for (const node of nodesToRemove) {
       /* istanbul ignore else */
       if (node._parent) {
-        this._algo.mutation.remove(node, node._parent)
+        mutation_remove(node, node._parent)
       }
     }
 
@@ -370,7 +370,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * end offset and data the empty string.
      */
     if (Guard.isCharacterDataNode(originalEndNode)) {
-      this._algo.characterData.replaceData(originalEndNode,
+      characterData_replaceData(originalEndNode,
         0, originalEndOffset, '')
     }
 
@@ -387,7 +387,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The extractContents() method, when invoked, must return the result of 
      * extracting the context object.
      */
-    return this._algo.range.extract(this)
+    return range_extract(this)
   }
 
   /** @inheritdoc */
@@ -396,7 +396,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The cloneContents() method, when invoked, must return the result of 
      * cloning the contents of the context object.
      */
-    return this._algo.range.cloneTheContents(this)
+    return range_cloneTheContents(this)
   }
 
   /** @inheritdoc */
@@ -405,7 +405,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The insertNode(node) method, when invoked, must insert node into the 
      * context object.
      */
-    return this._algo.range.insert(node, this)
+    return range_insert(node, this)
   }
 
   /** @inheritdoc */
@@ -414,7 +414,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 1. If a non-Text node is partially contained in the context object, then 
      * throw an "InvalidStateError" DOMException.
      */
-    for (const node of this._algo.range.getPartiallyContainedNodes(this)) {
+    for (const node of range_getPartiallyContainedNodes(this)) {
       if (!Guard.isTextNode(node)) {
         throw new InvalidStateError()
       }
@@ -433,26 +433,26 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 3. Let fragment be the result of extracting the context object.
      */
-    const fragment = this._algo.range.extract(this)
+    const fragment = range_extract(this)
 
     /**
      * 4. If newParent has children, then replace all with null within newParent.
      */
     if ((newParent)._children.size !== 0) {
-      this._algo.mutation.replaceAll(null, newParent)
+      mutation_replaceAll(null, newParent)
     }
 
     /**
      * 5. Insert newParent into the context object.
      * 6. Append fragment to newParent.
      */
-    this._algo.range.insert(newParent, this)
-    this._algo.mutation.append(fragment, newParent)
+    range_insert(newParent, this)
+    mutation_append(fragment, newParent)
 
     /**
      * 7. Select newParent within the context object.
      */
-    this._algo.range.select(newParent, this)
+    range_select(newParent, this)
   }
 
   /** @inheritdoc */
@@ -461,7 +461,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * The cloneRange() method, when invoked, must return a new live range with 
      * the same start and end as the context object.
      */
-    return this._algo.create.range(this._start, this._end)
+    return create_range(this._start, this._end)
   }
 
   /** @inheritdoc */
@@ -471,7 +471,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 
      * since JS lacks weak references, we still use detach
      */
-    this._algo.range.rangeList.remove(this)
+    globalStore.dom.rangeList.remove(this)
   }
 
   /** @inheritdoc */
@@ -479,7 +479,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. If node’s root is different from the context object’s root, return false.
      */
-    if (this._algo.tree.rootNode(node) !== this._algo.range.root(this)) {
+    if (tree_rootNode(node) !== range_root(this)) {
       return false
     }
 
@@ -490,15 +490,15 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      */
     if (Guard.isDocumentTypeNode(node))
       throw new InvalidNodeTypeError()
-    if (offset > this._algo.tree.nodeLength(node))
+    if (offset > tree_nodeLength(node))
       throw new IndexSizeError()
 
     /**
      * 4. If (node, offset) is before start or after end, return false.
      */
     const bp: BoundaryPoint = [node, offset]
-    if (this._algo.boundaryPoint.position(bp, this._start) === BoundaryPosition.Before ||
-      this._algo.boundaryPoint.position(bp, this._end) === BoundaryPosition.After) {
+    if (boundaryPoint_position(bp, this._start) === BoundaryPosition.Before ||
+      boundaryPoint_position(bp, this._end) === BoundaryPosition.After) {
       return false
     }
 
@@ -517,11 +517,11 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 3. If offset is greater than node’s length, then throw an 
      * "IndexSizeError" DOMException.
      */
-    if (this._algo.tree.rootNode(node) !== this._algo.range.root(this))
+    if (tree_rootNode(node) !== range_root(this))
       throw new WrongDocumentError()
     if (Guard.isDocumentTypeNode(node))
       throw new InvalidNodeTypeError()
-    if (offset > this._algo.tree.nodeLength(node))
+    if (offset > tree_nodeLength(node))
       throw new IndexSizeError()
 
     /**
@@ -530,9 +530,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 6. Return 0.
      */
     const bp: BoundaryPoint = [node, offset]
-    if (this._algo.boundaryPoint.position(bp, this._start) === BoundaryPosition.Before) {
+    if (boundaryPoint_position(bp, this._start) === BoundaryPosition.Before) {
       return -1
-    } else if (this._algo.boundaryPoint.position(bp, this._end) === BoundaryPosition.After) {
+    } else if (boundaryPoint_position(bp, this._end) === BoundaryPosition.After) {
       return 1
     } else {
       return 0
@@ -544,7 +544,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. If node’s root is different from the context object’s root, return false.
      */
-    if (this._algo.tree.rootNode(node) !== this._algo.range.root(this)) {
+    if (tree_rootNode(node) !== range_root(this)) {
       return false
     }
 
@@ -558,14 +558,14 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 4. Let offset be node’s index.
      */
-    const offset = this._algo.tree.index(node)
+    const offset = tree_index(node)
 
     /**
      * 5. If (parent, offset) is before end and (parent, offset plus 1) is 
      * after start, return true.
      */
-    if (this._algo.boundaryPoint.position([parent, offset], this._end) === BoundaryPosition.Before &&
-      this._algo.boundaryPoint.position([parent, offset + 1], this._start) === BoundaryPosition.After) {
+    if (boundaryPoint_position([parent, offset], this._end) === BoundaryPosition.Before &&
+      boundaryPoint_position([parent, offset + 1], this._start) === BoundaryPosition.After) {
       return true
     }
 
@@ -604,7 +604,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 4. Append the concatenation of the data of all Text nodes that are
      * contained in the context object, in tree order, to s.
      */
-    for (const child of this._algo.range.getContainedNodes(this)) {
+    for (const child of range_getContainedNodes(this)) {
       if (Guard.isTextNode(child)) {
         s += child._data
       }

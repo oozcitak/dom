@@ -1,13 +1,12 @@
 import { AbortSignal, AbortController } from "./interfaces"
-import { globalStore } from "../util"
-import { DOMAlgorithm } from "../algorithm/interfaces"
+import { create_abortSignal } from "../algorithm/CreateAlgorithm"
+import { abort_signalAbort } from "../algorithm/AbortAlgorithm"
 
 /**
  * Represents a controller that allows to abort DOM requests.
  */
 export class AbortControllerImpl implements AbortController {
 
-  _algo: DOMAlgorithm
   _signal: AbortSignal
 
   /**
@@ -19,8 +18,7 @@ export class AbortControllerImpl implements AbortController {
      * 2. Let controller be a new AbortController object whose signal is signal.
      * 3. Return controller.
      */
-    this._algo = globalStore.dom.algorithm
-    this._signal = this._algo.create.abortSignal()
+    this._signal = create_abortSignal()
   }
 
   /** @inheritdoc */
@@ -28,7 +26,7 @@ export class AbortControllerImpl implements AbortController {
 
   /** @inheritdoc */
   abort(): void {
-    this._algo.abort.signalAbort(this._signal)
+    abort_signalAbort(this._signal)
   }
 
 }

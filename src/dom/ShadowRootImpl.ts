@@ -3,6 +3,7 @@ import {
 } from "./interfaces"
 import { DocumentFragmentImpl } from "./DocumentFragmentImpl"
 import { isEmpty } from "@oozcitak/util"
+import { tree_rootNode } from "../algorithm/TreeAlgorithm"
 
 /**
  * Represents a shadow root.
@@ -44,7 +45,7 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRoot {
      * otherwise.
      */
     if (!event._composedFlag && !isEmpty(event._path) &&
-      this._algo.tree.rootNode(event._path[0].invocationTarget as Node) === this) {
+      tree_rootNode(event._path[0].invocationTarget as Node) === this) {
       return null
     } else {
       return this._host

@@ -1,5 +1,6 @@
 import { Element, NodeType, Attr, Document } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
+import { attr_setAnExistingAttributeValue } from "../algorithm/AttrAlgorithm"
 
 /**
  * Represents an attribute of an element node.
@@ -50,7 +51,7 @@ export class AttrImpl extends NodeImpl implements Attr {
      * The value attribute’s setter must set an existing attribute value with 
      * context object and the given value.
      */
-    this._algo.attr.setAnExistingAttributeValue(this, value)
+    attr_setAnExistingAttributeValue(this, value)
   }
 
   /** 

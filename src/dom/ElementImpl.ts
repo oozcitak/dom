@@ -1,15 +1,22 @@
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node, Document,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
-  HTMLSlotElement, Slot
+  HTMLSlotElement, Slot, AttributeChangeStep
 } from './interfaces'
 import { NodeImpl } from './NodeImpl'
 import { 
   InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
 } from './DOMException'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { AttributeChangeStep } from '../algorithm/interfaces'
 import { globalStore, Guard } from '../util'
+import { create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot, create_text } from '../algorithm/CreateAlgorithm'
+import { customElement_isValidCustomElementName, customElement_isValidShadowHostName, customElement_lookUpACustomElementDefinition } from '../algorithm/CustomElementAlgorithm'
+import { tree_rootNode } from '../algorithm/TreeAlgorithm'
+import { xml_isName } from '../algorithm/XMLAlgorithm'
+import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
+import { shadowTree_isAssigned, shadowTree_assignSlotables, shadowTree_assignASlot, shadowTree_assignSlotablesForATree } from '../algorithm/ShadowTreeAlgorithm'
+import { element_getAnAttributeValue, element_setAnAttributeValue, element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName, element_append, element_change, element_removeAnAttributeByName, element_removeAnAttributeByNamespaceAndLocalName, element_setAnAttribute, element_remove, element_insertAdjacent } from '../algorithm/ElementAlgorithm'
+import { node_listOfElementsWithNamespace, node_listOfElementsWithClassNames, node_listOfElementsWithQualifiedName } from '../algorithm/NodeAlgorithm'
 
 /**
  * Represents an element node.
@@ -42,7 +49,7 @@ export class ElementImpl extends NodeImpl implements Element {
   constructor() {
     super()
 
-    this._attributeList = this._algo.create.namedNodeMap(this)
+    this._attributeList = create_namedNodeMap(this)
     
     if (globalStore.dom.features.slots) {
       this._attributeChangeSteps.push(this._updateASlotablesName)
@@ -65,35 +72,35 @@ export class ElementImpl extends NodeImpl implements Element {
 
   /** @inheritdoc */
   get id(): string {
-    return this._algo.element.getAnAttributeValue(this, "id")
+    return element_getAnAttributeValue(this, "id")
   }
   set id(value: string) {
-    this._algo.element.setAnAttributeValue(this, "id", value)
+    element_setAnAttributeValue(this, "id", value)
   }
 
   /** @inheritdoc */
   get className(): string {
-    return this._algo.element.getAnAttributeValue(this, "class")
+    return element_getAnAttributeValue(this, "class")
   }
   set className(value: string) {
-    this._algo.element.setAnAttributeValue(this, "class", value)
+    element_setAnAttributeValue(this, "class", value)
   }
 
   /** @inheritdoc */
   get classList(): DOMTokenList {
-    let attr = this._algo.element.getAnAttributeByName("class", this)
+    let attr = element_getAnAttributeByName("class", this)
     if (attr === null) {
-      attr = this._algo.create.attr(this._nodeDocument, "class")
+      attr = create_attr(this._nodeDocument, "class")
     }
-    return this._algo.create.domTokenList(this, attr)
+    return create_domTokenList(this, attr)
   }
 
   /** @inheritdoc */
   get slot(): string {
-    return this._algo.element.getAnAttributeValue(this, "slot")
+    return element_getAnAttributeValue(this, "slot")
   }
   set slot(value: string) {
-    this._algo.element.setAnAttributeValue(this, "slot", value)
+    element_setAnAttributeValue(this, "slot", value)
   }
 
   /** @inheritdoc */
@@ -129,7 +136,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 2. If attr is null, return null.
      * 3. Return attr’s value.
      */
-    const attr = this._algo.element.getAnAttributeByName(qualifiedName, this)
+    const attr = element_getAnAttributeByName(qualifiedName, this)
     return (attr ? attr._value : null)
   }
 
@@ -141,7 +148,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 2. If attr is null, return null.
      * 3. Return attr’s value.
      */
-    const attr = this._algo.element.getAnAttributeByNamespaceAndLocalName(namespace, localName, this)
+    const attr = element_getAnAttributeByNamespaceAndLocalName(namespace, localName, this)
     return (attr ? attr.value : null)
   }
 
@@ -151,7 +158,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 1. If qualifiedName does not match the Name production in XML, then 
      * throw an "InvalidCharacterError" DOMException.
      */
-    if (!this._algo.xml.isName(qualifiedName))
+    if (!xml_isName(qualifiedName))
       throw new InvalidCharacterError()
 
     /**
@@ -182,16 +189,16 @@ export class ElementImpl extends NodeImpl implements Element {
      * then return.
      */
     if (attribute === null) {
-      attribute = this._algo.create.attr(this._nodeDocument, qualifiedName)
+      attribute = create_attr(this._nodeDocument, qualifiedName)
       attribute._value = value
-      this._algo.element.append(attribute, this)
+      element_append(attribute, this)
       return
     }
 
     /**
      * 5. Change attribute from context object to value.
      */
-    this._algo.element.change(attribute, this, value)
+    element_change(attribute, this, value)
   }
 
   /** @inheritdoc */
@@ -203,8 +210,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * and also prefix and namespace.
      */
     const [ns, prefix, localName] =
-      this._algo.namespace.validateAndExtract(namespace, qualifiedName)
-    this._algo.element.setAnAttributeValue(this, localName, value,
+      namespace_validateAndExtract(namespace, qualifiedName)
+    element_setAnAttributeValue(this, localName, value,
       prefix, ns)
   }
 
@@ -215,7 +222,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * attribute given qualifiedName and the context object, and then return 
      * undefined.
      */
-    this._algo.element.removeAnAttributeByName(qualifiedName, this)
+    element_removeAnAttributeByName(qualifiedName, this)
   }
 
   /** @inheritdoc */
@@ -225,7 +232,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * remove an attribute given namespace, localName, and context object, and 
      * then return undefined.
      */
-    this._algo.element.removeAnAttributeByNamespaceAndLocalName(namespace,
+    element_removeAnAttributeByNamespaceAndLocalName(namespace,
       localName, this)
   }
 
@@ -257,7 +264,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 1. If qualifiedName does not match the Name production in XML, then
      * throw an "InvalidCharacterError" DOMException.
      */
-    if (!this._algo.xml.isName(qualifiedName))
+    if (!xml_isName(qualifiedName))
       throw new InvalidCharacterError()
 
     /**
@@ -291,9 +298,9 @@ export class ElementImpl extends NodeImpl implements Element {
        * 4.2. Return false.
        */
       if (force === undefined || force === true) {
-        attribute = this._algo.create.attr(this._nodeDocument, qualifiedName)
+        attribute = create_attr(this._nodeDocument, qualifiedName)
         attribute._value = ''
-        this._algo.element.append(attribute, this)
+        element_append(attribute, this)
         return true
       }
       return false
@@ -302,7 +309,7 @@ export class ElementImpl extends NodeImpl implements Element {
        * 5. Otherwise, if force is not given or is false, remove an attribute
        * given qualifiedName and the context object, and then return false.
        */
-      this._algo.element.removeAnAttributeByName(qualifiedName, this)
+      element_removeAnAttributeByName(qualifiedName, this)
       return false
     }
 
@@ -336,7 +343,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * The getAttributeNode(qualifiedName) method, when invoked, must return the
      * result of getting an attribute given qualifiedName and context object.
      */
-    return this._algo.element.getAnAttributeByName(qualifiedName, this)
+    return element_getAnAttributeByName(qualifiedName, this)
   }
 
   /** @inheritdoc */
@@ -346,7 +353,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * return the result of getting an attribute given namespace, localName, and
      * the context object.
      */
-    return this._algo.element.getAnAttributeByNamespaceAndLocalName(
+    return element_getAnAttributeByNamespaceAndLocalName(
       namespace, localName, this)
   }
 
@@ -357,12 +364,12 @@ export class ElementImpl extends NodeImpl implements Element {
      * invoked, must return the result of setting an attribute given attr and 
      * the context object.
      */
-    return this._algo.element.setAnAttribute(attr, this)
+    return element_setAnAttribute(attr, this)
   }
 
   /** @inheritdoc */
   setAttributeNodeNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr, this)
+    return element_setAnAttribute(attr, this)
   }
 
   /** @inheritdoc */
@@ -383,7 +390,7 @@ export class ElementImpl extends NodeImpl implements Element {
     if (!found)
       throw new NotFoundError()
 
-    this._algo.element.remove(attr, this)
+    element_remove(attr, this)
     return attr
   }
 
@@ -402,8 +409,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * "h3", "h4", "h5", "h6", "header", "main" "nav", "p", "section", 
      * or "span", then throw a "NotSupportedError" DOMException.
      */
-    if (!this._algo.customElement.isValidCustomElementName(this._localName) &&
-      !this._algo.customElement.isValidShadowHostName(this._localName))
+    if (!customElement_isValidCustomElementName(this._localName) &&
+      !customElement_isValidShadowHostName(this._localName))
       throw new NotSupportedError()
 
     /**
@@ -415,8 +422,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * 3.2. If definition is not null and definition’s disable shadow is true,
      *  then throw a "NotSupportedError" DOMException.
      */
-    if (this._algo.customElement.isValidCustomElementName(this._localName) || this._is !== null) {
-      const definition = this._algo.customElement.lookUpACustomElementDefinition(
+    if (customElement_isValidCustomElementName(this._localName) || this._is !== null) {
+      const definition = customElement_lookUpACustomElementDefinition(
         this._nodeDocument, this._namespace, this._localName, this._is)
       if (definition !== null && definition.disableShadow === true) {
         throw new NotSupportedError()
@@ -436,7 +443,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 6. Set context object’s shadow root to shadow.
      * 7. Return shadow.
      */
-    const shadow = this._algo.create.shadowRoot(this._nodeDocument, this)
+    const shadow = create_shadowRoot(this._nodeDocument, this)
     shadow._mode = init.mode
     this._shadowRoot = shadow
     return shadow
@@ -497,7 +504,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * the list of elements with qualified name qualifiedName for context 
      * object.
      */
-    return this._algo.node.listOfElementsWithQualifiedName(qualifiedName, this)
+    return node_listOfElementsWithQualifiedName(qualifiedName, this)
   }
 
   /** @inheritdoc */
@@ -507,7 +514,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * must return the list of elements with namespace namespace and local name
      * localName for context object.
      */
-    return this._algo.node.listOfElementsWithNamespace(namespace, localName, this)
+    return node_listOfElementsWithNamespace(namespace, localName, this)
   }
 
   /** @inheritdoc */
@@ -516,7 +523,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * The getElementsByClassName(classNames) method, when invoked, must return 
      * the list of elements with class names classNames for context object.
      */
-    return this._algo.node.listOfElementsWithClassNames(classNames, this)
+    return node_listOfElementsWithClassNames(classNames, this)
   }
 
   /** @inheritdoc */
@@ -527,7 +534,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * return the result of running insert adjacent, given context object,
      *  where, and element.
      */
-    return this._algo.element.insertAdjacent(this, where, element) as Element | null
+    return element_insertAdjacent(this, where, element) as Element | null
   }
 
   /** @inheritdoc */
@@ -538,8 +545,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * context object’s node document.
      * 2. Run insert adjacent, given context object, where, and text.
      */
-    const text = this._algo.create.text(this._nodeDocument, data)
-    this._algo.element.insertAdjacent(this, where, text)
+    const text = create_text(this._nodeDocument, data)
+    element_insertAdjacent(this, where, text)
   }
 
   /** 
@@ -638,8 +645,7 @@ export class ElementImpl extends NodeImpl implements Element {
         element._name = value
       }
 
-      const algo = globalStore.dom.algorithm
-      algo.shadowTree.assignSlotablesForATree(algo.tree.rootNode(element))
+      shadowTree_assignSlotablesForATree(tree_rootNode(element))
     }
   }
 
@@ -671,12 +677,11 @@ export class ElementImpl extends NodeImpl implements Element {
         element._name = value
       }
 
-      const algo = globalStore.dom.algorithm
-      if (algo.shadowTree.isAssigned(element)) {
-        algo.shadowTree.assignSlotables(element._assignedSlot as Slot)
+      if (shadowTree_isAssigned(element)) {
+        shadowTree_assignSlotables(element._assignedSlot as Slot)
       }
 
-      algo.shadowTree.assignASlot(element)
+      shadowTree_assignASlot(element)
     }
   }
 

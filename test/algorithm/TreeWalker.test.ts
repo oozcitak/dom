@@ -1,4 +1,5 @@
 import $$ from '../TestHelpers'
+import { treeWalker_traverseChildren, treeWalker_traverseSiblings } from '../../src/algorithm/TreeWalkerAlgorithm'
 
 describe('TreeWalker', () => {
 
@@ -46,7 +47,7 @@ describe('TreeWalker', () => {
       node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
-    const node = $$.algo.treeWalker.traverseChildren(iter as any, true)
+    const node = treeWalker_traverseChildren(iter as any, true)
 
     expect(node).toBe(child1)
   })
@@ -56,7 +57,7 @@ describe('TreeWalker', () => {
       node.nodeName.startsWith('c') && node.nodeName.endsWith('2') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
-    const node = $$.algo.treeWalker.traverseChildren(iter as any, true)
+    const node = treeWalker_traverseChildren(iter as any, true)
 
     expect(node).toBe(child2)
   })
@@ -66,7 +67,7 @@ describe('TreeWalker', () => {
       node.nodeName.startsWith('x') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
-    const node = $$.algo.treeWalker.traverseChildren(iter as any, true)
+    const node = treeWalker_traverseChildren(iter as any, true)
 
     expect(node).toBeNull()
   })
@@ -74,7 +75,7 @@ describe('TreeWalker', () => {
   test('traverseChildren() without children returns null', () => {
     const iter = doc.createTreeWalker(child2)
 
-    const node = $$.algo.treeWalker.traverseChildren(iter as any, true)
+    const node = treeWalker_traverseChildren(iter as any, true)
 
     expect(node).toBeNull()
   })
@@ -83,7 +84,7 @@ describe('TreeWalker', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node1
-    const node = $$.algo.treeWalker.traverseSiblings(iter as any, true)
+    const node = treeWalker_traverseSiblings(iter as any, true)
 
     expect(node).toBe(node2)
   })
@@ -92,7 +93,7 @@ describe('TreeWalker', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node2
-    const node = $$.algo.treeWalker.traverseSiblings(iter as any, false)
+    const node = treeWalker_traverseSiblings(iter as any, false)
 
     expect(node).toBe(node1)
   })
@@ -100,7 +101,7 @@ describe('TreeWalker', () => {
   test('traverseSiblings() at root returns null', () => {
     const iter = doc.createTreeWalker(root)
 
-    const node = $$.algo.treeWalker.traverseSiblings(iter as any, true)
+    const node = treeWalker_traverseSiblings(iter as any, true)
 
     expect(node).toBeNull()
   })
@@ -109,7 +110,7 @@ describe('TreeWalker', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = child32
-    const node = $$.algo.treeWalker.traverseSiblings(iter as any, true)
+    const node = treeWalker_traverseSiblings(iter as any, true)
 
     expect(node).toBeNull()
   })
@@ -118,7 +119,7 @@ describe('TreeWalker', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = node3
-    const node = $$.algo.treeWalker.traverseSiblings(iter as any, true)
+    const node = treeWalker_traverseSiblings(iter as any, true)
 
     expect(node).toBeNull()
   })

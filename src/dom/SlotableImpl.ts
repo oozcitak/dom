@@ -1,6 +1,5 @@
 import { Slotable, Slot, HTMLSlotElement } from './interfaces'
-import { DOMAlgorithm } from '../algorithm/interfaces'
-import { globalStore } from '../util'
+import { shadowTree_findASlot } from '../algorithm/ShadowTreeAlgorithm'
 
 /**
  * Represents a mixin that allows nodes to become the contents of
@@ -20,8 +19,7 @@ export class SlotableImpl implements Slotable {
 
   /** @inheritdoc */
   get assignedSlot(): HTMLSlotElement | null {
-    const algo = globalStore.dom.algorithm
-    return algo.shadowTree.findASlot(this, true) as HTMLSlotElement | null
+    return shadowTree_findASlot(this, true) as HTMLSlotElement | null
   }
 
 }

@@ -1,5 +1,4 @@
 import { Node, NodeFilter, WhatToShow, Traverser } from "./interfaces"
-import { DOMAlgorithm } from "../algorithm/interfaces"
 import { globalStore } from "../util"
 
 /**
@@ -7,8 +6,6 @@ import { globalStore } from "../util"
  * of a subtree.
  */
 export abstract class TraverserImpl implements Traverser {
-
-  protected _algo: DOMAlgorithm
 
   _activeFlag: boolean
   _root: Node
@@ -21,8 +18,6 @@ export abstract class TraverserImpl implements Traverser {
    * @param root - root node
    */
   protected constructor(root: Node) {
-    this._algo = globalStore.dom.algorithm
-
     this._activeFlag = false
     this._root = root
     this._whatToShow = WhatToShow.All

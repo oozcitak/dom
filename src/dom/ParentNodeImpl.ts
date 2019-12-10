@@ -1,5 +1,9 @@
 import { Node, HTMLCollection, NodeList, Element, ParentNode } from './interfaces'
-import { Cast, Guard, globalStore } from '../util'
+import { Cast, Guard } from '../util'
+import { create_htmlCollection, create_nodeListStatic } from '../algorithm/CreateAlgorithm'
+import { parentNode_convertNodesIntoANode } from '../algorithm/ParentNodeAlgorithm'
+import { selectors_scopeMatchASelectorsString } from '../algorithm/SelectorsAlgorithm'
+import { mutation_preInsert, mutation_append } from '../algorithm/MutationAlgorithm'
 
 /**
  * Represents a mixin that extends parent nodes that can have children.
@@ -14,8 +18,7 @@ export class ParentNodeImpl implements ParentNode {
      * The children attribute’s getter must return an HTMLCollection collection 
      * rooted at context object matching only element children.
      */
-    const algo = globalStore.dom.algorithm
-    return algo.create.htmlCollection(Cast.asNode(this))
+    return create_htmlCollection(Cast.asNode(this))
   }
 
   /** @inheritdoc */
@@ -58,9 +61,8 @@ export class ParentNodeImpl implements ParentNode {
      * The childElementCount attribute’s getter must return the number of 
      * children of context object that are elements.
      */
-    const node = Cast.asNode(this)
     let count = 0
-    for (const childNode of node._children) {
+    for (const childNode of Cast.asNode(this)._children) {
       if (Guard.isElementNode(childNode))
         count++
     }
@@ -76,11 +78,10 @@ export class ParentNodeImpl implements ParentNode {
      * 2. Pre-insert node into context object before the context object’s first 
      * child.
      */
-    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
-    const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
-    algo.mutation.preInsert(childNode, node, node._firstChild)
+    const childNode = parentNode_convertNodesIntoANode(nodes, node._nodeDocument)
+    mutation_preInsert(childNode, node, node._firstChild)
   }
 
   /** @inheritdoc */
@@ -90,11 +91,10 @@ export class ParentNodeImpl implements ParentNode {
      * and context object’s node document.
      * 2. Append node to context object.
      */
-    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
-    const childNode = algo.parentNode.convertNodesIntoANode(nodes, node._nodeDocument)
-    algo.mutation.append(childNode, node)
+    const childNode = parentNode_convertNodesIntoANode(nodes, node._nodeDocument)
+    mutation_append(childNode, node)
   }
 
   /** @inheritdoc */
@@ -104,10 +104,9 @@ export class ParentNodeImpl implements ParentNode {
      * result of running scope-match a selectors string selectors against
      * context object, if the result is not an empty list, and null otherwise.
      */
-    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
-    const result = algo.selectors.scopeMatchASelectorsString(selectors, node)
+    const result = selectors_scopeMatchASelectorsString(selectors, node)
     return (result.length === 0 ? null : result[0])
   }
 
@@ -118,11 +117,10 @@ export class ParentNodeImpl implements ParentNode {
      * static result of running scope-match a selectors string selectors against
      * context object.
      */
-    const algo = globalStore.dom.algorithm
     const node = Cast.asNode(this)
 
-    const result = algo.selectors.scopeMatchASelectorsString(selectors, node)
-    return algo.create.nodeListStatic(node, result)
+    const result = selectors_scopeMatchASelectorsString(selectors, node)
+    return create_nodeListStatic(node, result)
   }
 
 }

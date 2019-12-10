@@ -1,5 +1,6 @@
 import { Element, Node, CharacterData } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
+import { characterData_replaceData, characterData_substringData } from "../algorithm/CharacterDataAlgorithm"
 
 /**
  * Represents a generic text node.
@@ -22,7 +23,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
   /** @inheritdoc */
   get data(): string { return this._data }
   set data(value: string) {
-    this._algo.characterData.replaceData(this, 0, this.length, value)
+    characterData_replaceData(this, 0, this.length, value)
   }
 
   /** @inheritdoc */
@@ -34,7 +35,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * The substringData(offset, count) method, when invoked, must return the 
      * result of running substring data with node context object, offset offset, and count count.
      */
-    return this._algo.characterData.substringData(this, offset, count)
+    return characterData_substringData(this, offset, count)
   }
 
   /** @inheritdoc */
@@ -43,7 +44,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * The appendData(data) method, when invoked, must replace data with node 
      * context object, offset context object’s length, count 0, and data data.
      */
-    return this._algo.characterData.replaceData(this, this.length, 0, data)
+    return characterData_replaceData(this, this.length, 0, data)
   }
 
   /** @inheritdoc */
@@ -52,7 +53,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * The insertData(offset, data) method, when invoked, must replace data with 
      * node context object, offset offset, count 0, and data data.
      */
-    this._algo.characterData.replaceData(this, offset, 0, data)
+    characterData_replaceData(this, offset, 0, data)
   }
 
   /** @inheritdoc */
@@ -62,7 +63,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * with node context object, offset offset, count count, and data the 
      * empty string.
      */
-    this._algo.characterData.replaceData(this, offset, count, '')
+    characterData_replaceData(this, offset, count, '')
   }
 
   /** @inheritdoc */
@@ -71,7 +72,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * The replaceData(offset, count, data) method, when invoked, must replace 
      * data with node context object, offset offset, count count, and data data.
      */
-    this._algo.characterData.replaceData(this, offset, count, data)
+    characterData_replaceData(this, offset, count, data)
   }
 
 

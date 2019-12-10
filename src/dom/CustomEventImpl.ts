@@ -1,5 +1,6 @@
 import { CustomEventInit, CustomEvent } from './interfaces'
 import { EventImpl } from './EventImpl'
+import { event_initialize } from '../algorithm/EventAlgorithm'
 
 /**
  * Represents and event that carries custom data.
@@ -30,7 +31,7 @@ export class CustomEventImpl extends EventImpl implements CustomEvent {
     /**
      * 2. Initialize the context object with type, bubbles, and cancelable.
      */
-    this._algo.event.initialize(this, type, bubbles, cancelable)
+    event_initialize(this, type, bubbles, cancelable)
 
     /**
      * 3. Set the context object’s detail attribute to detail.

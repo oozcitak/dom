@@ -1,21 +1,22 @@
 import $$ from '../TestHelpers'
+import { customElement_isValidCustomElementName, customElement_isValidElementName, customElement_isVoidElementName } from '../../src/algorithm/CustomElementAlgorithm'
 
 describe('CustomElement', () => {
 
   test('isValidCustomElementName()', () => {
-    expect($$.algo.customElement.isValidCustomElementName('.name')).toBe(false)
-    expect($$.algo.customElement.isValidCustomElementName('font-face')).toBe(false)
-    expect($$.algo.customElement.isValidCustomElementName('my-custom')).toBe(true)
+    expect(customElement_isValidCustomElementName('.name')).toBe(false)
+    expect(customElement_isValidCustomElementName('font-face')).toBe(false)
+    expect(customElement_isValidCustomElementName('my-custom')).toBe(true)
   })
 
   test('isValidElementName()', () => {
-    expect($$.algo.customElement.isValidElementName('.name')).toBe(false)
-    expect($$.algo.customElement.isValidElementName('div')).toBe(true)
+    expect(customElement_isValidElementName('.name')).toBe(false)
+    expect(customElement_isValidElementName('div')).toBe(true)
   })
 
   test('isVoidElementName()', () => {
-    expect($$.algo.customElement.isVoidElementName('br')).toBe(true)
-    expect($$.algo.customElement.isVoidElementName('div')).toBe(false)
+    expect(customElement_isVoidElementName('br')).toBe(true)
+    expect(customElement_isVoidElementName('div')).toBe(false)
   })
 
 })

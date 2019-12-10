@@ -1,4 +1,5 @@
 import $$ from '../TestHelpers'
+import { traversal_filter } from '../../src/algorithm/TraversalAlgorithm'
 
 describe('Traverse', () => {
 
@@ -46,15 +47,15 @@ describe('Traverse', () => {
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
 
-    expect($$.algo.traversal.filter(iter as any, node1 as any)).toBe($$.FilterResult.Accept)
+    expect(traversal_filter(iter as any, node1 as any)).toBe($$.FilterResult.Accept)
   })
 
   test('filterNode() recursion check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
-      $$.algo.traversal.filter(iter as any, node1 as any)
+    traversal_filter(iter as any, node1 as any)
     )
 
-    expect(() => $$.algo.traversal.filter(iter as any, node1 as any)).toThrow()
+    expect(() => traversal_filter(iter as any, node1 as any)).toThrow()
   })
 
 })

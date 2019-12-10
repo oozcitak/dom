@@ -1,8 +1,7 @@
-import { CompareCache, isObject } from "@oozcitak/util"
-import { Node, DOM, Window, DOMImplementation, DOMFeatures } from "./dom/interfaces"
-import { DOMAlgorithm } from "./algorithm/interfaces"
-import { DOMAlgorithmImpl } from "./algorithm/DOMAlgorithmImpl"
+import { CompareCache, isObject, ObjectCache } from "@oozcitak/util"
+import { Node, DOM, Window, DOMImplementation, DOMFeatures, Range } from "./dom/interfaces"
 import { globalStore } from "./util"
+import { create_window } from "./algorithm/CreateAlgorithm"
 
 /**
  * Represents an object implementing DOM algorithms.
@@ -14,10 +13,10 @@ class DOMImpl implements DOM {
     customElements: true,
     slots: true
   }
-  private _algorithm: DOMAlgorithm
   private _window: Window | null = null
   private _compareCache: CompareCache<Node>
-  
+  private _rangeList: ObjectCache<Range>
+
   /**
    * Initializes a new instance of `DOM`.
    * 
@@ -38,8 +37,8 @@ class DOMImpl implements DOM {
       }
     }
     
-    this._algorithm = new DOMAlgorithmImpl()
-    this._compareCache = new CompareCache<Node>()    
+    this._compareCache = new CompareCache<Node>()
+    this._rangeList = new ObjectCache<Range>()
 
     globalStore.dom = this
   }
@@ -48,12 +47,9 @@ class DOMImpl implements DOM {
   get features(): DOMFeatures { return this._features }
 
   /** @inheritdoc */
-  get algorithm(): DOMAlgorithm { return this._algorithm }
-
-  /** @inheritdoc */
   get window(): Window {
     if (this._window === null) {
-      this._window = this._algorithm.create.window()
+      this._window = create_window()
     }
     return this._window
   }
@@ -63,6 +59,9 @@ class DOMImpl implements DOM {
 
   /** @inheritdoc */
   get compareCache(): CompareCache<Node> { return this._compareCache }
+
+  /** @inheritdoc */
+  get rangeList(): ObjectCache<Range> { return this._rangeList }
 }
 
 export { DOMImpl as DOM }

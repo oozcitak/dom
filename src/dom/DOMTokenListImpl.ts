@@ -1,8 +1,10 @@
 import { SyntaxError, InvalidCharacterError } from "./DOMException"
 import { DOMTokenList, Element, Attr } from "./interfaces"
-import { DOMAlgorithm } from "../algorithm/interfaces"
-import { globalStore } from "../util"
 import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
+import { orderedSet_parse } from "../algorithm/OrderedSetAlgorithm"
+import { dom_runAttributeChangeSteps } from "../algorithm/DOMAlgorithm"
+import { element_getAnAttributeValue, element_setAnAttributeValue } from "../algorithm/ElementAlgorithm"
+import { tokenList_updateSteps, tokenList_validationSteps, tokenList_serializeSteps } from "../algorithm/DOMTokenListAlgorithm"
 
 /**
  * Represents a token set.
@@ -13,8 +15,6 @@ export class DOMTokenListImpl implements DOMTokenList {
   _attribute: Attr
   _tokenSet: Set<string>
 
-  protected _algo: DOMAlgorithm
-
   /**
    * Initializes a new instance of `DOMTokenList`.
    *
@@ -22,8 +22,6 @@ export class DOMTokenListImpl implements DOMTokenList {
    * @param attribute - associated attribute
    */
   private constructor(element: Element, attribute: Attr) {
-
-    this._algo = globalStore.dom.algorithm
 
     /**
      * 1. Let element be associated element.
@@ -38,7 +36,7 @@ export class DOMTokenListImpl implements DOMTokenList {
     this._tokenSet = new Set()
 
     const localName = attribute._localName
-    const value = this._algo.element.getAnAttributeValue(element, localName)
+    const value = element_getAnAttributeValue(element, localName)
 
     // define a closure to be called when the associated attribute's value changes
     const thisObj = this
@@ -54,13 +52,13 @@ export class DOMTokenListImpl implements DOMTokenList {
         if (!value)
           thisObj._tokenSet.clear()
         else
-          thisObj._tokenSet = thisObj._algo.orderedSet.parse(value)
+          thisObj._tokenSet = orderedSet_parse(value)
       }
     }
     // add the closure to the associated element's attribute change steps
     this._element._attributeChangeSteps.push(updateTokenSet)
 
-    this._algo.runAttributeChangeSteps(element, localName, value, value, null)
+    dom_runAttributeChangeSteps(element, localName, value, value, null)
   }
 
   /** @inheritdoc */
@@ -116,7 +114,7 @@ export class DOMTokenListImpl implements DOMTokenList {
         this._tokenSet.add(token)
       }
     }
-    this._algo.tokenList.updateSteps(this)
+    tokenList_updateSteps(this)
   }
 
   /** @inheritdoc */
@@ -139,7 +137,7 @@ export class DOMTokenListImpl implements DOMTokenList {
         this._tokenSet.delete(token)
       }
     }
-    this._algo.tokenList.updateSteps(this)
+    tokenList_updateSteps(this)
   }
 
   /** @inheritdoc */
@@ -166,7 +164,7 @@ export class DOMTokenListImpl implements DOMTokenList {
        */
       if (force === undefined || force === false) {
         this._tokenSet.delete(token)
-        this._algo.tokenList.updateSteps(this)
+        tokenList_updateSteps(this)
         return false
       }
 
@@ -179,7 +177,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      */
     if (force === undefined || force === true) {
       this._tokenSet.add(token)
-      this._algo.tokenList.updateSteps(this)
+      tokenList_updateSteps(this)
       return true
     }
 
@@ -215,7 +213,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * 6. Return true.
      */
     infraSet.replace(this._tokenSet, token, newToken)
-    this._algo.tokenList.updateSteps(this)
+    tokenList_updateSteps(this)
     return true
   }
 
@@ -225,7 +223,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * 1. Let result be the return value of validation steps called with token.
      * 2. Return result.
      */
-    return this._algo.tokenList.validationSteps(this, token)
+    return tokenList_validationSteps(this, token)
   }
 
   /** @inheritdoc */
@@ -234,7 +232,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * The value attribute must return the result of running context object’s 
      * serialize steps.
      */
-    return this._algo.tokenList.serializeSteps(this)
+    return tokenList_serializeSteps(this)
   }
   set value(value: string) {
     /**
@@ -242,7 +240,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * associated element using associated attribute’s local name and the given
      * value.
      */
-    this._algo.element.setAnAttributeValue(this._element,
+    element_setAnAttributeValue(this._element,
       this._attribute.localName, value)
   }
 

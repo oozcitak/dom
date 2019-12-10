@@ -1,5 +1,7 @@
 import { Node, FilterResult, TreeWalker } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
+import { traversal_filter } from "../algorithm/TraversalAlgorithm"
+import { treeWalker_traverseChildren, treeWalker_traverseSiblings } from "../algorithm/TreeWalkerAlgorithm"
 
 /**
  * Represents the nodes of a subtree and a position within them.
@@ -37,7 +39,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        */
       node = node._parent
       if (node !== null &&
-        this._algo.traversal.filter(this, node) === FilterResult.Accept) {
+        traversal_filter(this, node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -55,7 +57,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
      * The firstChild() method, when invoked, must traverse children with the 
      * context object and first.
      */
-    return this._algo.treeWalker.traverseChildren(this, true)
+    return treeWalker_traverseChildren(this, true)
   }
 
   /** @inheritdoc */
@@ -64,7 +66,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
      * The lastChild() method, when invoked, must traverse children with the 
      * context object and last.
      */
-    return this._algo.treeWalker.traverseChildren(this, false)
+    return treeWalker_traverseChildren(this, false)
   }
 
   /** @inheritdoc */
@@ -73,7 +75,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
      * The nextSibling() method, when invoked, must traverse siblings with the 
      * context object and next.
      */
-    return this._algo.treeWalker.traverseSiblings(this, true)
+    return treeWalker_traverseSiblings(this, true)
   }
 
   /** @inheritdoc */
@@ -97,7 +99,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
          * object.
          */
         node = sibling
-        let result = this._algo.traversal.filter(this, node)
+        let result = traversal_filter(this, node)
 
         /**
          * 2.2.3. While result is not FILTER_REJECT and node has a child:
@@ -109,7 +111,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
            * context object.
            */
           node = node._lastChild
-          result = this._algo.traversal.filter(this, node)
+          result = traversal_filter(this, node)
         }
 
         /**
@@ -145,7 +147,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * FILTER_ACCEPT, then set the context object’s current to node and
        * return node.
        */
-      if (this._algo.traversal.filter(this, node) === FilterResult.Accept) {
+      if (traversal_filter(this, node) === FilterResult.Accept) {
         this._current = node
         return node
       }
@@ -163,7 +165,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
      * The previousSibling() method, when invoked, must traverse siblings with 
      * the context object and previous.
      */
-    return this._algo.treeWalker.traverseSiblings(this, false)
+    return treeWalker_traverseSiblings(this, false)
   }
 
   /** @inheritdoc */
@@ -189,7 +191,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
          * current to node and return node.
          */
         node = node._firstChild
-        result = this._algo.traversal.filter(this, node)
+        result = traversal_filter(this, node)
         if (result === FilterResult.Accept) {
           this._current = node
           return node
@@ -230,7 +232,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * 3.6. If result is FILTER_ACCEPT, then set the context object’s current 
        * to node and return node.
        */
-      result = this._algo.traversal.filter(this, node)
+      result = traversal_filter(this, node)
       if (result === FilterResult.Accept) {
         this._current = node
         return node

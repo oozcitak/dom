@@ -1,4 +1,5 @@
 import $$ from '../TestHelpers'
+import { nodeIterator_traverse } from '../../src/algorithm/NodeIteratorAlgorithm'
 
 describe('NodeIterator', () => {
 
@@ -45,7 +46,7 @@ describe('NodeIterator', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
     iter.nextNode() // skip root
-    const node = $$.algo.nodeIterator.traverse(iter as any, true)
+    const node = nodeIterator_traverse(iter as any, true)
 
     expect(node).toBe(node1)
     expect(iter.referenceNode).toBe(node1)
@@ -55,7 +56,7 @@ describe('NodeIterator', () => {
   test('traverse() backward', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
-    const node = $$.algo.nodeIterator.traverse(iter as any, false)
+    const node = nodeIterator_traverse(iter as any, false)
 
     expect(node).toBeNull()
     expect(iter.referenceNode).toBe(root)

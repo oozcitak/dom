@@ -1,8 +1,8 @@
 import {
   EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem, Event
 } from './interfaces'
-import { DOMAlgorithm } from '../algorithm/interfaces'
 import { globalStore } from '../util'
+import { event_setTheCanceledFlag, event_initialize } from '../algorithm/EventAlgorithm'
 
 /**
  * Represents a DOM event.
@@ -36,14 +36,10 @@ export class EventImpl implements Event {
   _cancelable: boolean = false
   _timeStamp: number
 
-  protected _algo: DOMAlgorithm
-
   /**
    * Initializes a new instance of `Event`.
    */
   public constructor(type: string, eventInit?: EventInit) {
-
-    this._algo = globalStore.dom.algorithm
 
     /**
      * When a constructor of the Event interface, or of an interface that
@@ -260,13 +256,13 @@ export class EventImpl implements Event {
   get returnValue(): boolean { return !this._canceledFlag }
   set returnValue(value: boolean) {
     if (!value) {
-      this._algo.event.setTheCanceledFlag(this)
+      event_setTheCanceledFlag(this)
     }
   }
 
   /** @inheritdoc */
   preventDefault(): void {
-    this._algo.event.setTheCanceledFlag(this)
+    event_setTheCanceledFlag(this)
   }
 
   /** @inheritdoc */
@@ -291,7 +287,7 @@ export class EventImpl implements Event {
     /**
      * 2. Initialize the context object with type, bubbles, and cancelable.
      */
-    this._algo.event.initialize(this, type, bubbles, cancelable)
+    event_initialize(this, type, bubbles, cancelable)
   }
 
 }

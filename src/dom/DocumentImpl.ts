@@ -12,6 +12,13 @@ import { globalStore, Guard } from '../util'
 import { isFunction, isString } from '@oozcitak/util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
 import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
+import { create_domImplementation, create_documentFragment, create_text, create_cdataSection, create_comment, create_processingInstruction, create_attr, create_range, create_nodeIterator, create_nodeList, create_nodeFilter, create_treeWalker } from '../algorithm/CreateAlgorithm'
+import { xml_isName } from '../algorithm/XMLAlgorithm'
+import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
+import { event_createLegacyEvent } from '../algorithm/EventAlgorithm'
+import { element_createAnElement } from '../algorithm/ElementAlgorithm'
+import { document_internalCreateElementNS, document_adopt } from '../algorithm/DocumentAlgorithm'
+import { node_listOfElementsWithQualifiedName, node_listOfElementsWithNamespace, node_listOfElementsWithClassNames, node_clone } from '../algorithm/NodeAlgorithm'
 
 /**
  * Represents a document node.
@@ -53,7 +60,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   public constructor() {
     super()
 
-    this._implementation = this._algo.create.domImplementation(this)
+    this._implementation = create_domImplementation(this)
   }
 
   /** @inheritdoc */
@@ -147,7 +154,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The getElementsByTagName(qualifiedName) method, when invoked, must return 
      * the list of elements with qualified name qualifiedName for the context object.
      */
-    return this._algo.node.listOfElementsWithQualifiedName(qualifiedName, this)
+    return node_listOfElementsWithQualifiedName(qualifiedName, this)
   }
 
   /** @inheritdoc */
@@ -157,7 +164,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * must return the list of elements with namespace namespace and local name 
      * localName for the context object.
      */
-    return this._algo.node.listOfElementsWithNamespace(namespace, localName, this)
+    return node_listOfElementsWithNamespace(namespace, localName, this)
   }
 
   /** @inheritdoc */
@@ -166,7 +173,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The getElementsByClassName(classNames) method, when invoked, must return 
      * the list of elements with class names classNames for the context object.
      */
-    return this._algo.node.listOfElementsWithClassNames(classNames, this)
+    return node_listOfElementsWithClassNames(classNames, this)
   }
 
   /** @inheritdoc */
@@ -187,7 +194,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * flag set.
      */
 
-    if (!this._algo.xml.isName(localName))
+    if (!xml_isName(localName))
       throw new InvalidCharacterError()
 
     if (this._type === "html") localName = localName.toLowerCase()
@@ -205,7 +212,7 @@ export class DocumentImpl extends NodeImpl implements Document {
       (this._type === "html" || this._contentType === "application/xhtml+xml") ?
         infraNamespace.HTML : null
 
-    return this._algo.element.createAnElement(this, localName, namespace, null,
+    return element_createAnElement(this, localName, namespace, null,
       is, true)
   }
 
@@ -217,7 +224,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * invoked, must return the result of running the internal createElementNS 
      * steps, given context object, namespace, qualifiedName, and options.
      */
-    return this._algo.document.internalCreateElementNS(this, namespace,
+    return document_internalCreateElementNS(this, namespace,
       qualifiedName, options)
   }
 
@@ -227,7 +234,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The createDocumentFragment() method, when invoked, must return a new 
      * DocumentFragment node with its node document set to the context object.
      */
-    return this._algo.create.documentFragment(this)
+    return create_documentFragment(this)
   }
 
   /** @inheritdoc */
@@ -236,7 +243,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The createTextNode(data) method, when invoked, must return a new Text 
      * node with its data set to data and node document set to the context object.
      */
-    return this._algo.create.text(this, data)
+    return create_text(this, data)
   }
 
   /** @inheritdoc */
@@ -255,7 +262,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     if (data.includes(']]>'))
       throw new InvalidCharacterError()
 
-    return this._algo.create.cdataSection(this, data)
+    return create_cdataSection(this, data)
   }
 
   /** @inheritdoc */
@@ -264,7 +271,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The createComment(data) method, when invoked, must return a new Comment
      * node with its data set to data and node document set to the context object.
      */
-    return this._algo.create.comment(this, data)
+    return create_comment(this, data)
   }
 
   /** @inheritdoc */
@@ -278,13 +285,13 @@ export class DocumentImpl extends NodeImpl implements Document {
      * data set to data, and node document set to the context object.
      */
 
-    if (!this._algo.xml.isName(target))
+    if (!xml_isName(target))
       throw new InvalidCharacterError()
 
     if (data.includes("?>"))
       throw new InvalidCharacterError()
 
-    return this._algo.create.processingInstruction(this, target, data)
+    return create_processingInstruction(this, target, data)
   }
 
   /** @inheritdoc */
@@ -298,7 +305,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     /**
      * 2. Return a clone of node, with context object and the clone children flag set if deep is true.
      */
-    return this._algo.node.clone(node, this, deep)
+    return node_clone(node, this, deep)
   }
 
   /** @inheritdoc */
@@ -319,7 +326,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 3. Adopt node into the context object.
      * 4. Return node.
      */
-    this._algo.document.adopt(node, this)
+    document_adopt(node, this)
     return node
   }
 
@@ -333,14 +340,14 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 3. Return a new attribute whose local name is localName and node document
      * is context object.
      */
-    if (!this._algo.xml.isName(localName))
+    if (!xml_isName(localName))
       throw new InvalidCharacterError()
 
     if (this._type === "html") {
       localName = localName.toLowerCase()
     }
 
-    const attr = this._algo.create.attr(this, localName)
+    const attr = create_attr(this, localName)
     return attr
   }
 
@@ -353,10 +360,10 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 2. Return a new attribute whose namespace is namespace, namespace prefix
      * is prefix, local name is localName, and node document is context object.
      */
-    const [ns, prefix, localName] = this._algo.namespace.validateAndExtract(
+    const [ns, prefix, localName] = namespace_validateAndExtract(
       namespace, qualifiedName)
 
-    const attr = this._algo.create.attr(this, localName)
+    const attr = create_attr(this, localName)
     attr._namespace = ns
     attr._namespacePrefix = prefix
     return attr
@@ -364,7 +371,7 @@ export class DocumentImpl extends NodeImpl implements Document {
 
   /** @inheritdoc */
   createEvent(eventInterface: string): Event {
-    return this._algo.event.createLegacyEvent(eventInterface)
+    return event_createLegacyEvent(eventInterface)
   }
 
   /** @inheritdoc */
@@ -373,7 +380,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The createRange() method, when invoked, must return a new live range 
      * with (context object, 0) as its start and end.
      */
-    const range = this._algo.create.range()
+    const range = create_range()
     range._start = [this, 0]
     range._end = [this, 0]
     return range
@@ -391,11 +398,11 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 5. Set iterator’s filter to filter.
      * 6. Return iterator.
      */
-    const iterator = this._algo.create.nodeIterator(root, root, true)
+    const iterator = create_nodeIterator(root, root, true)
     iterator._whatToShow = whatToShow
-    iterator._iteratorCollection = this._algo.create.nodeList(root)
+    iterator._iteratorCollection = create_nodeList(root)
     if (isFunction(filter)) {
-      iterator._filter = this._algo.create.nodeFilter()
+      iterator._filter = create_nodeFilter()
       iterator._filter.acceptNode = filter
     } else {
       iterator._filter = filter
@@ -413,10 +420,10 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 4. Set walker’s filter to filter.
      * 5. Return walker.
      */
-    const walker = this._algo.create.treeWalker(root, root)
+    const walker = create_treeWalker(root, root)
     walker._whatToShow = whatToShow
     if (isFunction(filter)) {
-      walker._filter = this._algo.create.nodeFilter()
+      walker._filter = create_nodeFilter()
       walker._filter.acceptNode = filter
     } else {
       walker._filter = filter

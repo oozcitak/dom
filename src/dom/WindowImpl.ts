@@ -3,6 +3,7 @@ import {
 } from './interfaces'
 import { EventTargetImpl } from './EventTargetImpl'
 import { ObjectCache } from '@oozcitak/util'
+import { create_document } from '../algorithm/CreateAlgorithm'
 
 /**
  * Represents a window containing a DOM document.
@@ -16,7 +17,6 @@ export class WindowImpl extends EventTargetImpl implements Window {
 
   _associatedDocument: Document
 
-  _rangeList = new ObjectCache<Range>()
   _iteratorList = new ObjectCache<NodeIterator>()
   
   /**
@@ -25,7 +25,7 @@ export class WindowImpl extends EventTargetImpl implements Window {
   protected constructor () {
     super()
 
-    this._associatedDocument = this._algo.create.document()
+    this._associatedDocument = create_document()
   }
 
   /** @inheritdoc */

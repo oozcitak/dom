@@ -139,10 +139,6 @@ export default class TestHelpers {
   static domObject = new DOM()
 
   /**
-   * Returns the algorithm object.
-   */
-  static algo = TestHelpers.domObject.algorithm
-  /**
    * Returns the window object.
    */
   static window = TestHelpers.domObject.window

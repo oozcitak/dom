@@ -1,14 +1,11 @@
 import { Element, Attr, NamedNodeMap } from "./interfaces"
 import { NotFoundError } from "./DOMException"
-import { DOMAlgorithm } from "../algorithm/interfaces"
-import { globalStore } from "../util"
+import { element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName, element_setAnAttribute, element_removeAnAttributeByName, element_removeAnAttributeByNamespaceAndLocalName } from "../algorithm/ElementAlgorithm"
 
 /**
  * Represents a collection of nodes.
  */
 export class NamedNodeMapImpl implements NamedNodeMap {
-
-  private _algo: DOMAlgorithm
 
   _element: Element
   _attributeList: Attr[] = []
@@ -19,8 +16,6 @@ export class NamedNodeMapImpl implements NamedNodeMap {
    * @param element - parent element
    */
   private constructor(element: Element) {
-    this._algo = globalStore.dom.algorithm
-
     this._element = element
   }
 
@@ -49,7 +44,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * The getNamedItem(qualifiedName) method, when invoked, must return the 
      * result of getting an attribute given qualifiedName and element.
      */
-    return this._algo.element.getAnAttributeByName(qualifiedName, this._element)
+    return element_getAnAttributeByName(qualifiedName, this._element)
   }
 
   /** @inheritdoc */
@@ -59,7 +54,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * return the result of getting an attribute given namespace, localName, 
      * and element.
      */
-    return this._algo.element.getAnAttributeByNamespaceAndLocalName(
+    return element_getAnAttributeByNamespaceAndLocalName(
       namespace || '', localName, this._element)
   }
 
@@ -69,12 +64,12 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * The setNamedItem(attr) and setNamedItemNS(attr) methods, when invoked, 
      * must return the result of setting an attribute given attr and element.
      */
-    return this._algo.element.setAnAttribute(attr, this._element)
+    return element_setAnAttribute(attr, this._element)
   }
 
   /** @inheritdoc */
   setNamedItemNS(attr: Attr): Attr | null {
-    return this._algo.element.setAnAttribute(attr, this._element)
+    return element_setAnAttribute(attr, this._element)
   }
 
   /** @inheritdoc */
@@ -85,7 +80,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * 2. If attr is null, then throw a "NotFoundError" DOMException.
      * 3. Return attr.
      */
-    const attr = this._algo.element.removeAnAttributeByName(qualifiedName, this._element)
+    const attr = element_removeAnAttributeByName(qualifiedName, this._element)
 
     if (attr === null)
       throw new NotFoundError()
@@ -101,7 +96,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * 2. If attr is null, then throw a "NotFoundError" DOMException.
      * 3. Return attr.
      */
-    const attr = this._algo.element.removeAnAttributeByNamespaceAndLocalName(
+    const attr = element_removeAnAttributeByNamespaceAndLocalName(
       namespace || '', localName, this._element)
 
     if (attr === null)

@@ -1,5 +1,6 @@
 import { EventHandler, AbortSignal } from "./interfaces"
 import { EventTargetImpl } from './EventTargetImpl'
+import { event_getterEventHandlerIDLAttribute, event_setterEventHandlerIDLAttribute } from "../algorithm/EventAlgorithm"
 
 /**
  * Represents a signal object that communicates with a DOM request and abort
@@ -22,10 +23,10 @@ export class AbortSignalImpl extends EventTargetImpl implements AbortSignal {
 
   /** @inheritdoc */
   get onabort(): EventHandler {
-    return this._algo.event.getterEventHandlerIDLAttribute(this, "onabort")
+    return event_getterEventHandlerIDLAttribute(this, "onabort")
   }
   set onabort(val: EventHandler) {
-    this._algo.event.setterEventHandlerIDLAttribute(this, "onabort", val)
+    event_setterEventHandlerIDLAttribute(this, "onabort", val)
   }
 
   /**
