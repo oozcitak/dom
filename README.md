@@ -13,12 +13,12 @@ A Javascript implementation of the [DOM Living Standard](https://dom.spec.whatwg
 Current version implements the standard as of commit [57512fa](https://dom.spec.whatwg.org/commit-snapshots/57512fac17cf2f1c4c85be4aec178c8086ee5ee4/).
 
 # Usage
-Create an instance of the `DOM` class and use its `implementation` property to construct the DOM tree.
+Create an instance of the `DOMImplementation` class to construct the DOM tree.
 
 ```js
-const { DOM } = require("@oozcitak/dom");
+const { DOMImplementation } = require("@oozcitak/dom");
 
-const dom = new DOM();
+const dom = new DOMImplementation();
 const doc = dom.implementation.createDocument('ns', 'root');
 ```
 
