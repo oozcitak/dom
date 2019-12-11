@@ -199,6 +199,12 @@ export function mutation_preInsert(node: Node, parent: Node,
 export function mutation_insert(node: Node, parent: Node, child: Node | null,
   suppressObservers?: boolean): void {
 
+  // Optimized common case
+  if (child === null && node.nodeType !== NodeType.DocumentFragment && node._children.size === 0) {
+    mutation_insert_single(node, parent, suppressObservers)
+    return
+  }
+
   /**
    * 1. Let count be the number of children of node if it is a 
    * DocumentFragment node, and one otherwise.
@@ -388,6 +394,153 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     if (!suppressObservers) {
       observer_queueTreeMutationRecord(parent, nodes, [],
         previousSibling, child)
+    }
+  }
+}
+
+/**
+ * Inserts a node into a parent node. Optimized routine for the common case where
+ * node is not a document fragment node and it has no child nodes.
+ * 
+ * @param node - node to insert
+ * @param parent - parent node to receive node
+ * @param suppressObservers - whether to notify observers
+ */
+function mutation_insert_single(node: Node, parent: Node,
+  suppressObservers?: boolean): void {
+
+  /**
+   * 1. Let count be the number of children of node if it is a 
+   * DocumentFragment node, and one otherwise.
+   * 2. If child is non-null, then:
+   * 2.1. For each live range whose start node is parent and start 
+   * offset is greater than child's index, increase its start 
+   * offset by count.
+   * 2.2. For each live range whose end node is parent and end 
+   * offset is greater than child's index, increase its end 
+   * offset by count.
+   * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
+   * otherwise « node ».
+   * 4. If node is a DocumentFragment node, remove its children with the 
+   * suppress observers flag set.
+   * 5. If node is a DocumentFragment node, then queue a tree mutation record 
+   * for node with « », nodes, null, and null.
+   */
+
+  /**
+   * 6. Let previousSibling be child’s previous sibling or parent’s last 
+   * child if child is null.
+   */
+  const previousSibling = parent._lastChild
+
+  /**
+   * 7. For each node in nodes, in tree order:
+   * 7.1. If child is null, then append node to parent’s children.
+   * 7.2. Otherwise, insert node into parent’s children before child’s
+   * index.
+   */
+  node._parent = parent
+  infraSet.append(parent._children, node)
+
+  // assign siblings and children for quick lookups
+  if (parent._firstChild === null) {
+    node._previousSibling = null
+    node._nextSibling = null
+
+    parent._firstChild = node
+    parent._lastChild = node
+  } else {
+    const prev = parent._lastChild
+
+    node._previousSibling = prev
+    node._nextSibling = null
+
+    if (prev) prev._nextSibling = node
+
+    if (!prev) parent._firstChild = node
+    parent._lastChild = node
+  }
+
+  /**
+   * 7.3. If parent is a shadow host and node is a slotable, then 
+   * assign a slot for node.
+   */
+  if (dom.features.slots) {
+    if ((parent as Element)._shadowRoot !== null && Guard.isSlotable(node)) {
+      shadowTree_assignASlot(node)
+    }
+  }
+
+  /**
+   * 7.4. If node is a Text node, run the child text content change 
+   * steps for parent.
+   */
+  if (dom.features.steps) {
+    if (Guard.isTextNode(node)) {
+      dom_runChildTextContentChangeSteps(parent)
+    }
+  }
+
+  /**
+   * 7.5. If parent's root is a shadow root, and parent is a slot 
+   * whose assigned nodes is the empty list, then run signal
+   * a slot change for parent.
+   */
+  if (dom.features.slots) {
+    if (Guard.isShadowRoot(tree_rootNode(parent)) &&
+      Guard.isSlot(parent) && isEmpty(parent._assignedNodes)) {
+      shadowTree_signalASlotChange(parent)
+    }
+  }
+
+  /**
+   * 7.6. Run assign slotables for a tree with node's root.
+   */
+  if (dom.features.slots) {
+    shadowTree_assignSlotablesForATree(tree_rootNode(node))
+  }
+
+  /**
+   * 7.7. For each shadow-including inclusive descendant 
+   * inclusiveDescendant of node, in shadow-including tree
+   * order:
+   * 7.7.1. Run the insertion steps with inclusiveDescendant.
+   */
+  if (dom.features.steps) {
+    dom_runInsertionSteps(node)
+  }
+
+  if (dom.features.customElements) {
+    /**
+     * 7.7.2. If inclusiveDescendant is connected, then:
+     */
+    if (Guard.isElementNode(node) && 
+      shadowTree_isConnected(node)) {
+      if (Guard.isCustomElementNode(node)) {
+        /**
+         * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
+         * element callback reaction with inclusiveDescendant, callback name 
+         * "connectedCallback", and an empty argument list.
+         */
+        customElement_enqueueACustomElementCallbackReaction(
+          node, "connectedCallback", [])
+      } else {
+        /**
+         * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
+         */
+        customElement_tryToUpgrade(node)
+      }      
+    }
+  }
+
+  /**
+   * 8. If suppress observers flag is unset, then queue a tree mutation record
+   * for parent with nodes, « », previousSibling, and child.
+   */
+  if (dom.features.mutationObservers) {
+    if (!suppressObservers) {
+      observer_queueTreeMutationRecord(parent, [node], [],
+        previousSibling, null)
     }
   }
 }
