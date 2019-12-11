@@ -42,13 +42,13 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   readonly DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
   readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
-  protected _childNodes: NodeList
+  protected __childNodes?: NodeList
+  get _childNodes(): NodeList { return this.__childNodes || (this.__childNodes = create_nodeList(this)) }
 
-  private _nodeDocumentOverride: Document | undefined = undefined
+  private _nodeDocumentOverride?: Document
   get _nodeDocument(): Document { return this._nodeDocumentOverride || dom.window._associatedDocument }
   set _nodeDocument(val: Document) { this._nodeDocumentOverride = val }
-  _registeredObserverList:
-    Array<RegisteredObserver | TransientRegisteredObserver> = []
+  _registeredObserverList: (RegisteredObserver | TransientRegisteredObserver)[] = []
 
   abstract _nodeType: NodeType
   _parent: Node | null = null
@@ -63,8 +63,6 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
    */
   protected constructor() {
     super()
-    
-    this._childNodes = create_nodeList(this)
   }
 
   /** @inheritdoc */

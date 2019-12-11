@@ -1,4 +1,3 @@
-import { dom } from '../'
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node, Document,
   Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
@@ -9,13 +8,10 @@ import {
   InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
 } from './DOMException'
 import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { Guard } from '../util'
 import { create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot, create_text } from '../algorithm/CreateAlgorithm'
 import { customElement_isValidCustomElementName, customElement_isValidShadowHostName, customElement_lookUpACustomElementDefinition } from '../algorithm/CustomElementAlgorithm'
-import { tree_rootNode } from '../algorithm/TreeAlgorithm'
 import { xml_isName } from '../algorithm/XMLAlgorithm'
 import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
-import { shadowTree_isAssigned, shadowTree_assignSlotables, shadowTree_assignASlot, shadowTree_assignSlotablesForATree } from '../algorithm/ShadowTreeAlgorithm'
 import { element_getAnAttributeValue, element_setAnAttributeValue, element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName, element_append, element_change, element_removeAnAttributeByName, element_removeAnAttributeByNamespaceAndLocalName, element_setAnAttribute, element_remove, element_insertAdjacent } from '../algorithm/ElementAlgorithm'
 import { node_listOfElementsWithNamespace, node_listOfElementsWithClassNames, node_listOfElementsWithQualifiedName } from '../algorithm/NodeAlgorithm'
 
@@ -35,7 +31,8 @@ export class ElementImpl extends NodeImpl implements Element {
 
   _shadowRoot: ShadowRoot | null = null
 
-  _attributeList: NamedNodeMap
+  __attributeList?: NamedNodeMap
+  get _attributeList(): NamedNodeMap { return this.__attributeList || (this.__attributeList = create_namedNodeMap(this)) }
 
   _uniqueIdentifier?: string
 
@@ -49,8 +46,6 @@ export class ElementImpl extends NodeImpl implements Element {
    */
   constructor() {
     super()
-
-    this._attributeList = create_namedNodeMap(this)    
   }
 
   /** @inheritdoc */

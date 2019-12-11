@@ -50,7 +50,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
-  protected _implementation: DOMImplementation
+  protected _implementation?: DOMImplementation
 
   _nodeDocumentOverwrite: Document | null = null
   get _nodeDocument(): Document { return this._nodeDocumentOverwrite || this }
@@ -61,8 +61,6 @@ export class DocumentImpl extends NodeImpl implements Document {
    */
   public constructor() {
     super()
-
-    this._implementation = create_domImplementation(this)
   }
 
   /** @inheritdoc */
@@ -71,7 +69,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * The implementation attribute’s getter must return the DOMImplementation 
      * object that is associated with the document.
      */
-    return this._implementation
+    return this._implementation || (this._implementation = create_domImplementation(this))
   }
 
   /** @inheritdoc */
