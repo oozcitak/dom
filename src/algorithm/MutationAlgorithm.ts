@@ -21,13 +21,17 @@ import { document_adopt } from './DocumentAlgorithm'
  * @param child - child node to insert node before
  */
 export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, child: Node | null): void {
+  const parentNodeType = parent._nodeType
+  const nodeNodeType = node._nodeType
+  const childNodeType = child ? child._nodeType : null
+  
   /**
    * 1. If parent is not a Document, DocumentFragment, or Element node,
    * throw a "HierarchyRequestError" DOMException.
    */
-  if (parent.nodeType !== NodeType.Document &&
-    parent.nodeType !== NodeType.DocumentFragment &&
-    parent.nodeType !== NodeType.Element)
+  if (parentNodeType !== NodeType.Document &&
+    parentNodeType !== NodeType.DocumentFragment &&
+    parentNodeType !== NodeType.Element)
     throw new HierarchyRequestError(`Only document, document fragment and element nodes can contain child nodes. Parent node is ${parent.nodeName}.`)
 
   /**
@@ -49,13 +53,13 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
    * ProcessingInstruction, or Comment node, throw a "HierarchyRequestError"
    * DOMException.
    */
-  if (node.nodeType !== NodeType.DocumentFragment &&
-    node.nodeType !== NodeType.DocumentType &&
-    node.nodeType !== NodeType.Element &&
-    node.nodeType !== NodeType.Text &&
-    node.nodeType !== NodeType.ProcessingInstruction &&
-    node.nodeType !== NodeType.CData &&
-    node.nodeType !== NodeType.Comment)
+  if (nodeNodeType !== NodeType.DocumentFragment &&
+    nodeNodeType !== NodeType.DocumentType &&
+    nodeNodeType !== NodeType.Element &&
+    nodeNodeType !== NodeType.Text &&
+    nodeNodeType !== NodeType.ProcessingInstruction &&
+    nodeNodeType !== NodeType.CData &&
+    nodeNodeType !== NodeType.Comment)
     throw new HierarchyRequestError(`Only document fragment, document type, element, text, processing instruction, cdata section or comment nodes can be inserted. Node is ${node.nodeName}.`)
 
   /**
@@ -63,12 +67,12 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
    * doctype and parent is not a document, throw a "HierarchyRequestError"
    * DOMException.
    */
-  if (node.nodeType === NodeType.Text &&
-    parent.nodeType === NodeType.Document)
+  if (nodeNodeType === NodeType.Text &&
+    parentNodeType === NodeType.Document)
     throw new HierarchyRequestError(`Cannot insert a text node as a child of a document node. Node is ${node.nodeName}.`)
 
-  if (node.nodeType === NodeType.DocumentType &&
-    parent.nodeType !== NodeType.Document)
+  if (nodeNodeType === NodeType.DocumentType &&
+    parentNodeType !== NodeType.Document)
     throw new HierarchyRequestError(`A document type node can only be inserted under a document node. Parent node is ${parent.nodeName}.`)
 
   /**
@@ -86,13 +90,13 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
    * parent has a doctype child, child is non-null and an element is preceding
    * child, or child is null and parent has an element child.
    */
-  if (parent.nodeType === NodeType.Document) {
-    if (node.nodeType === NodeType.DocumentFragment) {
+  if (parentNodeType === NodeType.Document) {
+    if (nodeNodeType === NodeType.DocumentFragment) {
       let eleCount = 0
       for (const childNode of node._children) {
-        if (childNode.nodeType === NodeType.Element)
+        if (childNode._nodeType === NodeType.Element)
           eleCount++
-        else if (childNode.nodeType === NodeType.Text)
+        else if (childNode._nodeType === NodeType.Text)
           throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
       }
 
@@ -100,56 +104,56 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
         throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
       } else if (eleCount === 1) {
         for (const ele of parent._children) {
-          if (ele.nodeType === NodeType.Element)
+          if (ele._nodeType === NodeType.Element)
             throw new HierarchyRequestError(`The document node already has a document element node.`)
         }
 
         if (child) {
-          if (child.nodeType === NodeType.DocumentType)
+          if (childNodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
 
           let doctypeChild = child._nextSibling
           while (doctypeChild) {
-            if (doctypeChild.nodeType === NodeType.DocumentType)
+            if (doctypeChild._nodeType === NodeType.DocumentType)
               throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
             doctypeChild = doctypeChild._nextSibling
           }
         }
       }
-    } else if (node.nodeType === NodeType.Element) {
+    } else if (nodeNodeType === NodeType.Element) {
       for (const ele of parent._children) {
-        if (ele.nodeType === NodeType.Element)
+        if (ele._nodeType === NodeType.Element)
           throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
       }
 
       if (child) {
-        if (child.nodeType === NodeType.DocumentType)
+        if (childNodeType === NodeType.DocumentType)
           throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
 
         let doctypeChild = child._nextSibling
         while (doctypeChild) {
-          if (doctypeChild.nodeType === NodeType.DocumentType)
+          if (doctypeChild._nodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
           doctypeChild = doctypeChild._nextSibling
         }
       }
-    } else if (node.nodeType === NodeType.DocumentType) {
+    } else if (nodeNodeType === NodeType.DocumentType) {
       for (const ele of parent._children) {
-        if (ele.nodeType === NodeType.DocumentType)
+        if (ele._nodeType === NodeType.DocumentType)
           throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
       }
 
       if (child) {
         let elementChild = child._previousSibling
         while (elementChild) {
-          if (elementChild.nodeType === NodeType.Element)
+          if (elementChild._nodeType === NodeType.Element)
             throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
           elementChild = elementChild._previousSibling
         }
       } else {
         let elementChild = parent._firstChild
         while (elementChild) {
-          if (elementChild.nodeType === NodeType.Element)
+          if (elementChild._nodeType === NodeType.Element)
             throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
           elementChild = elementChild._nextSibling
         }
