@@ -40,7 +40,6 @@
     "benchmark": "*",
     "chalk": "^3.0.0",
     "dedent": "*",
-    "git-state": "*",
     "glob": "*",
     "jest": "*",
     "jsdom": "*",

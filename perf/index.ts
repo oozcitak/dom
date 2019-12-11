@@ -1,7 +1,7 @@
 import chalk from "chalk"
 import { existsSync, closeSync, openSync, readFileSync, writeFileSync } from "fs"
-import { join, resolve } from "path"
-const { isGitSync, dirtySync } = require("git-state")
+import { join } from "path"
+import { execSync } from "child_process"
 
 export function processBenchmark(suite: any, baseCase: string): void {
   const items: any[] = []
@@ -85,9 +85,14 @@ const savePerf = function(perfObj: PerfList): void {
 }
 
 const gitWorking = function(): boolean {
-  const gitDir = resolve(__dirname, '..')
-  return isGitSync(gitDir) && (dirtySync(gitDir) !== 0)
+  const version = require('../package.json').version  
+  const commitMessage = execSync("git log -1 HEAD --pretty=format:%s").toString()
+  if (version !== commitMessage) return true
+  const diff = execSync("git diff --name-only").toString()
+  if (diff === "" || diff.includes("perf/perf.list")) return false
+  return true
 }
+
 
 const currentVersion = function(): string {
   let version = require('../package.json').version
