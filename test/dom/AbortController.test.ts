@@ -7,12 +7,12 @@ describe('AbortController', () => {
 
   function doWork(signal: any) {
     if (signal.aborted) {
-      return Promise.reject(new $$.DOMException('Aborted', 'AbortError'))
+      return Promise.reject(new Error('Aborted'))
     }
   
     return new Promise((resolve, reject) => {
       signal.addEventListener('abort', () => {
-        reject(new $$.DOMException('Aborted', 'AbortError'))
+        reject(new Error('Aborted'))
       })
       for(let i = 0; i < 100000; i++) {
         //

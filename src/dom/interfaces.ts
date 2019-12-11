@@ -1,5 +1,5 @@
 import { ObjectCache } from "@oozcitak/util"
-import { Interfaces as URLInterfaces } from "@oozcitak/url"
+import { URLRecord } from "@oozcitak/url/lib/url/interfaces"
 
 /**
  * Defines DOM features supported by algorithms.
@@ -1033,7 +1033,7 @@ export interface Document extends Node, NonElementParentNode,
 
   _encoding: { name: string, labels: string[] }
   _contentType: string
-  _URL: URLInterfaces.URLRecord
+  _URL: URLRecord
   _origin: Origin
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"  

@@ -12,7 +12,8 @@ import { NodeImpl } from './NodeImpl'
 import { Guard } from '../util'
 import { isFunction, isString } from '@oozcitak/util'
 import { namespace as infraNamespace } from '@oozcitak/infra'
-import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
+import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
+import { URLRecord } from '@oozcitak/url/lib/url/interfaces'
 import { create_domImplementation, create_documentFragment, create_text, create_cdataSection, create_comment, create_processingInstruction, create_attr, create_range, create_nodeIterator, create_nodeList, create_nodeFilter, create_treeWalker } from '../algorithm/CreateAlgorithm'
 import { xml_isName } from '../algorithm/XMLAlgorithm'
 import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
@@ -33,7 +34,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
   }
   _contentType: string = 'application/xml'
-  _URL: URLInterfaces.URLRecord = {
+  _URL: URLRecord = {
     scheme: "about",
     username: "",
     password: "",

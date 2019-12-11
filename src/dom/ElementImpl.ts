@@ -37,7 +37,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
   _attributeList: NamedNodeMap
 
-  _uniqueIdentifier?: string | undefined
+  _uniqueIdentifier?: string
 
   _attributeChangeSteps: AttributeChangeStep[] = []
     

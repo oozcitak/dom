@@ -7,7 +7,7 @@ import {
 import { EventTargetImpl } from './EventTargetImpl'
 import { Guard } from '../util'
 import { NotSupportedError } from './DOMException'
-import { URLAlgorithm } from '@oozcitak/url'
+import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
 import { create_nodeList } from '../algorithm/CreateAlgorithm'
 import { tree_rootNode, tree_nodeLength, tree_getDescendantNodes, tree_index, tree_isAncestorOf, tree_isDescendantOf, tree_isPreceding } from '../algorithm/TreeAlgorithm'
 import { shadowTree_isAssigned, shadowTree_isConnected } from '../algorithm/ShadowTreeAlgorithm'

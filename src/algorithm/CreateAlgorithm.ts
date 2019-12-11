@@ -1,4 +1,4 @@
-import { URLAlgorithm, Interfaces as URLInterfaces } from '@oozcitak/url'
+import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
 import { 
   Document, DOMImplementation, Window, XMLDocument, AbortController, 
   AbortSignal, DocumentType, Element, DocumentFragment, ShadowRoot, Attr, Text, 
@@ -31,6 +31,7 @@ import { TreeWalkerImpl } from '../dom/TreeWalkerImpl'
 import { NodeFilterImpl } from '../dom/NodeFilterImpl'
 import { MutationRecordImpl } from '../dom/MutationRecordImpl'
 import { DOMTokenListImpl } from '../dom/DOMTokenListImpl'
+import { URLRecord } from '@oozcitak/url/lib/url/interfaces'
 
 /** 
  * Creates a `DOMImplementation`.
@@ -325,7 +326,7 @@ export function create_domTokenList(element: Element,
  * 
  * @param url - an URL string
  */
-export function create_urlRecord(url: string): URLInterfaces.URLRecord {
+export function create_urlRecord(url: string): URLRecord {
   const urlRecord = new URLAlgorithm().basicURLParser(url)
   if (urlRecord === null) {
     throw new Error("Invalid URL.")
