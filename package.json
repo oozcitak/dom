@@ -62,7 +62,7 @@
   "scripts": {
     "compile": "rm -rf lib && tsc --version && tsc",
     "test": "npm run compile && jest --coverage",
-    "perf": "ts-node ./perf/perf.ts",
+    "perf": "npm run compile && ts-node ./perf/perf.ts",
     "prof": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate.log && rm isolate-v8.log",
     "publish-public": "npm run test && npm publish --access public"
   }

@@ -33,6 +33,17 @@ function _getNextDescendantNode(root: Node, node: Node, shadow: boolean = false)
 	return null
 }
 
+function _emptyIterator<T>(): Iterable<T> {
+	return {
+		[Symbol.iterator]: () => {
+			return {
+				next: () => {
+					return { done: true, value: null }
+				}
+			}
+		}
+	}
+}
 /**
  * Traverses through all descendant nodes of the tree rooted at
  * `node` in depth-first pre-order.
@@ -45,6 +56,10 @@ function _getNextDescendantNode(root: Node, node: Node, shadow: boolean = false)
 export function tree_getDescendantNodes(node: Node, self: boolean = false,
 	shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
 	Iterable<Node> {
+
+	if (!self && node._children.size === 0) {
+		return _emptyIterator<Node>()
+	}
 
 	return {
 		[Symbol.iterator]: () => {
@@ -83,6 +98,10 @@ export function tree_getDescendantElements(node: Node, self: boolean = false,
 	shadow: boolean = false, filter?:	((childNode: Element) => boolean)):
 	Iterable<Element> {
 	
+  if (!self && node._children.size === 0) {
+	  return _emptyIterator<Element>()
+	}
+	
 	return {
 		[Symbol.iterator]: () => {
 
@@ -119,6 +138,10 @@ export function tree_getSiblingNodes(node: Node, self: boolean = false,
 	filter?: ((childNode: Node) => boolean)):
 	Iterable<Node> {
 
+	if (!node._parent || node._parent._children.size === 0) {
+		return _emptyIterator<Node>()
+	}
+
 	return {
 		[Symbol.iterator]() {
 
@@ -154,6 +177,10 @@ export function tree_getAncestorNodes(node: Node, self: boolean = false,
 	filter?: ((ancestorNode: Node) => boolean)):
 	Iterable<Node> {
 
+	if (!self && !node._parent) {
+		return _emptyIterator<Node>()
+	}
+
 	return {
 		[Symbol.iterator]() {
 
@@ -185,6 +212,7 @@ export function tree_getAncestorNodes(node: Node, self: boolean = false,
  * @param nodeB - a node
  */
 export function tree_getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
+	
 	if(nodeA === nodeB){
 		return nodeA._parent
 	}
