@@ -45,9 +45,9 @@ export interface Window extends EventTarget {
   _signalSlots: Set<Slot>
   _mutationObserverMicrotaskQueued: boolean
   _mutationObservers: Set<MutationObserver>
-  
+
   _associatedDocument: Document
-  
+
   _iteratorList: ObjectCache<NodeIterator>
 }
 
@@ -55,7 +55,7 @@ export interface Window extends EventTarget {
  * Represents a DOM event.
  */
 export interface Event {
-  
+
   readonly NONE: number
   readonly CAPTURING_PHASE: number
   readonly AT_TARGET: number
@@ -375,7 +375,7 @@ export interface EventTarget {
    * 
    * @param event - an event
    */
-  _legacyCanceledActivationBehavior?(event: Event): void  
+  _legacyCanceledActivationBehavior?(event: Event): void
 }
 
 /**
@@ -1036,7 +1036,7 @@ export interface Document extends Node, NonElementParentNode,
   _URL: URLRecord
   _origin: Origin
   _type: "xml" | "html"
-  _mode: "no-quirks" | "quirks" | "limited-quirks"  
+  _mode: "no-quirks" | "quirks" | "limited-quirks"
 }
 
 /**
@@ -1354,7 +1354,7 @@ export interface Element extends Node, ParentNode,
    */
   insertAdjacentText(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
     data: string): void
-    
+
   _namespace: string | null
   _namespacePrefix: string | null
   _localName: string
@@ -1362,14 +1362,14 @@ export interface Element extends Node, ParentNode,
   _customElementDefinition: CustomElementDefinition | null
   _is: string | null
   _shadowRoot: ShadowRoot | null
-  
+
   readonly _qualifiedName: string
   readonly _htmlUppercasedQualifiedName: string
-  
+
   _attributeList: NamedNodeMap
 
   _attributeChangeSteps: AttributeChangeStep[]
-  
+
   _uniqueIdentifier?: string
 }
 
@@ -2553,7 +2553,7 @@ export type CustomElementDefinition = {
   localName: string
   constructor: (new (...args: any[]) => Element)
   observedAttributes: string[]
-  lifecycleCallbacks: { 
+  lifecycleCallbacks: {
     "connectedCallback": ((args: any[]) => any) | null
     "disconnectedCallback": ((args: any[]) => any) | null
     "adoptedCallback": ((args: any) => any[]) | null

@@ -1,18 +1,24 @@
-import { 
-  Node, AbstractRange, DocumentFragment, CharacterData, Range, BoundaryPoint, 
+import {
+  Node, AbstractRange, DocumentFragment, CharacterData, Range, BoundaryPoint,
   BoundaryPosition
-} from '../dom/interfaces'
-import { 
+} from "../dom/interfaces"
+import {
   InvalidNodeTypeError, IndexSizeError, HierarchyRequestError
-} from '../dom/DOMException'
-import { Guard } from '../util'
-import { create_documentFragment, create_range } from './CreateAlgorithm'
-import { tree_rootNode, tree_nodeLength, tree_isAncestorOf, tree_index, tree_getDescendantNodes } from './TreeAlgorithm'
-import { boundaryPoint_position } from './BoundaryPointAlgorithm'
-import { characterData_substringData, characterData_replaceData } from './CharacterDataAlgorithm'
-import { node_clone } from './NodeAlgorithm'
-import { mutation_append, mutation_ensurePreInsertionValidity, mutation_remove, mutation_preInsert } from './MutationAlgorithm'
-import { text_split } from './TextAlgorithm'
+} from "../dom/DOMException"
+import { Guard } from "../util"
+import { create_documentFragment, create_range } from "./CreateAlgorithm"
+import {
+  tree_rootNode, tree_nodeLength, tree_isAncestorOf, tree_index,
+  tree_getDescendantNodes
+} from "./TreeAlgorithm"
+import { boundaryPoint_position } from "./BoundaryPointAlgorithm"
+import { characterData_substringData, characterData_replaceData } from "./CharacterDataAlgorithm"
+import { node_clone } from "./NodeAlgorithm"
+import {
+  mutation_append, mutation_ensurePreInsertionValidity, mutation_remove,
+  mutation_preInsert
+} from "./MutationAlgorithm"
+import { text_split } from "./TextAlgorithm"
 
 /**
  * Determines if the node's start boundary point is at its end boundary
@@ -225,7 +231,7 @@ export function range_extract(range: AbstractRange): DocumentFragment {
    * node, set common ancestor to its own parent.
    */
   let commonAncestor = originalStartNode
-  while(!tree_isAncestorOf(originalEndNode, commonAncestor, true)) {
+  while (!tree_isAncestorOf(originalEndNode, commonAncestor, true)) {
     if (commonAncestor._parent === null) {
       throw new Error("Parent node  is null.")
     }
@@ -464,7 +470,7 @@ export function range_cloneTheContents(range: AbstractRange): DocumentFragment {
    * node, set common ancestor to its own parent.
    */
   let commonAncestor = originalStartNode
-  while(!tree_isAncestorOf(originalEndNode, commonAncestor, true)) {
+  while (!tree_isAncestorOf(originalEndNode, commonAncestor, true)) {
     if (commonAncestor._parent === null) {
       throw new Error("Parent node  is null.")
     }
@@ -724,20 +730,20 @@ export function range_insert(node: Node, range: AbstractRange): void {
  * 
  * @param range - a range
  */
-export function range_getContainedNodes(range: Range): Iterable<Node> {   
+export function range_getContainedNodes(range: Range): Iterable<Node> {
   return {
     [Symbol.iterator]: () => {
 
       const container = range.commonAncestorContainer
-      const it = tree_getDescendantNodes(container)[Symbol.iterator]()            
+      const it = tree_getDescendantNodes(container)[Symbol.iterator]()
       let currentNode: Node | null = it.next().value
-      
+
       return {
         next: () => {
           while (currentNode && !range_isContained(currentNode, range)) {
             currentNode = it.next().value
           }
-          
+
           if (currentNode === null) {
             return { done: true, value: null }
           } else {
@@ -756,20 +762,20 @@ export function range_getContainedNodes(range: Range): Iterable<Node> {
  * 
  * @param range - a range
  */
-export function range_getPartiallyContainedNodes(range: Range): Iterable<Node> {   
+export function range_getPartiallyContainedNodes(range: Range): Iterable<Node> {
   return {
     [Symbol.iterator]: () => {
 
       const container = range.commonAncestorContainer
       const it = tree_getDescendantNodes(container)[Symbol.iterator]()
       let currentNode: Node | null = it.next().value
-      
+
       return {
         next: () => {
           while (currentNode && !range_isPartiallyContained(currentNode, range)) {
             currentNode = it.next().value
           }
-          
+
           if (currentNode === null) {
             return { done: true, value: null }
           } else {

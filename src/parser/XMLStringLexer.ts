@@ -1,8 +1,8 @@
 import {
   EOFToken, DeclarationToken, PIToken, TextToken,
   ClosingTagToken, ElementToken, CommentToken, DocTypeToken, CDATAToken
-} from './XMLToken'
-import { XMLToken, TokenType, XMLLexer } from './interfaces'
+} from "./XMLToken"
+import { XMLToken, TokenType, XMLLexer } from "./interfaces"
 
 /**
  * Represents a lexer for XML content in a string.
@@ -521,7 +521,7 @@ export class XMLStringLexer implements XMLLexer {
     this.reset()
 
     return {
-      next: function(this: XMLStringLexer): IteratorResult<XMLToken> {
+      next: function (this: XMLStringLexer): IteratorResult<XMLToken> {
         const token = this.nextToken()
         if (token.type === TokenType.EOF) {
           return { done: true, value: null }

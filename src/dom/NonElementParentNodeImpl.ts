@@ -1,6 +1,6 @@
-import { Element, NonElementParentNode } from './interfaces'
-import { Cast } from '../util'
-import { tree_getDescendantElements } from '../algorithm/TreeAlgorithm'
+import { Element, NonElementParentNode } from "./interfaces"
+import { Cast } from "../util"
+import { tree_getDescendantElements } from "../algorithm"
 
 /**
  * Represents a mixin that extends non-element parent nodes. This mixin
@@ -23,5 +23,5 @@ export class NonElementParentNodeImpl implements NonElementParentNode {
 
     return null
   }
-  
+
 }

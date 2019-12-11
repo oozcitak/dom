@@ -1,6 +1,6 @@
-import { DOMFeatures, Window, Node, Range, DOMImplementation } from "./interfaces"
+import { DOMFeatures, Window, Node, Range } from "./interfaces"
 import { CompareCache, ObjectCache, isObject } from "@oozcitak/util"
-import { create_window } from "../algorithm/CreateAlgorithm"
+import { create_window } from "../algorithm"
 
 /**
  * Represents an object implementing DOM algorithms.
@@ -21,7 +21,7 @@ export class DOMImpl {
   /**
    * Initializes a new instance of `DOM`.
    */
-  private constructor() { 
+  private constructor() {
     this._compareCache = new CompareCache<Node>()
     this._rangeList = new ObjectCache<Range>()
   }
@@ -34,7 +34,7 @@ export class DOMImpl {
    */
   setFeatures(features?: Partial<DOMFeatures> | boolean): void {
     if (features === undefined) features = true
-    
+
     if (isObject(features)) {
       for (const key in features) {
         (this._features as any)[key] = (features as any)[key]

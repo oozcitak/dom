@@ -1,4 +1,4 @@
-import { string as infraString } from '@oozcitak/infra'
+import { string as infraString } from "@oozcitak/infra"
 
 /**
  * Converts a whitespace separated string into an array of tokens.

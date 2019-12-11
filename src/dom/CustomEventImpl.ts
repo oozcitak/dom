@@ -1,6 +1,6 @@
-import { CustomEventInit, CustomEvent } from './interfaces'
-import { EventImpl } from './EventImpl'
-import { event_initialize } from '../algorithm/EventAlgorithm'
+import { CustomEventInit, CustomEvent } from "./interfaces"
+import { EventImpl } from "./EventImpl"
+import { event_initialize } from "../algorithm"
 
 /**
  * Represents and event that carries custom data.

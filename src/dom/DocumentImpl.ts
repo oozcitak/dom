@@ -1,26 +1,29 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
   DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
   HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
   ProcessingInstruction, Comment, CDATASection, NodeIterator, TreeWalker,
   FilterResult, Range, Event, EventTarget, Origin, Document
-} from './interfaces'
-import { 
-  NotSupportedError, InvalidCharacterError, HierarchyRequestError 
-} from './DOMException'
-import { NodeImpl } from './NodeImpl'
-import { Guard } from '../util'
-import { isFunction, isString } from '@oozcitak/util'
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
-import { URLRecord } from '@oozcitak/url/lib/url/interfaces'
-import { create_domImplementation, create_documentFragment, create_text, create_cdataSection, create_comment, create_processingInstruction, create_attr, create_range, create_nodeIterator, create_nodeList, create_nodeFilter, create_treeWalker } from '../algorithm/CreateAlgorithm'
-import { xml_isName } from '../algorithm/XMLAlgorithm'
-import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
-import { event_createLegacyEvent } from '../algorithm/EventAlgorithm'
-import { element_createAnElement } from '../algorithm/ElementAlgorithm'
-import { document_internalCreateElementNS, document_adopt } from '../algorithm/DocumentAlgorithm'
-import { node_listOfElementsWithQualifiedName, node_listOfElementsWithNamespace, node_listOfElementsWithClassNames, node_clone } from '../algorithm/NodeAlgorithm'
+} from "./interfaces"
+import {
+  NotSupportedError, InvalidCharacterError, HierarchyRequestError
+} from "./DOMException"
+import { NodeImpl } from "./NodeImpl"
+import { Guard } from "../util"
+import { isFunction, isString } from "@oozcitak/util"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
+import { URLRecord } from "@oozcitak/url/lib/url/interfaces"
+import {
+  create_domImplementation, create_documentFragment, create_text,
+  create_cdataSection, create_comment, create_processingInstruction,
+  create_attr, create_range, create_nodeIterator, create_nodeList,
+  create_nodeFilter, create_treeWalker, xml_isName,
+  namespace_validateAndExtract, event_createLegacyEvent,
+  element_createAnElement, document_internalCreateElementNS, document_adopt,
+  node_listOfElementsWithQualifiedName, node_listOfElementsWithNamespace,
+  node_listOfElementsWithClassNames, node_clone
+} from "../algorithm"
 
 /**
  * Represents a document node.

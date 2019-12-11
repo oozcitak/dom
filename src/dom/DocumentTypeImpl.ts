@@ -1,5 +1,5 @@
 import { Node, NodeType, DocumentType, Document } from "./interfaces"
-import { NodeImpl } from './NodeImpl'
+import { NodeImpl } from "./NodeImpl"
 
 /**
  * Represents an object providing methods which are not dependent on 

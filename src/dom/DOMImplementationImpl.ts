@@ -2,10 +2,10 @@ import {
   DocumentType, Document, XMLDocument, DOMImplementation, Element
 } from "./interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
-import { create_documentType, create_xmlDocument, create_document, create_text } from "../algorithm/CreateAlgorithm"
-import { namespace_validate } from "../algorithm/NamespaceAlgorithm"
-import { document_internalCreateElementNS } from "../algorithm/DocumentAlgorithm"
-import { element_createAnElement } from "../algorithm/ElementAlgorithm"
+import {
+  create_documentType, create_xmlDocument, create_document, create_text,
+  namespace_validate, document_internalCreateElementNS, element_createAnElement
+} from "../algorithm"
 import { DOMImpl } from "./DOMImpl"
 
 /**

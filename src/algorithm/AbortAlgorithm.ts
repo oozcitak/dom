@@ -1,5 +1,5 @@
-import { AbortSignal } from '../dom/interfaces'
-import { event_fireAnEvent } from './EventAlgorithm'
+import { AbortSignal } from "../dom/interfaces"
+import { event_fireAnEvent } from "./EventAlgorithm"
 
 /**
  * Adds an algorithm to the given abort signal.
@@ -43,7 +43,7 @@ export function abort_signalAbort(signal: AbortSignal): void {
    * 4. Empty signal’s abort algorithms.
    * 5. Fire an event named abort at signal.
    */
-  if(signal._abortedFlag) return
+  if (signal._abortedFlag) return
   signal._abortedFlag = true
   for (const algorithm of signal._abortAlgorithms) {
     algorithm.call(signal)

@@ -1,7 +1,9 @@
-import { Node, ChildNode } from './interfaces'
-import { Cast } from '../util'
-import { parentNode_convertNodesIntoANode } from '../algorithm/ParentNodeAlgorithm'
-import { mutation_preInsert, mutation_replace, mutation_remove } from '../algorithm/MutationAlgorithm'
+import { Node, ChildNode } from "./interfaces"
+import { Cast } from "../util"
+import { 
+  parentNode_convertNodesIntoANode, mutation_preInsert, mutation_replace,
+  mutation_remove
+} from "../algorithm"
 
 /**
  * Represents a mixin that extends child nodes that can have siblings

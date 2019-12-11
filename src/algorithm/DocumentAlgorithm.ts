@@ -1,14 +1,14 @@
-import { dom } from '../'
-import { Element, Document, Node } from '../dom/interfaces'
-import { Guard } from '../util'
-import { isString } from '@oozcitak/util'
-import { Element as ElementImpl } from '../dom'
-import { customElement_enqueueACustomElementCallbackReaction } from './CustomElementAlgorithm'
-import { tree_getDescendantNodes } from './TreeAlgorithm'
-import { namespace_validateAndExtract } from './NamespaceAlgorithm'
-import { dom_runAdoptingSteps } from './DOMAlgorithm'
-import { element_createAnElement } from './ElementAlgorithm'
-import { mutation_remove } from './MutationAlgorithm'
+import { dom } from "../"
+import { Element, Document, Node } from "../dom/interfaces"
+import { Guard } from "../util"
+import { isString } from "@oozcitak/util"
+import { Element as ElementImpl } from "../dom"
+import { customElement_enqueueACustomElementCallbackReaction } from "./CustomElementAlgorithm"
+import { tree_getDescendantNodes } from "./TreeAlgorithm"
+import { namespace_validateAndExtract } from "./NamespaceAlgorithm"
+import { dom_runAdoptingSteps } from "./DOMAlgorithm"
+import { element_createAnElement } from "./ElementAlgorithm"
+import { mutation_remove } from "./MutationAlgorithm"
 
 /**
  * Returns an element interface for the given name and namespace.
@@ -107,7 +107,7 @@ export function document_adopt(node: Node, document: Document): void {
        * containing oldDocument and document.
        */
       if (dom.features.customElements) {
-        if (Guard.isElementNode(inclusiveDescendant) && 
+        if (Guard.isElementNode(inclusiveDescendant) &&
           inclusiveDescendant._customElementState === "custom") {
           customElement_enqueueACustomElementCallbackReaction(
             inclusiveDescendant, "adoptedCallback", [oldDocument, document])

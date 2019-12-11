@@ -1,5 +1,5 @@
 import dedent from "dedent"
-import { dom } from '../src'
+import { dom } from "../src"
 import {
   AbortController, AbortSignal, Attr, CDATASection, 
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -9,17 +9,17 @@ import {
   NamedNodeMap, NodeFilter, Node, NodeList,
   ProcessingInstruction, ShadowRoot, StaticRange, Text,
   XMLDocument, Range
-} from '../src/dom'
+} from "../src/dom"
 // DOMParser
-import { DOMParser } from '../src/parser'
-import { XMLStringLexer } from '../src/parser/XMLStringLexer'
-import * as Token from '../src/parser/XMLToken'
+import { DOMParser } from "../src/parser"
+import { XMLStringLexer } from "../src/parser/XMLStringLexer"
+import * as Token from "../src/parser/XMLToken"
 // XMLSerializer
-import { XMLSerializer } from '../src/serializer'
-import { TupleSet } from '../src/serializer/TupleSet'
+import { XMLSerializer } from "../src/serializer"
+import { TupleSet } from "../src/serializer/TupleSet"
 
-import { WhatToShow, FilterResult } from '../src/dom/interfaces'
-import * as util from '../src/util'
+import { WhatToShow, FilterResult } from "../src/dom/interfaces"
+import * as util from "../src/util"
 
 export default class TestHelpers {
   /**

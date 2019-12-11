@@ -1,8 +1,8 @@
-import { dom } from '../'
-import { FilterResult, Node, NodeIterator } from '../dom/interfaces'
-import { ObjectCache } from '@oozcitak/util'
-import { traversal_filter } from './TraversalAlgorithm'
-import { tree_getFollowingNode, tree_getPrecedingNode } from './TreeAlgorithm'
+import { dom } from "../"
+import { FilterResult, Node, NodeIterator } from "../dom/interfaces"
+import { ObjectCache } from "@oozcitak/util"
+import { traversal_filter } from "./TraversalAlgorithm"
+import { tree_getFollowingNode, tree_getPrecedingNode } from "./TreeAlgorithm"
 
 /**
  * Returns the next or previous node in the subtree, or `null` if 

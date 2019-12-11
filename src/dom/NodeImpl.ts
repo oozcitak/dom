@@ -1,21 +1,23 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
   Node, NodeList, Element, Document, NodeType, Text, Attr, Position,
   GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,
   Event, EventTarget
-} from './interfaces'
-import { EventTargetImpl } from './EventTargetImpl'
-import { Guard } from '../util'
-import { NotSupportedError } from './DOMException'
-import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
-import { create_nodeList } from '../algorithm/CreateAlgorithm'
-import { tree_rootNode, tree_nodeLength, tree_getDescendantNodes, tree_index, tree_isAncestorOf, tree_isDescendantOf, tree_isPreceding } from '../algorithm/TreeAlgorithm'
-import { shadowTree_isAssigned, shadowTree_isConnected } from '../algorithm/ShadowTreeAlgorithm'
-import { characterData_replaceData } from '../algorithm/CharacterDataAlgorithm'
-import { mutation_preInsert, mutation_append, mutation_replace, mutation_preRemove, mutation_remove } from '../algorithm/MutationAlgorithm'
-import { attr_setAnExistingAttributeValue } from '../algorithm/AttrAlgorithm'
-import { text_descendantTextContent, text_contiguousExclusiveTextNodes } from '../algorithm/TextAlgorithm'
-import { node_stringReplaceAll, node_clone, node_equals, node_locateANamespacePrefix, node_locateANamespace } from '../algorithm/NodeAlgorithm'
+} from "./interfaces"
+import { EventTargetImpl } from "./EventTargetImpl"
+import { Guard } from "../util"
+import { NotSupportedError } from "./DOMException"
+import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
+import {
+  tree_rootNode, tree_nodeLength, tree_getDescendantNodes, tree_index,
+  tree_isAncestorOf, tree_isDescendantOf, tree_isPreceding, create_nodeList,
+  shadowTree_isAssigned, shadowTree_isConnected, characterData_replaceData,
+  mutation_preInsert, mutation_append, mutation_replace, mutation_preRemove,
+  mutation_remove, attr_setAnExistingAttributeValue,
+  text_descendantTextContent, text_contiguousExclusiveTextNodes,
+  node_stringReplaceAll, node_clone, node_equals, node_locateANamespacePrefix,
+  node_locateANamespace
+} from "../algorithm"
 
 /**
  * Represents a generic XML node.
@@ -523,7 +525,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * DOCUMENT_POSITION_PRECEDING or DOCUMENT_POSITION_FOLLOWING, 
      * with the constraint that this is to be consistent, together.
      */
-    if (node1 === null || node2 === null ||  
+    if (node1 === null || node2 === null ||
       tree_rootNode(node1) !== tree_rootNode(node2)) {
       // nodes are disconnected
       // return a random result but cache the value for consistency
@@ -725,7 +727,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * The replaceChild(node, child) method, when invoked, must return the 
      * result of replacing child with node within context object.
      */
-    return mutation_replace(oldChild,newChild, this)
+    return mutation_replace(oldChild, newChild, this)
   }
 
   /**

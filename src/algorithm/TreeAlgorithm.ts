@@ -1,5 +1,5 @@
-import { Guard } from '../util'
-import { NodeType, Element, Node } from '../dom/interfaces'
+import { Guard } from "../util"
+import { NodeType, Element, Node } from "../dom/interfaces"
 
 /**
  * Gets the next descendant of the given node of the tree rooted at `root`
@@ -10,39 +10,39 @@ import { NodeType, Element, Node } from '../dom/interfaces'
  * @param shadow - whether to visit shadow tree nodes
  */
 function _getNextDescendantNode(root: Node, node: Node, shadow: boolean = false): Node | null {
-	// traverse shadow tree
-	if (shadow && Guard.isElementNode(node) && Guard.isShadowRoot(node.shadowRoot)) {
-		if (node.shadowRoot._firstChild) return node.shadowRoot._firstChild
-	}
+  // traverse shadow tree
+  if (shadow && Guard.isElementNode(node) && Guard.isShadowRoot(node.shadowRoot)) {
+    if (node.shadowRoot._firstChild) return node.shadowRoot._firstChild
+  }
 
-	// traverse child nodes
-	if(node._firstChild) return node._firstChild
+  // traverse child nodes
+  if (node._firstChild) return node._firstChild
 
-	if (node === root) return null
+  if (node === root) return null
 
-	// traverse siblings
-	if(node._nextSibling) return node._nextSibling
+  // traverse siblings
+  if (node._nextSibling) return node._nextSibling
 
-	// traverse parent's next sibling
-	let parent = node._parent
-	while (parent && parent !== root) {
-		if (parent._nextSibling) return parent._nextSibling
-		parent = parent._parent
-	}
+  // traverse parent's next sibling
+  let parent = node._parent
+  while (parent && parent !== root) {
+    if (parent._nextSibling) return parent._nextSibling
+    parent = parent._parent
+  }
 
-	return null
+  return null
 }
 
 function _emptyIterator<T>(): Iterable<T> {
-	return {
-		[Symbol.iterator]: () => {
-			return {
-				next: () => {
-					return { done: true, value: null }
-				}
-			}
-		}
-	}
+  return {
+    [Symbol.iterator]: () => {
+      return {
+        next: () => {
+          return { done: true, value: null }
+        }
+      }
+    }
+  }
 }
 /**
  * Traverses through all descendant nodes of the tree rooted at
@@ -54,35 +54,35 @@ function _emptyIterator<T>(): Iterable<T> {
  * @param filter - a function to filter nodes
  */
 export function tree_getDescendantNodes(node: Node, self: boolean = false,
-	shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
-	Iterable<Node> {
+  shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
+  Iterable<Node> {
 
-	if (!self && node._children.size === 0) {
-		return _emptyIterator<Node>()
-	}
+  if (!self && node._children.size === 0) {
+    return _emptyIterator<Node>()
+  }
 
-	return {
-		[Symbol.iterator]: () => {
+  return {
+    [Symbol.iterator]: () => {
 
-			let currentNode: Node | null = (self ? node : _getNextDescendantNode(node, node, shadow))
-			
-			return {
-				next: () => {
-					while (currentNode && filter && !filter(currentNode)) {
-						currentNode = _getNextDescendantNode(node, currentNode, shadow)
-					}
+      let currentNode: Node | null = (self ? node : _getNextDescendantNode(node, node, shadow))
 
-					if (currentNode === null) {
-						return { done: true, value: null }
-					} else {
-						const result = { done: false, value: currentNode }
-						currentNode = _getNextDescendantNode(node, currentNode, shadow)
-						return result
-					}
-				}
-			}
-		}
-	}
+      return {
+        next: () => {
+          while (currentNode && filter && !filter(currentNode)) {
+            currentNode = _getNextDescendantNode(node, currentNode, shadow)
+          }
+
+          if (currentNode === null) {
+            return { done: true, value: null }
+          } else {
+            const result = { done: false, value: currentNode }
+            currentNode = _getNextDescendantNode(node, currentNode, shadow)
+            return result
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -94,37 +94,37 @@ export function tree_getDescendantNodes(node: Node, self: boolean = false,
  * @param shadow - whether to visit shadow tree nodes
  * @param filter - a function to filter nodes
  */
-export function tree_getDescendantElements(node: Node, self: boolean = false, 
-	shadow: boolean = false, filter?:	((childNode: Element) => boolean)):
-	Iterable<Element> {
-	
-  if (!self && node._children.size === 0) {
-	  return _emptyIterator<Element>()
-	}
-	
-	return {
-		[Symbol.iterator]: () => {
+export function tree_getDescendantElements(node: Node, self: boolean = false,
+  shadow: boolean = false, filter?: ((childNode: Element) => boolean)):
+  Iterable<Element> {
 
-			const it = tree_getDescendantNodes(node, self, shadow, (e: Node) => Guard.isElementNode(e))[Symbol.iterator]()
-			let currentNode: Element | null = it.next().value
-			
-			return {
-				next() {
-					while (currentNode && filter && !filter(currentNode)) {
-						currentNode = it.next().value
-					}
-					
-					if (currentNode === null) {
-						return { done: true, value: null }
-					} else {
-						const result = { done: false, value: currentNode }
-						currentNode = it.next().value
-						return result
-					}
-				}
-			}
-		}
-	}
+  if (!self && node._children.size === 0) {
+    return _emptyIterator<Element>()
+  }
+
+  return {
+    [Symbol.iterator]: () => {
+
+      const it = tree_getDescendantNodes(node, self, shadow, (e: Node) => Guard.isElementNode(e))[Symbol.iterator]()
+      let currentNode: Element | null = it.next().value
+
+      return {
+        next() {
+          while (currentNode && filter && !filter(currentNode)) {
+            currentNode = it.next().value
+          }
+
+          if (currentNode === null) {
+            return { done: true, value: null }
+          } else {
+            const result = { done: false, value: currentNode }
+            currentNode = it.next().value
+            return result
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -135,35 +135,35 @@ export function tree_getDescendantElements(node: Node, self: boolean = false,
  * @param filter - a function to filter nodes
  */
 export function tree_getSiblingNodes(node: Node, self: boolean = false,
-	filter?: ((childNode: Node) => boolean)):
-	Iterable<Node> {
+  filter?: ((childNode: Node) => boolean)):
+  Iterable<Node> {
 
-	if (!node._parent || node._parent._children.size === 0) {
-		return _emptyIterator<Node>()
-	}
+  if (!node._parent || node._parent._children.size === 0) {
+    return _emptyIterator<Node>()
+  }
 
-	return {
-		[Symbol.iterator]() {
+  return {
+    [Symbol.iterator]() {
 
-			let currentNode: Node | null = node._parent ? node._parent._firstChild : null
-			
-			return {
-				next() {
-					while (currentNode && (filter && !filter(currentNode) || (!self && currentNode === node))) {
-						currentNode = currentNode._nextSibling
-					}
-					
-					if (currentNode === null) {
-						return { done: true, value: null }
-					} else {
-						const result = { done: false, value: currentNode }
-						currentNode = currentNode._nextSibling
-						return result
-					}
-				}
-			}
-		}
-	}
+      let currentNode: Node | null = node._parent ? node._parent._firstChild : null
+
+      return {
+        next() {
+          while (currentNode && (filter && !filter(currentNode) || (!self && currentNode === node))) {
+            currentNode = currentNode._nextSibling
+          }
+
+          if (currentNode === null) {
+            return { done: true, value: null }
+          } else {
+            const result = { done: false, value: currentNode }
+            currentNode = currentNode._nextSibling
+            return result
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -174,35 +174,35 @@ export function tree_getSiblingNodes(node: Node, self: boolean = false,
  * @param filter - a function to filter nodes
  */
 export function tree_getAncestorNodes(node: Node, self: boolean = false,
-	filter?: ((ancestorNode: Node) => boolean)):
-	Iterable<Node> {
+  filter?: ((ancestorNode: Node) => boolean)):
+  Iterable<Node> {
 
-	if (!self && !node._parent) {
-		return _emptyIterator<Node>()
-	}
+  if (!self && !node._parent) {
+    return _emptyIterator<Node>()
+  }
 
-	return {
-		[Symbol.iterator]() {
+  return {
+    [Symbol.iterator]() {
 
-			let currentNode = self ? node : node._parent
-			
-			return {
-				next() {
-					while (currentNode && (filter && !filter(currentNode))) {
-						currentNode = currentNode._parent
-					}
-					
-					if (currentNode === null) {
-						return { done: true, value: null }
-					} else {
-						const result = { done: false, value: currentNode }
-						currentNode = currentNode._parent
-						return result
-					}
-				}
-			}
-		}
-	}
+      let currentNode = self ? node : node._parent
+
+      return {
+        next() {
+          while (currentNode && (filter && !filter(currentNode))) {
+            currentNode = currentNode._parent
+          }
+
+          if (currentNode === null) {
+            return { done: true, value: null }
+          } else {
+            const result = { done: false, value: currentNode }
+            currentNode = currentNode._parent
+            return result
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -212,29 +212,29 @@ export function tree_getAncestorNodes(node: Node, self: boolean = false,
  * @param nodeB - a node
  */
 export function tree_getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
-	
-	if(nodeA === nodeB){
-		return nodeA._parent
-	}
 
-	// lists of parent nodes
-	const parentsA: Node[] = [...tree_getAncestorNodes(nodeA, true)]
-	const parentsB: Node[] = [...tree_getAncestorNodes(nodeB, true)]
+  if (nodeA === nodeB) {
+    return nodeA._parent
+  }
 
-	// walk through parents backwards until they differ
-	let pos1 = parentsA.length
-	let pos2 = parentsB.length
-	let parent: Node | null = null
-	for (let i = Math.min(pos1, pos2); i > 0; i--) {
-		const parent1 = parentsA[--pos1]
-		const parent2 = parentsB[--pos2]
-		if (parent1 !== parent2) {
-			break
-		}
-		parent = parent1
-	}
+  // lists of parent nodes
+  const parentsA: Node[] = [...tree_getAncestorNodes(nodeA, true)]
+  const parentsB: Node[] = [...tree_getAncestorNodes(nodeB, true)]
 
-	return parent
+  // walk through parents backwards until they differ
+  let pos1 = parentsA.length
+  let pos2 = parentsB.length
+  let parent: Node | null = null
+  for (let i = Math.min(pos1, pos2); i > 0; i--) {
+    const parent1 = parentsA[--pos1]
+    const parent2 = parentsB[--pos2]
+    if (parent1 !== parent2) {
+      break
+    }
+    parent = parent1
+  }
+
+  return parent
 }
 
 /**
@@ -244,22 +244,22 @@ export function tree_getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
  * @param node - a node
  */
 export function tree_getFollowingNode(root: Node, node: Node): Node | null {
-	if (node._firstChild) {
-		return node._firstChild
-	} else if (node._nextSibling) {
-		return node._nextSibling
-	} else {
-		while (true) {
-			const parent = node._parent
-			if (parent === null || parent === root) {
-				return null
-			} else if (parent._nextSibling) {
-				return parent._nextSibling
-			} else {
-				node = parent
-			}
-		}
-	}
+  if (node._firstChild) {
+    return node._firstChild
+  } else if (node._nextSibling) {
+    return node._nextSibling
+  } else {
+    while (true) {
+      const parent = node._parent
+      if (parent === null || parent === root) {
+        return null
+      } else if (parent._nextSibling) {
+        return parent._nextSibling
+      } else {
+        node = parent
+      }
+    }
+  }
 }
 
 /**
@@ -269,19 +269,19 @@ export function tree_getFollowingNode(root: Node, node: Node): Node | null {
  * @param node - a node
  */
 export function tree_getPrecedingNode(root: Node, node: Node): Node | null {
-	if (node === root) {
-		return null
-	}
-	if (node._previousSibling) {
-		node = node._previousSibling
-		if (node._lastChild) {
-			return node._lastChild
-		} else {
-			return node
-		}
-	} else {
-		return node._parent
-	}
+  if (node === root) {
+    return null
+  }
+  if (node._previousSibling) {
+    node = node._previousSibling
+    if (node._lastChild) {
+      return node._lastChild
+    } else {
+      return node
+    }
+  } else {
+    return node._parent
+  }
 }
 
 /**
@@ -306,57 +306,57 @@ export function tree_getPrecedingNode(root: Node, node: Node): Node | null {
  * @param node - the root of the tree
  */
 export function tree_isConstrained(node: Node): boolean {
-	switch (node.nodeType) {
-		case NodeType.Document:
-			let hasDocType = false
-			let hasElement = false
-			for (const childNode of node._children) {
-				switch (childNode.nodeType) {
-					case NodeType.ProcessingInstruction:
-					case NodeType.Comment:
-						break
-					case NodeType.DocumentType:
-						if (hasDocType || hasElement) return false
-						hasDocType = true
-						break
-					case NodeType.Element:
-						if (hasElement) return false
-						hasElement = true
-						break
-					default:
-						return false
-				}
-			}
-			break
-		case NodeType.DocumentFragment:
-		case NodeType.Element:
-			for (const childNode of node._children) {
-				switch (childNode.nodeType) {
-					case NodeType.Element:
-					case NodeType.Text:
-					case NodeType.ProcessingInstruction:
-					case NodeType.CData:
-					case NodeType.Comment:
-						break
-					default:
-						return false
-				}
-			}
-			break
-		case NodeType.DocumentType:
-		case NodeType.Text:
-		case NodeType.ProcessingInstruction:
-		case NodeType.CData:
-		case NodeType.Comment:
-			return (!node.hasChildNodes())
-	}
+  switch (node.nodeType) {
+    case NodeType.Document:
+      let hasDocType = false
+      let hasElement = false
+      for (const childNode of node._children) {
+        switch (childNode.nodeType) {
+          case NodeType.ProcessingInstruction:
+          case NodeType.Comment:
+            break
+          case NodeType.DocumentType:
+            if (hasDocType || hasElement) return false
+            hasDocType = true
+            break
+          case NodeType.Element:
+            if (hasElement) return false
+            hasElement = true
+            break
+          default:
+            return false
+        }
+      }
+      break
+    case NodeType.DocumentFragment:
+    case NodeType.Element:
+      for (const childNode of node._children) {
+        switch (childNode.nodeType) {
+          case NodeType.Element:
+          case NodeType.Text:
+          case NodeType.ProcessingInstruction:
+          case NodeType.CData:
+          case NodeType.Comment:
+            break
+          default:
+            return false
+        }
+      }
+      break
+    case NodeType.DocumentType:
+    case NodeType.Text:
+    case NodeType.ProcessingInstruction:
+    case NodeType.CData:
+    case NodeType.Comment:
+      return (!node.hasChildNodes())
+  }
 
-	for (const childNode of node._children) {
-		// recursively check child nodes
-		if (!tree_isConstrained(childNode))
-			return false
-	}
-	return true
+  for (const childNode of node._children) {
+    // recursively check child nodes
+    if (!tree_isConstrained(childNode))
+      return false
+  }
+  return true
 }
 
 /**
@@ -376,13 +376,13 @@ export function tree_nodeLength(node: Node): number {
 		* - Any other node
 		* Its number of children.
 		*/
-	if (Guard.isDocumentTypeNode(node)) {
-		return 0
-	} else if (Guard.isCharacterDataNode(node)) {
-		return node._data.length
-	} else {
-		return node._children.size
-	}
+  if (Guard.isDocumentTypeNode(node)) {
+    return 0
+  } else if (Guard.isCharacterDataNode(node)) {
+    return node._data.length
+  } else {
+    return node._children.size
+  }
 }
 
 /**
@@ -394,7 +394,7 @@ export function tree_isEmpty(node: Node): boolean {
 	/**
 		* A node is considered empty if its length is zero.
 		*/
-	return (tree_nodeLength(node) === 0)
+  return (tree_nodeLength(node) === 0)
 }
 
 /**
@@ -413,18 +413,18 @@ export function tree_rootNode(node: Node, shadow = false): Node {
 		* root of its parent. The root of a tree is any object participating in 
 		* that tree whose parent is null.
 		*/
-	if (shadow) {
-		const root = tree_rootNode(node, false)
-		if (Guard.isShadowRoot(root))
-			return tree_rootNode(root._host, true)
-		else
-			return root
-	} else {
-		if (!node._parent)
-			return node
-		else
-			return tree_rootNode(node._parent)
-	}
+  if (shadow) {
+    const root = tree_rootNode(node, false)
+    if (Guard.isShadowRoot(root))
+      return tree_rootNode(root._host, true)
+    else
+      return root
+  } else {
+    if (!node._parent)
+      return node
+    else
+      return tree_rootNode(node._parent)
+  }
 }
 
 /**
@@ -439,19 +439,19 @@ export function tree_rootNode(node: Node, shadow = false): Node {
  * node's and its descendant's shadow trees as well.
  */
 export function tree_isDescendantOf(node: Node, other: Node,
-	self: boolean = false, shadow: boolean = false): boolean {
+  self: boolean = false, shadow: boolean = false): boolean {
 	/**
 		* An object A is called a descendant of an object B, if either A is a 
 		* child of B or A is a child of an object C that is a descendant of B.
 		* 
 		* An inclusive descendant is an object or one of its descendants.
 		*/
-	for (const child of tree_getDescendantNodes(node, self, shadow)) {
-		if (child === other)
-			return true
-	}
+  for (const child of tree_getDescendantNodes(node, self, shadow)) {
+    if (child === other)
+      return true
+  }
 
-	return false
+  return false
 }
 
 /**
@@ -466,14 +466,14 @@ export function tree_isDescendantOf(node: Node, other: Node,
  * node's and its descendant's shadow trees as well.
  */
 export function tree_isAncestorOf(node: Node, other: Node,
-	self: boolean = false, shadow: boolean = false): boolean {
+  self: boolean = false, shadow: boolean = false): boolean {
 	/**
 		* An object A is called an ancestor of an object B if and only if B is a
 		* descendant of A.
 		* 
 		* An inclusive ancestor is an object or one of its ancestors.
 		*/
-	return tree_isDescendantOf(other, node, self, shadow)
+  return tree_isDescendantOf(other, node, self, shadow)
 }
 
 /**
@@ -486,20 +486,20 @@ export function tree_isAncestorOf(node: Node, other: Node,
  * @param self - if `true`, traversal includes `node` itself
  */
 export function tree_isSiblingOf(node: Node, other: Node,
-	self: boolean = false): boolean {
+  self: boolean = false): boolean {
 	/**
 		* An object A is called a sibling of an object B, if and only if B and A 
 		* share the same non-null parent.
 		* 
 		* An inclusive sibling is an object or one of its siblings.
 		*/
-	if (node === other) {
-		if (self) return true
-	} else {
-		return (node._parent !== null && node._parent === other._parent)
-	}
+  if (node === other) {
+    if (self) return true
+  } else {
+    return (node._parent !== null && node._parent === other._parent)
+  }
 
-	return false
+  return false
 }
 
 /**
@@ -515,15 +515,15 @@ export function tree_isPreceding(node: Node, other: Node): boolean {
 		* An object A is preceding an object B if A and B are in the same tree and 
 		* A comes before B in tree order.
 		*/
-	const nodePos = tree_treePosition(node)
-	const otherPos = tree_treePosition(other)
+  const nodePos = tree_treePosition(node)
+  const otherPos = tree_treePosition(other)
 
-	if (nodePos === -1 || otherPos === -1)
-		return false
-	else if (tree_rootNode(node) !== tree_rootNode(other))
-		return false
-	else
-		return otherPos < nodePos
+  if (nodePos === -1 || otherPos === -1)
+    return false
+  else if (tree_rootNode(node) !== tree_rootNode(other))
+    return false
+  else
+    return otherPos < nodePos
 }
 
 /**
@@ -539,15 +539,15 @@ export function tree_isFollowing(node: Node, other: Node): boolean {
 		* An object A is following an object B if A and B are in the same tree and 
 		* A comes after B in tree order.
 		*/
-	const nodePos = tree_treePosition(node)
-	const otherPos = tree_treePosition(other)
+  const nodePos = tree_treePosition(node)
+  const otherPos = tree_treePosition(other)
 
-	if (nodePos === -1 || otherPos === -1)
-		return false
-	else if (tree_rootNode(node) !== tree_rootNode(other))
-		return false
-	else
-		return otherPos > nodePos
+  if (nodePos === -1 || otherPos === -1)
+    return false
+  else if (tree_rootNode(node) !== tree_rootNode(other))
+    return false
+  else
+    return otherPos > nodePos
 }
 
 /**
@@ -562,7 +562,7 @@ export function tree_isParentOf(node: Node, other: Node): boolean {
 		* null or an object, and has children, which is an ordered set of objects.
 		* An object A whose parent is object B is a child of B.
 		*/
-	return (node._parent === other)
+  return (node._parent === other)
 }
 
 /**
@@ -577,7 +577,7 @@ export function tree_isChildOf(node: Node, other: Node): boolean {
 		* null or an object, and has children, which is an ordered set of objects.
 		* An object A whose parent is object B is a child of B.
 		*/
-	return (other._parent === node)
+  return (other._parent === node)
 }
 
 /**
@@ -591,7 +591,7 @@ export function tree_previousSibling(node: Node): Node | null {
 		* The previous sibling of an object is its first preceding sibling or null 
 		* if it has no preceding sibling.
 		*/
-	return node._previousSibling
+  return node._previousSibling
 }
 
 /**
@@ -605,7 +605,7 @@ export function tree_nextSibling(node: Node): Node | null {
 		* The next sibling of an object is its first following sibling or null 
 		* if it has no following sibling.
 		*/
-	return node._nextSibling
+  return node._nextSibling
 }
 
 /**
@@ -619,7 +619,7 @@ export function tree_firstChild(node: Node): Node | null {
 		* The first child of an object is its first child or null if it has no 
 		* children.
 		*/
-	return node._firstChild
+  return node._firstChild
 }
 
 /**
@@ -633,7 +633,7 @@ export function tree_lastChild(node: Node): Node | null {
 		* The last child of an object is its last child or null if it has no 
 		* children.
 		*/
-	return node._lastChild
+  return node._lastChild
 }
 
 /**
@@ -644,15 +644,15 @@ export function tree_lastChild(node: Node): Node | null {
  * @param node - the node to get the index of
  */
 export function tree_treePosition(node: Node): number {
-	const root = tree_rootNode(node)
+  const root = tree_rootNode(node)
 
-	let pos = 0
-	for (const childNode of tree_getDescendantNodes(root)) {
-		pos++
-		if (childNode === node) return pos
-	}
+  let pos = 0
+  for (const childNode of tree_getDescendantNodes(root)) {
+    pos++
+    if (childNode === node) return pos
+  }
 
-	return -1
+  return -1
 }
 
 /**
@@ -667,14 +667,14 @@ export function tree_index(node: Node): number {
 		* The index of an object is its number of preceding siblings, or 0 if it 
 		* has none.
 		*/
-	let n = 0
+  let n = 0
 
-	while (node._previousSibling !== null) {
-		n++
-		node = node._previousSibling
-	}
+  while (node._previousSibling !== null) {
+    n++
+    node = node._previousSibling
+  }
 
-	return n
+  return n
 }
 
 /**
@@ -696,20 +696,20 @@ export function tree_retarget(a: any, b: any): any {
 		* 2. Set A to A's root's host.
 		*/
 
-	while (true) {
-		if (!a || !Guard.isNode(a)) {
-			return a
-		}
+  while (true) {
+    if (!a || !Guard.isNode(a)) {
+      return a
+    }
 
-		const rootOfA = tree_rootNode(a)
-		if (!Guard.isShadowRoot(rootOfA)) {
-			return a
-		}
+    const rootOfA = tree_rootNode(a)
+    if (!Guard.isShadowRoot(rootOfA)) {
+      return a
+    }
 
-		if (b && Guard.isNode(b) && tree_isAncestorOf(rootOfA, b, true, true)) {
-			return a
-		}
+    if (b && Guard.isNode(b) && tree_isAncestorOf(rootOfA, b, true, true)) {
+      return a
+    }
 
-		a = rootOfA.host
-	}
+    a = rootOfA.host
+  }
 }

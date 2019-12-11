@@ -1,11 +1,12 @@
 import { dom } from "../"
 import { SyntaxError, InvalidCharacterError } from "./DOMException"
 import { DOMTokenList, Element, Attr } from "./interfaces"
-import { codePoint as infraCodePoint, set as infraSet } from '@oozcitak/infra'
-import { orderedSet_parse } from "../algorithm/OrderedSetAlgorithm"
-import { dom_runAttributeChangeSteps } from "../algorithm/DOMAlgorithm"
-import { element_getAnAttributeValue, element_setAnAttributeValue } from "../algorithm/ElementAlgorithm"
-import { tokenList_updateSteps, tokenList_validationSteps, tokenList_serializeSteps } from "../algorithm/DOMTokenListAlgorithm"
+import { codePoint as infraCodePoint, set as infraSet } from "@oozcitak/infra"
+import {
+  dom_runAttributeChangeSteps, element_getAnAttributeValue,
+  element_setAnAttributeValue, tokenList_updateSteps, tokenList_validationSteps,
+  tokenList_serializeSteps, orderedSet_parse
+} from "../algorithm"
 
 /**
  * Represents a token set.

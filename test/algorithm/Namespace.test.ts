@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { namespace_validate, namespace_validateAndExtract } from '../../src/algorithm/NamespaceAlgorithm'
+import $$ from "../TestHelpers"
+import { namespace_validate, namespace_validateAndExtract } from "../../src/algorithm"
 
 describe('Namespace', () => {
 

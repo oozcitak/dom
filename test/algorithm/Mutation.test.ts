@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { mutation_preInsert, mutation_replace, mutation_replaceAll, mutation_preRemove } from '../../src/algorithm/MutationAlgorithm'
+import $$ from "../TestHelpers"
+import { mutation_preInsert, mutation_replace, mutation_replaceAll, mutation_preRemove } from "../../src/algorithm"
 
 describe('Mutation', () => {
 

@@ -1,4 +1,4 @@
-import { dom } from '../'
+import { dom } from "../"
 import { Node, NodeList } from "./interfaces"
 
 /**
@@ -48,11 +48,11 @@ export class NodeListStaticImpl implements NodeList {
   /** @inheritdoc */
   keys(): Iterable<number> {
     return {
-      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<number> {
+      [Symbol.iterator]: function (this: NodeListStaticImpl): Iterator<number> {
         let index = 0
-    
+
         return {
-          next: function(this: NodeListStaticImpl): IteratorResult<number> {
+          next: function (this: NodeListStaticImpl): IteratorResult<number> {
             if (index === this.length) {
               return { done: true, value: null }
             } else {
@@ -67,10 +67,10 @@ export class NodeListStaticImpl implements NodeList {
   /** @inheritdoc */
   values(): Iterable<Node> {
     return {
-      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<Node> {
+      [Symbol.iterator]: function (this: NodeListStaticImpl): Iterator<Node> {
 
         const it = this[Symbol.iterator]()
-    
+
         return {
           next(): IteratorResult<Node> {
             return it.next()
@@ -83,11 +83,11 @@ export class NodeListStaticImpl implements NodeList {
   /** @inheritdoc */
   entries(): Iterable<[number, Node]> {
     return {
-      [Symbol.iterator]: function(this: NodeListStaticImpl): Iterator<[number, Node]> {
-        
+      [Symbol.iterator]: function (this: NodeListStaticImpl): Iterator<[number, Node]> {
+
         const it = this[Symbol.iterator]()
         let index = 0
-    
+
         return {
           next(): IteratorResult<[number, Node]> {
             const itResult = it.next()

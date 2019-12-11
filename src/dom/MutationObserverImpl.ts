@@ -1,9 +1,9 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
   Node, MutationObserverInit, MutationRecord, MutationCallback, MutationObserver
 } from "./interfaces"
 import { Guard } from "../util"
-import { list as infraList, set as infraSet } from '@oozcitak/infra'
+import { list as infraList, set as infraSet } from "@oozcitak/infra"
 
 /**
  * Represents an object that can be used to observe mutations to the tree of
@@ -87,7 +87,7 @@ export class MutationObserverImpl implements MutationObserver {
          * registered observer list.
          */
         for (const node of this._nodeList) {
-          infraList.remove((node)._registeredObserverList, (ob) => 
+          infraList.remove((node)._registeredObserverList, (ob) =>
             Guard.isTransientRegisteredObserver(ob) && ob.source === registered
           )
         }

@@ -1,4 +1,4 @@
-import { Node, BoundaryPoint, AbstractRange } from './interfaces'
+import { Node, BoundaryPoint, AbstractRange } from "./interfaces"
 
 /**
  * Represents an abstract range with a start and end boundary point.

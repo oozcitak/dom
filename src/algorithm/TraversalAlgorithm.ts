@@ -1,5 +1,5 @@
-import { FilterResult, NodeIterator, Node, TreeWalker } from '../dom/interfaces'
-import { InvalidStateError } from '../dom/DOMException'
+import { FilterResult, NodeIterator, Node, TreeWalker } from "../dom/interfaces"
+import { InvalidStateError } from "../dom/DOMException"
 
 /**
  * Applies the filter to the given node and returns the result.

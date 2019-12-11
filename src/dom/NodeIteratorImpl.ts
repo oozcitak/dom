@@ -1,6 +1,6 @@
 import { Node, NodeIterator, Collection } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
-import { nodeIterator_iteratorList, nodeIterator_traverse } from "../algorithm/NodeIteratorAlgorithm"
+import { nodeIterator_iteratorList, nodeIterator_traverse } from "../algorithm"
 
 /**
  * Represents an object which can be used to iterate through the nodes
@@ -56,8 +56,8 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
      * 
      * since JS lacks weak references, we still use detach
      */
-    nodeIterator_iteratorList().remove(this)    
-   }
+    nodeIterator_iteratorList().remove(this)
+  }
 
 
   /**

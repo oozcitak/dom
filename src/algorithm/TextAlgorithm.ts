@@ -1,11 +1,13 @@
-import { dom } from '../'
-import { Node, Text } from '../dom/interfaces'
-import { Guard } from '../util'
-import { IndexSizeError } from '../dom/DOMException'
-import { create_text } from './CreateAlgorithm'
-import { tree_getDescendantNodes, tree_index } from './TreeAlgorithm'
-import { characterData_substringData, characterData_replaceData } from './CharacterDataAlgorithm'
-import { mutation_insert } from './MutationAlgorithm'
+import { dom } from "../"
+import { Node, Text } from "../dom/interfaces"
+import { Guard } from "../util"
+import { IndexSizeError } from "../dom/DOMException"
+import { create_text } from "./CreateAlgorithm"
+import { tree_getDescendantNodes, tree_index } from "./TreeAlgorithm"
+import {
+  characterData_substringData, characterData_replaceData
+} from "./CharacterDataAlgorithm"
+import { mutation_insert } from "./MutationAlgorithm"
 
 /**
  * Returns node with its adjacent text and cdata node siblings.
@@ -27,7 +29,7 @@ export function text_contiguousTextNodes(node: Text, self: boolean = false): Ite
       while (currentNode && Guard.isTextNode(currentNode._previousSibling)) {
         currentNode = currentNode._previousSibling
       }
-      
+
       return {
         next() {
           if (currentNode && (!self && currentNode === node)) {
@@ -47,7 +49,7 @@ export function text_contiguousTextNodes(node: Text, self: boolean = false): Ite
             } else {
               currentNode = null
             }
-    
+
             return result
           }
         }
@@ -76,7 +78,7 @@ export function text_contiguousExclusiveTextNodes(node: Text, self: boolean = fa
       while (currentNode && Guard.isExclusiveTextNode(currentNode._previousSibling)) {
         currentNode = currentNode._previousSibling
       }
-      
+
       return {
         next() {
           if (currentNode && (!self && currentNode === node)) {
@@ -96,7 +98,7 @@ export function text_contiguousExclusiveTextNodes(node: Text, self: boolean = fa
             } else {
               currentNode = null
             }
-    
+
             return result
           }
         }

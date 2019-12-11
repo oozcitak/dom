@@ -1,4 +1,4 @@
-import { DocumentOrShadowRoot } from './interfaces'
+import { DocumentOrShadowRoot } from "./interfaces"
 
 /**
  * Represents a mixin for an interface to be used to share APIs between

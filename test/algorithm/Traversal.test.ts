@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { traversal_filter } from '../../src/algorithm/TraversalAlgorithm'
+import $$ from "../TestHelpers"
+import { traversal_filter } from "../../src/algorithm"
 
 describe('Traverse', () => {
 

@@ -1,5 +1,8 @@
-import { Node, BoundaryPoint, BoundaryPosition } from '../dom/interfaces'
-import { tree_rootNode, tree_isFollowing, tree_isAncestorOf, tree_isChildOf, tree_index, tree_nodeLength } from './TreeAlgorithm'
+import { BoundaryPoint, BoundaryPosition, Node } from "../dom/interfaces"
+import { 
+  tree_index, tree_isAncestorOf, tree_isChildOf, tree_isFollowing, 
+  tree_nodeLength, tree_rootNode
+} from "./TreeAlgorithm"
 
 /**
  * Defines the position of a boundary point relative to another.
@@ -32,7 +35,7 @@ export function boundaryPoint_position(bp: BoundaryPoint, relativeTo: BoundaryPo
     } else if (offsetA < offsetB) {
       return BoundaryPosition.Before
     } else {
-      return BoundaryPosition.After        
+      return BoundaryPosition.After
     }
   }
 

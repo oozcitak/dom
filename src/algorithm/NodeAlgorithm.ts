@@ -1,14 +1,18 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
   Attr, Element, Node, Document, HTMLCollection
-} from '../dom/interfaces'
-import { Guard } from '../util'
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { create_text, create_document, create_documentType, create_attr, create_cdataSection, create_comment, create_processingInstruction, create_documentFragment, create_htmlCollection } from './CreateAlgorithm'
-import { orderedSet_parse, orderedSet_contains } from './OrderedSetAlgorithm'
-import { dom_runCloningSteps } from './DOMAlgorithm'
-import { mutation_replaceAll, mutation_append } from './MutationAlgorithm'
-import { element_createAnElement, element_append } from './ElementAlgorithm'
+} from "../dom/interfaces"
+import { Guard } from "../util"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import {
+  create_text, create_document, create_documentType, create_attr,
+  create_cdataSection, create_comment, create_processingInstruction,
+  create_documentFragment, create_htmlCollection
+} from "./CreateAlgorithm"
+import { orderedSet_parse, orderedSet_contains } from "./OrderedSetAlgorithm"
+import { dom_runCloningSteps } from "./DOMAlgorithm"
+import { mutation_replaceAll, mutation_append } from "./MutationAlgorithm"
+import { element_createAnElement, element_append } from "./ElementAlgorithm"
 
 /**
  * Replaces the contents of the given node with a single text node.
@@ -289,7 +293,7 @@ export function node_listOfElementsWithQualifiedName(qualifiedName: string, root
  * @param localName - local name
  * @param root - root node
  */
-export function node_listOfElementsWithNamespace(namespace: string | null, 
+export function node_listOfElementsWithNamespace(namespace: string | null,
   localName: string, root: Node): HTMLCollection {
   /**
    * 1. If namespace is the empty string, set it to null.

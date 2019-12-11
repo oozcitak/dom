@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { nodeIterator_traverse } from '../../src/algorithm/NodeIteratorAlgorithm'
+import $$ from "../TestHelpers"
+import { nodeIterator_traverse } from "../../src/algorithm"
 
 describe('NodeIterator', () => {
 

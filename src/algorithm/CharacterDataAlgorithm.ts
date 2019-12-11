@@ -1,10 +1,10 @@
-import { dom } from '../'
-import { CharacterData } from '../dom/interfaces'
-import { Guard } from '../util'
-import { IndexSizeError } from '../dom/DOMException'
-import { tree_nodeLength } from './TreeAlgorithm'
-import { observer_queueMutationRecord } from './MutationObserverAlgorithm'
-import { dom_runChildTextContentChangeSteps } from './DOMAlgorithm'
+import { dom } from "../"
+import { CharacterData } from "../dom/interfaces"
+import { Guard } from "../util"
+import { IndexSizeError } from "../dom/DOMException"
+import { tree_nodeLength } from "./TreeAlgorithm"
+import { observer_queueMutationRecord } from "./MutationObserverAlgorithm"
+import { dom_runChildTextContentChangeSteps } from "./DOMAlgorithm"
 
 /**
  * Replaces character data.

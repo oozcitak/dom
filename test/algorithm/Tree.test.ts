@@ -1,5 +1,10 @@
-import $$ from '../TestHelpers'
-import { tree_getDescendantNodes, tree_getDescendantElements, tree_getSiblingNodes, tree_isConstrained, tree_nodeLength, tree_isEmpty, tree_rootNode, tree_isDescendantOf, tree_isAncestorOf, tree_isSiblingOf, tree_isPreceding, tree_isFollowing, tree_firstChild, tree_lastChild } from '../../src/algorithm/TreeAlgorithm'
+import $$ from "../TestHelpers"
+import { 
+  tree_getDescendantNodes, tree_getDescendantElements, tree_getSiblingNodes, 
+  tree_isConstrained, tree_nodeLength, tree_isEmpty, tree_rootNode, 
+  tree_isDescendantOf, tree_isAncestorOf, tree_isSiblingOf, tree_isPreceding,
+  tree_isFollowing, tree_firstChild, tree_lastChild
+} from "../../src/algorithm"
 
 describe('Tree', () => {
 

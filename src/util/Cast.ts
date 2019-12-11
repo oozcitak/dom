@@ -1,5 +1,5 @@
-import { Node } from '../dom/interfaces'
-import { Guard } from './Guard'
+import { Node } from "../dom/interfaces"
+import { Guard } from "./Guard"
 
 /**
  * Contains type casts for DOM objects.

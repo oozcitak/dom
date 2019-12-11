@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { orderedSet_parse, orderedSet_serialize, orderedSet_sanitize } from '../../src/algorithm/OrderedSetAlgorithm'
+import $$ from "../TestHelpers"
+import { orderedSet_parse, orderedSet_serialize, orderedSet_sanitize } from "../../src/algorithm"
 
 describe('OrderedSet', () => {
 

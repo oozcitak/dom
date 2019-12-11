@@ -1,5 +1,7 @@
-import $$ from '../TestHelpers'
-import { treeWalker_traverseChildren, treeWalker_traverseSiblings } from '../../src/algorithm/TreeWalkerAlgorithm'
+import $$ from "../TestHelpers"
+import {
+  treeWalker_traverseChildren, treeWalker_traverseSiblings
+} from "../../src/algorithm"
 
 describe('TreeWalker', () => {
 

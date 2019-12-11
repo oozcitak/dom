@@ -1,16 +1,29 @@
-import { dom } from '../'
-import { HierarchyRequestError, NotFoundError } from '../dom/DOMException'
-import { NodeType, Node, Element } from '../dom/interfaces'
-import { Guard } from '../util'
-import { isEmpty } from '@oozcitak/util'
-import { set as infraSet } from '@oozcitak/infra'
-import { customElement_enqueueACustomElementCallbackReaction, customElement_tryToUpgrade } from './CustomElementAlgorithm'
-import { tree_isAncestorOf, tree_index, tree_rootNode, tree_getDescendantNodes, tree_isDescendantOf, tree_getDescendantElements, tree_getAncestorNodes } from './TreeAlgorithm'
-import { nodeIterator_iteratorList } from './NodeIteratorAlgorithm'
-import { shadowTree_assignASlot, shadowTree_signalASlotChange, shadowTree_assignSlotablesForATree, shadowTree_isConnected, shadowTree_isAssigned, shadowTree_assignSlotables } from './ShadowTreeAlgorithm'
-import { observer_queueTreeMutationRecord } from './MutationObserverAlgorithm'
-import { dom_runChildTextContentChangeSteps, dom_runRemovingSteps, dom_runNodeIteratorPreRemovingSteps, dom_runInsertionSteps } from './DOMAlgorithm'
-import { document_adopt } from './DocumentAlgorithm'
+import { dom } from "../"
+import { HierarchyRequestError, NotFoundError } from "../dom/DOMException"
+import { NodeType, Node, Element } from "../dom/interfaces"
+import { Guard } from "../util"
+import { isEmpty } from "@oozcitak/util"
+import { set as infraSet } from "@oozcitak/infra"
+import {
+  customElement_enqueueACustomElementCallbackReaction,
+  customElement_tryToUpgrade
+} from "./CustomElementAlgorithm"
+import {
+  tree_isAncestorOf, tree_index, tree_rootNode, tree_getDescendantNodes,
+  tree_isDescendantOf, tree_getDescendantElements, tree_getAncestorNodes
+} from "./TreeAlgorithm"
+import { nodeIterator_iteratorList } from "./NodeIteratorAlgorithm"
+import {
+  shadowTree_assignASlot, shadowTree_signalASlotChange,
+  shadowTree_assignSlotablesForATree, shadowTree_isConnected,
+  shadowTree_isAssigned, shadowTree_assignSlotables
+} from "./ShadowTreeAlgorithm"
+import { observer_queueTreeMutationRecord } from "./MutationObserverAlgorithm"
+import {
+  dom_runChildTextContentChangeSteps, dom_runRemovingSteps,
+  dom_runNodeIteratorPreRemovingSteps, dom_runInsertionSteps
+} from "./DOMAlgorithm"
+import { document_adopt } from "./DocumentAlgorithm"
 
 /**
  * Ensures pre-insertion validity of a node into a parent before a
@@ -24,7 +37,7 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
   const parentNodeType = parent._nodeType
   const nodeNodeType = node._nodeType
   const childNodeType = child ? child._nodeType : null
-  
+
   /**
    * 1. If parent is not a Document, DocumentFragment, or Element node,
    * throw a "HierarchyRequestError" DOMException.
@@ -245,7 +258,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
    * otherwise « node ».
    */
-  const nodes = node.nodeType === NodeType.DocumentFragment ? 
+  const nodes = node.nodeType === NodeType.DocumentFragment ?
     new Array<Node>(...node._children) : [node]
 
   /**
@@ -369,7 +382,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
         /**
          * 7.7.2. If inclusiveDescendant is connected, then:
          */
-        if (Guard.isElementNode(inclusiveDescendant) && 
+        if (Guard.isElementNode(inclusiveDescendant) &&
           shadowTree_isConnected(inclusiveDescendant)) {
           if (Guard.isCustomElementNode(inclusiveDescendant)) {
             /**
@@ -384,7 +397,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
              * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
              */
             customElement_tryToUpgrade(inclusiveDescendant)
-          }      
+          }
         }
       }
     }
@@ -518,7 +531,7 @@ function mutation_insert_single(node: Node, parent: Node,
     /**
      * 7.7.2. If inclusiveDescendant is connected, then:
      */
-    if (Guard.isElementNode(node) && 
+    if (Guard.isElementNode(node) &&
       shadowTree_isConnected(node)) {
       if (Guard.isCustomElementNode(node)) {
         /**
@@ -533,7 +546,7 @@ function mutation_insert_single(node: Node, parent: Node,
          * 7.7.2.2. Otherwise, try to upgrade inclusiveDescendant.
          */
         customElement_tryToUpgrade(node)
-      }      
+      }
     }
   }
 

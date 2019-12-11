@@ -1,7 +1,8 @@
 import { Node, FilterResult, TreeWalker } from "./interfaces"
 import { TraverserImpl } from "./TraverserImpl"
-import { traversal_filter } from "../algorithm/TraversalAlgorithm"
-import { treeWalker_traverseChildren, treeWalker_traverseSiblings } from "../algorithm/TreeWalkerAlgorithm"
+import {
+  treeWalker_traverseChildren, treeWalker_traverseSiblings, traversal_filter
+} from "../algorithm"
 
 /**
  * Represents the nodes of a subtree and a position within them.

@@ -1,11 +1,13 @@
 import {
   Event, EventListener, EventTarget, AddEventListenerOptions,
   EventListenerOptions, EventListenerEntry, EventHandlerEntry
-} from './interfaces'
-import { InvalidStateError } from './DOMException'
-import { Guard } from '../util'
-import { eventTarget_removeEventListener, eventTarget_flatten, eventTarget_flattenMore, eventTarget_addEventListener } from '../algorithm/EventTargetAlgorithm'
-import { event_dispatch } from '../algorithm/EventAlgorithm'
+} from "./interfaces"
+import { InvalidStateError } from "./DOMException"
+import { Guard } from "../util"
+import {
+  eventTarget_removeEventListener, eventTarget_flatten, eventTarget_flattenMore,
+  eventTarget_addEventListener, event_dispatch
+} from "../algorithm"
 
 /**
  * Represents a target to which an event can be dispatched.
@@ -13,7 +15,7 @@ import { event_dispatch } from '../algorithm/EventAlgorithm'
 export abstract class EventTargetImpl implements EventTarget {
 
   _eventListenerList: EventListenerEntry[] = []
-  _eventHandlerMap: { [key: string]: EventHandlerEntry } = { }
+  _eventHandlerMap: { [key: string]: EventHandlerEntry } = {}
 
   /**
    * Initializes a new instance of `EventTarget`.

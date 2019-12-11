@@ -1,7 +1,7 @@
 import {
   EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem, Event
-} from './interfaces'
-import { event_setTheCanceledFlag, event_initialize } from '../algorithm/EventAlgorithm'
+} from "./interfaces"
+import { event_setTheCanceledFlag, event_initialize } from "../algorithm"
 
 /**
  * Represents a DOM event.
@@ -282,7 +282,7 @@ export class EventImpl implements Event {
      * 1. If the context object’s dispatch flag is set, then return.
      */
     if (this._dispatchFlag) return
-    
+
     /**
      * 2. Initialize the context object with type, bubbles, and cancelable.
      */

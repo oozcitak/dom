@@ -1,6 +1,6 @@
-import { Node, Element, HTMLCollection, Attr } from "./interfaces"
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { tree_getDescendantElements } from "../algorithm/TreeAlgorithm"
+import { Node, Element, HTMLCollection } from "./interfaces"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import { tree_getDescendantElements } from "../algorithm"
 
 /**
  * Represents a collection of elements.

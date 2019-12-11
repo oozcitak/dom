@@ -1,20 +1,20 @@
-import { AbstractRangeImpl } from './AbstractRangeImpl'
-import { InvalidNodeTypeError } from './DOMException'
-import { BoundaryPoint, StaticRangeInit, StaticRange } from './interfaces'
-import { Guard } from '../util'
+import { AbstractRangeImpl } from "./AbstractRangeImpl"
+import { InvalidNodeTypeError } from "./DOMException"
+import { BoundaryPoint, StaticRangeInit, StaticRange } from "./interfaces"
+import { Guard } from "../util"
 
 /**
  * Represents a static range.
  */
 export class StaticRangeImpl extends AbstractRangeImpl implements StaticRange {
-  
+
   _start: BoundaryPoint
   _end: BoundaryPoint
 
   /**
    * Initializes a new instance of `StaticRange`.
    */
-  constructor(init: StaticRangeInit ) {
+  constructor(init: StaticRangeInit) {
     super()
     /**
      * 1. If init’s startContainer or endContainer is a DocumentType or Attr 

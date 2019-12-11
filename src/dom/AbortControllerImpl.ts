@@ -1,6 +1,5 @@
 import { AbortSignal, AbortController } from "./interfaces"
-import { create_abortSignal } from "../algorithm/CreateAlgorithm"
-import { abort_signalAbort } from "../algorithm/AbortAlgorithm"
+import { abort_signalAbort, create_abortSignal } from "../algorithm"
 
 /**
  * Represents a controller that allows to abort DOM requests.

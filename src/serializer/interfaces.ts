@@ -10,7 +10,7 @@ export interface XMLSerializer {
    * 
    * @param root - node to serialize
    */
-  serializeToString(root: Node): string 
+  serializeToString(root: Node): string
 }
 
 /**

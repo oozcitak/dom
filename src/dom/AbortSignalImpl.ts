@@ -1,6 +1,8 @@
 import { EventHandler, AbortSignal } from "./interfaces"
-import { EventTargetImpl } from './EventTargetImpl'
-import { event_getterEventHandlerIDLAttribute, event_setterEventHandlerIDLAttribute } from "../algorithm/EventAlgorithm"
+import { EventTargetImpl } from "./EventTargetImpl"
+import {
+  event_getterEventHandlerIDLAttribute, event_setterEventHandlerIDLAttribute
+} from "../algorithm"
 
 /**
  * Represents a signal object that communicates with a DOM request and abort

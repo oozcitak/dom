@@ -1,5 +1,5 @@
-import { 
-  XMLSerializer, PreSerializedNode, PreSerializedAttr 
+import {
+  XMLSerializer, PreSerializedNode, PreSerializedAttr
 } from "./interfaces"
 import {
   Node, NodeType, Document, DocumentType, Comment, ProcessingInstruction,
@@ -42,26 +42,26 @@ export class XMLSerializerImpl implements XMLSerializer {
    */
   private _serializeNode(preNode: PreSerializedNode<Node>): string {
 
-      switch (preNode.node.nodeType) {
-        case NodeType.Element:
-          return this._serializeElement(<PreSerializedNode<Element>>preNode)
-        case NodeType.Document:
-          return this._serializeDocument(<PreSerializedNode<Document>>preNode)
-        case NodeType.Comment:
-          return this._serializeComment(<PreSerializedNode<Comment>>preNode)
-        case NodeType.Text:
-          return this._serializeText(<PreSerializedNode<Text>>preNode)
-        case NodeType.DocumentFragment:
-          return this._serializeDocumentFragment(<PreSerializedNode<DocumentFragment>>preNode)
-        case NodeType.DocumentType:
-          return this._serializeDocumentType(<PreSerializedNode<DocumentType>>preNode)
-        case NodeType.ProcessingInstruction:
-          return this._serializeProcessingInstruction(<PreSerializedNode<ProcessingInstruction>>preNode)
-        case NodeType.CData:
-          return this._serializeCData(<PreSerializedNode<CDATASection>>preNode)
-        default:
-          throw new Error("Invalid node type.")
-      }
+    switch (preNode.node.nodeType) {
+      case NodeType.Element:
+        return this._serializeElement(<PreSerializedNode<Element>>preNode)
+      case NodeType.Document:
+        return this._serializeDocument(<PreSerializedNode<Document>>preNode)
+      case NodeType.Comment:
+        return this._serializeComment(<PreSerializedNode<Comment>>preNode)
+      case NodeType.Text:
+        return this._serializeText(<PreSerializedNode<Text>>preNode)
+      case NodeType.DocumentFragment:
+        return this._serializeDocumentFragment(<PreSerializedNode<DocumentFragment>>preNode)
+      case NodeType.DocumentType:
+        return this._serializeDocumentType(<PreSerializedNode<DocumentType>>preNode)
+      case NodeType.ProcessingInstruction:
+        return this._serializeProcessingInstruction(<PreSerializedNode<ProcessingInstruction>>preNode)
+      case NodeType.CData:
+        return this._serializeCData(<PreSerializedNode<CDATASection>>preNode)
+      default:
+        throw new Error("Invalid node type.")
+    }
   }
 
   /**

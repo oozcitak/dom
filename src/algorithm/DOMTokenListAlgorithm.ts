@@ -1,7 +1,9 @@
-import { DOMTokenList } from '../dom/interfaces'
-import { orderedSet_serialize } from './OrderedSetAlgorithm'
-import { dom_hasSupportedTokens, dom_getSupportedTokens } from './DOMAlgorithm'
-import { element_setAnAttributeValue, element_getAnAttributeValue } from './ElementAlgorithm'
+import { DOMTokenList } from "../dom/interfaces"
+import { orderedSet_serialize } from "./OrderedSetAlgorithm"
+import { dom_hasSupportedTokens, dom_getSupportedTokens } from "./DOMAlgorithm"
+import {
+  element_setAnAttributeValue, element_getAnAttributeValue
+} from "./ElementAlgorithm"
 
 /**
  * Validates a given token against the supported tokens defined for the given
@@ -10,7 +12,8 @@ import { element_setAnAttributeValue, element_getAnAttributeValue } from './Elem
  * @param tokenList - a token list
  * @param token - a token
  */
-export function tokenList_validationSteps(tokenList: DOMTokenList, token: string): boolean {
+export function tokenList_validationSteps(tokenList: DOMTokenList,
+  token: string): boolean {
   /**
    * 1. If the associated attribute’s local name does not define supported 
    * tokens, throw a TypeError.

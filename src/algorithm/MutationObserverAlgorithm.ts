@@ -1,10 +1,10 @@
-import { dom } from '../'
-import { MutationRecord, MutationObserver, Node, Slot } from '../dom/interfaces'
-import { Guard } from '../util'
-import { list as infraList, set as infraSet } from '@oozcitak/infra'
-import { create_mutationRecord, create_nodeListStatic } from './CreateAlgorithm'
-import { tree_getAncestorNodes } from './TreeAlgorithm'
-import { event_fireAnEvent } from './EventAlgorithm'
+import { dom } from "../"
+import { MutationRecord, MutationObserver, Node, Slot } from "../dom/interfaces"
+import { Guard } from "../util"
+import { list as infraList, set as infraSet } from "@oozcitak/infra"
+import { create_mutationRecord, create_nodeListStatic } from "./CreateAlgorithm"
+import { tree_getAncestorNodes } from "./TreeAlgorithm"
+import { event_fireAnEvent } from "./EventAlgorithm"
 
 /**
  * Queues a mutation observer microtask to the surrounding agent’s mutation
@@ -64,7 +64,7 @@ export function observer_notifyMutationObservers(): void {
      * 5.4. If records is not empty, then invoke mo’s callback with « records, 
      * mo », and mo. If this throws an exception, then report the exception.
      */
-    if(!infraList.isEmpty(records)) {
+    if (!infraList.isEmpty(records)) {
       try {
         mo._callback.call(mo, records, mo)
       } catch (err) {

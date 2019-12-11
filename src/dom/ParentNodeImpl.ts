@@ -1,9 +1,10 @@
-import { Node, HTMLCollection, NodeList, Element, ParentNode } from './interfaces'
-import { Cast, Guard } from '../util'
-import { create_htmlCollection, create_nodeListStatic } from '../algorithm/CreateAlgorithm'
-import { parentNode_convertNodesIntoANode } from '../algorithm/ParentNodeAlgorithm'
-import { selectors_scopeMatchASelectorsString } from '../algorithm/SelectorsAlgorithm'
-import { mutation_preInsert, mutation_append } from '../algorithm/MutationAlgorithm'
+import { Node, HTMLCollection, NodeList, Element, ParentNode } from "./interfaces"
+import { Cast, Guard } from "../util"
+import {
+  create_htmlCollection, create_nodeListStatic,
+  parentNode_convertNodesIntoANode, selectors_scopeMatchASelectorsString,
+  mutation_preInsert, mutation_append
+} from "../algorithm"
 
 /**
  * Represents a mixin that extends parent nodes that can have children.

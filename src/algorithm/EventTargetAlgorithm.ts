@@ -1,7 +1,7 @@
 import {
   EventListenerOptions, AddEventListenerOptions, EventListenerEntry, EventTarget
-} from '../dom/interfaces'
-import { isBoolean } from '@oozcitak/util'
+} from "../dom/interfaces"
+import { isBoolean } from "@oozcitak/util"
 
 /**
  * Flattens the given options argument.

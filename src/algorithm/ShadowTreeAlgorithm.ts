@@ -1,9 +1,11 @@
-import { dom } from '../'
-import { Slotable, Slot, Element, ShadowRoot, Node } from '../dom/interfaces'
-import { Cast, Guard } from '../util'
-import { isEmpty } from '@oozcitak/util'
-import { tree_rootNode, tree_getDescendantElements, tree_getDescendantNodes } from './TreeAlgorithm'
-import { observer_queueAMutationObserverMicrotask } from './MutationObserverAlgorithm'
+import { dom } from "../"
+import { Slotable, Slot, Element, ShadowRoot, Node } from "../dom/interfaces"
+import { Cast, Guard } from "../util"
+import { isEmpty } from "@oozcitak/util"
+import {
+  tree_rootNode, tree_getDescendantElements, tree_getDescendantNodes
+} from "./TreeAlgorithm"
+import { observer_queueAMutationObserverMicrotask } from "./MutationObserverAlgorithm"
 
 /**
  * Signals a slot change to the given slot.

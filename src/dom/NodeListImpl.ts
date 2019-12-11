@@ -1,4 +1,4 @@
-import { dom } from '../'
+import { dom } from "../"
 import { Node, NodeList } from "./interfaces"
 
 /**
@@ -61,11 +61,11 @@ export class NodeListImpl implements NodeList {
   /** @inheritdoc */
   keys(): Iterable<number> {
     return {
-      [Symbol.iterator]: function(this: NodeListImpl): Iterator<number> {
+      [Symbol.iterator]: function (this: NodeListImpl): Iterator<number> {
         let index = 0
-    
+
         return {
-          next: function(this: NodeListImpl): IteratorResult<number> {
+          next: function (this: NodeListImpl): IteratorResult<number> {
             if (index === this.length) {
               return { done: true, value: null }
             } else {
@@ -80,10 +80,10 @@ export class NodeListImpl implements NodeList {
   /** @inheritdoc */
   values(): Iterable<Node> {
     return {
-      [Symbol.iterator]: function(this: NodeListImpl): Iterator<Node> {
+      [Symbol.iterator]: function (this: NodeListImpl): Iterator<Node> {
 
         const it = this[Symbol.iterator]()
-    
+
         return {
           next(): IteratorResult<Node> {
             return it.next()
@@ -96,11 +96,11 @@ export class NodeListImpl implements NodeList {
   /** @inheritdoc */
   entries(): Iterable<[number, Node]> {
     return {
-      [Symbol.iterator]: function(this: NodeListImpl): Iterator<[number, Node]> {
-        
+      [Symbol.iterator]: function (this: NodeListImpl): Iterator<[number, Node]> {
+
         const it = this[Symbol.iterator]()
         let index = 0
-    
+
         return {
           next(): IteratorResult<[number, Node]> {
             const itResult = it.next()

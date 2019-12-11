@@ -1,5 +1,5 @@
-import { NotSupportedError } from '../dom/DOMException'
-import { Element, Node } from '../dom/interfaces'
+import { NotSupportedError } from "../dom/DOMException"
+import { Element, Node } from "../dom/interfaces"
 
 /**
  * Matches elements with the given selectors.

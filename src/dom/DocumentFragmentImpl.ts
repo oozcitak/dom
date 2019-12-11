@@ -51,7 +51,7 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
    * @param document - owner document
    * @param host - shadow root's host element
    */
-  static _create(document: Document, host: Element | null = null): 
+  static _create(document: Document, host: Element | null = null):
     DocumentFragmentImpl {
     const node = new DocumentFragmentImpl(host)
     node._nodeDocument = document

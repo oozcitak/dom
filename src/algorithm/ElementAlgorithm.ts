@@ -1,14 +1,21 @@
-import { dom } from '../'
-import { Attr, Element, Document, NamedNodeMap, Node } from '../dom/interfaces'
-import { list as infraList, namespace as infraNamespace  } from '@oozcitak/infra'
-import { Guard } from '../util'
-import { SyntaxError, InUseAttributeError, NotSupportedError } from '../dom/DOMException'
-import { create_attr, create_element, create_htmlUnknownElement, create_htmlElement } from "./CreateAlgorithm"
-import { customElement_enqueueACustomElementCallbackReaction, customElement_lookUpACustomElementDefinition, customElement_upgrade, customElement_enqueueACustomElementUpgradeReaction, customElement_isValidCustomElementName } from './CustomElementAlgorithm'
-import { observer_queueAttributeMutationRecord } from './MutationObserverAlgorithm'
-import { dom_runAttributeChangeSteps } from './DOMAlgorithm'
-import { mutation_preInsert } from './MutationAlgorithm'
-import { document_elementInterface } from './DocumentAlgorithm'
+import { dom } from "../"
+import { Attr, Element, Document, Node } from "../dom/interfaces"
+import { list as infraList, namespace as infraNamespace } from "@oozcitak/infra"
+import { Guard } from "../util"
+import { SyntaxError, InUseAttributeError, NotSupportedError } from "../dom/DOMException"
+import {
+  create_attr, create_element, create_htmlUnknownElement, create_htmlElement
+} from "./CreateAlgorithm"
+import {
+  customElement_enqueueACustomElementCallbackReaction,
+  customElement_lookUpACustomElementDefinition, customElement_upgrade,
+  customElement_enqueueACustomElementUpgradeReaction,
+  customElement_isValidCustomElementName
+} from "./CustomElementAlgorithm"
+import { observer_queueAttributeMutationRecord } from "./MutationObserverAlgorithm"
+import { dom_runAttributeChangeSteps } from "./DOMAlgorithm"
+import { mutation_preInsert } from "./MutationAlgorithm"
+import { document_elementInterface } from "./DocumentAlgorithm"
 
 /**
  * Determines whether the element's attribute list contains the given 
@@ -53,7 +60,7 @@ export function element_change(attribute: Attr, element: Element, value: string)
   if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
+        element, "attributeChangedCallback",
         [attribute._localName, attribute._value, value, attribute._namespace])
     }
   }
@@ -96,7 +103,7 @@ export function element_append(attribute: Attr, element: Element): void {
   if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
+        element, "attributeChangedCallback",
         [attribute._localName, null, attribute._value, attribute._namespace])
     }
   }
@@ -144,7 +151,7 @@ export function element_remove(attribute: Attr, element: Element): void {
   if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
+        element, "attributeChangedCallback",
         [attribute._localName, attribute._value, null, attribute._namespace])
     }
   }
@@ -194,7 +201,7 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
   if (dom.features.customElements) {
     if (Guard.isCustomElementNode(element)) {
       customElement_enqueueACustomElementCallbackReaction(
-        element, "attributeChangedCallback", 
+        element, "attributeChangedCallback",
         [oldAttr._localName, oldAttr._value, newAttr._value, oldAttr._namespace])
     }
   }
@@ -434,7 +441,7 @@ export function element_createAnElement(document: Document, localName: string,
     result._customElementState = "uncustomized"
     result._customElementDefinition = null
     result._is = is
-    
+
     return result
   }
 
@@ -537,7 +544,7 @@ export function element_createAnElement(document: Document, localName: string,
          * is value set to null, and node document set to document.
          */
         // TODO: Report the exception
-        result = create_htmlUnknownElement(document, localName, 
+        result = create_htmlUnknownElement(document, localName,
           infraNamespace.HTML, prefix)
         result._customElementState = "failed"
         result._customElementDefinition = null
@@ -554,7 +561,7 @@ export function element_createAnElement(document: Document, localName: string,
        * 6.2.2. Enqueue a custom element upgrade reaction given result and 
        * definition.
        */
-      result = create_htmlElement(document, localName, 
+      result = create_htmlElement(document, localName,
         infraNamespace.HTML, prefix)
       result._customElementState = "undefined"
       result._customElementDefinition = null

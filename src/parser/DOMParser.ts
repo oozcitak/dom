@@ -1,14 +1,13 @@
 import { XMLStringLexer } from "./XMLStringLexer"
-import { TokenType } from './interfaces'
+import { TokenType } from "./interfaces"
 import { Document, Node } from "../dom/interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
 import { forEachObject } from "@oozcitak/util"
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { create_document } from "../algorithm/CreateAlgorithm"
-import { namespace_extractQName } from "../algorithm/NamespaceAlgorithm"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import { create_document, namespace_extractQName } from "../algorithm"
 
 /**
  * Represents a parser for XML and HTML content.
@@ -18,7 +17,7 @@ export class DOMParser {
   /**
    * Initializes a new instance of `DOMParser`.
    */
-  constructor () { }
+  constructor() { }
 
   /**
    * Parses the given string and returns a document object.
@@ -136,5 +135,5 @@ export class DOMParser {
 /**
  * Defines the mime type of the document.
  */
-export type MimeType = 'text/html' | 'text/xml' | 'application/xml' | 
+export type MimeType = 'text/html' | 'text/xml' | 'application/xml' |
   'application/xhtml+xml' | 'image/svg+xml'

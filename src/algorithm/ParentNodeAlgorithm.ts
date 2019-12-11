@@ -1,6 +1,6 @@
-import { Node, Document } from '../dom/interfaces'
-import { isString } from '@oozcitak/util'
-import { create_text, create_documentFragment } from './CreateAlgorithm'
+import { Node, Document } from "../dom/interfaces"
+import { isString } from "@oozcitak/util"
+import { create_text, create_documentFragment } from "./CreateAlgorithm"
 
 /**
  * Converts the given nodes or strings into a node (if `nodes` has

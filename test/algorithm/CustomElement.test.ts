@@ -1,5 +1,8 @@
-import $$ from '../TestHelpers'
-import { customElement_isValidCustomElementName, customElement_isValidElementName, customElement_isVoidElementName } from '../../src/algorithm/CustomElementAlgorithm'
+import $$ from "../TestHelpers"
+import {
+  customElement_isValidCustomElementName, customElement_isValidElementName,
+  customElement_isVoidElementName
+} from "../../src/algorithm"
 
 describe('CustomElement', () => {
 

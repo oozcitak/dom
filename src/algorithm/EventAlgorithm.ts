@@ -1,16 +1,16 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
-  EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry, 
+  EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry,
   EventHandler, Event, EventTarget
-} from '../dom/interfaces'
-import { Guard } from '../util'
-import { forEachObject } from '@oozcitak/util'
-import { CustomEventImpl } from '../dom/CustomEventImpl'
-import { EventImpl } from '../dom/EventImpl'
-import { NotSupportedError } from '../dom/DOMException'
-import { tree_rootNode, tree_retarget, tree_isAncestorOf } from './TreeAlgorithm'
-import { shadowTree_isAssigned } from './ShadowTreeAlgorithm'
-import { dom_runEventConstructingSteps } from './DOMAlgorithm'
+} from "../dom/interfaces"
+import { Guard } from "../util"
+import { forEachObject } from "@oozcitak/util"
+import { CustomEventImpl } from "../dom/CustomEventImpl"
+import { EventImpl } from "../dom/EventImpl"
+import { NotSupportedError } from "../dom/DOMException"
+import { tree_rootNode, tree_retarget, tree_isAncestorOf } from "./TreeAlgorithm"
+import { shadowTree_isAssigned } from "./ShadowTreeAlgorithm"
+import { dom_runEventConstructingSteps } from "./DOMAlgorithm"
 
 /**
  * Defines a boolean out variable of a function.
@@ -341,7 +341,7 @@ export function event_dispatch(event: Event, target: EventTarget,
      */
     if (activationTarget !== null &&
       activationTarget._legacyPreActivationBehavior !== undefined) {
-        activationTarget._legacyPreActivationBehavior(event)
+      activationTarget._legacyPreActivationBehavior(event)
     }
 
     /**
@@ -616,7 +616,7 @@ export function event_invoke(struct: EventPathItem, event: Event,
  * @param legacyOutputDidListenersThrowFlag - legacy output flag that returns
  * whether the event listener's callback threw an exception
  */
-export function event_innerInvoke(event: Event, listeners: EventListenerEntry[], 
+export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
   phase: "capturing" | "bubbling", struct: EventPathItem,
   legacyOutputDidListenersThrowFlag: OutputFlag = { value: false }): boolean {
 
@@ -743,7 +743,7 @@ export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
  * @param legacyTargetOverrideFlag - legacy target override flag
  */
 export function event_fireAnEvent(e: string, target: EventTarget,
-  eventConstructor?: typeof EventImpl, idlAttributes?: { [key:string]: any },
+  eventConstructor?: typeof EventImpl, idlAttributes?: { [key: string]: any },
   legacyTargetOverrideFlag?: boolean): boolean {
   /**
    * 1. If eventConstructor is not given, then let eventConstructor be Event.
@@ -823,13 +823,13 @@ export function event_createLegacyEvent(eventInterface: string): Event {
    * "uievent" | UIEvent
    * "uievents" | UIEvent
    */
-  switch(eventInterface.toLowerCase()) {
+  switch (eventInterface.toLowerCase()) {
     case "beforeunloadevent":
       break
     case "compositionevent":
       break
     case "customevent":
-        constructor = CustomEventImpl
+      constructor = CustomEventImpl
       break
     case "devicemotionevent":
       break
@@ -839,8 +839,8 @@ export function event_createLegacyEvent(eventInterface: string): Event {
       break
     case "event":
     case "events":
-        constructor = EventImpl
-        break
+      constructor = EventImpl
+      break
     case "focusevent":
       break
     case "hashchangeevent":
@@ -872,7 +872,7 @@ export function event_createLegacyEvent(eventInterface: string): Event {
   /**
    * 3. If constructor is null, then throw a "NotSupportedError" DOMException.
    */
-  if(constructor === null) {
+  if (constructor === null) {
     throw new NotSupportedError()
   }
 

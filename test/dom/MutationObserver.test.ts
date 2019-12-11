@@ -1,5 +1,5 @@
-import $$ from '../TestHelpers'
-import { MutationRecord } from '../../src/dom/interfaces'
+import $$ from "../TestHelpers"
+import { MutationRecord } from "../../src/dom/interfaces"
 
 
 describe('MutationObserver', () => {

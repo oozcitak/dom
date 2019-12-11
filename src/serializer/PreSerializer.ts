@@ -3,11 +3,11 @@ import {
   DocumentType, ProcessingInstruction, CDATASection
 } from "../dom/interfaces"
 import { TupleSet } from "./TupleSet"
-import { NamespacePrefixMap } from './NamespacePrefixMap'
+import { NamespacePrefixMap } from "./NamespacePrefixMap"
 import { PreSerializedNode, PreSerializedAttr } from "./interfaces"
 import { InvalidStateError } from "../dom/DOMException"
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { xml_isName, xml_isLegalChar, xml_isPubidChar } from "../algorithm/XMLAlgorithm"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import { xml_isName, xml_isLegalChar, xml_isPubidChar } from "../algorithm"
 
 /**
  * Stores the last generated prefix. An object is used instead of a number so
@@ -949,7 +949,7 @@ export class PreSerializer {
        * well-formed attribute.
        */
       if (requireWellFormed && (attr.localName.includes(":") ||
-        !xml_isName(attr.localName) || 
+        !xml_isName(attr.localName) ||
         (attr.localName === "xmlns" && attributeNamespace === null))) {
         throw new Error("Attribute local name contains invalid characters (well-formed required).")
       }

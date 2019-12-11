@@ -1,5 +1,7 @@
-import $$ from '../TestHelpers'
-import { xml_isName, xml_isQName, xml_isLegalChar, xml_isPubidChar } from '../../src/algorithm/XMLAlgorithm'
+import $$ from "../TestHelpers"
+import {
+  xml_isName, xml_isQName, xml_isLegalChar, xml_isPubidChar
+} from "../../src/algorithm"
 
 describe('XMLAlgorithm', () => {
 
@@ -45,7 +47,7 @@ describe('XMLAlgorithm', () => {
     expect(xml_isLegalChar('invalid char \u{D800}')).toBe(false)
     expect(xml_isLegalChar('invalid char \u{DFFF}')).toBe(false)
     expect(xml_isLegalChar('invalid char \u{FFFE}')).toBe(false)
-    expect(xml_isLegalChar('invalid char \u{FFFF}')).toBe(false)    
+    expect(xml_isLegalChar('invalid char \u{FFFF}')).toBe(false)
   })
 
   test('isLegalChar() XML 1.1', () => {

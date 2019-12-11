@@ -1,37 +1,37 @@
-import { URLAlgorithm } from '@oozcitak/url/lib/algorithm'
-import { 
-  Document, DOMImplementation, Window, XMLDocument, AbortController, 
-  AbortSignal, DocumentType, Element, DocumentFragment, ShadowRoot, Attr, Text, 
-  CDATASection, Comment, ProcessingInstruction, Node, HTMLCollection, NodeList, 
-  NamedNodeMap, BoundaryPoint, Range, NodeIterator, TreeWalker, NodeFilter, 
+import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
+import {
+  Document, DOMImplementation, Window, XMLDocument, AbortController,
+  AbortSignal, DocumentType, Element, DocumentFragment, ShadowRoot, Attr, Text,
+  CDATASection, Comment, ProcessingInstruction, Node, HTMLCollection, NodeList,
+  NamedNodeMap, BoundaryPoint, Range, NodeIterator, TreeWalker, NodeFilter,
   MutationRecord, DOMTokenList
-} from '../dom/interfaces'
-import { DOMImplementationImpl } from '../dom/DOMImplementationImpl'
-import { WindowImpl } from '../dom/WindowImpl'
-import { XMLDocumentImpl } from '../dom/XMLDocumentImpl'
-import { DocumentImpl } from '../dom/DocumentImpl'
-import { AbortControllerImpl } from '../dom/AbortControllerImpl'
-import { AbortSignalImpl } from '../dom/AbortSignalImpl'
-import { DocumentTypeImpl } from '../dom/DocumentTypeImpl'
-import { ElementImpl } from '../dom/ElementImpl'
-import { DocumentFragmentImpl } from '../dom/DocumentFragmentImpl'
-import { ShadowRootImpl } from '../dom/ShadowRootImpl'
-import { AttrImpl } from '../dom/AttrImpl'
-import { TextImpl } from '../dom/TextImpl'
-import { CDATASectionImpl } from '../dom/CDATASectionImpl'
-import { CommentImpl } from '../dom/CommentImpl'
-import { ProcessingInstructionImpl } from '../dom/ProcessingInstructionImpl'
-import { HTMLCollectionImpl } from '../dom/HTMLCollectionImpl'
-import { NodeListImpl } from '../dom/NodeListImpl'
-import { NodeListStaticImpl } from '../dom/NodeListStaticImpl'
-import { NamedNodeMapImpl } from '../dom/NamedNodeMapImpl'
-import { RangeImpl } from '../dom/RangeImpl'
-import { NodeIteratorImpl } from '../dom/NodeIteratorImpl'
-import { TreeWalkerImpl } from '../dom/TreeWalkerImpl'
-import { NodeFilterImpl } from '../dom/NodeFilterImpl'
-import { MutationRecordImpl } from '../dom/MutationRecordImpl'
-import { DOMTokenListImpl } from '../dom/DOMTokenListImpl'
-import { URLRecord } from '@oozcitak/url/lib/url/interfaces'
+} from "../dom/interfaces"
+import { DOMImplementationImpl } from "../dom/DOMImplementationImpl"
+import { WindowImpl } from "../dom/WindowImpl"
+import { XMLDocumentImpl } from "../dom/XMLDocumentImpl"
+import { DocumentImpl } from "../dom/DocumentImpl"
+import { AbortControllerImpl } from "../dom/AbortControllerImpl"
+import { AbortSignalImpl } from "../dom/AbortSignalImpl"
+import { DocumentTypeImpl } from "../dom/DocumentTypeImpl"
+import { ElementImpl } from "../dom/ElementImpl"
+import { DocumentFragmentImpl } from "../dom/DocumentFragmentImpl"
+import { ShadowRootImpl } from "../dom/ShadowRootImpl"
+import { AttrImpl } from "../dom/AttrImpl"
+import { TextImpl } from "../dom/TextImpl"
+import { CDATASectionImpl } from "../dom/CDATASectionImpl"
+import { CommentImpl } from "../dom/CommentImpl"
+import { ProcessingInstructionImpl } from "../dom/ProcessingInstructionImpl"
+import { HTMLCollectionImpl } from "../dom/HTMLCollectionImpl"
+import { NodeListImpl } from "../dom/NodeListImpl"
+import { NodeListStaticImpl } from "../dom/NodeListStaticImpl"
+import { NamedNodeMapImpl } from "../dom/NamedNodeMapImpl"
+import { RangeImpl } from "../dom/RangeImpl"
+import { NodeIteratorImpl } from "../dom/NodeIteratorImpl"
+import { TreeWalkerImpl } from "../dom/TreeWalkerImpl"
+import { NodeFilterImpl } from "../dom/NodeFilterImpl"
+import { MutationRecordImpl } from "../dom/MutationRecordImpl"
+import { DOMTokenListImpl } from "../dom/DOMTokenListImpl"
+import { URLRecord } from "@oozcitak/url/lib/url/interfaces"
 
 /** 
  * Creates a `DOMImplementation`.
@@ -115,7 +115,7 @@ export function create_htmlElement(document: Document, localName: string, namesp
   prefix: string | null = null): Element {
   // TODO: Implement in HTML DOM
   return ElementImpl._create(document, localName, namespace, prefix)
-}  
+}
 
 /**
  * Creates a new `HTMLUnknownElement` node.
@@ -316,7 +316,7 @@ export function create_mutationRecord(type: "attributes" | "characterData" | "ch
  * @param element - associated element
  * @param attribute - associated attribute
  */
-export function create_domTokenList(element: Element, 
+export function create_domTokenList(element: Element,
   attribute: Attr): DOMTokenList {
   return DOMTokenListImpl._create(element, attribute)
 }

@@ -45,7 +45,7 @@ export class TupleSet<T1, T2> implements Iterable<[T1, T2]> {
   clear(): void {
     this._storage = new Map<T1, Set<T2>>()
   }
-  
+
   /**
    * Removes a tuple from the set.
    * 
@@ -65,7 +65,7 @@ export class TupleSet<T1, T2> implements Iterable<[T1, T2]> {
    * Returns an iterator for the set.
    */
   *entries(): IterableIterator<[T1, T2]> {
-    yield *this
+    yield* this
   }
 
   /**
@@ -98,7 +98,7 @@ export class TupleSet<T1, T2> implements Iterable<[T1, T2]> {
    * Returns an iterator for the set.
    */
   *values(): IterableIterator<[T1, T2]> {
-    yield *this
+    yield* this
   }
 
   /**

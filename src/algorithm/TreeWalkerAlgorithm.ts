@@ -1,5 +1,5 @@
-import { FilterResult, TreeWalker, Node } from '../dom/interfaces'
-import { traversal_filter } from './TraversalAlgorithm'
+import { FilterResult, TreeWalker, Node } from "../dom/interfaces"
+import { traversal_filter } from "./TraversalAlgorithm"
 
 /**
  * Returns the first or last child node, or `null` if there are none.

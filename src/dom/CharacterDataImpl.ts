@@ -1,6 +1,8 @@
 import { Element, Node, CharacterData } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
-import { characterData_replaceData, characterData_substringData } from "../algorithm/CharacterDataAlgorithm"
+import {
+  characterData_replaceData, characterData_substringData
+} from "../algorithm"
 
 /**
  * Represents a generic text node.

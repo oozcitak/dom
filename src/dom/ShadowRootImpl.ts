@@ -3,7 +3,7 @@ import {
 } from "./interfaces"
 import { DocumentFragmentImpl } from "./DocumentFragmentImpl"
 import { isEmpty } from "@oozcitak/util"
-import { tree_rootNode } from "../algorithm/TreeAlgorithm"
+import { tree_rootNode } from "../algorithm"
 
 /**
  * Represents a shadow root.

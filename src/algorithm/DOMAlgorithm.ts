@@ -1,8 +1,14 @@
 import { dom } from "../"
 import { Event, Node, Document, Element, NodeIterator, Slot } from "../dom/interfaces"
-import { tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf, tree_getDescendantElements, tree_rootNode } from "./TreeAlgorithm"
+import {
+  tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf,
+  tree_getDescendantElements, tree_rootNode
+} from "./TreeAlgorithm"
 import { Guard } from "../util"
-import { shadowTree_assignSlotablesForATree, shadowTree_isAssigned, shadowTree_assignSlotables, shadowTree_assignASlot } from "./ShadowTreeAlgorithm"
+import {
+  shadowTree_assignSlotablesForATree, shadowTree_isAssigned,
+  shadowTree_assignSlotables, shadowTree_assignASlot
+} from "./ShadowTreeAlgorithm"
 
 const supportedTokens = new Map()
 
@@ -24,7 +30,7 @@ export function dom_runRemovingSteps(removedNode: Node, oldParent?: Node | null)
  * @param document - document to own the cloned node
  * @param cloneChildrenFlag - whether child nodes are cloned
  */
-export function dom_runCloningSteps(copy: Node, node: Node, document: Document, 
+export function dom_runCloningSteps(copy: Node, node: Node, document: Document,
   cloneChildrenFlag?: boolean): void {
   // No steps defined
 }
@@ -48,7 +54,7 @@ export function dom_runAdoptingSteps(node: Node, oldDocument: Document): void {
  * @param value - attribute's new value
  * @param namespace - attribute's namespace
  */
-export function dom_runAttributeChangeSteps(element: Element, localName: string, 
+export function dom_runAttributeChangeSteps(element: Element, localName: string,
   oldValue: string | null, value: string | null,
   namespace: string | null): void {
 
@@ -219,7 +225,7 @@ function updateASlotsName(element: Element, localName: string,
  * Defines attribute change steps to update a slotable’s name.
  */
 function updateASlotablesName(element: Element, localName: string,
-  oldValue: string | null, value: string | null, namespace: string | null): void {  
+  oldValue: string | null, value: string | null, namespace: string | null): void {
   /**
    * 1. If localName is slot and namespace is null, then:
    * 1.1. If value is oldValue, then return.

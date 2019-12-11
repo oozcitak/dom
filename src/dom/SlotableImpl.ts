@@ -1,5 +1,5 @@
-import { Slotable, Slot, HTMLSlotElement } from './interfaces'
-import { shadowTree_findASlot } from '../algorithm/ShadowTreeAlgorithm'
+import { Slotable, Slot, HTMLSlotElement } from "./interfaces"
+import { shadowTree_findASlot } from "../algorithm"
 
 /**
  * Represents a mixin that allows nodes to become the contents of

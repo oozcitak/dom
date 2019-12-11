@@ -16,7 +16,7 @@ export class CommentImpl extends CharacterDataImpl implements Comment {
   public constructor(data: string = '') {
     super(data)
   }
- 
+
 
   /**
    * Creates a new `Comment`.

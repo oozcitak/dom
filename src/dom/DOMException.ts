@@ -26,7 +26,7 @@ export class DOMStringSizeError extends DOMException {
   */
   constructor(message?: string) {
     super("DOMStringSizeError", message || "")
-  } 
+  }
 }
 
 export class WrongDocumentError extends DOMException {
@@ -35,7 +35,7 @@ export class WrongDocumentError extends DOMException {
   */
   constructor(message?: string) {
     super("WrongDocumentError", "The object is in the wrong document. " + message || "")
-  } 
+  }
 }
 
 export class NoDataAllowedError extends DOMException {
@@ -44,7 +44,7 @@ export class NoDataAllowedError extends DOMException {
   */
   constructor(message?: string) {
     super("NoDataAllowedError", message || "")
-  } 
+  }
 }
 
 export class NoModificationAllowedError extends DOMException {
@@ -53,7 +53,7 @@ export class NoModificationAllowedError extends DOMException {
   */
   constructor(message?: string) {
     super("NoModificationAllowedError", "The object can not be modified. " + message || "")
-  } 
+  }
 }
 
 export class NotSupportedError extends DOMException {
@@ -62,7 +62,7 @@ export class NotSupportedError extends DOMException {
   */
   constructor(message?: string) {
     super("NotSupportedError", "The operation is not supported. " + message || "")
-  } 
+  }
 }
 
 export class InUseAttributeError extends DOMException {
@@ -71,7 +71,7 @@ export class InUseAttributeError extends DOMException {
   */
   constructor(message?: string) {
     super("InUseAttributeError", message || "")
-  } 
+  }
 }
 
 export class InvalidStateError extends DOMException {
@@ -80,7 +80,7 @@ export class InvalidStateError extends DOMException {
   */
   constructor(message?: string) {
     super("InvalidStateError", "The object is in an invalid state. " + message || "")
-  } 
+  }
 }
 
 export class InvalidModificationError extends DOMException {
@@ -89,7 +89,7 @@ export class InvalidModificationError extends DOMException {
   */
   constructor(message?: string) {
     super("InvalidModificationError", "The object can not be modified in this way. " + message || "")
-  } 
+  }
 }
 
 export class NamespaceError extends DOMException {
@@ -98,7 +98,7 @@ export class NamespaceError extends DOMException {
   */
   constructor(message?: string) {
     super("NamespaceError", "The operation is not allowed by Namespaces in XML. [XMLNS] " + message || "")
-  } 
+  }
 }
 
 export class InvalidAccessError extends DOMException {
@@ -107,7 +107,7 @@ export class InvalidAccessError extends DOMException {
   */
   constructor(message?: string) {
     super("InvalidAccessError", "The object does not support the operation or argument. " + message || "")
-  } 
+  }
 }
 
 export class ValidationError extends DOMException {
@@ -116,7 +116,7 @@ export class ValidationError extends DOMException {
   */
   constructor(message?: string) {
     super("ValidationError", message || "")
-  } 
+  }
 }
 
 export class TypeMismatchError extends DOMException {
@@ -125,7 +125,7 @@ export class TypeMismatchError extends DOMException {
   */
   constructor(message?: string) {
     super("TypeMismatchError", message || "")
-  } 
+  }
 }
 
 export class SecurityError extends DOMException {
@@ -134,7 +134,7 @@ export class SecurityError extends DOMException {
   */
   constructor(message?: string) {
     super("SecurityError", "The operation is insecure. " + message || "")
-  } 
+  }
 }
 
 export class NetworkError extends DOMException {
@@ -143,7 +143,7 @@ export class NetworkError extends DOMException {
   */
   constructor(message?: string) {
     super("NetworkError", "A network error occurred. " + message || "")
-  } 
+  }
 }
 
 export class AbortError extends DOMException {
@@ -152,7 +152,7 @@ export class AbortError extends DOMException {
   */
   constructor(message?: string) {
     super("AbortError", "The operation was aborted. " + message || "")
-  } 
+  }
 }
 
 export class URLMismatchError extends DOMException {
@@ -161,7 +161,7 @@ export class URLMismatchError extends DOMException {
   */
   constructor(message?: string) {
     super("URLMismatchError", "The given URL does not match another URL. " + message || "")
-  } 
+  }
 }
 
 export class QuotaExceededError extends DOMException {
@@ -170,7 +170,7 @@ export class QuotaExceededError extends DOMException {
   */
   constructor(message?: string) {
     super("QuotaExceededError", "The quota has been exceeded. " + message || "")
-  } 
+  }
 }
 
 export class TimeoutError extends DOMException {
@@ -179,7 +179,7 @@ export class TimeoutError extends DOMException {
   */
   constructor(message?: string) {
     super("TimeoutError", "The operation timed out. " + message || "")
-  } 
+  }
 }
 
 export class InvalidNodeTypeError extends DOMException {
@@ -188,7 +188,7 @@ export class InvalidNodeTypeError extends DOMException {
   */
   constructor(message?: string) {
     super("InvalidNodeTypeError", "The supplied node is incorrect or has an incorrect ancestor for this operation. " + message || "")
-  } 
+  }
 }
 
 export class DataCloneError extends DOMException {
@@ -197,7 +197,7 @@ export class DataCloneError extends DOMException {
   */
   constructor(message?: string) {
     super("DataCloneError", "The object can not be cloned. " + message || "")
-  } 
+  }
 }
 
 export class NotImplementedError extends DOMException {
@@ -206,7 +206,7 @@ export class NotImplementedError extends DOMException {
   */
   constructor(message?: string) {
     super("NotImplementedError", "The DOM method is not implemented by this module. " + message || "")
-  } 
+  }
 }
 
 

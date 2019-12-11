@@ -1,9 +1,9 @@
 import {
   NodeType, RegisteredObserver, TransientRegisteredObserver, EventListener,
-  MouseEvent, Slotable, Node, Text, Element, ShadowRoot, CharacterData, 
-  Document, DocumentType, Attr, Comment, ProcessingInstruction, Slot, Window, 
+  MouseEvent, Slotable, Node, Text, Element, ShadowRoot, CharacterData,
+  Document, DocumentType, Attr, Comment, ProcessingInstruction, Slot, Window,
   CDATASection, DocumentFragment
-} from '../dom/interfaces'
+} from "../dom/interfaces"
 
 /**
  * Contains user-defined type guards for DOM objects.
@@ -61,7 +61,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isCharacterDataNode(a: any): a is CharacterData {
-    if(!Guard.isNode(a)) return false
+    if (!Guard.isNode(a)) return false
 
     const type = a.nodeType
 

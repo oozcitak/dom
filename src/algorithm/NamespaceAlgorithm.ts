@@ -1,6 +1,6 @@
-import { InvalidCharacterError, NamespaceError } from '../dom/DOMException'
-import { namespace as infraNamespace } from '@oozcitak/infra'
-import { xml_isName, xml_isQName } from './XMLAlgorithm'
+import { InvalidCharacterError, NamespaceError } from "../dom/DOMException"
+import { namespace as infraNamespace } from "@oozcitak/infra"
+import { xml_isName, xml_isQName } from "./XMLAlgorithm"
 
 /**
  * Validates the given qualified name.
@@ -82,7 +82,7 @@ export function namespace_validateAndExtract(namespace: string | null, qualified
  * 
  * @returns an tuple with `prefix` and `localName`.
  */
-export function namespace_extractQName(qualifiedName: string): [ string | null, string ] {
+export function namespace_extractQName(qualifiedName: string): [string | null, string] {
 
   namespace_validate(qualifiedName)
 
@@ -90,5 +90,5 @@ export function namespace_extractQName(qualifiedName: string): [ string | null, 
   const prefix = (parts.length === 2 ? parts[0] : null)
   const localName = (parts.length === 2 ? parts[1] : qualifiedName)
 
-  return [ prefix, localName ]
+  return [prefix, localName]
 }

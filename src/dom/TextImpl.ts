@@ -1,6 +1,6 @@
 import { NodeType, Text, HTMLSlotElement, Document, Slot } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { text_contiguousTextNodes, text_split } from "../algorithm/TextAlgorithm"
+import { text_contiguousTextNodes, text_split } from "../algorithm"
 
 /**
  * Represents a text node.

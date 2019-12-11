@@ -1,19 +1,27 @@
 import {
   Attr, NamedNodeMap, DOMTokenList, ShadowRoot, NodeType, Node, Document,
-  Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition, 
+  Element, HTMLCollection, NodeList, ShadowRootMode, CustomElementDefinition,
   HTMLSlotElement, Slot, AttributeChangeStep
-} from './interfaces'
-import { NodeImpl } from './NodeImpl'
-import { 
+} from "./interfaces"
+import { NodeImpl } from "./NodeImpl"
+import {
   InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
-} from './DOMException'
-import { list as infraList, namespace as infraNamespace } from '@oozcitak/infra'
-import { create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot, create_text } from '../algorithm/CreateAlgorithm'
-import { customElement_isValidCustomElementName, customElement_isValidShadowHostName, customElement_lookUpACustomElementDefinition } from '../algorithm/CustomElementAlgorithm'
-import { xml_isName } from '../algorithm/XMLAlgorithm'
-import { namespace_validateAndExtract } from '../algorithm/NamespaceAlgorithm'
-import { element_getAnAttributeValue, element_setAnAttributeValue, element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName, element_append, element_change, element_removeAnAttributeByName, element_removeAnAttributeByNamespaceAndLocalName, element_setAnAttribute, element_remove, element_insertAdjacent } from '../algorithm/ElementAlgorithm'
-import { node_listOfElementsWithNamespace, node_listOfElementsWithClassNames, node_listOfElementsWithQualifiedName } from '../algorithm/NodeAlgorithm'
+} from "./DOMException"
+import { list as infraList, namespace as infraNamespace } from "@oozcitak/infra"
+import {
+  create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot,
+  create_text, customElement_isValidCustomElementName,
+  customElement_isValidShadowHostName,
+  customElement_lookUpACustomElementDefinition, xml_isName,
+  namespace_validateAndExtract, element_getAnAttributeValue,
+  element_setAnAttributeValue, element_getAnAttributeByName,
+  element_getAnAttributeByNamespaceAndLocalName,
+  element_append, element_change, element_removeAnAttributeByName,
+  element_removeAnAttributeByNamespaceAndLocalName, element_setAnAttribute,
+  element_remove, element_insertAdjacent,
+  node_listOfElementsWithNamespace, node_listOfElementsWithClassNames,
+  node_listOfElementsWithQualifiedName
+} from "../algorithm"
 
 /**
  * Represents an element node.
@@ -37,7 +45,7 @@ export class ElementImpl extends NodeImpl implements Element {
   _uniqueIdentifier?: string
 
   _attributeChangeSteps: AttributeChangeStep[] = []
-    
+
   _name: string = ''
   _assignedSlot: Slot | null = null
 
@@ -237,7 +245,7 @@ export class ElementImpl extends NodeImpl implements Element {
     if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
       qualifiedName = qualifiedName.toLowerCase()
     }
-    
+
     for (const attr of this._attributeList) {
       if (attr._qualifiedName === qualifiedName) {
         return true

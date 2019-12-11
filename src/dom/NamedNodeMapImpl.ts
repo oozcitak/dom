@@ -1,6 +1,10 @@
 import { Element, Attr, NamedNodeMap } from "./interfaces"
 import { NotFoundError } from "./DOMException"
-import { element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName, element_setAnAttribute, element_removeAnAttributeByName, element_removeAnAttributeByNamespaceAndLocalName } from "../algorithm/ElementAlgorithm"
+import {
+  element_getAnAttributeByName, element_getAnAttributeByNamespaceAndLocalName,
+  element_setAnAttribute, element_removeAnAttributeByName,
+  element_removeAnAttributeByNamespaceAndLocalName
+} from "../algorithm"
 
 /**
  * Represents a collection of nodes.

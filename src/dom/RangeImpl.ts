@@ -1,20 +1,22 @@
-import { dom } from '../'
+import { dom } from "../"
 import {
   Node, Range, BoundaryPosition, HowToCompare, DocumentFragment,
   BoundaryPoint
-} from './interfaces'
-import { AbstractRangeImpl } from './AbstractRangeImpl'
-import { 
-  InvalidNodeTypeError, NotSupportedError, WrongDocumentError, 
-  InvalidStateError, IndexSizeError 
-} from './DOMException'
-import { create_range } from '../algorithm/CreateAlgorithm'
-import { tree_isAncestorOf, tree_index, tree_nodeLength, tree_rootNode } from '../algorithm/TreeAlgorithm'
-import { boundaryPoint_position } from '../algorithm/BoundaryPointAlgorithm'
-import { characterData_replaceData } from '../algorithm/CharacterDataAlgorithm'
-import { range_setTheStart, range_setTheEnd, range_select, range_root, range_collapsed, range_getContainedNodes, range_isContained, range_extract, range_cloneTheContents, range_insert, range_getPartiallyContainedNodes } from '../algorithm/RangeAlgorithm'
-import { mutation_remove, mutation_replaceAll, mutation_append } from '../algorithm/MutationAlgorithm'
-import { Guard } from '../util'
+} from "./interfaces"
+import { AbstractRangeImpl } from "./AbstractRangeImpl"
+import {
+  InvalidNodeTypeError, NotSupportedError, WrongDocumentError,
+  InvalidStateError, IndexSizeError
+} from "./DOMException"
+import {
+  tree_isAncestorOf, tree_index, tree_nodeLength, tree_rootNode,
+  boundaryPoint_position, characterData_replaceData,
+  range_setTheStart, range_setTheEnd, range_select, range_root, range_collapsed,
+  range_getContainedNodes, range_isContained, range_extract,
+  range_cloneTheContents, range_insert, range_getPartiallyContainedNodes,
+  mutation_remove, mutation_replaceAll, mutation_append, create_range
+} from "../algorithm"
+import { Guard } from "../util"
 
 /**
  * Represents a live range.
@@ -55,7 +57,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 3. Return container.
      */
     let container = this._start[0]
-    while(!tree_isAncestorOf(this._end[0], container, true)) {
+    while (!tree_isAncestorOf(this._end[0], container, true)) {
       if (container._parent === null) {
         throw new Error("Parent node  is null.")
       }
