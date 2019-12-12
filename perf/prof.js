@@ -2,7 +2,7 @@ const { dom, DOMImplementation } = require("../lib")
 
 dom.setFeatures(false)
 const impl = new DOMImplementation()
-for (let i = 0; i < 100000; i++) {
+for (let i = 0; i < 10000; i++) {
   const doc = impl.createDocument(null, "", null)
   const root = doc.createElement("root")
   doc.appendChild(root)
