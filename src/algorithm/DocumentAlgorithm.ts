@@ -4,7 +4,7 @@ import { Guard } from "../util"
 import { isString } from "@oozcitak/util"
 import { Element as ElementImpl } from "../dom"
 import { customElement_enqueueACustomElementCallbackReaction } from "./CustomElementAlgorithm"
-import { tree_getDescendantNodes } from "./TreeAlgorithm"
+import { tree_getFirstDescendantNode, tree_getNextDescendantNode } from "./TreeAlgorithm"
 import { namespace_validateAndExtract } from "./NamespaceAlgorithm"
 import { dom_runAdoptingSteps } from "./DOMAlgorithm"
 import { element_createAnElement } from "./ElementAlgorithm"
@@ -83,8 +83,8 @@ export function document_adopt(node: Node, document: Document): void {
      * 3.1. For each inclusiveDescendant in node’s shadow-including inclusive 
      * descendants:
      */
-    for (const inclusiveDescendant of tree_getDescendantNodes(node,
-      true, true)) {
+    let inclusiveDescendant = tree_getFirstDescendantNode(node, true, true)
+    while (inclusiveDescendant !== null) {
       /**
        * 3.1.1. Set inclusiveDescendant’s node document to document.
        * 3.1.2. If inclusiveDescendant is an element, then set the node 
@@ -122,6 +122,8 @@ export function document_adopt(node: Node, document: Document): void {
       if (dom.features.steps) {
         dom_runAdoptingSteps(inclusiveDescendant, oldDocument)
       }
+
+      inclusiveDescendant = tree_getNextDescendantNode(node, inclusiveDescendant, true, true)
     }
   }
 }

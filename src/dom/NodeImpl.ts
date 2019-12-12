@@ -9,14 +9,14 @@ import { Guard } from "../util"
 import { NotSupportedError } from "./DOMException"
 import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
 import {
-  tree_rootNode, tree_nodeLength, tree_getDescendantNodes, tree_index,
+  tree_rootNode, tree_nodeLength, tree_index,
   tree_isAncestorOf, tree_isDescendantOf, tree_isPreceding, create_nodeList,
   shadowTree_isAssigned, shadowTree_isConnected, characterData_replaceData,
   mutation_preInsert, mutation_append, mutation_replace, mutation_preRemove,
   mutation_remove, attr_setAnExistingAttributeValue,
   text_descendantTextContent, text_contiguousExclusiveTextNodes,
   node_stringReplaceAll, node_clone, node_equals, node_locateANamespacePrefix,
-  node_locateANamespace
+  node_locateANamespace, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "../algorithm"
 
 /**
@@ -313,10 +313,10 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * descendant exclusive Text node node of context object:
      */
     const descendantNodes: Text[] = []
-    for (const node of tree_getDescendantNodes(this)) {
-      if (Guard.isExclusiveTextNode(node)) {
-        descendantNodes.push(node)
-      }
+    let node = tree_getFirstDescendantNode(this, false, false, (e) => Guard.isExclusiveTextNode(e))
+    while (node !== null) {
+      descendantNodes.push(node as Text)
+      node = tree_getNextDescendantNode(this, node, false, false, (e) => Guard.isExclusiveTextNode(e))
     }
 
     for (const node of descendantNodes) {

@@ -1,6 +1,6 @@
 import { Element, NonElementParentNode } from "./interfaces"
-import { Cast } from "../util"
-import { tree_getDescendantElements } from "../algorithm"
+import { Cast, Guard } from "../util"
+import { tree_getFirstDescendantNode, tree_getNextDescendantNode } from "../algorithm"
 
 /**
  * Represents a mixin that extends non-element parent nodes. This mixin
@@ -15,10 +15,14 @@ export class NonElementParentNodeImpl implements NonElementParentNode {
      * element, in tree order, within the context object’s descendants, 
      * whose ID is elementId, and null if there is no such element otherwise.
      */
-    for (const ele of tree_getDescendantElements(Cast.asNode(this))) {
+    let ele = tree_getFirstDescendantNode(Cast.asNode(this), false, false, 
+      (e) => Guard.isElementNode(e)) as Element | null
+    while (ele !== null) {
       if (ele._uniqueIdentifier === id) {
         return ele
       }
+      ele = tree_getNextDescendantNode(Cast.asNode(this), ele, false, false, 
+        (e) => Guard.isElementNode(e)) as Element | null
     }
 
     return null

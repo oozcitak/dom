@@ -1,8 +1,8 @@
 import { dom } from "../"
-import { Event, Node, Document, Element, NodeIterator, Slot } from "../dom/interfaces"
+import { Node, Element, NodeIterator, Slot, Document, Event } from "../dom/interfaces"
 import {
   tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf,
-  tree_getDescendantElements, tree_rootNode
+  tree_rootNode, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "./TreeAlgorithm"
 import { Guard } from "../util"
 import {
@@ -18,7 +18,7 @@ const supportedTokens = new Map()
  * @param removedNode - removed node
  * @param oldParent - old parent node
  */
-export function dom_runRemovingSteps(removedNode: Node, oldParent?: Node | null): void {
+export function dom_runRemovingSteps(removedNode: Node, oldParent: Node): void {
   // No steps defined
 }
 
@@ -31,7 +31,7 @@ export function dom_runRemovingSteps(removedNode: Node, oldParent?: Node | null)
  * @param cloneChildrenFlag - whether child nodes are cloned
  */
 export function dom_runCloningSteps(copy: Node, node: Node, document: Document,
-  cloneChildrenFlag?: boolean): void {
+  cloneChildrenFlag: boolean): void {
   // No steps defined
 }
 
@@ -63,7 +63,7 @@ export function dom_runAttributeChangeSteps(element: Element, localName: string,
     updateASlotablesName.call(element, element, localName, oldValue, value, namespace)
     updateASlotsName.call(element, element, localName, oldValue, value, namespace)
   }
-  updateAnElementID.call(element, element, localName, oldValue, value, namespace)
+  updateAnElementID.call(element, element, localName, value, namespace)
 
   // run custom steps
   for (const attributeChangeStep of element._attributeChangeSteps) {
@@ -183,11 +183,16 @@ function removeNodeIterator(nodeIterator: NodeIterator,
       nodeIterator._reference = toBeRemovedNode._parent
     }
   } else {
-    let childNode = toBeRemovedNode._previousSibling
-    for (childNode of tree_getDescendantElements(toBeRemovedNode._previousSibling, true)) {
+    let referenceNode = toBeRemovedNode._previousSibling
+    let childNode = tree_getFirstDescendantNode(toBeRemovedNode._previousSibling, true, false)
+    while (childNode !== null) {
+      if (childNode !== null) {
+        referenceNode = childNode
+      }
       // loop through to get the last descendant node
+      childNode = tree_getNextDescendantNode(toBeRemovedNode._previousSibling, childNode, true, false)
     }
-    nodeIterator._reference = childNode
+    nodeIterator._reference = referenceNode
   }
 }
 
@@ -261,7 +266,7 @@ function updateASlotablesName(element: Element, localName: string,
  * Defines attribute change steps to update an element's ID.
  */
 function updateAnElementID(element: Element, localName: string,
-  oldValue: string | null, value: string | null, namespace: string | null): void {
+  value: string | null, namespace: string | null): void {
   /**
    * 1. If localName is id, namespace is null, and value is null or the empty
    * string, then unset element’s ID.

@@ -44,6 +44,52 @@ function _emptyIterator<T>(): Iterable<T> {
     }
   }
 }
+
+/**
+ * Returns the first descendant node of the tree rooted at `node` in
+ * depth-first pre-order.
+ * 
+ * @param node - root node of the tree
+ * @param self - whether to include `node` in traversal
+ * @param shadow - whether to visit shadow tree nodes
+ * @param filter - a function to filter nodes
+ */
+export function tree_getFirstDescendantNode(node: Node, self: boolean = false,
+  shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
+  Node | null {
+
+  let firstNode: Node | null = (self ? node : _getNextDescendantNode(node, node, shadow))
+
+  while (firstNode && filter && !filter(firstNode)) {
+    firstNode = _getNextDescendantNode(node, firstNode, shadow)
+  }
+
+  return firstNode
+}
+
+/**
+ * Returns the next descendant node of the tree rooted at `node` in
+ * depth-first pre-order.
+ * 
+ * @param node - root node of the tree
+ * @param currentNode - current descendant node
+ * @param self - whether to include `node` in traversal
+ * @param shadow - whether to visit shadow tree nodes
+ * @param filter - a function to filter nodes
+ */
+export function tree_getNextDescendantNode(node: Node, currentNode: Node, self: boolean = false,
+  shadow: boolean = false, filter?: ((childNode: Node) => boolean)):
+  Node | null {
+
+  let nextNode: Node | null = _getNextDescendantNode(node, currentNode, shadow)
+
+  while (nextNode && filter && !filter(nextNode)) {
+    nextNode = _getNextDescendantNode(node, nextNode, shadow)
+  }
+
+  return nextNode
+}
+
 /**
  * Traverses through all descendant nodes of the tree rooted at
  * `node` in depth-first pre-order.
@@ -445,10 +491,13 @@ export function tree_isDescendantOf(node: Node, other: Node,
 		* child of B or A is a child of an object C that is a descendant of B.
 		* 
 		* An inclusive descendant is an object or one of its descendants.
-		*/
-  for (const child of tree_getDescendantNodes(node, self, shadow)) {
-    if (child === other)
+    */
+  let child = tree_getFirstDescendantNode(node, self, shadow)
+  while (child !== null) {
+    if (child === other) {
       return true
+    }
+    child = tree_getNextDescendantNode(node, child, self, shadow)
   }
 
   return false
@@ -647,9 +696,11 @@ export function tree_treePosition(node: Node): number {
   const root = tree_rootNode(node)
 
   let pos = 0
-  for (const childNode of tree_getDescendantNodes(root)) {
+  let childNode = tree_getFirstDescendantNode(root)
+  while (childNode !== null) {
     pos++
     if (childNode === node) return pos
+    childNode = tree_getNextDescendantNode(root, childNode)
   }
 
   return -1

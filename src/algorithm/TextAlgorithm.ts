@@ -3,7 +3,9 @@ import { Node, Text } from "../dom/interfaces"
 import { Guard } from "../util"
 import { IndexSizeError } from "../dom/DOMException"
 import { create_text } from "./CreateAlgorithm"
-import { tree_getDescendantNodes, tree_index } from "./TreeAlgorithm"
+import { 
+  tree_index, tree_getFirstDescendantNode, tree_getNextDescendantNode 
+} from "./TreeAlgorithm"
 import {
   characterData_substringData, characterData_replaceData
 } from "./CharacterDataAlgorithm"
@@ -119,10 +121,10 @@ export function text_descendantTextContent(node: Node): string {
    * data of all the Text node descendants of node, in tree order.
    */
   let contents = ''
-  for (const text of tree_getDescendantNodes(node)) {
-    if (Guard.isTextNode(text)) {
-      contents += text._data
-    }
+  let text = tree_getFirstDescendantNode(node, false, false, (e) => Guard.isTextNode(e))
+  while (text !== null) {
+    contents += (text as Text)._data
+    text = tree_getNextDescendantNode(node, text, false, false, (e) => Guard.isTextNode(e))
   }
   return contents
 }

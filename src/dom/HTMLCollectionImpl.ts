@@ -1,6 +1,7 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
-import { tree_getDescendantElements } from "../algorithm"
+import { tree_getFirstDescendantNode, tree_getNextDescendantNode } from "../algorithm"
+import { Guard } from "../util"
 
 /**
  * Represents a collection of elements.
@@ -87,9 +88,10 @@ export class HTMLCollectionImpl implements HTMLCollection {
 
   /** @inheritdoc */
   [Symbol.iterator](): Iterator<Element> {
-    const it = tree_getDescendantElements(this._root, false, false,
-      (ele) => { return !!this._filter(ele) })[Symbol.iterator]()
-    let currentNode: Element | null = it.next().value
+    const root = this._root
+    const filter = this._filter
+    let currentNode: Element | null = tree_getFirstDescendantNode(root, 
+      false, false, (e) => Guard.isElementNode(e) && filter(e)) as Element | null
 
     return {
       next(): IteratorResult<Element> {
@@ -97,7 +99,8 @@ export class HTMLCollectionImpl implements HTMLCollection {
           return { done: true, value: null }
         } else {
           const result = { done: false, value: currentNode }
-          currentNode = it.next().value
+          currentNode = tree_getNextDescendantNode(root, currentNode,
+            false, false, (e) => Guard.isElementNode(e) && filter(e)) as Element | null
           return result
         }
       }

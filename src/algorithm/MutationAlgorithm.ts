@@ -9,8 +9,9 @@ import {
   customElement_tryToUpgrade
 } from "./CustomElementAlgorithm"
 import {
-  tree_isAncestorOf, tree_index, tree_rootNode, tree_getDescendantNodes,
-  tree_isDescendantOf, tree_getDescendantElements, tree_getAncestorNodes
+  tree_isAncestorOf, tree_index, tree_rootNode, 
+  tree_isDescendantOf, tree_getAncestorNodes,
+  tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "./TreeAlgorithm"
 import { nodeIterator_iteratorList } from "./NodeIteratorAlgorithm"
 import {
@@ -370,7 +371,8 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * inclusiveDescendant of node, in shadow-including tree
      * order:
      */
-    for (const inclusiveDescendant of tree_getDescendantNodes(node, true, true)) {
+    let inclusiveDescendant = tree_getFirstDescendantNode(node, true, true)
+    while (inclusiveDescendant !== null) {
       /**
        * 7.7.1. Run the insertion steps with inclusiveDescendant.
        */
@@ -400,6 +402,8 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
           }
         }
       }
+
+      inclusiveDescendant = tree_getNextDescendantNode(node, inclusiveDescendant, true, true)
     }
   }
 
@@ -968,14 +972,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * 12.2. Run assign slotables for a tree with node.
    */
   if (dom.features.slots) {
-    let hasSlotDescendant = false
-    for (const descendant of tree_getDescendantElements(node, true)) {
-      if (Guard.isSlot(descendant)) {
-        hasSlotDescendant = true
-        break
-      }
-    }
-    if (hasSlotDescendant) {
+    const descendant = tree_getFirstDescendantNode(node, true, false, (e) => Guard.isSlot(e))
+    if (descendant !== null) {
       shadowTree_assignSlotablesForATree(tree_rootNode(parent))
       shadowTree_assignSlotablesForATree(node)
     }
@@ -1004,12 +1002,13 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * 15. For each shadow-including descendant descendant of node, 
    * in shadow-including tree order, then:
    */
-  for (const descendant of tree_getDescendantNodes(node, false, true)) {
+  let descendant = tree_getFirstDescendantNode(node, false, true)
+  while (descendant !== null) {
     /**
      * 15.1. Run the removing steps with descendant.
      */
     if (dom.features.steps) {
-      dom_runRemovingSteps(descendant)
+      dom_runRemovingSteps(descendant, node)
     }
 
     /**
@@ -1023,6 +1022,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
           descendant, "disconnectedCallback", [])
       }
     }
+
+    descendant = tree_getNextDescendantNode(node, descendant, false, true)
   }
 
   /**

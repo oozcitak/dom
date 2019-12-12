@@ -9,7 +9,7 @@ import { Guard } from "../util"
 import { create_documentFragment, create_range } from "./CreateAlgorithm"
 import {
   tree_rootNode, tree_nodeLength, tree_isAncestorOf, tree_index,
-  tree_getDescendantNodes
+  tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "./TreeAlgorithm"
 import { boundaryPoint_position } from "./BoundaryPointAlgorithm"
 import { characterData_substringData, characterData_replaceData } from "./CharacterDataAlgorithm"
@@ -735,20 +735,19 @@ export function range_getContainedNodes(range: Range): Iterable<Node> {
     [Symbol.iterator]: () => {
 
       const container = range.commonAncestorContainer
-      const it = tree_getDescendantNodes(container)[Symbol.iterator]()
-      let currentNode: Node | null = it.next().value
+      let currentNode = tree_getFirstDescendantNode(container)
 
       return {
         next: () => {
           while (currentNode && !range_isContained(currentNode, range)) {
-            currentNode = it.next().value
+            currentNode = tree_getNextDescendantNode(container, currentNode)
           }
 
           if (currentNode === null) {
             return { done: true, value: null }
           } else {
             const result = { done: false, value: currentNode }
-            currentNode = it.next().value
+            currentNode = tree_getNextDescendantNode(container, currentNode)
             return result
           }
         }
@@ -767,20 +766,19 @@ export function range_getPartiallyContainedNodes(range: Range): Iterable<Node> {
     [Symbol.iterator]: () => {
 
       const container = range.commonAncestorContainer
-      const it = tree_getDescendantNodes(container)[Symbol.iterator]()
-      let currentNode: Node | null = it.next().value
+      let currentNode = tree_getFirstDescendantNode(container)
 
       return {
         next: () => {
           while (currentNode && !range_isPartiallyContained(currentNode, range)) {
-            currentNode = it.next().value
+            currentNode = tree_getNextDescendantNode(container, currentNode)
           }
 
           if (currentNode === null) {
             return { done: true, value: null }
           } else {
             const result = { done: false, value: currentNode }
-            currentNode = it.next().value
+            currentNode = tree_getNextDescendantNode(container, currentNode)
             return result
           }
         }

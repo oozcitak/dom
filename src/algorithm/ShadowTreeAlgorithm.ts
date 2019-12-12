@@ -3,7 +3,7 @@ import { Slotable, Slot, Element, ShadowRoot, Node } from "../dom/interfaces"
 import { Cast, Guard } from "../util"
 import { isEmpty } from "@oozcitak/util"
 import {
-  tree_rootNode, tree_getDescendantElements, tree_getDescendantNodes
+  tree_rootNode, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "./TreeAlgorithm"
 import { observer_queueAMutationObserverMicrotask } from "./MutationObserverAlgorithm"
 
@@ -53,8 +53,8 @@ export function shadowTree_isAssigned(slotable: Slotable): boolean {
  * @param slotable - a slotable
  * @param openFlag - `true` to search open shadow tree's only
  */
-export function shadowTree_findASlot(slotable: Slotable, openFlag: boolean = false):
-  Slot | null {
+export function shadowTree_findASlot(slotable: Slotable, openFlag: 
+  boolean = false): Slot | null {
   /**
    * 1. If slotable’s parent is null, then return null.
    * 2. Let shadow be slotable’s parent’s shadow root.
@@ -71,10 +71,10 @@ export function shadowTree_findASlot(slotable: Slotable, openFlag: boolean = fal
   if (shadow === null) return null
   if (openFlag && shadow._mode !== "open") return null
 
-  for (const child of tree_getDescendantElements(shadow, false, true)) {
-    if (Guard.isSlot(child)) {
-      if (child._name === slotable._name) return child
-    }
+  let child = tree_getFirstDescendantNode(shadow, false, true, (e) => Guard.isSlot(e))
+  while (child !== null) {
+    if ((child as Slot)._name === slotable._name) return (child as Slot)
+    child = tree_getNextDescendantNode(shadow, child, false, true, (e) => Guard.isSlot(e))    
   }
 
   return null
@@ -219,8 +219,10 @@ export function shadowTree_assignSlotablesForATree(root: Node): void {
    * To assign slotables for a tree, given a node root, run assign slotables
    * for each slot slot in root’s inclusive descendants, in tree order.
    */
-  for (const slot of tree_getDescendantNodes(root, true, false, (e: Node) => Guard.isSlot(e))) {
-    shadowTree_assignSlotables(slot as Slot)
+  let descendant = tree_getFirstDescendantNode(root, true, false, (e: Node) => Guard.isSlot(e))
+  while (descendant !== null) {
+    shadowTree_assignSlotables(descendant as Slot)
+    descendant = tree_getNextDescendantNode(root, descendant, true, false, (e: Node) => Guard.isSlot(e))
   }
 }
 
