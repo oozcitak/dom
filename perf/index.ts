@@ -35,7 +35,7 @@ export function processBenchmark(suite: any, baseCase: string): void {
       name = chalk.bold(caseName.padEnd(len))
       comp = ` (${fastest.name} is ${((fastest.hz / hz)).toFixed(2)} times faster)`
     }
-    console.log(`  • ${name} ${hz.toFixed(0)} ops/sec${comp}`)
+    console.log(`  • ${name} ${hz.toFixed(2)} ops/sec${comp}`)
   }
 
   // find previous suite
