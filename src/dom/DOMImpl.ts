@@ -37,12 +37,12 @@ export class DOMImpl {
 
     if (isObject(features)) {
       for (const key in features) {
-        (this._features as any)[key] = (features as any)[key]
+        this._features[key] = features[key] || false
       }
     } else {
       // enable/disable all features
       for (const key in this._features) {
-        (this._features as any)[key] = features
+        this._features[key] = features
       }
     }
   }

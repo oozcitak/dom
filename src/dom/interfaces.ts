@@ -21,6 +21,8 @@ export type DOMFeatures = {
    * Enables or disables various run steps defined in algorithms.
    */
   steps: boolean
+
+  [key: string]: boolean
 }
 
 /**
