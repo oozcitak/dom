@@ -29,6 +29,7 @@ import {
 export class ElementImpl extends NodeImpl implements Element {
 
   _nodeType: NodeType = NodeType.Element
+  _children: Set<Node> = new Set<Node>()
 
   _namespace: string | null = null
   _namespacePrefix: string | null = null

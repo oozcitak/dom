@@ -1,6 +1,7 @@
-import { NodeType, Text, HTMLSlotElement, Document, Slot } from "./interfaces"
+import { NodeType, Text, HTMLSlotElement, Document, Slot, Node } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
 import { text_contiguousTextNodes, text_split } from "../algorithm"
+import { EmptySet } from "../util"
 
 /**
  * Represents a text node.
@@ -8,6 +9,7 @@ import { text_contiguousTextNodes, text_split } from "../algorithm"
 export class TextImpl extends CharacterDataImpl implements Text {
 
   _nodeType: NodeType = NodeType.Text
+  _children: Set<Node> = new EmptySet<Node>()
 
   _name: string = ''
   _assignedSlot: Slot | null = null

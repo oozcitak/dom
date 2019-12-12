@@ -1,5 +1,6 @@
-import { NodeType, ProcessingInstruction, Document } from "./interfaces"
+import { NodeType, ProcessingInstruction, Document, Node } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
+import { EmptySet } from "../util"
 
 /**
  * Represents a processing instruction node.
@@ -7,6 +8,7 @@ import { CharacterDataImpl } from "./CharacterDataImpl"
 export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstruction {
 
   _nodeType: NodeType = NodeType.ProcessingInstruction
+  _children: Set<Node> = new EmptySet<Node>()
 
   _target: string = ''
 

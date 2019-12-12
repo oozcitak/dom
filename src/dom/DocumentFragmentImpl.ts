@@ -9,6 +9,7 @@ import { NodeImpl } from "./NodeImpl"
 export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
   _nodeType: NodeType = NodeType.DocumentFragment
+  _children: Set<Node> = new Set<Node>()
 
   _host: Element | null
 

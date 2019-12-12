@@ -31,6 +31,7 @@ import {
 export class DocumentImpl extends NodeImpl implements Document {
 
   _nodeType: NodeType = NodeType.Document
+  _children: Set<Node> = new Set<Node>()
 
   _encoding: { name: string, labels: string[] } = {
     name: "UTF-8",

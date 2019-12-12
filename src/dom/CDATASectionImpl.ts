@@ -1,5 +1,6 @@
 import { TextImpl } from "./TextImpl"
-import { NodeType, CDATASection, Document } from "./interfaces"
+import { NodeType, CDATASection, Document, Node } from "./interfaces"
+import { EmptySet } from "../util"
 
 /**
  * Represents a CDATA node.
@@ -7,6 +8,7 @@ import { NodeType, CDATASection, Document } from "./interfaces"
 export class CDATASectionImpl extends TextImpl implements CDATASection {
 
   _nodeType: NodeType = NodeType.CData
+  _children: Set<Node> = new EmptySet<Node>()
 
   /**
    * Initializes a new instance of `CDATASection`.

@@ -1,6 +1,7 @@
-import { Element, NodeType, Attr, Document } from "./interfaces"
+import { Element, NodeType, Attr, Document, Node } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
 import { attr_setAnExistingAttributeValue } from "../algorithm"
+import { EmptySet } from "../util"
 
 /**
  * Represents an attribute of an element node.
@@ -8,6 +9,7 @@ import { attr_setAnExistingAttributeValue } from "../algorithm"
 export class AttrImpl extends NodeImpl implements Attr {
 
   _nodeType: NodeType = NodeType.Attribute
+  _children: Set<Node> = new EmptySet<Node>()
 
   _localName: string
   _namespace: string | null = null
