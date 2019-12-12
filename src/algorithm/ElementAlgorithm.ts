@@ -1,6 +1,6 @@
 import { dom } from "../"
 import { Attr, Element, Document, Node } from "../dom/interfaces"
-import { list as infraList, namespace as infraNamespace } from "@oozcitak/infra"
+import { namespace as infraNamespace } from "@oozcitak/infra"
 import { Guard } from "../util"
 import { SyntaxError, InUseAttributeError, NotSupportedError } from "../dom/DOMException"
 import {
@@ -28,10 +28,7 @@ export function element_has(attribute: Attr, element: Element): boolean {
   /**
    * An element has an attribute A if its attribute list contains A.
    */
-  for (const attr of element._attributeList) {
-    if (attr === attribute) return true
-  }
-  return false
+  return element._attributeList._attributeList.includes(attribute)
 }
 
 /**
@@ -121,8 +118,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * 4. Append attribute to element’s attribute list.
    * 5. Set attribute’s element to element.
    */
-  infraList.append(
-    element._attributeList._attributeList, attribute)
+  element._attributeList._attributeList.push(attribute)
   attribute._element = element
 }
 
@@ -169,8 +165,8 @@ export function element_remove(attribute: Attr, element: Element): void {
    * 3. Remove attribute from element’s attribute list.
    * 5. Set attribute’s element to null.
    */
-  infraList.remove(
-    element._attributeList._attributeList, attribute)
+  const index = element._attributeList._attributeList.indexOf(attribute)
+  element._attributeList._attributeList.splice(index, 1)
   attribute._element = null
 }
 
@@ -220,7 +216,10 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * 5. Set oldAttr’s element to null.
    * 6. Set newAttr’s element to element.
    */
-  infraList.replace(element._attributeList._attributeList, oldAttr, newAttr)
+  const index = element._attributeList._attributeList.indexOf(oldAttr)
+  if (index !== -1) {
+    element._attributeList._attributeList[index] = newAttr
+  }
   oldAttr._element = null
   newAttr._element = element
 }
@@ -243,12 +242,9 @@ export function element_getAnAttributeByName(qualifiedName: string, element: Ele
     qualifiedName = qualifiedName.toLowerCase()
   }
 
-  for (const attr of (element._attributeList)._attributeList) {
-    if (attr._qualifiedName === qualifiedName) {
-      return attr
-    }
-  }
-  return null
+  const index = element._attributeList._attributeList.findIndex(
+    attr => attr._qualifiedName === qualifiedName)
+  return (index === -1 ? null : element._attributeList._attributeList[index])
 }
 
 /**
@@ -267,12 +263,9 @@ export function element_getAnAttributeByNamespaceAndLocalName(namespace: string,
    * namespace and local name is localName, if any, and null otherwise.
    */
   const ns: string | null = namespace || null
-  for (const attr of (element._attributeList)._attributeList) {
-    if (attr._namespace === ns && attr._localName === localName) {
-      return attr
-    }
-  }
-  return null
+  const index = element._attributeList._attributeList.findIndex(
+    attr => attr._namespace === ns && attr._localName === localName)
+  return (index === -1 ? null : element._attributeList._attributeList[index])
 }
 
 /**

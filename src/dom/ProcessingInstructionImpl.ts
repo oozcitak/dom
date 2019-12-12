@@ -10,7 +10,7 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
   _nodeType: NodeType = NodeType.ProcessingInstruction
   _children: Set<Node> = new EmptySet<Node>()
 
-  _target: string = ''
+  _target: string
 
   /**
    * Initializes a new instance of `ProcessingInstruction`.

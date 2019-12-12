@@ -9,7 +9,7 @@ import {
  */
 export abstract class CharacterDataImpl extends NodeImpl implements CharacterData {
 
-  _data: string = ''
+  _data: string
 
   /**
    * Initializes a new instance of `CharacterData`.
