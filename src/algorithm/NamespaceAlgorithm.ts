@@ -14,10 +14,10 @@ export function namespace_validate(qualifiedName: string): void {
    * production.
    */
   if (!xml_isName(qualifiedName))
-    throw new InvalidCharacterError()
+    throw new InvalidCharacterError(`Invalid XML name: ${qualifiedName}`)
 
   if (!xml_isQName(qualifiedName))
-    throw new InvalidCharacterError()
+    throw new InvalidCharacterError(`Invalid XML qualified name: ${qualifiedName}.`)
 }
 
 /**

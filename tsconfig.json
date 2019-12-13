@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
+        "target": "ES6",
+        "module": "CommonJS",
         "declaration": true,
         "lib": [
-            "es6"
+            "ES6"
         ],
         "locale": "en",
         "strict": true,

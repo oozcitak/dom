@@ -869,7 +869,7 @@ export function event_createLegacyEvent(eventInterface: string): Event {
    * 3. If constructor is null, then throw a "NotSupportedError" DOMException.
    */
   if (constructor === null) {
-    throw new NotSupportedError()
+    throw new NotSupportedError(`Event constructor not found for interface ${eventInterface}.`)
   }
 
   /**
