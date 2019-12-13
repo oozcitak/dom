@@ -319,7 +319,8 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
       node = tree_getNextDescendantNode(this, node, false, false, (e) => Guard.isExclusiveTextNode(e))
     }
 
-    for (const node of descendantNodes) {
+    for (let i = 0; i < descendantNodes.length; i++) {
+      const node = descendantNodes[i]
       if (node._parent === null) continue
 
       /**
@@ -367,25 +368,26 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
            * end offset is currentNode’s index, set its end node to node and its
            * end offset to length.
            */
-          const index = tree_index(currentNode)
-          for (const range of dom.rangeList) {
-            if (range._start[0] === currentNode) {
+          const cn = currentNode
+          const index = tree_index(cn)
+          dom.rangeList.forEach(range => {
+            if (range._start[0] === cn) {
               range._start[0] = node
               range._start[1] += length
             }
-            if (range._end[0] === currentNode) {
+            if (range._end[0] === cn) {
               range._end[0] = node
               range._end[1] += length
             }
-            if (range._start[0] === currentNode._parent && range._start[1] === index) {
+            if (range._start[0] === cn._parent && range._start[1] === index) {
               range._start[0] = node
               range._start[1] = length
             }
-            if (range._end[0] === currentNode._parent && range._end[1] === index) {
+            if (range._end[0] === cn._parent && range._end[1] === index) {
               range._end[0] = node
               range._end[1] = length
             }
-          }
+          })
           /**
            * 6.5. Add currentNode’s length to length.
            * 6.6. Set currentNode to its next sibling.
@@ -399,7 +401,8 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 7. Remove node’s contiguous exclusive Text nodes (excluding itself), 
        * in tree order.
        */
-      for (const sibling of textSiblings) {
+      for (let i = 0; i < textSiblings.length; i++) {
+        const sibling = textSiblings[i]
         if (sibling._parent === null) continue
         mutation_remove(sibling, sibling._parent)
       }
@@ -500,7 +503,8 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
         /**
          * 5.2. For each attr in node2’s attribute list:
          */
-        for (const attr of (node2 as Element)._attributeList) {
+        for (let i = 0; i < (node2 as Element)._attributeList._attributeList.length; i++) {
+          const attr = (node2 as Element)._attributeList._attributeList[i]
           /**
            * 5.2.1. If attr equals attr1, then return the result of adding
            * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and

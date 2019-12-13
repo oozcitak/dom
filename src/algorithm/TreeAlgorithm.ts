@@ -213,6 +213,46 @@ export function tree_getSiblingNodes(node: Node, self: boolean = false,
 }
 
 /**
+ * Gets the first ancestor of `node` in reverse tree order.
+ * 
+ * @param node - root node of the tree
+ * @param self - whether to include `node` in traversal
+ * @param filter - a function to filter nodes
+ */
+export function tree_getFirstAncestorNode(node: Node, self: boolean = false,
+  filter?: ((ancestorNode: Node) => boolean)):
+  Node | null {
+
+  let firstNode: Node | null = self ? node : node._parent
+
+  while (firstNode && filter && !filter(firstNode)) {
+    firstNode = firstNode._parent
+  }
+
+  return firstNode
+}
+
+/**
+ * Gets the first ancestor of `node` in reverse tree order.
+ * 
+ * @param node - root node of the tree
+ * @param self - whether to include `node` in traversal
+ * @param filter - a function to filter nodes
+ */
+export function tree_getNextAncestorNode(node: Node, currentNode: Node, self: boolean = false,
+  filter?: ((ancestorNode: Node) => boolean)):
+  Node | null {
+
+  let nextNode: Node | null = currentNode._parent
+
+  while (nextNode && filter && !filter(nextNode)) {
+    nextNode = nextNode._parent
+  }
+
+  return nextNode
+}
+
+/**
  * Traverses through all ancestor nodes `node` in reverse tree order.
  * 
  * @param node - root node of the tree
@@ -230,19 +270,15 @@ export function tree_getAncestorNodes(node: Node, self: boolean = false,
   return {
     [Symbol.iterator]() {
 
-      let currentNode = self ? node : node._parent
+      let currentNode = tree_getFirstAncestorNode(node, self, filter)
 
       return {
         next() {
-          while (currentNode && (filter && !filter(currentNode))) {
-            currentNode = currentNode._parent
-          }
-
           if (currentNode === null) {
             return { done: true, value: null }
           } else {
             const result = { done: false, value: currentNode }
-            currentNode = currentNode._parent
+            currentNode = tree_getNextAncestorNode(node, currentNode, self, filter)
             return result
           }
         }
@@ -264,8 +300,18 @@ export function tree_getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
   }
 
   // lists of parent nodes
-  const parentsA: Node[] = [...tree_getAncestorNodes(nodeA, true)]
-  const parentsB: Node[] = [...tree_getAncestorNodes(nodeB, true)]
+  const parentsA: Node[] = []
+  const parentsB: Node[] = []
+  let pA = tree_getFirstAncestorNode(nodeA, true)
+  while(pA !== null) { 
+    parentsA.push(pA)
+    pA = tree_getNextAncestorNode(nodeA, pA, true)
+  }
+  let pB = tree_getFirstAncestorNode(nodeB, true)
+  while(pB !== null) { 
+    parentsB.push(pB)
+    pB = tree_getNextAncestorNode(nodeB, pB, true)
+  }
 
   // walk through parents backwards until they differ
   let pos1 = parentsA.length

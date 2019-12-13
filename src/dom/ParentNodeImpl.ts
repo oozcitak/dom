@@ -63,10 +63,10 @@ export class ParentNodeImpl implements ParentNode {
      * children of context object that are elements.
      */
     let count = 0
-    for (const childNode of Cast.asNode(this)._children) {
+    Cast.asNode(this)._children.forEach(childNode => {
       if (Guard.isElementNode(childNode))
         count++
-    }
+    })
 
     return count
   }

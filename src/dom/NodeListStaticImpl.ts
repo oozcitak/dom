@@ -120,9 +120,9 @@ export class NodeListStaticImpl implements NodeList {
       thisArg = dom.window
     }
 
-    for (const [index, node] of this.entries()) {
-      callback.call(thisArg, node, index, this)
-    }
+    let index = 0
+    this._items.forEach(node =>
+      callback.call(thisArg, node, index++, this))    
   }
 
   /**

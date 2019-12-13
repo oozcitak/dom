@@ -37,7 +37,8 @@ export class DOMParser {
       doc._contentType = mimeType
 
       let context: Node = doc
-      for (const token of lexer) {
+      let token = lexer.nextToken()
+      while (token.type !== TokenType.EOF) {
         switch (token.type) {
           case TokenType.Declaration:
             // no-op
@@ -73,7 +74,8 @@ export class DOMParser {
 
             // override namespace if there is a namespace declaration
             // attribute
-            for (let [attName, attValue] of forEachObject(element.attributes)) {
+            for (const attName in element.attributes) {
+              const attValue = element.attributes[attName]
               if (attName === "xmlns") {
                 namespace = attValue
               } else {
@@ -92,7 +94,8 @@ export class DOMParser {
             context.appendChild(elementNode)
 
             // assign attributes
-            for (let [attName, attValue] of forEachObject(element.attributes)) {
+            for (const attName in element.attributes) {
+              const attValue = element.attributes[attName]
               // skip the default namespace declaration attribute
               if (attName === "xmlns") {
                 continue
@@ -126,6 +129,8 @@ export class DOMParser {
             }
             break
         }
+
+        token = lexer.nextToken()
       }
       return doc
     }

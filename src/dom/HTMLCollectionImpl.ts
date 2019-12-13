@@ -35,8 +35,12 @@ export class HTMLCollectionImpl implements HTMLCollection {
      * represented by the collection.
      */
     let count = 0
-    for (const node of this) {
+    let node = tree_getFirstDescendantNode(this._root, false, false,
+      (e) => Guard.isElementNode(e) && this._filter(e))
+    while (node !== null) {
       count++
+      node = tree_getNextDescendantNode(this._root, node, false, false,
+        (e) => Guard.isElementNode(e) && this._filter(e))
     }
     return count
   }
@@ -49,11 +53,16 @@ export class HTMLCollectionImpl implements HTMLCollection {
      * then the method must return null.
      */
     let i = 0
-    for (const node of this) {
+    let node = tree_getFirstDescendantNode(this._root, false, false,
+      (e) => Guard.isElementNode(e) && this._filter(e)) as Element | null
+    while (node !== null) {
       if (i === index)
         return node
       else
         i++
+
+      node = tree_getNextDescendantNode(this._root, node, false, false,
+        (e) => Guard.isElementNode(e) && this._filter(e)) as Element | null
     }
 
     return null
@@ -71,16 +80,23 @@ export class HTMLCollectionImpl implements HTMLCollection {
      */
     if (key === '') return null
 
-    for (const ele of this) {
+    let ele = tree_getFirstDescendantNode(this._root, false, false,
+      (e) => Guard.isElementNode(e) && this._filter(e)) as Element | null
+
+    while (ele != null) {
       if (ele._uniqueIdentifier === key) {
         return ele
       } else if (ele._namespace === infraNamespace.HTML) {
-        for (const attr of ele._attributeList) {
+        for (let i = 0; i < ele._attributeList._attributeList.length; i++) {
+          const attr = ele._attributeList._attributeList[i];
           if (attr._localName === "name" && attr._namespace === null &&
             attr._namespacePrefix === null && attr._value === key)
             return ele
         }
       }
+
+      ele = tree_getNextDescendantNode(this._root, ele, false, false,
+        (e) => Guard.isElementNode(e) && this._filter(e)) as Element | null
     }
 
     return null

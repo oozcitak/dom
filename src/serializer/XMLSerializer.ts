@@ -71,9 +71,7 @@ export class XMLSerializerImpl implements XMLSerializer {
    */
   private _serializeChildNodes(preNode: PreSerializedNode<Node>): string {
     let markup = ''
-    for (const child of preNode.children) {
-      markup += this._serializeNode(child)
-    }
+    preNode.children.forEach(child => markup += this._serializeNode(child))
     return markup
   }
 
@@ -84,9 +82,9 @@ export class XMLSerializerImpl implements XMLSerializer {
    */
   private _serializeAttributes(preNode: PreSerializedNode<Node>): string {
     let markup = ''
-    for (const preAttr of preNode.attributes) {
+    preNode.attributes.forEach(preAttr =>
       markup += ` ${this._serializeAttribute(preAttr)}`
-    }
+    )
     return markup
   }
 

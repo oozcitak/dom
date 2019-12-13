@@ -179,10 +179,10 @@ export function event_dispatch(event: Event, target: EventTarget,
      * 5.8. Let parent be the result of invoking target's get the parent with
      * event.
      */
-    let touchTargets = []
-    for (const touchTarget of event._touchTargetList) {
+    let touchTargets: PotentialEventTarget[] = []
+    event._touchTargetList.forEach(touchTarget =>
       touchTargets.push(tree_retarget(touchTarget, target))
-    }
+    )
 
     event_appendToAnEventPath(event, target, targetOverride, relatedTarget,
       touchTargets, false)
@@ -236,9 +236,9 @@ export function event_dispatch(event: Event, target: EventTarget,
       relatedTarget = tree_retarget(event._relatedTarget, parent)
 
       touchTargets = []
-      for (const touchTarget of event._touchTargetList) {
+      event._touchTargetList.forEach(touchTarget =>
         touchTargets.push(tree_retarget(touchTarget, parent))
-      }
+      )
 
       /**
        * 5.9.6. If parent is a Window object, or parent is a node and target's 
@@ -300,14 +300,12 @@ export function event_dispatch(event: Event, target: EventTarget,
      */
     let clearTargetsStruct: EventPathItem | null = null
     const path: EventPathItem[] = event._path
-    let i = path.length - 1
-    while (i >= 0) {
+    for (let i = path.length - 1; i >= 0; i--) {
       const struct = path[i]
       if (struct.shadowAdjustedTarget !== null) {
         clearTargetsStruct = struct
         break
       }
-      i--
     }
 
     /**
@@ -324,7 +322,8 @@ export function event_dispatch(event: Event, target: EventTarget,
         Guard.isShadowRoot(tree_rootNode(clearTargetsStruct.relatedTarget, true))) {
         clearTargets = true
       } else {
-        for (const struct of clearTargetsStruct.touchTargetList) {
+        for (let j = 0; j < clearTargetsStruct.touchTargetList.length; j++) {
+          const struct = clearTargetsStruct.touchTargetList[j]
           if (Guard.isNode(struct) &&
             Guard.isShadowRoot(tree_rootNode(struct, true))) {
             clearTargets = true
@@ -347,8 +346,7 @@ export function event_dispatch(event: Event, target: EventTarget,
     /**
      * 5.13. For each struct in event's path, in reverse order:
      */
-    i = path.length - 1
-    while (i >= 0) {
+    for (let i = path.length -1; i >= 0; i--) {
       const struct = path[i]
       /**
        * 5.13.1. If struct's shadow-adjusted target is non-null, then set 
@@ -366,14 +364,13 @@ export function event_dispatch(event: Event, target: EventTarget,
 
       event_invoke(struct, event, "capturing",
         legacyOutputDidListenersThrowFlag)
-
-      i--
     }
 
     /**
      * 5.14. For each struct in event's path
      */
-    for (const struct of path) {
+    for (let i = 0; i < path.length; i++) {
+      const struct = path[i]
       /**
        * 5.14.1. If struct's shadow-adjusted target is non-null, then set
        * event's eventPhase attribute to AT_TARGET.
@@ -392,8 +389,6 @@ export function event_dispatch(event: Event, target: EventTarget,
 
       event_invoke(struct, event, "bubbling",
         legacyOutputDidListenersThrowFlag)
-
-      i--
     }
   }
 
@@ -626,7 +621,8 @@ export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
    */
   let found = false
 
-  for (const listener of listeners) {
+  for (let i = 0; i < listeners.length; i++) {
+    const listener = listeners[i]
     if (!listener.removed) {
       /**
        * 2.1. If event's type attribute value is not listener's type, then
@@ -769,9 +765,9 @@ export function event_fireAnEvent(e: string, target: EventTarget,
    * _Note:_ This also allows for the isTrusted attribute to be set to false.
    */
   if (idlAttributes) {
-    for (const [key, value] of forEachObject(idlAttributes)) {
+    for (const key in idlAttributes) {
       const idlObj = event as any
-      idlObj[key] = value
+      idlObj[key] = idlAttributes[key]
     }
   }
 

@@ -19,9 +19,7 @@ export class TupleSet<T1, T2> implements Iterable<[T1, T2]> {
    */
   get size(): number {
     let count = 0
-    for (const [key, subSet] of this._storage.entries()) {
-      count += subSet.size
-    }
+    this._storage.forEach(subSet => count += subSet.size)
     return count
   }
 
@@ -79,9 +77,10 @@ export class TupleSet<T1, T2> implements Iterable<[T1, T2]> {
    */
   forEach(callback: (tuple: [T1, T2], set: TupleSet<T1, T2>) => any,
     thisArg?: any): void {
-    for (const val of this) {
-      callback.call(thisArg, val, this)
-    }
+    this._storage.forEach((subSet, key) =>
+      subSet.forEach(val => callback.call(thisArg, [key, val], this)
+      )
+    )
   }
 
   /**

@@ -45,9 +45,7 @@ export function abort_signalAbort(signal: AbortSignal): void {
    */
   if (signal._abortedFlag) return
   signal._abortedFlag = true
-  for (const algorithm of signal._abortAlgorithms) {
-    algorithm.call(signal)
-  }
+  signal._abortAlgorithms.forEach(algorithm => algorithm.call(signal))
   signal._abortAlgorithms.clear()
   event_fireAnEvent("abort", signal)
 }

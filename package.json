@@ -25,7 +25,7 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@oozcitak/util": "1.0.2",
+    "@oozcitak/util": "1.0.4",
     "@oozcitak/infra": "1.0.4",
     "@oozcitak/url": "0.0.9"
   },
@@ -35,7 +35,7 @@
     "@types/dedent": "*",
     "@types/jest": "*",
     "@types/jsdom": "*",
-    "@types/node": "^12.12.16",
+    "@types/node": "^12.12.17",
     "@types/xmldom": "*",
     "benchmark": "*",
     "chalk": "^3.0.0",

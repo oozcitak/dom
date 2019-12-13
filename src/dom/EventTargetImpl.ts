@@ -82,8 +82,8 @@ export abstract class EventTargetImpl implements EventTarget {
      * whose type is type, callback is callback, and capture is capture, then
      * remove an event listener with the context object and that event listener.
      */
-    let i = 0
-    for (const entry of this._eventListenerList) {
+    for (let i = 0; i < this._eventListenerList.length; i++) {
+      const entry = this._eventListenerList[i]
       if (entry.type !== type || entry.capture !== capture) continue
       if (Guard.isEventListener(callback) && entry.callback === callback) {
         eventTarget_removeEventListener(this, entry, i)
@@ -92,7 +92,6 @@ export abstract class EventTargetImpl implements EventTarget {
         eventTarget_removeEventListener(this, entry, i)
         break
       }
-      i++
     }
   }
 

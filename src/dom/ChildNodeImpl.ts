@@ -30,7 +30,8 @@ export class ChildNodeImpl implements ChildNode {
     let flag = true
     while (flag && viablePreviousSibling) {
       flag = false
-      for (const child of nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        const child = nodes[i];
         if (child === viablePreviousSibling) {
           viablePreviousSibling = viablePreviousSibling._previousSibling
           flag = true
@@ -80,7 +81,8 @@ export class ChildNodeImpl implements ChildNode {
     let flag = true
     while (flag && viableNextSibling) {
       flag = false
-      for (const child of nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        const child = nodes[i];
         if (child === viableNextSibling) {
           viableNextSibling = viableNextSibling._nextSibling
           flag = true
@@ -121,7 +123,8 @@ export class ChildNodeImpl implements ChildNode {
     let flag = true
     while (flag && viableNextSibling) {
       flag = false
-      for (const child of nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        const child = nodes[i];
         if (child === viableNextSibling) {
           viableNextSibling = viableNextSibling._nextSibling
           flag = true

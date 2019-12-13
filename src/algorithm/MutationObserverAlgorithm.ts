@@ -3,7 +3,7 @@ import { MutationRecord, MutationObserver, Node, Slot } from "../dom/interfaces"
 import { Guard } from "../util"
 import { list as infraList, set as infraSet } from "@oozcitak/infra"
 import { create_mutationRecord, create_nodeListStatic } from "./CreateAlgorithm"
-import { tree_getAncestorNodes } from "./TreeAlgorithm"
+import { tree_getFirstAncestorNode, tree_getNextAncestorNode } from "./TreeAlgorithm"
 import { event_fireAnEvent } from "./EventAlgorithm"
 
 /**
@@ -54,8 +54,8 @@ export function observer_notifyMutationObservers(): void {
      * 5.3. For each node of mo’s node list, remove all transient registered 
      * observers whose observer is mo from node’s registered observer list.
      */
-    for (const nodeItem of mo._nodeList) {
-      const node = nodeItem
+    for (let i = 0; i < mo._nodeList.length; i++) {
+      const node = mo._nodeList[i];      
       infraList.remove(node._registeredObserverList, (observer) => {
         return Guard.isTransientRegisteredObserver(observer) && observer.observer === mo
       })
@@ -77,9 +77,9 @@ export function observer_notifyMutationObservers(): void {
    * bubbles attribute set to true, at slot.
    */
   if (dom.features.slots) {
-    for (const slot of signalSet) {
-      event_fireAnEvent("slotchange", slot as Slot, undefined, { bubbles: true })
-    }
+    signalSet.forEach(slot =>
+      event_fireAnEvent("slotchange", slot, undefined, { bubbles: true })
+    )
   }
 }
 
@@ -109,8 +109,10 @@ export function observer_queueMutationRecord(type: "attributes" | "characterData
    * registered observer list:
    */
   const interestedObservers = new Map<MutationObserver, string | null>()
-  for (const node of tree_getAncestorNodes(target, true)) {
-    for (const registered of node._registeredObserverList) {
+  let node = tree_getFirstAncestorNode(target, true)
+  while (node !== null) {
+    for (let i = 0; i < node._registeredObserverList.length; i++) {
+      const registered = node._registeredObserverList[i];
       /**
        * 3.1. Let options be registered’s options.
        * 3.2. If none of the following are true
@@ -150,12 +152,13 @@ export function observer_queueMutationRecord(type: "attributes" | "characterData
         interestedObservers.set(mo, oldValue)
       }
     }
+    node = tree_getNextAncestorNode(target, node, true)
   }
 
   /**
    * 4. For each observer → mappedOldValue of interestedObservers:
    */
-  for (const [observer, mappedOldValue] of interestedObservers) {
+  interestedObservers.forEach((mappedOldValue, observer) => {
     /**
      * 4.1. Let record be a new MutationRecord object with its type set to 
      * type, target set to target, attributeName set to name, 
@@ -172,7 +175,7 @@ export function observer_queueMutationRecord(type: "attributes" | "characterData
 
     const queue: MutationRecord[] = observer._recordQueue
     queue.push(record)
-  }
+  })
 
   /**
    * 5. Queue a mutation observer microtask.

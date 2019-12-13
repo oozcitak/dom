@@ -25,9 +25,7 @@ export class NamespacePrefixMap {
     this._items = new Map<string | null, Array<string>>()
 
     if (items !== undefined) {
-      for (const item of items) {
-        this.set(item[0], item[1])
-      }
+      items.forEach(item => this.set(item[0], item[1]))
     }
   }
 
@@ -42,9 +40,7 @@ export class NamespacePrefixMap {
      * which should be associated with the respective key in the new map.
      */
     const mapCopy = new NamespacePrefixMap()
-    for (const [key, list] of this._items.entries()) {
-      mapCopy._items.set(key, list.slice(0))
-    }
+    this._items.forEach((list, key) => mapCopy._items.set(key, list.slice(0)))
     return mapCopy
   }
 
@@ -71,7 +67,8 @@ export class NamespacePrefixMap {
      * _Note:_ There will always be at least one prefix value in the list.
      */
     let prefix: string | null = null
-    for (prefix of candidatesList) {
+    for (let i = 0; i < candidatesList.length; i++) {
+      const prefix = candidatesList[i];
       /**
        * 2.1. If prefix matches preferred prefix, then stop running these steps
        * and return prefix.

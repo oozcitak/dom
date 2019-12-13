@@ -422,10 +422,10 @@ export class PreSerializer {
      * providing inherited ns, map, prefix index, and the require well-formed 
      * flag.
      */
-    for (const childNode of node._children) {
+    node._children.forEach(childNode =>
       children.push(this._serializeNode(childNode, inheritedNS, map,
         prefixIndex, requireWellFormed, level + 1))
-    }
+    )
 
     /**
      * 20. Append the following to markup, in the order listed:
@@ -481,10 +481,11 @@ export class PreSerializer {
      * 3. Return the value of serialized document.
     */
     const children: PreSerializedNode<Node>[] = []
-    for (const childNode of node._children) {
+    node._children.forEach(childNode =>
       children.push(this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed, level))
-    }
+    )
+
     return {
       node: node,
       level: level,
@@ -592,10 +593,11 @@ export class PreSerializer {
      * 3. Return the value of markup.
      */
     const children: PreSerializedNode<Node>[] = []
-    for (const childNode of node._children) {
+    node._children.forEach(childNode =>
       children.push(this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed, level))
-    }
+    )
+
     return {
       node: node,
       level: level,
@@ -791,7 +793,8 @@ export class PreSerializer {
      * 3. Loop: For each attribute attr in element's attributes, in the order 
      * they are specified in the element's attribute list: 
      */
-    for (const attr of node.attributes) {
+    for (let i = 0; i < node.attributes._attributeList.length; i++) {
+      const attr = node.attributes._attributeList[i]
       /**
        * 3.1. If the require well-formed flag is set (its value is true), and the 
        * localname set contains a tuple whose values match those of a new tuple 
@@ -993,7 +996,8 @@ export class PreSerializer {
      * 2. Main: For each attribute attr in element's attributes, in the order
      * they are specified in the element's attribute list:
      */
-    for (const attr of node.attributes) {
+    for (let i = 0; i < node.attributes._attributeList.length; i++) {
+      const attr = node.attributes._attributeList[i]
       /**
        * _Note:_ The following conditional steps find namespace prefixes. Only 
        * attributes in the XMLNS namespace are considered (e.g., attributes made 

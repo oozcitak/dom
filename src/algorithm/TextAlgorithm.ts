@@ -178,7 +178,7 @@ export function text_split(node: Text, offset: number): Text {
      * 7.5. For each live range whose end node is parent and end offset is equal
      * to the index of node plus 1, increase its end offset by 1.
      */
-    for (const range of dom.rangeList) {
+    dom.rangeList.forEach(range => {
       if (range._start[0] === node && range._start[1] > offset) {
         range._start[0] = newNode
         range._start[1] -= offset
@@ -194,7 +194,7 @@ export function text_split(node: Text, offset: number): Text {
       if (range._end[0] === parent && range._end[1] === index + 1) {
         range._end[1]++
       }
-    }
+    })
   }
 
   /**

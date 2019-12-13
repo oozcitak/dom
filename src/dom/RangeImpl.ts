@@ -360,12 +360,12 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 8. For each node in nodes to remove, in tree order, remove node from its 
      * parent.
      */
-    for (const node of nodesToRemove) {
+    nodesToRemove.forEach(node => {
       /* istanbul ignore else */
       if (node._parent) {
         mutation_remove(node, node._parent)
       }
-    }
+    })
 
     /**
      * 9. If original end node is a Text, ProcessingInstruction, or Comment 

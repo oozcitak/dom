@@ -44,7 +44,8 @@ export function eventTarget_addEventListener(eventTarget: EventTarget,
   if (listener.callback === null) return
 
   // return if the listener is already defined
-  for (const entry of eventTarget._eventListenerList) {
+  for (let i = 0; i < eventTarget._eventListenerList.length; i++) {
+    const entry = eventTarget._eventListenerList[i]
     if (entry.type === listener.type && entry.callback === listener.callback
       && entry.capture === listener.capture) {
       return
@@ -68,14 +69,13 @@ export function eventTarget_removeEventListener(eventTarget: EventTarget,
 
   // check if the listener is defined
   if (index === -1) {
-    let i = 0
-    for (const entry of eventTarget._eventListenerList) {
+    for (let i = 0; i < eventTarget._eventListenerList.length; i++) {
+      const entry = eventTarget._eventListenerList[i]
       if (entry.type === listener.type && entry.callback === listener.callback
         && entry.capture === listener.capture) {
         index = i
         break
       }
-      i++
     }
   }
 
@@ -92,9 +92,7 @@ export function eventTarget_removeEventListener(eventTarget: EventTarget,
  */
 export function eventTarget_removeAllEventListeners(eventTarget: EventTarget): void {
   // check if the listener is defined
-  for (const entry of eventTarget._eventListenerList) {
-    entry.removed = true
-  }
+  eventTarget._eventListenerList.forEach(e => e.removed = true)
 
   // empty list
   eventTarget._eventListenerList = []

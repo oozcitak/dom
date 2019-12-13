@@ -35,9 +35,8 @@ export function parentNode_convertNodesIntoANode(nodes: (Node | string)[],
     node = nodes[0] as Node
   } else {
     node = create_documentFragment(document)
-    for (const item of nodes) {
-      node.appendChild(item as Node)
-    }
+    const ns = node
+    nodes.forEach(item => ns.appendChild(item as Node))
   }
 
   /**

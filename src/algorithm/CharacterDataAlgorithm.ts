@@ -67,7 +67,7 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    * than offset plus count, increase its end offset by data’s length and 
    * decrease it by count.
    */
-  for (const range of dom.rangeList) {
+  dom.rangeList.forEach(range => {
     if (range._start[0] === node && range._start[1] > offset && range._start[1] <= offset + count) {
       range._start[1] += offset
     }
@@ -80,7 +80,7 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
     if (range._end[0] === node && range._end[1] > offset + count) {
       range._end[1] += data.length - count
     }
-  }
+  })
 
   /**
    * 12. If node is a Text node and its parent is not null, run the child 
