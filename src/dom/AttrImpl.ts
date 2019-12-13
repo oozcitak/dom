@@ -65,7 +65,7 @@ export class AttrImpl extends NodeImpl implements Attr {
      * is null, and its namespace prefix, followed by ":", followed by its 
      * local name, otherwise.
      */
-    return (this._namespacePrefix ?
+    return (this._namespacePrefix !== null ?
       this._namespacePrefix + ':' + this.localName :
       this.localName)
   }
