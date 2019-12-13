@@ -3,15 +3,14 @@ import {
   ClosingTagToken, ElementToken, CommentToken, DocTypeToken, CDATAToken
 } from "./XMLToken"
 import { XMLToken, TokenType, XMLLexer } from "./interfaces"
+import { StringWalker } from "@oozcitak/util"
 
 /**
  * Represents a lexer for XML content in a string.
  */
 export class XMLStringLexer implements XMLLexer {
 
-  _str = ''
-  _length = 0
-  _index = 0
+  _walker: StringWalker
 
   /**
    * Initializes a new instance of `XMLStringLexer`.
@@ -19,8 +18,7 @@ export class XMLStringLexer implements XMLLexer {
    * @param str - the string to tokenize and lex
    */
   constructor(str: string) {
-    this._str = str
-    this._length = str.length
+    this._walker = new StringWalker(str)
   }
 
   /**
@@ -61,22 +59,22 @@ export class XMLStringLexer implements XMLLexer {
    * Resets the lexer to the beginning of the string.
    */
   private reset(): void {
-    this._index = 0
+    this._walker.pointer = 0
   }
 
   /**
    * Determines whether the parser is at or past the end of the string.
    */
   private get eof(): boolean {
-    return (this._index >= this._length)
+    return this._walker.eof
   }
 
   /**
    * Consumes and returns a single character.
    */
   private consumeChar(): string {
-    const char = this._str[this._index]
-    this._index++
+    const char = this._walker.c()
+    this._walker.pointer++
     return char
   }
 
@@ -84,8 +82,8 @@ export class XMLStringLexer implements XMLLexer {
    * Skips over whitespace characters.
    */
   private skipSpace(): void {
-    while (!this.eof && XMLStringLexer.isSpace(this._str[this._index])) {
-      this._index++
+    while (!this.eof && XMLStringLexer.isSpace(this._walker.c())) {
+      this._walker.pointer++
     }
   }
 
@@ -93,8 +91,8 @@ export class XMLStringLexer implements XMLLexer {
    * Unconsumes one character.
    */
   private revert(): void {
-    if (this._index > 0) {
-      this._index--
+    if (this._walker.pointer > 0) {
+      this._walker.pointer--
     }
   }
 
@@ -102,21 +100,21 @@ export class XMLStringLexer implements XMLLexer {
    * Skips over a number of characters.
    */
   private seek(count: number): void {
-    this._index += count
+    this._walker.pointer += count
   }
 
   /**
    * Returns a single character without consuming.
    */
   private peekChar(): string {
-    return this._str[this._index]
+    return this._walker.c()
   }
 
   /**
    * Returns a given number of characters without consuming.
    */
   private peek(count: number): string {
-    return this._str.substr(this._index, count)
+    return this._walker.substring(count)
   }
 
   /**

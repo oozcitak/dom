@@ -7,7 +7,6 @@ import {
 import { EventTargetImpl } from "./EventTargetImpl"
 import { Guard } from "../util"
 import { NotSupportedError } from "./DOMException"
-//import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
 import {
   tree_rootNode, tree_nodeLength, tree_index,
   tree_isAncestorOf, tree_isDescendantOf, tree_isPreceding, create_nodeList,
@@ -18,6 +17,7 @@ import {
   node_stringReplaceAll, node_clone, node_equals, node_locateANamespacePrefix,
   node_locateANamespace, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "../algorithm"
+import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
 
 /**
  * Represents a generic XML node.
@@ -113,7 +113,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
      * TODO: Implement in HTML DOM
      * https://html.spec.whatwg.org/multipage/urls-and-fetching.html#document-base-url
      */
-    return "" //new URLAlgorithm().urlSerializer(this._nodeDocument._URL)
+    return urlSerializer(this._nodeDocument._URL)
   }
 
   /** 

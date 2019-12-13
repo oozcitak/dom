@@ -5,7 +5,6 @@ import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./XMLToken"
-import { forEachObject } from "@oozcitak/util"
 import { namespace as infraNamespace } from "@oozcitak/infra"
 import { create_document, namespace_extractQName } from "../algorithm"
 
