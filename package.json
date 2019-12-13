@@ -62,7 +62,8 @@
     "compile": "rm -rf lib && tsc --version && tsc",
     "test": "npm run compile && jest --coverage",
     "perf": "npm run compile && ts-node ./perf/perf.ts",
-    "prof": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate.log && rm isolate-v8.log",
+    "prof-create": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof-create.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate-create.log && rm isolate-v8.log",
+    "prof-parse": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof-parse.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate-parse.log && rm isolate-v8.log",
     "publish-public": "npm run test && npm publish --access public"
   }
 }
