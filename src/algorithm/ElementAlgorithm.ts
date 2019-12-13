@@ -310,7 +310,7 @@ export function element_setAnAttribute(attr: Attr, element: Element): Attr | nul
    * 6. Return oldAttr.
    */
   if (attr._element !== null && attr._element !== element)
-    throw new InUseAttributeError()
+    throw new InUseAttributeError(`This attribute already exists in the document: ${attr._qualifiedName} as a child of ${attr._element._qualifiedName}.`)
 
   const oldAttr = element_getAnAttributeByNamespaceAndLocalName(attr._namespace || '',
     attr.localName, element)
@@ -514,11 +514,11 @@ export function element_createAnElement(document: Document, localName: string,
          * 6.1.9. If result’s local name is not equal to localName, then throw 
          * a "NotSupportedError" DOMException.
          */
-        if (result._attributeList.length !== 0) throw new NotSupportedError()
-        if (result._children.size !== 0) throw new NotSupportedError()
-        if (result._parent !== null) throw new NotSupportedError()
-        if (result._nodeDocument !== document) throw new NotSupportedError()
-        if (result._localName !== localName) throw new NotSupportedError()
+        if (result._attributeList.length !== 0) throw new NotSupportedError("Custom element already has attributes.")
+        if (result._children.size !== 0) throw new NotSupportedError("Custom element already has child nodes.")
+        if (result._parent !== null) throw new NotSupportedError("Custom element already has a parent node.")
+        if (result._nodeDocument !== document) throw new NotSupportedError("Custom element is already in a document.")
+        if (result._localName !== localName) throw new NotSupportedError("Custom element has a different local name.")
 
         /**
          * 6.1.10. Set result’s namespace prefix to prefix.
@@ -648,6 +648,6 @@ export function element_insertAdjacent(element: Element,
       return mutation_preInsert(node, element._parent,
         element._nextSibling)
     default:
-      throw new SyntaxError()
+      throw new SyntaxError(`Invalid 'where' argument. "beforebegin", "afterbegin", "beforeend" or "afterend" expected`)
   }
 }

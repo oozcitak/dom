@@ -14,10 +14,10 @@ export function namespace_validate(qualifiedName: string): void {
    * production.
    */
   if (!xml_isName(qualifiedName))
-    throw new InvalidCharacterError()
+    throw new InvalidCharacterError(`Invalid XML name: ${qualifiedName}`)
 
   if (!xml_isQName(qualifiedName))
-    throw new InvalidCharacterError()
+    throw new InvalidCharacterError(`Invalid XML qualified name: ${qualifiedName}.`)
 }
 
 /**
@@ -59,18 +59,18 @@ export function namespace_validateAndExtract(namespace: string | null, qualified
   const localName = (parts.length === 2 ? parts[1] : qualifiedName)
 
   if (prefix && namespace === null)
-    throw new NamespaceError()
+    throw new NamespaceError("Qualified name includes a prefix but the namespace is null.")
 
   if (prefix === "xml" && namespace !== infraNamespace.XML)
-    throw new NamespaceError()
+    throw new NamespaceError(`Qualified name includes the "xml" prefix but the namespace is not the XML namespace.`)
 
   if (namespace !== infraNamespace.XMLNS &&
     (prefix === "xmlns" || qualifiedName === "xmlns"))
-    throw new NamespaceError()
+    throw new NamespaceError(`Qualified name includes the "xmlns" prefix but the namespace is not the XMLNS namespace.`)
 
   if (namespace === infraNamespace.XMLNS &&
     (prefix !== "xmlns" && qualifiedName !== "xmlns"))
-    throw new NamespaceError()
+    throw new NamespaceError(`Qualified name does not include the "xmlns" prefix but the namespace is the XMLNS namespace.`)
 
   return [namespace, prefix, localName]
 }
