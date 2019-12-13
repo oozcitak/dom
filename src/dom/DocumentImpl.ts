@@ -12,8 +12,8 @@ import { NodeImpl } from "./NodeImpl"
 import { Guard } from "../util"
 import { isFunction, isString } from "@oozcitak/util"
 import { namespace as infraNamespace } from "@oozcitak/infra"
-import { URLAlgorithm } from "@oozcitak/url/lib/algorithm"
-import { URLRecord } from "@oozcitak/url/lib/url/interfaces"
+import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
+import { URLRecord } from "@oozcitak/url/lib/interfaces"
 import {
   create_domImplementation, create_documentFragment, create_text,
   create_cdataSection, create_comment, create_processingInstruction,
@@ -83,7 +83,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * the URL, serialized.
      * See: https://url.spec.whatwg.org/#concept-url-serializer
      */
-    return new URLAlgorithm().urlSerializer(this._URL)
+    return urlSerializer(this._URL)
   }
 
   /** @inheritdoc */

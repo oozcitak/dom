@@ -14,8 +14,15 @@ import {
  */
 export abstract class EventTargetImpl implements EventTarget {
 
-  _eventListenerList: EventListenerEntry[] = []
-  _eventHandlerMap: { [key: string]: EventHandlerEntry } = {}
+  private __eventListenerList?: EventListenerEntry[]
+  get _eventListenerList(): EventListenerEntry[] {
+    return this.__eventListenerList || (this.__eventListenerList = [])
+  }
+  
+  private __eventHandlerMap?: { [key: string]: EventHandlerEntry }
+  get _eventHandlerMap(): { [key: string]: EventHandlerEntry } {
+    return this.__eventHandlerMap || (this.__eventHandlerMap = {})
+  }
 
   /**
    * Initializes a new instance of `EventTarget`.

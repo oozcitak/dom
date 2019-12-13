@@ -1,5 +1,5 @@
 import { ObjectCache } from "@oozcitak/util"
-import { URLRecord } from "@oozcitak/url/lib/url/interfaces"
+import { URLRecord } from "@oozcitak/url/lib/interfaces"
 
 /**
  * Defines DOM features supported by algorithms.
