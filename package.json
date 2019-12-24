@@ -19,7 +19,7 @@
   },
   "main": "./lib/index",
   "engines": {
-    "node": ">=6.0"
+    "node": ">=8.0"
   },
   "files": [
     "lib/**/*"
@@ -27,7 +27,7 @@
   "dependencies": {
     "@oozcitak/util": "2.1.0",
     "@oozcitak/infra": "1.0.4",
-    "@oozcitak/url": "0.0.10"
+    "@oozcitak/url": "1.0.0"
   },
   "devDependencies": {
     "@types/benchmark": "*",

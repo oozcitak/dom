@@ -30,8 +30,6 @@ import { TreeWalkerImpl } from "../dom/TreeWalkerImpl"
 import { NodeFilterImpl } from "../dom/NodeFilterImpl"
 import { MutationRecordImpl } from "../dom/MutationRecordImpl"
 import { DOMTokenListImpl } from "../dom/DOMTokenListImpl"
-import { URLRecord } from "@oozcitak/url/lib/interfaces"
-import { basicURLParser } from "@oozcitak/url/lib/URLAlgorithm"
 
 /** 
  * Creates a `DOMImplementation`.
@@ -319,17 +317,4 @@ export function create_mutationRecord(type: "attributes" | "characterData" | "ch
 export function create_domTokenList(element: Element,
   attribute: Attr): DOMTokenList {
   return DOMTokenListImpl._create(element, attribute)
-}
-
-/** 
- * Creates an `URLRecord`.
- * 
- * @param url - an URL string
- */
-export function create_urlRecord(url: string): URLRecord {
-  const urlRecord = basicURLParser(url)
-  if (urlRecord === null) {
-    throw new Error("Invalid URL.")
-  }
-  return urlRecord
 }
