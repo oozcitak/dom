@@ -25,7 +25,7 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@oozcitak/util": "1.0.6",
+    "@oozcitak/util": "2.1.0",
     "@oozcitak/infra": "1.0.4",
     "@oozcitak/url": "0.0.10"
   },
@@ -35,19 +35,19 @@
     "@types/dedent": "*",
     "@types/jest": "^24.0.24",
     "@types/jsdom": "*",
-    "@types/node": "^12.12.21",
+    "@types/node": "^12.12.22",
     "@types/xmldom": "*",
     "benchmark": "*",
     "chalk": "^3.0.0",
     "dedent": "*",
+    "fast-xml-parser": "*",
     "glob": "*",
     "jest": "*",
     "jsdom": "*",
     "ts-jest": "*",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4",
-    "xmldom": "*",
-    "fast-xml-parser": "*"
+    "xmldom": "*"
   },
   "jest": {
     "transform": {
