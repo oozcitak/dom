@@ -1,19 +1,6 @@
 {
   "1.0.0": {
     "createDocument + createElement + appendChild": {
-      "xmldom": 3302.981385270388,
-      "dom": 1358.3285396631845,
-      "jsdom": 190.54828018938267
-    },
-    "parse 1.5 kB sample.xml": {
-      "fast-xml-parser": 10699.848568107845,
-      "xmldom": 9678.321319858964,
-      "dom": 4937.451765147046,
-      "jsdom": 774.30071639218
-    }
-  },
-  "1.0.0*": {
-    "createDocument + createElement + appendChild": {
       "xmldom": 3255.9826936575982,
       "dom": 1389.3997545108102,
       "jsdom": 178.0517813559419
