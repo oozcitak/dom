@@ -200,6 +200,18 @@ describe('XMLSerializer', () => {
       `)
   })
 
+  test('xml namespace', () => {
+    const ns = 'http://www.w3.org/XML/1998/namespace'
+    const doc = $$.dom.createDocument(ns, 'root')
+    if (!doc.documentElement) throw new Error("Document element is null.")
+    doc.documentElement.append(doc.createElement('foo'), doc.createElement('bar'))
+
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<xml:root><foo/><bar/></xml:root>'
+    )
+  })
+
   test('fragment', () => {
     const ns = 'uri:myns'
     const doc = $$.dom.createDocument(ns, 'root')
