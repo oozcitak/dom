@@ -64,4 +64,21 @@ describe('Guard', () => {
     expect($$.util.Guard.isCDATASectionNode(doc.createCDATASection('value'))).toBe(true)
   })
 
+  test('MouseEvent', () => {
+    const e = { screenX: 100, screenY: 100 }
+    expect($$.util.Guard.isMouseEvent(e)).toBe(true)
+  })
+
+  test('isRegisteredObserver', () => {
+    const e = { observer: new Object(), options: {} }
+    expect($$.util.Guard.isRegisteredObserver(e)).toBe(true)
+  })
+
+  test('isTransientRegisteredObserver', () => {
+    const e = { observer: new Object(), options: {} }
+    const t = { observer: new Object(), options: {}, source: e }
+    expect($$.util.Guard.isTransientRegisteredObserver(e)).toBe(false)
+    expect($$.util.Guard.isTransientRegisteredObserver(t)).toBe(true)
+  })
+
 })
