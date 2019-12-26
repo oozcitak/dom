@@ -59,40 +59,8 @@ describe('TupleSet', () => {
     expect(set.has([2, "b"])).toBe(true)
     expect(set.has([1, "aa"])).toBe(false)
     expect(set.has([3, "c"])).toBe(false)
-  })
-
-  test('entries()', () => {
-    const set = new $$.TupleSet<number, string>()
-    set.set([1, "a"])
-    set.set([1, "aa"])
-    set.set([2, "b"])
-    set.set([3, "c"])
-    set.set([3, "c"])
-    let keys = ""
-    let vals = ""
-    for (const val of set.entries()) {
-      keys += val[0].toString()
-      vals += val[1].toString()
-    }
-    expect(keys).toBe("1123")
-    expect(vals).toBe("aaabc")
-  })
-
-  test('values()', () => {
-    const set = new $$.TupleSet<number, string>()
-    set.set([1, "a"])
-    set.set([1, "aa"])
-    set.set([2, "b"])
-    set.set([3, "c"])
-    set.set([3, "c"])
-    let keys = ""
-    let vals = ""
-    for (const val of set.values()) {
-      keys += val[0].toString()
-      vals += val[1].toString()
-    }
-    expect(keys).toBe("1123")
-    expect(vals).toBe("aaabc")
+    set.delete([4, "n"])
+    expect(set.size).toBe(2)
   })
 
   test('foreach()', () => {
@@ -140,23 +108,6 @@ describe('TupleSet', () => {
     expect(set.has([2, "b"])).toBe(false)
     expect(set.has([1, "aa"])).toBe(false)
     expect(set.has([3, "c"])).toBe(false)
-  })
-
-  test('iterator', () => {
-    const set = new $$.TupleSet<number, string>()
-    set.set([1, "a"])
-    set.set([1, "aa"])
-    set.set([2, "b"])
-    set.set([3, "c"])
-    set.set([3, "c"])
-    let keys = ""
-    let vals = ""
-    for (const val of set) {
-      keys += val[0].toString()
-      vals += val[1].toString()
-    }
-    expect(keys).toBe("1123")
-    expect(vals).toBe("aaabc")
   })
 
 })
