@@ -1,8 +1,7 @@
 import {
-  EOFToken, DeclarationToken, PIToken, TextToken,
+  XMLToken, TokenType, XMLLexer, DeclarationToken, PIToken, TextToken,
   ClosingTagToken, ElementToken, CommentToken, DocTypeToken, CDATAToken
-} from "./XMLToken"
-import { XMLToken, TokenType, XMLLexer } from "./interfaces"
+} from "./interfaces"
 import { StringWalker, SeekOrigin } from "@oozcitak/util"
 
 /**
@@ -10,6 +9,7 @@ import { StringWalker, SeekOrigin } from "@oozcitak/util"
  */
 export class XMLStringLexer implements XMLLexer {
 
+  private static _WhiteSpace = /^[\t\n\f\r ]*$/
   private _walker: StringWalker
 
   /**
@@ -31,10 +31,10 @@ export class XMLStringLexer implements XMLLexer {
    */
   nextToken(): XMLToken {
     if (this._walker.eof) {
-      return new EOFToken()
+      return { type: TokenType.EOF }
     }
 
-    let token: XMLToken = new EOFToken()
+    let token: XMLToken = { type: TokenType.EOF }
     const char = this._walker.c
     if (char === '<') {
       this._walker.next()
@@ -44,11 +44,8 @@ export class XMLStringLexer implements XMLLexer {
     }
 
     if (this.skipWhitespaceOnlyText) {
-      if (token.type === TokenType.Text) {
-        const textToken = <TextToken>token
-        if (textToken.isWhitespace) {
-          token = this.nextToken()
-        }
+      if (token.type === TokenType.Text && XMLStringLexer.isWhiteSpaceToken(token as TextToken)) {
+        token = this.nextToken()
       }
     }
 
@@ -91,7 +88,7 @@ export class XMLStringLexer implements XMLLexer {
   /**
    * Produces an XML declaration token.
    */
-  private declaration(): XMLToken {
+  private declaration(): DeclarationToken {
     let attName = ''
     let attValue = ''
     let version = ''
@@ -109,7 +106,7 @@ export class XMLStringLexer implements XMLLexer {
       const nextChar = this._walker.c
       if (char === '?' && nextChar === '>') {
         this._walker.seek(1)
-        return new DeclarationToken(version, encoding, standalone)
+        return { type: TokenType.Declaration, version: version, encoding: encoding, standalone: standalone }
       } else if (inName && XMLStringLexer.isSpace(char) || char === '=') {
         inName = false
         inValue = true
@@ -152,7 +149,7 @@ export class XMLStringLexer implements XMLLexer {
   /**
    * Produces a doc type token.
    */
-  private doctype(): XMLToken {
+  private doctype(): DocTypeToken {
     let name = ''
     let pubId = ''
     let sysId = ''
@@ -163,7 +160,7 @@ export class XMLStringLexer implements XMLLexer {
       const char = this._walker.c
       if (char === '>') {
         this._walker.next()
-        return new DocTypeToken(name, '', '')
+        return { type: TokenType.DocType, name: name,  pubId: '', sysId: '' }
       } else if (char === '[') {
         break
       } else if (XMLStringLexer.isSpace(char)) {
@@ -230,7 +227,7 @@ export class XMLStringLexer implements XMLLexer {
     while (!this._walker.eof) {
       const char = this._walker.take(1)
       if (char === '>') {
-        return new DocTypeToken(name, pubId, sysId)
+        return { type: TokenType.DocType, name: name,  pubId: pubId, sysId: sysId }
       } else if (char === '[') {
         hasInternalSubset = true
         break
@@ -248,7 +245,7 @@ export class XMLStringLexer implements XMLLexer {
       while (!this._walker.eof) {
         const char = this._walker.take(1)
         if (char === '>') {
-          return new DocTypeToken(name, pubId, sysId)
+          return { type: TokenType.DocType, name: name,  pubId: pubId, sysId: sysId }
         }
       }
     }
@@ -259,7 +256,7 @@ export class XMLStringLexer implements XMLLexer {
   /**
    * Produces a processing instruction token.
    */
-  private pi(): XMLToken {
+  private pi(): PIToken {
     let target = ''
     while (!this._walker.eof) {
       const char = this._walker.take(1)
@@ -268,7 +265,7 @@ export class XMLStringLexer implements XMLLexer {
       if (XMLStringLexer.isSpace(char) || endTag) {
         if (endTag) {
           this._walker.seek(1)
-          return new PIToken(target, '')
+          return { type: TokenType.PI, target: target, data: '' }
         }
         break
       } else {
@@ -282,7 +279,7 @@ export class XMLStringLexer implements XMLLexer {
       const nextChar = this._walker.c
       if (char === '?' && nextChar === '>') {
         this._walker.seek(1)
-        return new PIToken(target, data)
+        return { type: TokenType.PI, target: target, data: data }
       } else {
         data += char
       }
@@ -295,7 +292,7 @@ export class XMLStringLexer implements XMLLexer {
    * Produces a text token.
    * 
    */
-  private text(): XMLToken {
+  private text(): TextToken {
     let data = ''
     while (!this._walker.eof) {
       const char = this._walker.c
@@ -306,20 +303,20 @@ export class XMLStringLexer implements XMLLexer {
       this._walker.next()
     }
 
-    return new TextToken(data)
+    return { type: TokenType.Text, data: data }
   }
 
   /**
    * Produces a comment token.
    * 
    */
-  private comment(): XMLToken {
+  private comment(): CommentToken {
     let data = ''
     while (!this._walker.eof) {
       const char = this._walker.take(1)
       if (char === '-' && this._walker.startsWith('->')) {
         this._walker.seek(2)
-        return new CommentToken(data)
+        return { type: TokenType.Comment, data: data }
       }
       data += char
     }
@@ -331,13 +328,13 @@ export class XMLStringLexer implements XMLLexer {
    * Produces a CDATA token.
    * 
    */
-  private cdata(): XMLToken {
+  private cdata(): CDATAToken {
     let data = ''
     while (!this._walker.eof) {
       const char = this._walker.take(1)
       if (char === ']' && this._walker.startsWith(']>')) {
         this._walker.seek(2)
-        return new CDATAToken(data)
+        return { type: TokenType.CDATA, data: data }
       }
       data += char
     }
@@ -348,7 +345,7 @@ export class XMLStringLexer implements XMLLexer {
   /**
    * Produces an element token.
    */
-  private openTag(): XMLToken {
+  private openTag(): ElementToken {
     let name = ''
     let attributes: { [name: string]: string } = {}
     let attName = ''
@@ -363,10 +360,10 @@ export class XMLStringLexer implements XMLLexer {
       const char = this._walker.take(1)
       const nextChar = this._walker.c
       if (char === '>') {
-        return new ElementToken(name, {}, false)
+        return { type: TokenType.Element, name: name, attributes: {}, selfClosing: false }
       } else if (char === '/' && nextChar === '>') {
         this._walker.seek(1)
-        return new ElementToken(name, {}, true)
+        return { type: TokenType.Element, name: name, attributes: {}, selfClosing: true }
       } else if (XMLStringLexer.isSpace(char)) {
         break
       } else {
@@ -382,10 +379,10 @@ export class XMLStringLexer implements XMLLexer {
       let char = this._walker.take(1)
       const nextChar = this._walker.c
       if (char === '>') {
-        return new ElementToken(name, attributes, false)
+        return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: false }
       } else if (char === '/' && nextChar === '>') {
         this._walker.seek(1)
-        return new ElementToken(name, attributes, true)
+        return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: true }
       } else if (inAttName && XMLStringLexer.isSpace(char) || char === '=') {
         inAttName = false
         inAttValue = true
@@ -420,19 +417,28 @@ export class XMLStringLexer implements XMLLexer {
    * Produces a closing tag token.
    * 
    */
-  private closeTag(): XMLToken {
+  private closeTag(): ClosingTagToken {
     let name = ''
     this._walker.skip(c => XMLStringLexer.isSpace(c))
     while (!this._walker.eof) {
       const char = this._walker.take(1)
       if (char === '>') {
-        return new ClosingTagToken(name)
+        return { type: TokenType.ClosingTag, name: name }
       } else if (!XMLStringLexer.isSpace(char)) {
         name += char
       }
     }
 
     throw new Error('Missing closing element tag end symbol `>`')
+  }
+
+  /**
+   * Determines if the given token is entirely whitespace.
+   * 
+   * @param token - the token to check
+   */
+  private static isWhiteSpaceToken(token: TextToken): boolean {
+    return XMLStringLexer._WhiteSpace.test(token.data)
   }
 
   /**

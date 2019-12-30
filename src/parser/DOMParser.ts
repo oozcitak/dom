@@ -4,7 +4,7 @@ import { Document, Node } from "../dom/interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
-} from "./XMLToken"
+} from "./interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
 import { create_document, namespace_extractQName } from "../algorithm"
 
