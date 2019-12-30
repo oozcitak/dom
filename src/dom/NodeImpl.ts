@@ -25,25 +25,25 @@ import { Lazy } from "@oozcitak/util"
  */
 export abstract class NodeImpl extends EventTargetImpl implements Node {
 
-  readonly ELEMENT_NODE: number = 1
-  readonly ATTRIBUTE_NODE: number = 2
-  readonly TEXT_NODE: number = 3
-  readonly CDATA_SECTION_NODE: number = 4
-  readonly ENTITY_REFERENCE_NODE: number = 5
-  readonly ENTITY_NODE: number = 6
-  readonly PROCESSING_INSTRUCTION_NODE: number = 7
-  readonly COMMENT_NODE: number = 8
-  readonly DOCUMENT_NODE: number = 9
-  readonly DOCUMENT_TYPE_NODE: number = 10
-  readonly DOCUMENT_FRAGMENT_NODE: number = 11
-  readonly NOTATION_NODE: number = 12
+  static ELEMENT_NODE: number = 1
+  static ATTRIBUTE_NODE: number = 2
+  static TEXT_NODE: number = 3
+  static CDATA_SECTION_NODE: number = 4
+  static ENTITY_REFERENCE_NODE: number = 5
+  static ENTITY_NODE: number = 6
+  static PROCESSING_INSTRUCTION_NODE: number = 7
+  static COMMENT_NODE: number = 8
+  static DOCUMENT_NODE: number = 9
+  static DOCUMENT_TYPE_NODE: number = 10
+  static DOCUMENT_FRAGMENT_NODE: number = 11
+  static NOTATION_NODE: number = 12
 
-  readonly DOCUMENT_POSITION_DISCONNECTED: number = 0x01
-  readonly DOCUMENT_POSITION_PRECEDING: number = 0x02
-  readonly DOCUMENT_POSITION_FOLLOWING: number = 0x04
-  readonly DOCUMENT_POSITION_CONTAINS: number = 0x08
-  readonly DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
-  readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
+  static DOCUMENT_POSITION_DISCONNECTED: number = 0x01
+  static DOCUMENT_POSITION_PRECEDING: number = 0x02
+  static DOCUMENT_POSITION_FOLLOWING: number = 0x04
+  static DOCUMENT_POSITION_CONTAINS: number = 0x08
+  static DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
+  static DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
   private __childNodes = new Lazy<NodeList>(()=> create_nodeList(this))
   get _childNodes(): NodeList {

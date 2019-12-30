@@ -8,10 +8,10 @@ import { event_setTheCanceledFlag, event_initialize } from "../algorithm"
  */
 export class EventImpl implements Event {
 
-  readonly NONE: number = 0
-  readonly CAPTURING_PHASE: number = 1
-  readonly AT_TARGET: number = 2
-  readonly BUBBLING_PHASE: number = 3
+  static NONE: number = 0
+  static CAPTURING_PHASE: number = 1
+  static AT_TARGET: number = 2
+  static BUBBLING_PHASE: number = 3
 
   _target: PotentialEventTarget = null
   _relatedTarget: PotentialEventTarget = null
