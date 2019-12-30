@@ -1,4 +1,5 @@
 import $$ from "../TestHelpers"
+import { TokenType } from "../../src/parser/interfaces"
 
 describe('XMLStringLexer', () => {
 
@@ -17,37 +18,33 @@ describe('XMLStringLexer', () => {
       </root>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', '', ''),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, false),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CommentToken(' same node below '),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('kidding', 'itwas="different"'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('forreal', ''),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CDATAToken('here be dragons'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('text', { }, false),
-      new $$.Token.TextToken('alien\'s pinky toe'),
-      new $$.Token.ClosingTagToken('text'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ClosingTagToken('root')
+      { type: TokenType.Declaration, version: '1.0', encoding: '', standalone: '' },
+      { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
+      { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: false },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val' }, selfClosing: true },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Comment, data: ' same node below ' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val', 'att2': 'val2' }, selfClosing: true },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.PI, target: 'kidding', data: 'itwas="different"' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.PI, target: 'forreal', data: '' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.CDATA, data: 'here be dragons' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'text', attributes: {}, selfClosing: false },
+      { type: TokenType.Text, data: 'alien\'s pinky toe' },
+      { type: TokenType.ClosingTag, name: 'text' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.ClosingTag, name: 'root' }
     ]
-    let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
-    for (const token of lexer) {
-      expect(token).toEqual(tokens[i])
-      i++
-    }
-    expect(i).toBe(tokens.length)
+
+    const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
+    expect(lexerTokens).toEqual(tokens)
   })
 
   test('with insignificant whitespace', () => {
@@ -64,35 +61,31 @@ describe('XMLStringLexer', () => {
       </root>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', '', ''),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, false),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CommentToken(' same node below '),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('node', { 'att': 'val', 'att2': 'val2' }, true),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.PIToken('kidding', 'itwas="different"'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.CDATAToken('here be dragons'),
-      new $$.Token.TextToken('\n  '),
-      new $$.Token.ElementToken('text', { }, false),
-      new $$.Token.TextToken('alien\'s pinky toe'),
-      new $$.Token.ClosingTagToken('text'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ClosingTagToken('root')
+      { type: TokenType.Declaration, version: '1.0', encoding: '', standalone: '' },
+      { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
+      { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: false },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val' }, selfClosing: true },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Comment, data: ' same node below ' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val', 'att2': 'val2' }, selfClosing: true },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.PI, target: 'kidding', data: 'itwas="different"' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.CDATA, data: 'here be dragons' },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'text', attributes: {}, selfClosing: false },
+      { type: TokenType.Text, data: 'alien\'s pinky toe' },
+      { type: TokenType.ClosingTag, name: 'text' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.ClosingTag, name: 'root' }
     ]
-    let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
-    for (const token of lexer) {
-      expect(token).toEqual(tokens[i])
-      i++
-    }
-    expect(i).toBe(tokens.length)
+
+    const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
+    expect(lexerTokens).toEqual(tokens)
   })
 
   test('public DTD', () => {
@@ -102,19 +95,15 @@ describe('XMLStringLexer', () => {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '-//W3C//DTD HTML 4.01//EN', 'http://www.w3.org/TR/html4/strict.dtd'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      { type: TokenType.Declaration, version: '1.0', encoding: 'UTF-8', standalone: 'yes' },
+      { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
+      { type: TokenType.DocType, name: 'root', pubId: '-//W3C//DTD HTML 4.01//EN', sysId: 'http://www.w3.org/TR/html4/strict.dtd' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
     ]
-    let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
-    for (const token of lexer) {
-      expect(token).toEqual(tokens[i])
-      i++
-    }
-    expect(i).toBe(tokens.length)
+
+    const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
+    expect(lexerTokens).toEqual(tokens)
   })
 
   test('system DTD', () => {
@@ -124,19 +113,15 @@ describe('XMLStringLexer', () => {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', 'http://www.w3.org/Math/DTD/mathml1/mathml.dtd'),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      { type: TokenType.Declaration, version: '1.0', encoding: 'UTF-8', standalone: 'yes' },
+      { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
+      { type: TokenType.DocType, name: 'root', pubId: '', sysId: 'http://www.w3.org/Math/DTD/mathml1/mathml.dtd' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
     ]
-    let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
-    for (const token of lexer) {
-      expect(token).toEqual(tokens[i])
-      i++
-    }
-    expect(i).toBe(tokens.length)
+
+    const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
+    expect(lexerTokens).toEqual(tokens)
   })
 
   test('DTD with internal subset', () => {
@@ -146,19 +131,15 @@ describe('XMLStringLexer', () => {
       <root/>
       `
     const tokens = [
-      new $$.Token.DeclarationToken('1.0', 'UTF-8', 'yes'),
-      new $$.Token.TextToken('\n'), // lexer preserves whitespace
-      new $$.Token.DocTypeToken('root', '', ''),
-      new $$.Token.TextToken('\n'),
-      new $$.Token.ElementToken('root', {}, true)
+      { type: TokenType.Declaration, version: '1.0', encoding: 'UTF-8', standalone: 'yes' },
+      { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
+      { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
+      { type: TokenType.Text, data: '\n' },
+      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
     ]
-    let i = 0
-    const lexer = new $$.XMLStringLexer(xmlStr)
-    for (const token of lexer) {
-      expect(token).toEqual(tokens[i])
-      i++
-    }
-    expect(i).toBe(tokens.length)
+
+    const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
+    expect(lexerTokens).toEqual(tokens)
   })
 
   test('declaration attribute without quote', () => {

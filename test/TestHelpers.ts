@@ -1,10 +1,10 @@
 import dedent from "dedent"
 import { dom } from "../src"
 import {
-  AbortController, AbortSignal, Attr, CDATASection, 
+  AbortController, AbortSignal, Attr, CDATASection,
   CharacterData, Comment, CustomEvent, DocumentFragment,
   Document, DocumentType, DOMImplementation,
-  DOMTokenList, Element, Event, HTMLCollection, 
+  DOMTokenList, Element, Event, HTMLCollection,
   MutationObserver, MutationRecord,
   NamedNodeMap, NodeFilter, Node, NodeList,
   ProcessingInstruction, ShadowRoot, StaticRange, Text,
@@ -13,7 +13,6 @@ import {
 // DOMParser
 import { DOMParser } from "../src/parser"
 import { XMLStringLexer } from "../src/parser/XMLStringLexer"
-import * as Token from "../src/parser/XMLToken"
 // XMLSerializer
 import { XMLSerializer } from "../src/serializer"
 import { TupleSet } from "../src/serializer/TupleSet"
@@ -41,12 +40,12 @@ export default class TestHelpers {
     switch (node.nodeType) {
       case 1: // Element
         str = `${indent}${node.tagName}`
-        if(node.namespaceURI) {
+        if (node.namespaceURI) {
           str += ` (ns:${node.namespaceURI})`
         }
         for (const attr of node.attributes) {
           str += ` ${attr.name}="${attr.value}"`
-          if(attr.namespaceURI) {
+          if (attr.namespaceURI) {
             str += ` (ns:${attr.namespaceURI})`
           }
         }
@@ -128,7 +127,6 @@ export default class TestHelpers {
   static XMLSerializer = XMLSerializer
 
   static XMLStringLexer = XMLStringLexer
-  static Token = Token
 
   static TupleSet = TupleSet
 
@@ -151,9 +149,9 @@ export default class TestHelpers {
 
     if (!doc.documentElement)
       throw new Error("documentElement is null")
-  
+
     return doc.documentElement as Element
   }
-  
+
   static util = util
 }

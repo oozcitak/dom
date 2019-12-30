@@ -160,7 +160,7 @@ export class XMLStringLexer implements XMLLexer {
       const char = this._walker.c
       if (char === '>') {
         this._walker.next()
-        return { type: TokenType.DocType, name: name,  pubId: '', sysId: '' }
+        return { type: TokenType.DocType, name: name, pubId: '', sysId: '' }
       } else if (char === '[') {
         break
       } else if (XMLStringLexer.isSpace(char)) {
@@ -221,31 +221,18 @@ export class XMLStringLexer implements XMLLexer {
       }
     }
 
-    // skip internal subset
-    let hasInternalSubset = false
-    this._walker.skip(c => XMLStringLexer.isSpace(c))
-    while (!this._walker.eof) {
+    this._walker.skip(c => c !== '>' && c !== '[')
+    if (!this._walker.eof) {
       const char = this._walker.take(1)
       if (char === '>') {
-        return { type: TokenType.DocType, name: name,  pubId: pubId, sysId: sysId }
+        return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
       } else if (char === '[') {
-        hasInternalSubset = true
-        break
-      }
-    }
-
-    if (hasInternalSubset) {
-      while (!this._walker.eof) {
-        const char = this._walker.take(1)
-        if (char === ']') {
-          break
-        }
-      }
-      this._walker.skip(c => XMLStringLexer.isSpace(c))
-      while (!this._walker.eof) {
-        const char = this._walker.take(1)
-        if (char === '>') {
-          return { type: TokenType.DocType, name: name,  pubId: pubId, sysId: sysId }
+        // skip internal subset
+        this._walker.skip(c => c !== ']')
+        this._walker.skip(c => c !== '>')
+        if (!this._walker.eof) {
+          this._walker.seek(1)
+          return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
         }
       }
     }
@@ -257,32 +244,17 @@ export class XMLStringLexer implements XMLLexer {
    * Produces a processing instruction token.
    */
   private pi(): PIToken {
-    let target = ''
-    while (!this._walker.eof) {
-      const char = this._walker.take(1)
-      const nextChar = this._walker.c
-      const endTag = (char === '?' && nextChar === '>')
-      if (XMLStringLexer.isSpace(char) || endTag) {
-        if (endTag) {
-          this._walker.seek(1)
-          return { type: TokenType.PI, target: target, data: '' }
-        }
-        break
-      } else {
-        target += char
-      }
+    const target = this._walker.take(c => !XMLStringLexer.isSpace(c) && this._walker.peek(2) !== '?>')
+    this._walker.skip(c => XMLStringLexer.isSpace(c))
+    if (this._walker.peek(2) === '?>') {
+      this._walker.seek(2)
+      return { type: TokenType.PI, target: target, data: '' }
     }
 
-    let data = ''
-    while (!this._walker.eof) {
-      const char = this._walker.take(1)
-      const nextChar = this._walker.c
-      if (char === '?' && nextChar === '>') {
-        this._walker.seek(1)
-        return { type: TokenType.PI, target: target, data: data }
-      } else {
-        data += char
-      }
+    const data = this._walker.take(() => this._walker.peek(2) !== '?>')
+    if (!this._walker.eof) {
+      this._walker.seek(2)
+      return { type: TokenType.PI, target: target, data: data }
     }
 
     throw new Error('Missing processing instruction end symbol `?>`')
@@ -293,15 +265,7 @@ export class XMLStringLexer implements XMLLexer {
    * 
    */
   private text(): TextToken {
-    let data = ''
-    while (!this._walker.eof) {
-      const char = this._walker.c
-      if (char === '<') {
-        break
-      }
-      data += char
-      this._walker.next()
-    }
+    const data = this._walker.take(c => c !== '<')
 
     return { type: TokenType.Text, data: data }
   }
@@ -311,14 +275,10 @@ export class XMLStringLexer implements XMLLexer {
    * 
    */
   private comment(): CommentToken {
-    let data = ''
-    while (!this._walker.eof) {
-      const char = this._walker.take(1)
-      if (char === '-' && this._walker.startsWith('->')) {
-        this._walker.seek(2)
-        return { type: TokenType.Comment, data: data }
-      }
-      data += char
+    const data = this._walker.take(() => this._walker.peek(3) !== '-->')
+    if (!this._walker.eof) {
+      this._walker.seek(3)
+      return { type: TokenType.Comment, data: data }
     }
 
     throw new Error('Missing comment end symbol `-->`')
@@ -329,14 +289,10 @@ export class XMLStringLexer implements XMLLexer {
    * 
    */
   private cdata(): CDATAToken {
-    let data = ''
-    while (!this._walker.eof) {
-      const char = this._walker.take(1)
-      if (char === ']' && this._walker.startsWith(']>')) {
-        this._walker.seek(2)
-        return { type: TokenType.CDATA, data: data }
-      }
-      data += char
+    const data = this._walker.take(() => this._walker.peek(3) !== ']]>')
+    if (!this._walker.eof) {
+      this._walker.seek(3)
+      return { type: TokenType.CDATA, data: data }
     }
 
     throw new Error('Missing CDATA end symbol `]>`')
@@ -418,15 +374,12 @@ export class XMLStringLexer implements XMLLexer {
    * 
    */
   private closeTag(): ClosingTagToken {
-    let name = ''
     this._walker.skip(c => XMLStringLexer.isSpace(c))
-    while (!this._walker.eof) {
-      const char = this._walker.take(1)
-      if (char === '>') {
-        return { type: TokenType.ClosingTag, name: name }
-      } else if (!XMLStringLexer.isSpace(char)) {
-        name += char
-      }
+    const name = this._walker.take(c => c !== '>' && !XMLStringLexer.isSpace(c))
+    this._walker.skip(c => XMLStringLexer.isSpace(c))
+    if (!this._walker.eof && this._walker.c === '>') {
+      this._walker.seek(1)
+      return { type: TokenType.ClosingTag, name: name }
     }
 
     throw new Error('Missing closing element tag end symbol `>`')
