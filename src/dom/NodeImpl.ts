@@ -359,7 +359,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * 5. Let currentNode be node’s next sibling.
        * 6. While currentNode is an exclusive Text node:
        */
-      if (dom.rangeList.length !== 0) {
+      if (dom.rangeList.size !== 0) {
         let currentNode = node._nextSibling
         while (currentNode !== null && Guard.isExclusiveTextNode(currentNode)) {
           /**

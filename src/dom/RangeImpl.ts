@@ -474,7 +474,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 
      * since JS lacks weak references, we still use detach
      */
-    dom.rangeList.remove(this)
+    dom.rangeList.delete(this)
   }
 
   /** @inheritdoc */

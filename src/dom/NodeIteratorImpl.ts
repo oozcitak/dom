@@ -56,7 +56,7 @@ export class NodeIteratorImpl extends TraverserImpl implements NodeIterator {
      * 
      * since JS lacks weak references, we still use detach
      */
-    nodeIterator_iteratorList().remove(this)
+    nodeIterator_iteratorList().delete(this)
   }
 
 

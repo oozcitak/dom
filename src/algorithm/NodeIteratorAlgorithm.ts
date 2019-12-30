@@ -1,6 +1,6 @@
 import { dom } from "../"
 import { FilterResult, Node, NodeIterator } from "../dom/interfaces"
-import { ObjectCache } from "@oozcitak/util"
+import { ObjectCache, FixedSizeSet } from "@oozcitak/util"
 import { traversal_filter } from "./TraversalAlgorithm"
 import { tree_getFollowingNode, tree_getPrecedingNode } from "./TreeAlgorithm"
 
@@ -96,6 +96,6 @@ export function nodeIterator_traverse(iterator: NodeIterator, forward: boolean):
 /**
  * Gets the global iterator list.
  */
-export function nodeIterator_iteratorList(): ObjectCache<NodeIterator> {
+export function nodeIterator_iteratorList(): FixedSizeSet<NodeIterator> {
   return dom.window._iteratorList
 }

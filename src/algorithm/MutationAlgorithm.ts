@@ -242,7 +242,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      * offset is greater than child's index, increase its end 
      * offset by count.
      */
-    if (dom.rangeList.length !== 0) {
+    if (dom.rangeList.size !== 0) {
       const index = tree_index(child)
       dom.rangeList.forEach(range => {
         if (range._start[0] === parent && range._start[1] > index) {
@@ -854,7 +854,7 @@ export function mutation_preRemove(child: Node, parent: Node): Node {
  */
 export function mutation_remove(node: Node, parent: Node, suppressObservers?: boolean): void {
 
-  if (dom.rangeList.length !== 0) {
+  if (dom.rangeList.size !== 0) {
     /**
      * 1. Let index be node’s index.
      */

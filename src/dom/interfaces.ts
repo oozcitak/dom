@@ -1,4 +1,4 @@
-import { ObjectCache } from "@oozcitak/util"
+import { FixedSizeSet } from "@oozcitak/util"
 import { URLRecord } from "@oozcitak/url/lib/interfaces"
 
 /**
@@ -50,7 +50,7 @@ export interface Window extends EventTarget {
 
   _associatedDocument: Document
 
-  _iteratorList: ObjectCache<NodeIterator>
+  _iteratorList: FixedSizeSet<NodeIterator>
 }
 
 /**

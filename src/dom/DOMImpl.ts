@@ -1,5 +1,5 @@
 import { DOMFeatures, Window, Node, Range } from "./interfaces"
-import { CompareCache, ObjectCache, Lazy, isObject } from "@oozcitak/util"
+import { CompareCache, FixedSizeSet, Lazy, isObject } from "@oozcitak/util"
 import { create_window } from "../algorithm"
 
 type RegExpDict = { 
@@ -24,7 +24,7 @@ export class DOMImpl {
   }
   private _window: Window | null = null
   private _compareCache: CompareCache<Node>
-  private _rangeList: ObjectCache<Range>
+  private _rangeList: FixedSizeSet<Range>
   private _regExp: RegExpDict
 
   /**
@@ -32,7 +32,7 @@ export class DOMImpl {
    */
   private constructor() {
     this._compareCache = new CompareCache<Node>()
-    this._rangeList = new ObjectCache<Range>()
+    this._rangeList = new FixedSizeSet<Range>()
     this._regExp = {
       /** Matches a valid XML name */
       Name: new Lazy<RegExp>(() => /^([:A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])([\x2D\.0-:A-Z_a-z\xB7\xC0-\xD6\xD8-\xF6\xF8-\u037D\u037F-\u1FFF\u200C\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])*$/),
@@ -91,7 +91,7 @@ export class DOMImpl {
   /**
    * Gets the global range list.
    */
-  get rangeList(): ObjectCache<Range> { return this._rangeList }
+  get rangeList(): FixedSizeSet<Range> { return this._rangeList }
 
   /**
    * Gets the global RegExp list.

@@ -2,7 +2,7 @@ import {
   Event, Slot, MutationObserver, Document, Window, NodeIterator
 } from "./interfaces"
 import { EventTargetImpl } from "./EventTargetImpl"
-import { ObjectCache } from "@oozcitak/util"
+import { FixedSizeSet } from "@oozcitak/util"
 import { create_document } from "../algorithm"
 
 /**
@@ -17,7 +17,7 @@ export class WindowImpl extends EventTargetImpl implements Window {
 
   _associatedDocument: Document
 
-  _iteratorList = new ObjectCache<NodeIterator>()
+  _iteratorList = new FixedSizeSet<NodeIterator>()
 
   /**
    * Initializes a new instance of `Window`.
