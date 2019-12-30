@@ -18,6 +18,7 @@ import {
   node_locateANamespace, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "../algorithm"
 import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
+import { Lazy } from "@oozcitak/util"
 
 /**
  * Represents a generic XML node.
@@ -44,9 +45,9 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   readonly DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
   readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
-  private __childNodes?: NodeList
+  private __childNodes = new Lazy<NodeList>(()=> create_nodeList(this))
   get _childNodes(): NodeList {
-    return this.__childNodes || (this.__childNodes = create_nodeList(this))
+    return this.__childNodes.value
   }
 
   private _nodeDocumentOverride?: Document
