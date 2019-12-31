@@ -10,7 +10,7 @@ import { StringWalker, SeekOrigin } from "@oozcitak/util"
  */
 export class XMLStringLexer implements XMLLexer {
 
-  private static _WhiteSpace = /^[\t\n\f\r ]*$/
+  private static _WhiteSpace = /^[ \n\r\t\f]*$/
   private _walker: StringWalker
   private _options: XMLLexerOptions = {
     skipWhitespaceOnlyText: false
@@ -94,42 +94,33 @@ export class XMLStringLexer implements XMLLexer {
    * Produces an XML declaration token.
    */
   private declaration(): DeclarationToken {
-    let attName = ''
-    let attValue = ''
     let version = ''
     let encoding = ''
     let standalone = ''
-    let inName = false
-    let inValue = false
-    let startQuote = ''
 
     this._walker.skip(c => XMLStringLexer.isSpace(c))
-    inName = true
-    inValue = false
     while (!this._walker.eof) {
-      let char = this._walker.take(1)
-      const nextChar = this._walker.c
-      if (char === '?' && nextChar === '>') {
-        this._walker.seek(1)
+      this._walker.skip(c => XMLStringLexer.isSpace(c))
+      if (this._walker.startsWith('?>')) {
+        this._walker.seek(2)
         return { type: TokenType.Declaration, version: version, encoding: encoding, standalone: standalone }
-      } else if (inName && XMLStringLexer.isSpace(char) || char === '=') {
-        inName = false
-        inValue = true
+      } else {
+        // read attribute value if attribute name was read
+        const attName = this._walker.take(c => c !== '=' && !XMLStringLexer.isSpace(c))
         this._walker.skip(c => XMLStringLexer.isSpace(c))
-        while (!this._walker.eof && char !== '=') { char = this._walker.take(1) }
-        if (char !== '=') {
+        if (this._walker.c !== '=') {
           throw new Error('Missing equals sign before attribute value')
         }
-        this._walker.skip(c => XMLStringLexer.isSpace(c))
-        startQuote = this._walker.take(1)
+        this._walker.skip(c => c === '=' || XMLStringLexer.isSpace(c))
+        const startQuote = this._walker.take(1)
         if (!XMLStringLexer.isQuote(startQuote)) {
-          throw new Error('Missing quote character before attribute value')
+          throw new Error('Missing start quote character before attribute value')
         }
-      } else if (inName) {
-        attName += char
-      } else if (inValue && char === startQuote) {
-        inName = true
-        inValue = false
+        const attValue = this._walker.take(c => c !== startQuote)
+        if (this._walker.c !== startQuote) {
+          throw new Error('Missing end quote character after attribute value')
+        }
+        this._walker.seek(1)
 
         if (attName === 'version')
           version = attValue
@@ -139,12 +130,6 @@ export class XMLStringLexer implements XMLLexer {
           standalone = attValue
         else
           throw new Error('Invalid attribute name: ' + attName)
-
-        attName = ''
-        attValue = ''
-        this._walker.skip(c => XMLStringLexer.isSpace(c))
-      } else if (inValue) {
-        attValue += char
       }
     }
 
@@ -161,19 +146,18 @@ export class XMLStringLexer implements XMLLexer {
 
     // name
     this._walker.skip(c => XMLStringLexer.isSpace(c))
+    this._walker.markStart()
     while (!this._walker.eof) {
-      const char = this._walker.c
-      if (char === '>') {
-        this._walker.next()
-        return { type: TokenType.DocType, name: name, pubId: '', sysId: '' }
-      } else if (char === '[') {
-        break
-      } else if (XMLStringLexer.isSpace(char)) {
-        this._walker.next()
+      if (this._walker.c === '>' || XMLStringLexer.isSpace(this._walker.c) || this._walker.c === '[') {
+        this._walker.markEnd()
+        name = this._walker.getMarked()
+        if (this._walker.c === '>') {
+          this._walker.next()
+          return { type: TokenType.DocType, name: name, pubId: '', sysId: '' }
+        }
         break
       } else {
         this._walker.next()
-        name += char
       }
     }
 
@@ -184,62 +168,58 @@ export class XMLStringLexer implements XMLLexer {
       this._walker.skip(c => XMLStringLexer.isSpace(c))
       let startQuote = this._walker.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing quote character before pubId value')
+        throw new Error('Missing start quote character before pubId value')
       }
-      while (!this._walker.eof) {
-        const char = this._walker.take(1)
-        if (char === startQuote) {
-          break
-        } else {
-          pubId += char
-        }
+      this._walker.markStart()
+      this._walker.skip(c => c !== startQuote)
+      if (this._walker.c !== startQuote) {
+        throw new Error('Missing end quote character after pubId value')
       }
+      this._walker.markEnd()
+      pubId = this._walker.getMarked()
+      this._walker.seek(1)
+
       // sysId
       this._walker.skip(c => XMLStringLexer.isSpace(c))
       startQuote = this._walker.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing quote character before sysId value')
+        throw new Error('Missing start quote character before sysId value')
       }
-      while (!this._walker.eof) {
-        const char = this._walker.take(1)
-        if (char === startQuote) {
-          break
-        } else {
-          sysId += char
-        }
+      this._walker.markStart()
+      this._walker.skip(c => c !== startQuote)
+      if (this._walker.c !== startQuote) {
+        throw new Error('Missing end quote character after sysId value')
       }
+      this._walker.markEnd()
+      sysId = this._walker.getMarked()
+      this._walker.seek(1)
     } else if (this._walker.startsWith('SYSTEM')) {
       this._walker.seek(6)
       // sysId
       this._walker.skip(c => XMLStringLexer.isSpace(c))
       let startQuote = this._walker.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing quote character before sysId value')
+        throw new Error('Missing start quote character before sysId value')
       }
-      while (!this._walker.eof) {
-        const char = this._walker.take(1)
-        if (char === startQuote) {
-          break
-        } else {
-          sysId += char
-        }
+      this._walker.markStart()
+      this._walker.skip(c => c !== startQuote)
+      if (this._walker.c !== startQuote) {
+        throw new Error('Missing end quote character after sysId value')
       }
+      this._walker.markEnd()
+      sysId = this._walker.getMarked()
+      this._walker.seek(1)
     }
 
-    this._walker.skip(c => c !== '>' && c !== '[')
-    if (!this._walker.eof) {
-      const char = this._walker.take(1)
-      if (char === '>') {
-        return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
-      } else if (char === '[') {
-        // skip internal subset
-        this._walker.skip(c => c !== ']')
-        this._walker.skip(c => c !== '>')
-        if (!this._walker.eof) {
-          this._walker.seek(1)
-          return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
-        }
-      }
+    this._walker.skip(c => XMLStringLexer.isSpace(c))
+    if (this._walker.c === '[') {
+      this._walker.skip(c => c !== ']')
+      this._walker.seek(1)
+    }
+    this._walker.skip(c => c !== '>')
+    if (this._walker.c === '>') {
+      this._walker.seek(1)
+      return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
     }
 
     throw new Error('Missing doctype end symbol `>`')
