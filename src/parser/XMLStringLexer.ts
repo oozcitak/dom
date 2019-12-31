@@ -295,7 +295,7 @@ export class XMLStringLexer implements XMLLexer {
         throw new Error('Missing equals sign before attribute value')
       }
       this._walker.seek(1)
-      
+
       // attribute value
       this._walker.skip(c => XMLStringLexer.isSpace(c))
       const startQuote = this._walker.take(1)
@@ -322,7 +322,7 @@ export class XMLStringLexer implements XMLLexer {
     this._walker.skip(c => XMLStringLexer.isSpace(c))
     const name = this._walker.take(c => c !== '>' && !XMLStringLexer.isSpace(c))
     this._walker.skip(c => XMLStringLexer.isSpace(c))
-    if (!this._walker.eof && this._walker.c === '>') {
+    if (this._walker.c === '>') {
       this._walker.seek(1)
       return { type: TokenType.ClosingTag, name: name }
     }
