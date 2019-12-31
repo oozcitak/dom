@@ -28,9 +28,7 @@ export class DOMParser {
     if (mimeType === "text/html") {
       throw new Error('HTML parser not implemented.')
     } else {
-      const lexer = new XMLStringLexer(source)
-
-      lexer.skipWhitespaceOnlyText = true
+      const lexer = new XMLStringLexer(source, { skipWhitespaceOnlyText: true })
 
       const doc = create_document()
       doc._contentType = mimeType

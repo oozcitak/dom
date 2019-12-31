@@ -100,6 +100,16 @@ export interface XMLLexer extends Iterable<XMLToken> {
 }
 
 /**
+ * Defines lexer options.
+ */
+export type XMLLexerOptions = {
+  /**
+   * Determines whether whitespace-only text nodes are skipped or not.
+   */
+  skipWhitespaceOnlyText: boolean
+}
+
+/**
  * Defines the type of a token.
  */
 export enum TokenType {

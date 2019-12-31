@@ -249,6 +249,14 @@ describe('XMLStringLexer', () => {
     expect(() => lexer.nextToken()).toThrow()
   })
 
+  test('element attribute without end quote', () => {
+    const xmlStr = $$.t`
+      <root att="val/>
+      `
+    const lexer = new $$.XMLStringLexer(xmlStr)
+    expect(() => lexer.nextToken()).toThrow()
+  })
+
   test('incomplete element', () => {
     const xmlStr = $$.t`
       <root
