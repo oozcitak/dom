@@ -1,4 +1,4 @@
-import { DOMImpl } from "../dom/DOMImpl"
+import { dom } from "../dom"
 
 /**
  * Determines if the given string is valid for a `"Name"` construct.
@@ -6,7 +6,7 @@ import { DOMImpl } from "../dom/DOMImpl"
  * @param name - name string to test
  */
 export function xml_isName(name: string): boolean {
-  return DOMImpl.instance.regExp.Name.value.test(name)
+  return dom.regExp.Name.value.test(name)
 }
 
 /**
@@ -15,7 +15,7 @@ export function xml_isName(name: string): boolean {
  * @param name - name string to test
  */
 export function xml_isQName(name: string): boolean {
-  return DOMImpl.instance.regExp.QName.value.test(name)
+  return dom.regExp.QName.value.test(name)
 }
 
 /**
@@ -26,9 +26,9 @@ export function xml_isQName(name: string): boolean {
  */
 export function xml_isLegalChar(chars: string, xmlVersion: "1.0" | "1.1" = "1.0"): boolean {
   if (xmlVersion === "1.0") {
-    return (!DOMImpl.instance.regExp.InvalidChar_10.value.test(chars))
+    return (!dom.regExp.InvalidChar_10.value.test(chars))
   } else {
-    return (!DOMImpl.instance.regExp.InvalidChar_11.value.test(chars))
+    return (!dom.regExp.InvalidChar_11.value.test(chars))
   }
 }
 
@@ -40,5 +40,5 @@ export function xml_isLegalChar(chars: string, xmlVersion: "1.0" | "1.1" = "1.0"
  * @param chars - sequence of characters to test
  */
 export function xml_isPubidChar(chars: string): boolean {
-  return DOMImpl.instance.regExp.PubidChar.value.test(chars)
+  return dom.regExp.PubidChar.value.test(chars)
 }

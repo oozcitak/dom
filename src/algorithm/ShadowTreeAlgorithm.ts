@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import { Slotable, Slot, Element, ShadowRoot, Node } from "../dom/interfaces"
 import { Cast, Guard } from "../util"
 import { isEmpty } from "@oozcitak/util"

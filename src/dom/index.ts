@@ -14,7 +14,7 @@ import { DocumentFragmentImpl } from "./DocumentFragmentImpl"
 import { DocumentImpl } from "./DocumentImpl"
 import { DocumentOrShadowRootImpl } from "./DocumentOrShadowRootImpl"
 import { DocumentTypeImpl } from "./DocumentTypeImpl"
-import { DOMImpl } from "./DOMImpl"
+import { dom } from "./DOMImpl"
 import { DOMImplementationImpl } from "./DOMImplementationImpl"
 import { DOMTokenListImpl } from "./DOMTokenListImpl"
 import { ElementImpl } from "./ElementImpl"
@@ -78,7 +78,7 @@ export {
   DocumentFragmentImpl as DocumentFragment,
   DocumentImpl as Document,
   DocumentTypeImpl as DocumentType,
-  DOMImpl as DOM,
+  dom,
   DOMImplementationImpl as DOMImplementation,
   DOMTokenListImpl as DOMTokenList,
   ElementImpl as Element,

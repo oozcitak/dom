@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry,
   EventHandler, Event, EventTarget

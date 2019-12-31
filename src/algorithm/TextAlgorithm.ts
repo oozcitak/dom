@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import { Node, Text } from "../dom/interfaces"
 import { Guard } from "../util"
 import { IndexSizeError } from "../dom/DOMException"

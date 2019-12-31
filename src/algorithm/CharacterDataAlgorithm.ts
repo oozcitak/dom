@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import { CharacterData } from "../dom/interfaces"
 import { Guard } from "../util"
 import { IndexSizeError } from "../dom/DOMException"

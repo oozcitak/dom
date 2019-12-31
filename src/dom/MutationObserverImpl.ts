@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "./"
 import {
   Node, MutationObserverInit, MutationRecord, MutationCallback, MutationObserver
 } from "./interfaces"

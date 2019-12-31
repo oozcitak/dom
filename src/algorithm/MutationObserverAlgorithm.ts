@@ -1,5 +1,5 @@
-import { dom } from "../"
-import { MutationRecord, MutationObserver, Node, Slot } from "../dom/interfaces"
+import { dom } from "../dom"
+import { MutationRecord, MutationObserver, Node } from "../dom/interfaces"
 import { Guard } from "../util"
 import { list as infraList, set as infraSet } from "@oozcitak/infra"
 import { create_mutationRecord, create_nodeListStatic } from "./CreateAlgorithm"

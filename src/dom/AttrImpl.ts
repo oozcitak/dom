@@ -71,7 +71,7 @@ export class AttrImpl extends NodeImpl implements Attr {
   }
 
   /**
-   * Creates a `Attr`.
+   * Creates an `Attr`.
    * 
    * @param document - owner document
    * @param localName - local name

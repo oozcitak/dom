@@ -1,3 +1,4 @@
+import { dom } from "./"
 import {
   DocumentType, Document, XMLDocument, DOMImplementation, Element
 } from "./interfaces"
@@ -6,7 +7,6 @@ import {
   create_documentType, create_xmlDocument, create_document, create_text,
   namespace_validate, document_internalCreateElementNS, element_createAnElement
 } from "../algorithm"
-import { DOMImpl } from "./DOMImpl"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -22,7 +22,7 @@ export class DOMImplementationImpl implements DOMImplementation {
    * @param document - the associated document
    */
   constructor(document?: Document) {
-    this._associatedDocument = document || DOMImpl.instance.window.document
+    this._associatedDocument = document || dom.window.document
   }
 
   /** @inheritdoc */

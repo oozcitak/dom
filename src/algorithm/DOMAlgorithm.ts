@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import { Node, Element, NodeIterator, Slot, Document, Event } from "../dom/interfaces"
 import {
   tree_isAncestorOf, tree_getFollowingNode, tree_isDescendantOf,

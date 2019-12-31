@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "./"
 import {
   Node, Range, BoundaryPosition, HowToCompare, DocumentFragment,
   BoundaryPoint

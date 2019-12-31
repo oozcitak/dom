@@ -1,4 +1,5 @@
-import { dom, DOMParser, DOMImplementation } from "../lib"
+import { DOMParser, DOMImplementation } from "../lib"
+import { dom } from "../lib/dom"
 import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
 import { parse as fastXMLParse } from "fast-xml-parser"
 import { JSDOM } from "jsdom"

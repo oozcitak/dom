@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import {
   Attr, Element, Node, Document, HTMLCollection
 } from "../dom/interfaces"

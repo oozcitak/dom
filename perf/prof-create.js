@@ -1,4 +1,5 @@
-const { dom, DOMImplementation } = require("../lib")
+const { DOMImplementation } = require("../lib")
+const { dom } = require("../lib/dom")
 
 function createTestDoc(impl) {
   const doc = impl.createDocument(null, "", null)

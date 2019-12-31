@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "./"
 import { SyntaxError, InvalidCharacterError } from "./DOMException"
 import { DOMTokenList, Element, Attr } from "./interfaces"
 import { codePoint as infraCodePoint, set as infraSet } from "@oozcitak/infra"

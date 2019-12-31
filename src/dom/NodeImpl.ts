@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "./"
 import {
   Node, NodeList, Element, Document, NodeType, Text, Attr, Position,
   GetRootNodeOptions, RegisteredObserver, TransientRegisteredObserver,

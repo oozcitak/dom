@@ -1,4 +1,5 @@
-const { dom, DOMParser } = require("../lib")
+const { DOMParser } = require("../lib")
+const { dom } = require("../lib/dom")
 const { readFileSync } = require("fs")
 const { join } = require("path")
 

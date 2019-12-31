@@ -1,4 +1,4 @@
-import { dom } from "../"
+import { dom } from "../dom"
 import { FilterResult, Node, NodeIterator } from "../dom/interfaces"
 import { ObjectCache, FixedSizeSet } from "@oozcitak/util"
 import { traversal_filter } from "./TraversalAlgorithm"

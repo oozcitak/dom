@@ -13,7 +13,7 @@ type RegExpDict = {
 /**
  * Represents an object implementing DOM algorithms.
  */
-export class DOMImpl {
+class DOMImpl {
   private static _instance: DOMImpl
 
   private _features: DOMFeatures = {
@@ -108,3 +108,8 @@ export class DOMImpl {
     return DOMImpl._instance
   }
 }
+
+/**
+ * Represents an object implementing DOM algorithms.
+ */
+export const dom = DOMImpl.instance

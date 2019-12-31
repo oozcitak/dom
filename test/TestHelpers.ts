@@ -1,5 +1,4 @@
 import dedent from "dedent"
-import { dom } from "../src"
 import {
   AbortController, AbortSignal, Attr, CDATASection,
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -8,7 +7,7 @@ import {
   MutationObserver, MutationRecord,
   NamedNodeMap, NodeFilter, Node, NodeList,
   ProcessingInstruction, ShadowRoot, StaticRange, Text,
-  XMLDocument, Range
+  XMLDocument, Range, dom
 } from "../src/dom"
 // DOMParser
 import { DOMParser } from "../src/parser"

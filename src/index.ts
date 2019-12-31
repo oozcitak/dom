@@ -1,7 +1,5 @@
-import { DOM } from "./dom"
-
-const domInstance = DOM.instance
-export { domInstance as dom }
+import { dom } from "./dom"
+dom.setFeatures(true)
 
 export { DOMImplementation } from "./dom"
 export { DOMParser } from "./parser"
