@@ -100,12 +100,16 @@ export class XMLStringLexer implements XMLLexer {
       if (this.skipIfStartsWith('?>')) {
         return { type: TokenType.Declaration, version: version, encoding: encoding, standalone: standalone }
       } else {
+        // attribute name
         const attName = this.takeUntil('=', true)
         this.skipSpace()
         if (this.c() !== '=') {
           throw new Error('Missing equals sign before attribute value')
         }
-        this.skipWhile('=', true)
+        this.skip(1)
+
+        // attribute value
+        this.skipSpace()
         const startQuote = this.c()
         if (!XMLStringLexer.isQuote(startQuote)) {
           throw new Error('Missing start quote character before attribute value')
