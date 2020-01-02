@@ -28,9 +28,7 @@ export class XMLStringLexer implements XMLLexer {
     this._index = 0
     this._length = str.length
     if (options) {
-      if (options.skipWhitespaceOnlyText !== undefined) {
-        this._options.skipWhitespaceOnlyText = options.skipWhitespaceOnlyText
-      }
+      this._options.skipWhitespaceOnlyText = options.skipWhitespaceOnlyText || false
     }
   }
 
