@@ -45,9 +45,9 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   static DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
   static DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
 
-  private __childNodes = new Lazy<NodeList>(()=> create_nodeList(this))
+  private __childNodes?: NodeList
   get _childNodes(): NodeList {
-    return this.__childNodes.value
+    return this.__childNodes || (this.__childNodes = create_nodeList(this))
   }
 
   private _nodeDocumentOverride?: Document
