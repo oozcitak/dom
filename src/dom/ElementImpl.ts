@@ -40,8 +40,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
   _shadowRoot: ShadowRoot | null = null
 
-  __attributeList?: NamedNodeMap
-  get _attributeList(): NamedNodeMap { return this.__attributeList || (this.__attributeList = create_namedNodeMap(this)) }
+  _attributeList: NamedNodeMap = create_namedNodeMap(this)
 
   _uniqueIdentifier?: string
 
