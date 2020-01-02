@@ -360,6 +360,8 @@ export class XMLStringLexer implements XMLLexer {
 
   /**
    * Seeks a number of character codes.
+   * 
+   * @param count - number of characters to skip
    */
   private seek(count: number): void {
     this._index += count
@@ -428,8 +430,6 @@ export class XMLStringLexer implements XMLLexer {
     const startIndex = this._index
     const strLength = str.length
     while (this._index < this._length) {
-      if (this._index + strLength > this._length) break
-
       let match = true
       for (let i = 0; i < strLength; i++) {
         const c = this._str[this._index + i]
