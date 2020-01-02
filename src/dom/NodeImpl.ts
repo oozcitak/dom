@@ -18,7 +18,6 @@ import {
   node_locateANamespace, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "../algorithm"
 import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
-import { Lazy } from "@oozcitak/util"
 
 /**
  * Represents a generic XML node.

@@ -22,7 +22,6 @@ import {
   node_listOfElementsWithNamespace, node_listOfElementsWithClassNames,
   node_listOfElementsWithQualifiedName
 } from "../algorithm"
-import { Lazy } from "@oozcitak/util"
 
 /**
  * Represents an element node.
@@ -41,8 +40,8 @@ export class ElementImpl extends NodeImpl implements Element {
 
   _shadowRoot: ShadowRoot | null = null
 
-  __attributeList: Lazy<NamedNodeMap> = new Lazy<NamedNodeMap>(() => create_namedNodeMap(this))
-  get _attributeList(): NamedNodeMap { return this.__attributeList.value }
+  __attributeList?: NamedNodeMap
+  get _attributeList(): NamedNodeMap { return this.__attributeList || (this.__attributeList = create_namedNodeMap(this)) }
 
   _uniqueIdentifier?: string
 
