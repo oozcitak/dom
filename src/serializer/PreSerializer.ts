@@ -145,7 +145,7 @@ export class PreSerializer {
      * does not match the XML Name production, then throw an exception; the 
      * serialization of this node would not be a well-formed element.
      */
-    if (requireWellFormed && (node.localName.includes(":") ||
+    if (requireWellFormed && (node.localName.indexOf(":") !== -1 ||
       !xml_isName(node.localName))) {
       throw new Error("Node local name contains invalid characters (well-formed required).")
     }
@@ -388,9 +388,8 @@ export class PreSerializer {
      * attributes given map, prefix index, local prefixes map, ignore namespace
      * definition attribute flag, and require well-formed flag.
      */
-    const eleAttributes = this._serializeAttributes(node, map, prefixIndex,
-      localPrefixesMap, ignoreNamespaceDefinitionAttribute, requireWellFormed)
-    attributes.push(...eleAttributes)
+    this._serializeAttributes(node, map, prefixIndex, localPrefixesMap,
+      ignoreNamespaceDefinitionAttribute, requireWellFormed, attributes)
 
     /**
      * 14. If ns is the HTML namespace, and the node's list of children is 
@@ -516,7 +515,7 @@ export class PreSerializer {
      * the serialization of this node's data would not be well-formed.
      */
     if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
-      node.data.includes("--") || node.data.endsWith("-"))) {
+      node.data.indexOf("--") !== -1 || node.data.endsWith("-"))) {
       throw new Error("Comment data contains invalid characters (well-formed required).")
     }
 
@@ -639,7 +638,7 @@ export class PreSerializer {
      */
     if (requireWellFormed &&
       (!xml_isLegalChar(node.systemId, this._xmlVersion) ||
-        (node.systemId.includes('"') && node.systemId.includes("'")))) {
+        (node.systemId.indexOf('"') !== -1 && node.systemId.indexOf("'") !== -1))) {
       throw new Error("DocType system identifier contains invalid characters (well-formed required).")
     }
 
@@ -700,7 +699,7 @@ export class PreSerializer {
      * case-insensitive match for the string "xml", then throw an exception; 
      * the serialization of this node's target would not be well-formed.
      */
-    if (requireWellFormed && (node.target.includes(":") || (/^xml$/i).test(node.target))) {
+    if (requireWellFormed && (node.target.indexOf(":") !== -1 || (/^xml$/i).test(node.target))) {
       throw new Error("Processing instruction target contains invalid characters (well-formed required).")
     }
 
@@ -712,7 +711,7 @@ export class PreSerializer {
      * this node's data would not be well-formed.
      */
     if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
-      node.data.includes("?>"))) {
+      node.data.indexOf("?>") !== -1)) {
       throw new Error("Processing instruction data contains invalid characters (well-formed required).")
     }
 
@@ -747,7 +746,7 @@ export class PreSerializer {
     prefixMap: NamespacePrefixMap, prefixIndex: PrefixIndex,
     requireWellFormed: boolean, level: number): PreSerializedNode<CDATASection> {
 
-    if (requireWellFormed && (node.data.includes("]]>"))) {
+    if (requireWellFormed && (node.data.indexOf("]]>") !== -1)) {
       throw new Error("CDATA contains invalid characters (well-formed required).")
     }
 
@@ -773,9 +772,7 @@ export class PreSerializer {
   private _serializeAttributes(node: Element, map: NamespacePrefixMap,
     prefixIndex: PrefixIndex, localPrefixesMap: Map<string, string>,
     ignoreNamespaceDefinitionAttribute: boolean,
-    requireWellFormed: boolean): PreSerializedAttr[] {
-
-    const result: PreSerializedAttr[] = []
+    requireWellFormed: boolean, result: PreSerializedAttr[]): void {
 
     /**
      * 1. Let result be the empty string.
@@ -951,7 +948,7 @@ export class PreSerializer {
        * exception; the serialization of this attr would not be a 
        * well-formed attribute.
        */
-      if (requireWellFormed && (attr.localName.includes(":") ||
+      if (requireWellFormed && (attr.localName.indexOf(":") !== -1 ||
         !xml_isName(attr.localName) ||
         (attr.localName === "xmlns" && attributeNamespace === null))) {
         throw new Error("Attribute local name contains invalid characters (well-formed required).")
@@ -972,8 +969,6 @@ export class PreSerializer {
     /**
      * 4. Return the value of result.
      */
-
-    return result
   }
 
   /**

@@ -263,7 +263,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     if (this._type === "html")
       throw new NotSupportedError()
 
-    if (data.includes(']]>'))
+    if (data.indexOf(']]>') !== -1)
       throw new InvalidCharacterError()
 
     return create_cdataSection(this, data)
@@ -292,7 +292,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     if (!xml_isName(target))
       throw new InvalidCharacterError()
 
-    if (data.includes("?>"))
+    if (data.indexOf("?>") !== -1)
       throw new InvalidCharacterError()
 
     return create_processingInstruction(this, target, data)
