@@ -1,8 +1,11 @@
-import { DOMParser, DOMImplementation } from "../lib"
 import { dom } from "../lib/dom"
-import { DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser } from "xmldom"
-import { parse as fastXMLParse } from "fast-xml-parser"
+import { DOMImplementation, DOMParser, XMLSerializer } from "../lib"
+import {
+  DOMImplementation as XMLDOMImplementation, DOMParser as XMLDOMParser,
+  XMLSerializer as XMLDOMSerializer
+} from "xmldom"
 import { JSDOM } from "jsdom"
+import { parse as fastXMLParse } from "fast-xml-parser"
 import { Suite } from "benchmark"
 import { processBenchmark } from "./"
 import { readFileSync } from "fs"
@@ -57,6 +60,30 @@ function createTestDoc(impl: any): any {
   suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
   suite.add("jsdom", () => jsdomParser(xml))
   suite.add("fast-xml-parser", () => fastXMLParse(xml, {}, true))
+
+  suite.on("complete", () => processBenchmark(suite, "dom"))
+  suite.run()
+
+})();
+
+(function () {
+  const suite = new Suite("serializer")
+
+  dom.setFeatures(false)
+  
+  const domImpl = new DOMImplementation()
+  const xmldomImpl = new XMLDOMImplementation()
+
+  const doc = createTestDoc(domImpl)
+  const xmldomDoc = createTestDoc(xmldomImpl)
+
+  const domSerializer = new XMLSerializer()
+  const xmldomSerializer = new XMLDOMSerializer()
+  const jsdomSerializer = new JSDOM(domSerializer.serializeToString(doc))
+
+  suite.add("dom", () => domSerializer.serializeToString(doc))
+  suite.add("xmldom", () => xmldomSerializer.serializeToString(xmldomDoc))
+  suite.add("jsdom", () => jsdomSerializer.serialize())
 
   suite.on("complete", () => processBenchmark(suite, "dom"))
   suite.run()
