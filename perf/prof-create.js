@@ -1,7 +1,9 @@
 const { DOMImplementation } = require("../lib")
 const { dom } = require("../lib/dom")
 
-function createTestDoc(impl) {
+dom.setFeatures(false)
+const impl = new DOMImplementation()
+for (let i = 0; i < 10000; i++) {
   const doc = impl.createDocument(null, "", null)
   const root = doc.createElement("root")
   doc.appendChild(root)
@@ -14,11 +16,4 @@ function createTestDoc(impl) {
     }
     root.appendChild(node)
   }
-  return doc
-}
-
-dom.setFeatures(false)
-const impl = new DOMImplementation()
-for (let i = 0; i < 10000; i++) {
-  createTestDoc(impl)
 }
