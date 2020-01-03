@@ -571,6 +571,29 @@ export function tree_isAncestorOf(node: Node, other: Node,
   return tree_isDescendantOf(other, node, self, shadow)
 }
 
+
+/**
+ * Determines whether `other` is a host-including ancestor of `node`. An
+ * object A is a host-including inclusive ancestor of an object B, if either
+ * A is an inclusive ancestor of B, or if B’s root has a non-null host and
+ * A is a host-including inclusive ancestor of B’s root’s host.
+ * 
+ * @param node - a node
+ * @param other - the node to check
+ * @param self - if `true`, traversal includes `node` itself
+ */
+export function tree_isHostIncludingAncestorOf(node: Node, other: Node,
+  self: boolean = false): boolean {
+
+  if (tree_isAncestorOf(node, other, self)) return true
+
+  const root = tree_rootNode(node)
+  if (Guard.isDocumentFragmentNode(root) && root._host !== null &&
+    tree_isAncestorOf(root._host, other, true)) return true
+  
+  return false
+}
+
 /**
  * Determines whether `other` is a sibling of `node`. An object A is
  * called a sibling of an object B, if and only if B and A share 

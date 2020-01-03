@@ -11,7 +11,7 @@ import {
 import {
   tree_isAncestorOf, tree_index, tree_rootNode, tree_isDescendantOf, 
   tree_getFirstDescendantNode, tree_getNextDescendantNode, 
-  tree_getFirstAncestorNode, tree_getNextAncestorNode
+  tree_getFirstAncestorNode, tree_getNextAncestorNode, tree_isHostIncludingAncestorOf
 } from "./TreeAlgorithm"
 import { nodeIterator_iteratorList } from "./NodeIteratorAlgorithm"
 import {
@@ -52,7 +52,7 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
    * 2. If node is a host-including inclusive ancestor of parent, throw a
    * "HierarchyRequestError" DOMException.
    */
-  if (tree_isAncestorOf(parent, node, true, true))
+  if (tree_isHostIncludingAncestorOf(parent, node, true))
     throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
@@ -603,7 +603,7 @@ export function mutation_replace(child: Node, node: Node,
    * 2. If node is a host-including inclusive ancestor of parent, throw a 
    * "HierarchyRequestError" DOMException.
    */
-  if (tree_isAncestorOf(parent, node, true, true))
+  if (tree_isHostIncludingAncestorOf(parent, node, true))
     throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
