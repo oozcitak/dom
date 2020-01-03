@@ -7,6 +7,8 @@ describe('Namespace', () => {
     expect(() => namespace_validate('name')).not.toThrow()
     expect(() => namespace_validate('prefix:name')).not.toThrow()
     expect(() => namespace_validate('not_a_qname:')).toThrow()
+    expect(() => namespace_validate(':not_a_qname')).toThrow()
+    expect(() => namespace_validate('not:a:qname')).toThrow()
     expect(() => namespace_validate('not a name')).toThrow()
   })
 
