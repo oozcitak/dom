@@ -12,7 +12,7 @@
       "jsdom": 757.6363128530063
     }
   },
-  "1.1.1*": {
+  "1.1.1": {
     "createDocument + createElement + appendChild": {
       "xmldom": 3385.8883723503814,
       "dom": 1757.0214229763508,
@@ -23,6 +23,19 @@
       "fast-xml-parser": 11275.620360981586,
       "xmldom": 9226.511456088065,
       "jsdom": 784.164427092699
+    }
+  },
+  "1.2.1": {
+    "createDocument + createElement + appendChild": {
+      "xmldom": 3515.2858219797326,
+      "dom": 1911.674435401808,
+      "jsdom": 190.59885846625392
+    },
+    "parse 1.5 kB sample.xml": {
+      "dom": 13170.847340058423,
+      "fast-xml-parser": 11497.442183589777,
+      "xmldom": 9911.979795590914,
+      "jsdom": 766.4622112720472
     }
   }
 }

@@ -218,7 +218,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   suppressObservers?: boolean): void {
 
   // Optimized common case
-  if (child === null && node.nodeType !== NodeType.DocumentFragment && node._children.size === 0) {
+  if (child === null && node.nodeType !== NodeType.DocumentFragment) {
     mutation_insert_single(node, parent, suppressObservers)
     return
   }
