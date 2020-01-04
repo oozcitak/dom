@@ -24,7 +24,7 @@ Create an instance of the `DOMImplementation` class to construct the DOM tree.
 const { DOMImplementation } = require("@oozcitak/dom");
 
 const dom = new DOMImplementation();
-const doc = dom.implementation.createDocument('ns', 'root');
+const doc = dom.createDocument('ns', 'root');
 ```
 
 The module also exports `DOMParser` and `XMLSerializer` classes as in the browser.
