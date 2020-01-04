@@ -106,7 +106,7 @@ export class XMLStringLexer implements XMLLexer {
         if (this.c() !== '=') {
           throw new Error('Missing equals sign before attribute value')
         }
-        this.skip(1)
+        this.seek(1)
 
         // attribute value
         this.skipSpace()
