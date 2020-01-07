@@ -191,6 +191,8 @@ export class XMLStringLexer implements XMLLexer {
     // skip internal subset
     this.skipSpace()
     if (this.c() === '[') {
+      this.seek(1)
+      // skip internal subset nodes
       this.skipUntil(']')
       if (this.c() !== ']') {
         throw new Error('Missing end bracket of DTD internal subset')
@@ -453,32 +455,14 @@ export class XMLStringLexer implements XMLLexer {
   }
 
   /**
-   * Skips characters while the next character matches `char`.
-   * 
-   * @param char - a character to match
-   * @param space - whether to skip space characters as well
-   */
-  private skipWhile(char: string, space: boolean = false): void {
-    while (this._index < this._length) {
-      const c = this._str[this._index]
-      if (c === char || (space && XMLStringLexer.isSpace(c))) {
-        this._index++
-      } else {
-        break
-      }
-    }
-  }
-
-  /**
    * Skips characters until the next character matches `char`.
    * 
    * @param char - a character to match
-   * @param space - whether to skip space characters as well
    */
-  private skipUntil(char: string, space: boolean = false): void {
+  private skipUntil(char: string): void {
     while (this._index < this._length) {
       const c = this._str[this._index]
-      if (c !== char && (!space || !XMLStringLexer.isSpace(c))) {
+      if (c !== char) {
         this._index++
       } else {
         break

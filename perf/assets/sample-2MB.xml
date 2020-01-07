@@ -8,7 +8,6 @@
   <!NOTATION fs SYSTEM "http://my.fs.com/reader">
   <!NOTATION fs-nt PUBLIC "FS Network Reader 1.0" "http://my.fs.com/reader">
   <!ATTLIST img src NOTATION (fs|fs-nt) #REQUIRED>
-  <![CDATA[<owner>John</owner>]]>
   <!ELEMENT node (#PCDATA)>
   <!ENTITY ent "my val">
   <!ENTITY ent SYSTEM "http://www.myspec.com/ent">
