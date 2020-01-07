@@ -381,7 +381,7 @@ describe('XMLSerializer', () => {
     if (doc.documentElement) {
       doc.documentElement.appendChild(invalid)
     }
-    Object.defineProperty(invalid, "nodeType", { value: 0 })
+    Object.defineProperty(invalid, "_nodeType", { value: 0 })
 
     const serializer = new $$.XMLSerializer()
     expect(() => serializer.serializeToString(doc)).toThrow()
