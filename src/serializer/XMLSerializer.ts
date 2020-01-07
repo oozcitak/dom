@@ -56,12 +56,40 @@ export class XMLSerializer {
    * @param value - attribute value
    */
   private _serializeAttributeValue(value: string): string {
-    // Although XML spec allows ">" in attribute values, we replace ">" 
-    // to match the behavior present in browsers    
-    return value.replace('"', "&quot;")
-      .replace("&", "&amp;")
-      .replace("<", "&lt;")
-      .replace(">", "&gt;")
+    /**
+     * From: https://w3c.github.io/DOM-Parsing/#dfn-serializing-an-attribute-value
+     * 
+     * 1. If the require well-formed flag is set (its value is true), and 
+     * attribute value contains characters that are not matched by the XML Char
+     * production, then throw an exception; the serialization of this attribute
+     * value would fail to produce a well-formed element serialization.
+     * 2. If attribute value is null, then return the empty string.
+     * 3. Otherwise, attribute value is a string. Return the value of attribute
+     * value, first replacing any occurrences of the following:
+     * - "&" with "&amp;"
+     * - """ with "&quot;"
+     * - "<" with "&lt;"
+     * - ">" with "&gt;"
+     * NOTE
+     * This matches behavior present in browsers, and goes above and beyond the
+     * grammar requirement in the XML specification's AttValue production by
+     * also replacing ">" characters.
+     */
+    let result = ""
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i]
+      if (c === "\"")
+        result += "&quot;"
+      else if (c === "&")
+        result += "&amp;"
+      else if (c === "<")
+        result += "&lt;"
+      else if (c === ">")
+        result += "&gt;"
+      else
+        result += c
+    }
+    return result
   }
 
   /**
@@ -70,9 +98,32 @@ export class XMLSerializer {
    * @param data - text node data to serialize
    */
   private _serializeTextData(data: string): string {
-    return data.replace("&", "&amp;")
-      .replace("<", "&lt;")
-      .replace(">", "&gt;")
+    /**
+     * From: https://w3c.github.io/DOM-Parsing/#xml-serializing-a-text-node
+     * 
+     * 1. If the require well-formed flag is set (its value is true), and 
+     * node's data contains characters that are not matched by the XML Char
+     *  production, then throw an exception; the serialization of this node's
+     * data would not be well-formed.
+     * 2. Let markup be the value of node's data.
+     * 3. Replace any occurrences of "&" in markup by "&amp;".
+     * 4. Replace any occurrences of "<" in markup by "&lt;".
+     * 5. Replace any occurrences of ">" in markup by "&gt;".
+     * 6. Return the value of markup.
+     */
+    let result = ""
+    for (let i = 0; i < data.length; i++) {
+      const c = data[i]
+      if (c === "&")
+        result += "&amp;"
+      else if (c === "<")
+        result += "&lt;"
+      else if (c === ">")
+        result += "&gt;"
+      else
+        result += c
+    }
+    return result
   }
 
 }
