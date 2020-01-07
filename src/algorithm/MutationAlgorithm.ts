@@ -9,7 +9,7 @@ import {
   customElement_tryToUpgrade
 } from "./CustomElementAlgorithm"
 import {
-  tree_isAncestorOf, tree_index, tree_rootNode, tree_isDescendantOf, 
+  tree_index, tree_rootNode, tree_isDescendantOf, 
   tree_getFirstDescendantNode, tree_getNextDescendantNode, 
   tree_getFirstAncestorNode, tree_getNextAncestorNode, tree_isHostIncludingAncestorOf
 } from "./TreeAlgorithm"

@@ -7,7 +7,7 @@ import {
 import { JSDOM } from "jsdom"
 import { parse as fastXMLParse } from "fast-xml-parser"
 import { Suite } from "benchmark"
-import { processBenchmark } from "./"
+import { benchmarkTitle, processBenchmark } from "./"
 import { readFileSync } from "fs"
 import { join } from "path"
 
@@ -26,6 +26,10 @@ function createTestDoc(impl: any): any {
   }
   return doc
 }
+
+(function () {
+  benchmarkTitle("dom")
+})();
 
 (function () {
   const suite = new Suite("createDocument + createElement + appendChild")
