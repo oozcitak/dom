@@ -218,7 +218,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   suppressObservers?: boolean): void {
 
   // Optimized common case
-  if (child === null && node.nodeType !== NodeType.DocumentFragment) {
+  if (child === null && node._nodeType !== NodeType.DocumentFragment) {
     mutation_insert_single(node, parent, suppressObservers)
     return
   }
@@ -227,7 +227,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * 1. Let count be the number of children of node if it is a 
    * DocumentFragment node, and one otherwise.
    */
-  const count = (node.nodeType === NodeType.DocumentFragment ?
+  const count = (node._nodeType === NodeType.DocumentFragment ?
     node._children.size : 1)
 
   /**
@@ -462,7 +462,7 @@ function mutation_insert_single(node: Node, parent: Node,
    * index.
    */
   node._parent = parent
-  infraSet.append(parent._children, node)
+  parent._children.add(node)
 
   // assign siblings and children for quick lookups
   if (parent._firstChild === null) {

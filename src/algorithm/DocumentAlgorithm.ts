@@ -41,7 +41,6 @@ export function document_internalCreateElementNS(document: Document, namespace: 
    * 4. Return the result of creating an element given document, localName, 
    * namespace, prefix, is, and with the synchronous custom elements flag set.
    */
-
   const [ns, prefix, localName] =
     namespace_validateAndExtract(namespace, qualifiedName)
 
@@ -66,6 +65,11 @@ export function document_internalCreateElementNS(document: Document, namespace: 
  * @param document - document to receive the node and its subtree
  */
 export function document_adopt(node: Node, document: Document): void {
+  // Optimize for common case of inserting a fresh node
+  if (node._nodeDocument === document && node._parent === null) {
+    return
+  }
+
   /**
    * 1. Let oldDocument be node’s node document.
    * 2. If node’s parent is not null, remove node from its parent.

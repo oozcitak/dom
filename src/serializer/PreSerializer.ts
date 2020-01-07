@@ -125,7 +125,7 @@ export class PreSerializer {
 
     this._currentNode = node
 
-    switch (node.nodeType) {
+    switch (node._nodeType) {
       case NodeType.Element:
         this._serializeElement(<Element>node, namespace, prefixMap, prefixIndex, 
           requireWellFormed)
@@ -155,7 +155,7 @@ export class PreSerializer {
         this._serializeCData(<CDATASection>node, requireWellFormed)
         break
       default:
-        throw new Error(`Unknown node type: ${node.nodeType}`)
+        throw new Error(`Unknown node type: ${node._nodeType}`)
     }
   }
 
