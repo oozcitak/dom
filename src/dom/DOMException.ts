@@ -1,6 +1,5 @@
 /**
- * Contains static properties to produce `Error` objects used by this
- * module.
+ * Represents the base class of `Error` objects used by this module.
  */
 export class DOMException extends Error {
   /**

@@ -32,7 +32,7 @@ export class TextImpl extends CharacterDataImpl implements Text {
     let text = ''
 
     for (const node of text_contiguousTextNodes(this, true)) {
-      text = text + node.data
+      text = text + node._data
     }
 
     return text

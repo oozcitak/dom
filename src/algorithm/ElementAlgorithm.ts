@@ -110,7 +110,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * null, attribute’s value, and attribute’s namespace.
    */
   if (dom.features.steps) {
-    dom_runAttributeChangeSteps(element, attribute.localName, null,
+    dom_runAttributeChangeSteps(element, attribute._localName, null,
       attribute._value, attribute._namespace)
   }
 
@@ -157,7 +157,7 @@ export function element_remove(attribute: Attr, element: Element): void {
    * attribute’s value, null, and attribute’s namespace.
    */
   if (dom.features.steps) {
-    dom_runAttributeChangeSteps(element, attribute.localName,
+    dom_runAttributeChangeSteps(element, attribute._localName,
       attribute._value, null, attribute._namespace)
   }
 
@@ -207,7 +207,7 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * oldAttr’s value, newAttr’s value, and oldAttr’s namespace.
    */
   if (dom.features.steps) {
-    dom_runAttributeChangeSteps(element, oldAttr.localName,
+    dom_runAttributeChangeSteps(element, oldAttr._localName,
       oldAttr._value, newAttr._value, oldAttr._namespace)
   }
 
@@ -313,7 +313,7 @@ export function element_setAnAttribute(attr: Attr, element: Element): Attr | nul
     throw new InUseAttributeError(`This attribute already exists in the document: ${attr._qualifiedName} as a child of ${attr._element._qualifiedName}.`)
 
   const oldAttr = element_getAnAttributeByNamespaceAndLocalName(attr._namespace || '',
-    attr.localName, element)
+    attr._localName, element)
 
   if (oldAttr === attr) return attr
   if (oldAttr !== null) {

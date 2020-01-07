@@ -191,7 +191,7 @@ export function node_equals(a: Node, b: Node): boolean {
   } else if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
     if (a._namespace !== b._namespace || a._namespacePrefix !== b._namespacePrefix ||
       a._localName !== b._localName ||
-      a._attributeList.length !== b._attributeList.length) return false
+      a._attributeList._attributeList.length !== b._attributeList._attributeList.length) return false
   } else if (Guard.isAttrNode(a) && Guard.isAttrNode(b)) {
     if (a._namespace !== b._namespace || a._localName !== b._localName ||
       a._value !== b._value) return false
@@ -206,7 +206,7 @@ export function node_equals(a: Node, b: Node): boolean {
    * that equals an attribute in B’s attribute list.
    */
   if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
-    if (a._attributeList.length !== b._attributeList.length) return false
+    if (a._attributeList._attributeList.length !== b._attributeList._attributeList.length) return false
     const attrMap = new Map<string, Attr>()
     a._attributeList._attributeList.forEach(attrA =>
       attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
@@ -399,8 +399,8 @@ export function node_locateANamespacePrefix(element: Element,
    * 3. If element’s parent element is not null, then return the result of 
    * running locate a namespace prefix on that element using namespace.
    */
-  if (element.parentElement) {
-    return node_locateANamespacePrefix(element.parentElement, namespace)
+  if (element._parent && Guard.isElementNode(element._parent)) {
+    return node_locateANamespacePrefix(element._parent, namespace)
   }
 
 
@@ -480,8 +480,8 @@ export function node_locateANamespace(node: Node, prefix: string | null): string
      * 2. Return the result of running locate a namespace on its parent
      * element using prefix.
      */
-    if (node.parentElement === null) return null
-    return node_locateANamespace(node.parentElement, prefix)
+    if (!node._parent || !Guard.isElementNode(node._parent)) return null
+    return node_locateANamespace(node._parent, prefix)
   }
 
 }

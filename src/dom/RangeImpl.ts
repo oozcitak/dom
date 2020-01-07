@@ -229,19 +229,19 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     switch (how) {
       case HowToCompare.StartToStart:
         thisPoint = this._start
-        otherPoint = [sourceRange.startContainer, sourceRange.startOffset]
+        otherPoint = sourceRange._start
         break
       case HowToCompare.StartToEnd:
         thisPoint = this._end
-        otherPoint = [sourceRange.startContainer, sourceRange.startOffset]
+        otherPoint = sourceRange._start
         break
       case HowToCompare.EndToEnd:
         thisPoint = this._end
-        otherPoint = [sourceRange.endContainer, sourceRange.endOffset]
+        otherPoint = sourceRange._end
         break
       case HowToCompare.EndToStart:
         thisPoint = this._start
-        otherPoint = [sourceRange.endContainer, sourceRange.endOffset]
+        otherPoint = sourceRange._end
         break
       /* istanbul ignore next */
       default:
@@ -591,7 +591,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * object’s end offset.
      */
     if (this._startNode === this._endNode && Guard.isTextNode(this._startNode)) {
-      return this._startNode._data.substring(this._startOffset, this.endOffset)
+      return this._startNode._data.substring(this._startOffset, this._endOffset)
     }
 
     /**

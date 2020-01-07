@@ -25,7 +25,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
   /** @inheritdoc */
   get data(): string { return this._data }
   set data(value: string) {
-    characterData_replaceData(this, 0, this.length, value)
+    characterData_replaceData(this, 0, this._data.length, value)
   }
 
   /** @inheritdoc */
@@ -46,7 +46,7 @@ export abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
      * The appendData(data) method, when invoked, must replace data with node 
      * context object, offset context object’s length, count 0, and data data.
      */
-    return characterData_replaceData(this, this.length, 0, data)
+    return characterData_replaceData(this, this._data.length, 0, data)
   }
 
   /** @inheritdoc */

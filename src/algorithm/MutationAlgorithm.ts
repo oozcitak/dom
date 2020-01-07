@@ -259,14 +259,14 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
    * otherwise « node ».
    */
-  const nodes = node.nodeType === NodeType.DocumentFragment ?
+  const nodes = node._nodeType === NodeType.DocumentFragment ?
     new Array<Node>(...node._children) : [node]
 
   /**
    * 4. If node is a DocumentFragment node, remove its children with the 
    * suppress observers flag set.
    */
-  if (node.nodeType === NodeType.DocumentFragment) {
+  if (node._nodeType === NodeType.DocumentFragment) {
     while (node._firstChild) {
       mutation_remove(node._firstChild, node, true)
     }
@@ -277,7 +277,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    * for node with « », nodes, null, and null.
    */
   if (dom.features.mutationObservers) {
-    if (node.nodeType === NodeType.DocumentFragment) {
+    if (node._nodeType === NodeType.DocumentFragment) {
       observer_queueTreeMutationRecord(node, [], nodes, null, null)
     }
   }
@@ -594,9 +594,9 @@ export function mutation_replace(child: Node, node: Node,
    * 1. If parent is not a Document, DocumentFragment, or Element node,
    * throw a "HierarchyRequestError" DOMException.
    */
-  if (parent.nodeType !== NodeType.Document &&
-    parent.nodeType !== NodeType.DocumentFragment &&
-    parent.nodeType !== NodeType.Element)
+  if (parent._nodeType !== NodeType.Document &&
+    parent._nodeType !== NodeType.DocumentFragment &&
+    parent._nodeType !== NodeType.Element)
     throw new HierarchyRequestError(`Only document, document fragment and element nodes can contain child nodes. Parent node is ${parent.nodeName}.`)
 
   /**
@@ -618,13 +618,13 @@ export function mutation_replace(child: Node, node: Node,
    * ProcessingInstruction, or Comment node, throw a "HierarchyRequestError" 
    * DOMException.
    */
-  if (node.nodeType !== NodeType.DocumentFragment &&
-    node.nodeType !== NodeType.DocumentType &&
-    node.nodeType !== NodeType.Element &&
-    node.nodeType !== NodeType.Text &&
-    node.nodeType !== NodeType.ProcessingInstruction &&
-    node.nodeType !== NodeType.CData &&
-    node.nodeType !== NodeType.Comment)
+  if (node._nodeType !== NodeType.DocumentFragment &&
+    node._nodeType !== NodeType.DocumentType &&
+    node._nodeType !== NodeType.Element &&
+    node._nodeType !== NodeType.Text &&
+    node._nodeType !== NodeType.ProcessingInstruction &&
+    node._nodeType !== NodeType.CData &&
+    node._nodeType !== NodeType.Comment)
     throw new HierarchyRequestError(`Only document fragment, document type, element, text, processing instruction, cdata section or comment nodes can be inserted. Node is ${node.nodeName}.`)
 
   /**
@@ -632,12 +632,12 @@ export function mutation_replace(child: Node, node: Node,
    * doctype and parent is not a document, throw a "HierarchyRequestError" 
    * DOMException.
    */
-  if (node.nodeType === NodeType.Text &&
-    parent.nodeType === NodeType.Document)
+  if (node._nodeType === NodeType.Text &&
+    parent._nodeType === NodeType.Document)
     throw new HierarchyRequestError(`Cannot insert a text node as a child of a document node. Node is ${node.nodeName}.`)
 
-  if (node.nodeType === NodeType.DocumentType &&
-    parent.nodeType !== NodeType.Document)
+  if (node._nodeType === NodeType.DocumentType &&
+    parent._nodeType !== NodeType.Document)
     throw new HierarchyRequestError(`A document type node can only be inserted under a document node. Parent node is ${parent.nodeName}.`)
 
   /**
@@ -654,13 +654,13 @@ export function mutation_replace(child: Node, node: Node,
    * parent has a doctype child that is not child, or an element is
    * preceding child.
    */
-  if (parent.nodeType === NodeType.Document) {
-    if (node.nodeType === NodeType.DocumentFragment) {
+  if (parent._nodeType === NodeType.Document) {
+    if (node._nodeType === NodeType.DocumentFragment) {
       let eleCount = 0
       node._children.forEach(childNode => {
-        if (childNode.nodeType === NodeType.Element)
+        if (childNode._nodeType === NodeType.Element)
           eleCount++
-        else if (childNode.nodeType === NodeType.Text)
+        else if (childNode._nodeType === NodeType.Text)
           throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
       })
 
@@ -668,38 +668,38 @@ export function mutation_replace(child: Node, node: Node,
         throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
       } else if (eleCount === 1) {
         parent._children.forEach(ele => {
-          if (ele.nodeType === NodeType.Element && ele !== child)
+          if (ele._nodeType === NodeType.Element && ele !== child)
             throw new HierarchyRequestError(`The document node already has a document element node.`)
         })
 
         let doctypeChild = child._nextSibling
         while (doctypeChild) {
-          if (doctypeChild.nodeType === NodeType.DocumentType)
+          if (doctypeChild._nodeType === NodeType.DocumentType)
             throw new HierarchyRequestError(`Cannot insert an element node before a document type node.`)
           doctypeChild = doctypeChild._nextSibling
         }
       }
-    } else if (node.nodeType === NodeType.Element) {
+    } else if (node._nodeType === NodeType.Element) {
       parent._children.forEach(ele => {
-        if (ele.nodeType === NodeType.Element && ele !== child)
+        if (ele._nodeType === NodeType.Element && ele !== child)
           throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
       })
 
       let doctypeChild = child._nextSibling
       while (doctypeChild) {
-        if (doctypeChild.nodeType === NodeType.DocumentType)
+        if (doctypeChild._nodeType === NodeType.DocumentType)
           throw new HierarchyRequestError(`Cannot insert an element node before a document type node. Node is ${node.nodeName}.`)
         doctypeChild = doctypeChild._nextSibling
       }
-    } else if (node.nodeType === NodeType.DocumentType) {
+    } else if (node._nodeType === NodeType.DocumentType) {
       parent._children.forEach(ele => {
-        if (ele.nodeType === NodeType.DocumentType && ele !== child)
+        if (ele._nodeType === NodeType.DocumentType && ele !== child)
           throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
       })
 
       let elementChild = child._previousSibling
       while (elementChild) {
-        if (elementChild.nodeType === NodeType.Element)
+        if (elementChild._nodeType === NodeType.Element)
           throw new HierarchyRequestError(`Cannot insert a document type node before an element node. Node is ${node.nodeName}.`)
         elementChild = elementChild._previousSibling
       }
@@ -740,7 +740,7 @@ export function mutation_replace(child: Node, node: Node,
    * otherwise [node].
    */
   let nodes: Node[] = []
-  if (node.nodeType === NodeType.DocumentFragment) {
+  if (node._nodeType === NodeType.DocumentFragment) {
     nodes = Array.from(node._children)
   } else {
     nodes.push(node)
@@ -793,7 +793,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
    * 5. Otherwise, if node is non-null, set addedNodes to [node].
    */
   let addedNodes: Node[] = []
-  if (node && node.nodeType === NodeType.DocumentFragment) {
+  if (node && node._nodeType === NodeType.DocumentFragment) {
     addedNodes = Array.from(node._children)
   } else if (node !== null) {
     addedNodes.push(node)

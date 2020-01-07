@@ -87,7 +87,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
      */
     let node: Node | null = this._current
 
-    while (node !== this.root) {
+    while (node !== this._root) {
       /**
        * 2.1. Let sibling be node’s previous sibling.
        * 2.2. While sibling is non-null:
@@ -134,7 +134,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
        * 2.3. If node is the context object’s root or node’s parent is null, 
        * then return null.
        */
-      if (node === this.root || node._parent === null) {
+      if (node === this._root || node._parent === null) {
         return null
       }
 
@@ -210,7 +210,7 @@ export class TreeWalkerImpl extends TraverserImpl implements TreeWalker {
         /**
          * 3.4.1. If temporary is the context object’s root, then return null.
          */
-        if (temporary === this.root) {
+        if (temporary === this._root) {
           return null
         }
         /**

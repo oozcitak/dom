@@ -25,7 +25,7 @@ export type OutputFlag = {
  * @param event - an event
  */
 export function event_setTheCanceledFlag(event: Event): void {
-  if (event.cancelable && !event._inPassiveListenerFlag) {
+  if (event._cancelable && !event._inPassiveListenerFlag) {
     event._canceledFlag = true
   }
 }
@@ -187,7 +187,7 @@ export function event_dispatch(event: Event, target: EventTarget,
     event_appendToAnEventPath(event, target, targetOverride, relatedTarget,
       touchTargets, false)
 
-    const isActivationEvent = (Guard.isMouseEvent(event) && event.type === "click")
+    const isActivationEvent = (Guard.isMouseEvent(event) && event._type === "click")
     if (isActivationEvent && target._activationBehavior !== undefined) {
       activationTarget = target
     }
@@ -216,7 +216,7 @@ export function event_dispatch(event: Event, target: EventTarget,
         }
         slotable = null
         const root = tree_rootNode(parent, true)
-        if (Guard.isShadowRoot(root) && root.mode === "closed") {
+        if (Guard.isShadowRoot(root) && root._mode === "closed") {
           slotInClosedTree = true
         }
       }
@@ -253,7 +253,7 @@ export function event_dispatch(event: Event, target: EventTarget,
          * 5.9.6.2. Append to an event path with event, parent, null, 
          * relatedTarget, touchTargets, and slot-in-closed-tree.
          */
-        if (isActivationEvent && event.bubbles && activationTarget === null &&
+        if (isActivationEvent && event._bubbles && activationTarget === null &&
           parent._activationBehavior) {
           activationTarget = parent
         }
@@ -383,7 +383,7 @@ export function event_dispatch(event: Event, target: EventTarget,
       if (struct.shadowAdjustedTarget !== null) {
         event._eventPhase = EventPhase.AtTarget
       } else {
-        if (!event.bubbles) continue
+        if (!event._bubbles) continue
         event._eventPhase = EventPhase.Bubbling
       }
 
@@ -473,7 +473,7 @@ export function event_appendToAnEventPath(event: Event,
    */
   let rootOfClosedTree = false
   if (Guard.isShadowRoot(invocationTarget) &&
-    invocationTarget.mode === "closed") {
+    invocationTarget._mode === "closed") {
     rootOfClosedTree = true
   }
 
@@ -564,7 +564,7 @@ export function event_invoke(struct: EventPathItem, event: Event,
   /**
    * 8. If found is false and event's isTrusted attribute is true, then:
    */
-  if (!found && event.isTrusted) {
+  if (!found && event._isTrusted) {
     /**
      * 8.1. Let originalEventType be event's type attribute value.
      * 8.2. If event's type attribute value is a match for any of the strings
@@ -633,7 +633,7 @@ export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
        * 2.4. If phase is "bubbling" and listener's capture is true, then
        * continue.
        */
-      if (event.type !== listener.type) continue
+      if (event._type !== listener.type) continue
       found = true
       if (phase === "capturing" && !listener.capture) continue
       if (phase === "bubbling" && listener.capture) continue
@@ -642,8 +642,8 @@ export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
        * 2.5. If listener's once is true, then remove listener from event's
        * currentTarget attribute value's event listener list.
        */
-      if (listener.once && event.currentTarget !== null) {
-        const impl = event.currentTarget
+      if (listener.once && event._currentTarget !== null) {
+        const impl = event._currentTarget
         let index = -1
         for (let i = 0; i < impl._eventListenerList.length; i++) {
           if (impl._eventListenerList[i] === listener) {
@@ -687,7 +687,7 @@ export function event_innerInvoke(event: Event, listeners: EventListenerEntry[],
        */
       if (listener.passive) event._inPassiveListenerFlag = true
       try {
-        listener.callback.handleEvent.call(event.currentTarget, event)
+        listener.callback.handleEvent.call(event._currentTarget, event)
       } catch (err) {
         /**
          * If this throws an exception, then:

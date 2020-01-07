@@ -50,7 +50,7 @@ export class DOMTokenListImpl implements DOMTokenList {
        * 2. Otherwise, if localName is associated attribute’s local name,
        * namespace is null, then set token set to value, parsed.
        */
-      if (localName === thisObj._attribute.localName && namespace === null) {
+      if (localName === thisObj._attribute._localName && namespace === null) {
         if (!value)
           thisObj._tokenSet.clear()
         else
@@ -245,7 +245,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * value.
      */
     element_setAnAttributeValue(this._element,
-      this._attribute.localName, value)
+      this._attribute._localName, value)
   }
 
   /**

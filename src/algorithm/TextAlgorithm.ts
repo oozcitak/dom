@@ -142,7 +142,7 @@ export function text_split(node: Text, offset: number): Text {
    * 2. If offset is greater than length, then throw an "IndexSizeError" 
    * DOMException.
    */
-  const length = node.data.length
+  const length = node._data.length
   if (offset > length) {
     throw new IndexSizeError()
   }

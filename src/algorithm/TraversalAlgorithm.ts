@@ -20,7 +20,7 @@ export function traversal_filter(traverser: NodeIterator | TreeWalker,
   /**
    * 2. Let n be node’s nodeType attribute value − 1.
    */
-  const n = node.nodeType - 1
+  const n = node._nodeType - 1
 
   /**
    * 3. If the nth bit (where 0 is the least significant bit) of traverser’s 

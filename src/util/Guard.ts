@@ -16,7 +16,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isNode(a: any): a is Node {
-    return (!!a && a.nodeType !== undefined)
+    return (!!a && a._nodeType !== undefined)
   }
 
   /**
@@ -25,7 +25,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isDocumentNode(a: any): a is Document {
-    return (Guard.isNode(a) && a.nodeType === NodeType.Document)
+    return (Guard.isNode(a) && a._nodeType === NodeType.Document)
   }
 
   /**
@@ -34,7 +34,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isDocumentTypeNode(a: any): a is DocumentType {
-    return (Guard.isNode(a) && a.nodeType === NodeType.DocumentType)
+    return (Guard.isNode(a) && a._nodeType === NodeType.DocumentType)
   }
 
   /**
@@ -43,7 +43,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isDocumentFragmentNode(a: any): a is DocumentFragment {
-    return (Guard.isNode(a) && a.nodeType === NodeType.DocumentFragment)
+    return (Guard.isNode(a) && a._nodeType === NodeType.DocumentFragment)
   }
 
   /**
@@ -52,7 +52,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isAttrNode(a: any): a is Attr {
-    return (Guard.isNode(a) && a.nodeType === NodeType.Attribute)
+    return (Guard.isNode(a) && a._nodeType === NodeType.Attribute)
   }
 
   /**
@@ -63,7 +63,7 @@ export class Guard {
   static isCharacterDataNode(a: any): a is CharacterData {
     if (!Guard.isNode(a)) return false
 
-    const type = a.nodeType
+    const type = a._nodeType
 
     return (type === NodeType.Text ||
       type === NodeType.ProcessingInstruction ||
@@ -77,7 +77,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isTextNode(a: any): a is Text {
-    return (Guard.isNode(a) && (a.nodeType === NodeType.Text || a.nodeType === NodeType.CData))
+    return (Guard.isNode(a) && (a._nodeType === NodeType.Text || a._nodeType === NodeType.CData))
   }
 
   /**
@@ -86,7 +86,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isExclusiveTextNode(a: any): a is Text {
-    return (Guard.isNode(a) && a.nodeType === NodeType.Text)
+    return (Guard.isNode(a) && a._nodeType === NodeType.Text)
   }
 
   /**
@@ -95,7 +95,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isCDATASectionNode(a: any): a is CDATASection {
-    return (Guard.isNode(a) && a.nodeType === NodeType.CData)
+    return (Guard.isNode(a) && a._nodeType === NodeType.CData)
   }
 
   /**
@@ -104,7 +104,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isCommentNode(a: any): a is Comment {
-    return (Guard.isNode(a) && a.nodeType === NodeType.Comment)
+    return (Guard.isNode(a) && a._nodeType === NodeType.Comment)
   }
 
   /**
@@ -113,7 +113,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isProcessingInstructionNode(a: any): a is ProcessingInstruction {
-    return (Guard.isNode(a) && a.nodeType === NodeType.ProcessingInstruction)
+    return (Guard.isNode(a) && a._nodeType === NodeType.ProcessingInstruction)
   }
 
   /**
@@ -122,7 +122,7 @@ export class Guard {
    * @param a - the object to check
    */
   static isElementNode(a: any): a is Element {
-    return (Guard.isNode(a) && a.nodeType === NodeType.Element)
+    return (Guard.isNode(a) && a._nodeType === NodeType.Element)
   }
 
   /**

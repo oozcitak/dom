@@ -144,7 +144,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * 3. Return attr’s value.
      */
     const attr = element_getAnAttributeByNamespaceAndLocalName(namespace, localName, this)
-    return (attr ? attr.value : null)
+    return (attr ? attr._value : null)
   }
 
   /** @inheritdoc */
@@ -559,8 +559,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * local name, otherwise.
      */
     return (this._namespacePrefix ?
-      this._namespacePrefix + ':' + this.localName :
-      this.localName)
+      this._namespacePrefix + ':' + this._localName :
+      this._localName)
   }
 
   /**

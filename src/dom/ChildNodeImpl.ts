@@ -70,7 +70,7 @@ export class ChildNodeImpl implements ChildNode {
      * 2. If parent is null, then return.
      */
     const context = Cast.asNode(this)
-    const parent = context.parentNode
+    const parent = context._parent
     if (!parent) return
 
     /**

@@ -94,7 +94,7 @@ export function document_adopt(node: Node, document: Document): void {
       inclusiveDescendant._nodeDocument = document as Document
 
       if (Guard.isElementNode(inclusiveDescendant)) {
-        inclusiveDescendant.attributes._attributeList.forEach(attr =>
+        inclusiveDescendant._attributeList._attributeList.forEach(attr =>
           attr._nodeDocument = document)
       }
 

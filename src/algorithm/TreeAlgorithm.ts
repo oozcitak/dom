@@ -398,12 +398,12 @@ export function tree_getPrecedingNode(root: Node, node: Node): Node | null {
  * @param node - the root of the tree
  */
 export function tree_isConstrained(node: Node): boolean {
-  switch (node.nodeType) {
+  switch (node._nodeType) {
     case NodeType.Document:
       let hasDocType = false
       let hasElement = false
       for (const childNode of node._children) {
-        switch (childNode.nodeType) {
+        switch (childNode._nodeType) {
           case NodeType.ProcessingInstruction:
           case NodeType.Comment:
             break
@@ -423,7 +423,7 @@ export function tree_isConstrained(node: Node): boolean {
     case NodeType.DocumentFragment:
     case NodeType.Element:
       for (const childNode of node._children) {
-        switch (childNode.nodeType) {
+        switch (childNode._nodeType) {
           case NodeType.Element:
           case NodeType.Text:
           case NodeType.ProcessingInstruction:

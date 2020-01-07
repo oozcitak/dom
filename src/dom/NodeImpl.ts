@@ -636,10 +636,10 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
        * Return the result of locating a namespace prefix for its parent 
        * element, if its parent element is non-null, and null otherwise.
        */
-      if (this.parentElement === null) {
-        return null
+      if (this._parent !== null && Guard.isElementNode(this._parent)) {
+        return node_locateANamespacePrefix(this._parent, namespace)
       } else {
-        return node_locateANamespacePrefix(this.parentElement, namespace)
+        return null
       }
     }
   }

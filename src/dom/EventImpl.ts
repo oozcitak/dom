@@ -90,7 +90,7 @@ export class EventImpl implements Event {
 
     if (path.length === 0) return composedPath
 
-    const currentTarget = this.currentTarget
+    const currentTarget = this._currentTarget
     if (currentTarget === null) {
       throw new Error("Event currentTarget is null.")
     }

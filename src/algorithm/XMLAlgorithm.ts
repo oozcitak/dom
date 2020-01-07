@@ -1,5 +1,3 @@
-import { dom } from "../dom"
-
 /**
  * Determines if the given string is valid for a `"Name"` construct.
  * 

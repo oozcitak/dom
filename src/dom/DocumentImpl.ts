@@ -114,10 +114,10 @@ export class DocumentImpl extends NodeImpl implements Document {
   }
 
   /** @inheritdoc */
-  get charset(): string { return this.characterSet }
+  get charset(): string { return this._encoding.name }
 
   /** @inheritdoc */
-  get inputEncoding(): string { return this.characterSet }
+  get inputEncoding(): string { return this._encoding.name }
 
   /** @inheritdoc */
   get contentType(): string {
@@ -447,7 +447,7 @@ export class DocumentImpl extends NodeImpl implements Document {
      * event’s type attribute value is "load" or document does not have a 
      * browsing context, and the document’s relevant global object otherwise.
      */
-    if (event.type === "load") {
+    if (event._type === "load") {
       return null
     } else {
       return dom.window

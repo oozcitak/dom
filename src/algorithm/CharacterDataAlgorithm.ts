@@ -40,7 +40,7 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    */
   if (dom.features.mutationObservers) {
     observer_queueMutationRecord("characterData", node, null, null,
-      node.data, [], [], null, null)
+      node._data, [], [], null, null)
   }
 
   /**
@@ -49,8 +49,8 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    * 7. Starting from delete offset code units, remove count code units from 
    * node’s data.
    */
-  const newData = node.data.substring(0, offset) + data +
-    node.data.substring(offset + count)
+  const newData = node._data.substring(0, offset) + data +
+    node._data.substring(offset + count)
   node._data = newData
 
   /**
@@ -119,8 +119,8 @@ export function characterData_substringData(node: CharacterData, offset: number,
   }
 
   if (offset + count > length) {
-    return node.data.substr(offset)
+    return node._data.substr(offset)
   } else {
-    return node.data.substr(offset, count)
+    return node._data.substr(offset, count)
   }
 }
