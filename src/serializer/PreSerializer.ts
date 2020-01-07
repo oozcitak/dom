@@ -776,7 +776,7 @@ export class PreSerializer {
      * This can occur when two otherwise identical attributes on the same 
      * element differ only by their prefix values.
      */
-    const localNameSet = new LocalNameSet()
+    const localNameSet = requireWellFormed ? new LocalNameSet() : undefined
 
     /** 
      * 3. Loop: For each attribute attr in element's attributes, in the order 
@@ -784,6 +784,13 @@ export class PreSerializer {
      */
     for (let i = 0; i < node._attributeList._attributeList.length; i++) {
       const attr = node.attributes._attributeList[i]
+
+      // Optimize common case
+      if (!requireWellFormed && attr.namespaceURI === null) {
+        this._attribute(attr.localName, attr.value)
+        continue
+      }
+
       /**
        * 3.1. If the require well-formed flag is set (its value is true), and the 
        * localname set contains a tuple whose values match those of a new tuple 
@@ -791,7 +798,7 @@ export class PreSerializer {
        * then throw an exception; the serialization of this attr would fail to
        * produce a well-formed element serialization.
        */
-      if (requireWellFormed && localNameSet.has(attr.namespaceURI, attr.localName)) {
+      if (requireWellFormed && localNameSet && localNameSet.has(attr.namespaceURI, attr.localName)) {
         throw new Error("Element contains duplicate attributes (well-formed required).")
       }
 
@@ -801,7 +808,7 @@ export class PreSerializer {
        * 3.3. Let attribute namespace be the value of attr's namespaceURI value.
        * 3.4. Let candidate prefix be null.
        */
-      if (requireWellFormed) localNameSet.set(attr.namespaceURI, attr.localName)
+      if (requireWellFormed && localNameSet) localNameSet.set(attr.namespaceURI, attr.localName)
       let attributeNamespace = attr.namespaceURI
       let candidatePrefix: string | null = null
 
