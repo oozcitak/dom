@@ -45,30 +45,6 @@
   },
   "1.3.0": {
     "createDocument + createElement + appendChild": {
-      "xmldom": 3288.9808431241263,
-      "dom": 1952.000764377974,
-      "jsdom": 186.7923435115243
-    },
-    "parse 2 kB sample xml": {
-      "fast-xml-parser": 22436.530639983648,
-      "dom": 18938.93947508156,
-      "xmldom": 12778.426077775865,
-      "jsdom": 979.9490423413657
-    },
-    "parse 2 MB sample xml": {
-      "fast-xml-parser": 15.950838922808785,
-      "dom": 9.692992797139478,
-      "xmldom": 8.110880601649278,
-      "jsdom": 0.9212507969891993
-    },
-    "serializer": {
-      "dom": 4904.480215955224,
-      "xmldom": 2436.542504746372,
-      "jsdom": 1405.6030956054979
-    }
-  },
-  "1.3.0*": {
-    "createDocument + createElement + appendChild": {
       "xmldom": 3463.4778880498166,
       "dom": 2045.5538081585053,
       "jsdom": 188.08105711552048
@@ -89,6 +65,30 @@
       "dom": 4918.186708406743,
       "xmldom": 2426.6494669881345,
       "jsdom": 1430.2435284741139
+    }
+  },
+  "1.4.0": {
+    "createDocument + createElement + appendChild": {
+      "xmldom": 3408.809428956097,
+      "dom": 1941.01971144883,
+      "jsdom": 183.67561775443386
+    },
+    "parse 2 kB sample xml": {
+      "fast-xml-parser": 22219.68077185929,
+      "dom": 21234.771717573753,
+      "xmldom": 12962.2872110984,
+      "jsdom": 1048.1946245974002
+    },
+    "parse 2 MB sample xml": {
+      "fast-xml-parser": 16.255110644191763,
+      "dom": 9.49520033448426,
+      "xmldom": 7.71363812681626,
+      "jsdom": 0.8891903332190686
+    },
+    "serializer": {
+      "dom": 4396.76099528819,
+      "xmldom": 2337.919950299222,
+      "jsdom": 1416.020102476375
     }
   }
 }
