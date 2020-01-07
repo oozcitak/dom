@@ -46,9 +46,9 @@ function createTestDoc(impl: any): any {
 })();
 
 (function () {
-  const suite = new Suite("parse 1.5 kB sample.xml")
+  const suite = new Suite("parse 2 kB sample xml")
 
-  const sampleFileName = join(__dirname, "./assets/sample.xml")
+  const sampleFileName = join(__dirname, "./assets/sample-2kB.xml")
   const xml = readFileSync(sampleFileName).toString()
 
   dom.setFeatures(false)
@@ -62,6 +62,29 @@ function createTestDoc(impl: any): any {
   suite.add("fast-xml-parser", () => fastXMLParse(xml, {}, true))
 
   suite.on("complete", () => processBenchmark(suite, "dom"))
+  suite.on("error", (evt: any) => { throw evt.target.error })
+  suite.run()
+
+})();
+
+(function () {
+  const suite = new Suite("parse 2 MB sample xml")
+
+  const sampleFileName = join(__dirname, "./assets/sample-2MB.xml")
+  const xml = readFileSync(sampleFileName).toString()
+
+  dom.setFeatures(false)
+  const domParser = new DOMParser()
+  const xmldomParser = new XMLDOMParser()
+  const jsdomParser = JSDOM.fragment
+
+  suite.add("dom", () => domParser.parseFromString(xml, "application/xml"))
+  suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
+  suite.add("jsdom", () => jsdomParser(xml))
+  suite.add("fast-xml-parser", () => fastXMLParse(xml, {}, true))
+
+  suite.on("complete", () => processBenchmark(suite, "dom"))
+  suite.on("error", (evt: any) => { throw evt.target.error })
   suite.run()
 
 })();
