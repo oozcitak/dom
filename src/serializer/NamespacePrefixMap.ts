@@ -16,18 +16,8 @@
  */
 export class NamespacePrefixMap {
 
-  private _items: Map<string | null, Array<string>>
-
-  /**
-   * Initializes a new instance of `NamespacePrefixMap`.
-   */
-  constructor(items?: [[string, string | null]]) {
-    this._items = new Map<string | null, Array<string>>()
-
-    if (items !== undefined) {
-      items.forEach(item => this.set(item[0], item[1]))
-    }
-  }
+  private _items: { [key: string]: string[] } = { }
+  private _nullItems: string[] = []
 
   /**
    * Creates a copy of the map.
@@ -40,7 +30,10 @@ export class NamespacePrefixMap {
      * which should be associated with the respective key in the new map.
      */
     const mapCopy = new NamespacePrefixMap()
-    this._items.forEach((list, key) => mapCopy._items.set(key, list.slice(0)))
+    for (const key in this._items) {
+      mapCopy._items[key] = this._items[key].slice(0)
+    }
+    mapCopy._nullItems = this._nullItems.slice(0)
     return mapCopy
   }
 
@@ -56,7 +49,7 @@ export class NamespacePrefixMap {
      * there exists a key in map that matches the value of ns or if there is no 
      * such key, then stop running these steps, and return the null value.
      */
-    const candidatesList = this._items.get(ns) || null
+    const candidatesList = ns === null ? this._nullItems : (this._items[ns] || null)
     if (candidatesList === null) {
       return null
     }
@@ -98,7 +91,7 @@ export class NamespacePrefixMap {
      * there exists a key in map that matches the value of ns or if there is
      * no such key, then stop running these steps, and return false.
      */
-    const candidatesList = this._items.get(ns) || null
+    const candidatesList = ns === null ? this._nullItems : (this._items[ns] || null)
     if (candidatesList === null) {
       return false
     }
@@ -106,7 +99,7 @@ export class NamespacePrefixMap {
      * 2. If the value of prefix occurs at least once in candidates list, 
      * return true, otherwise return false.
      */
-    return (candidatesList.includes(prefix))
+    return (candidatesList.indexOf(prefix) !== -1)
   }
 
   /**
@@ -115,10 +108,9 @@ export class NamespacePrefixMap {
    * @param prefix - prefix string
    */
   hasPrefix(prefix: string): boolean {
-    for (const [, candidatesList] of this._items) {
-      if (candidatesList.includes(prefix)) {
-        return true
-      }
+    if (this._nullItems.indexOf(prefix) !== -1) return true
+    for (const key in this._items) {
+      if (this._items[key].indexOf(prefix) !== -1) return true
     }
 
     return false
@@ -136,7 +128,7 @@ export class NamespacePrefixMap {
      * there exists a key in map that matches the value of ns or if there is
      * no such key, then let candidates list be null.
      */
-    const candidatesList = this._items.get(ns) || null
+    const candidatesList = ns === null ? this._nullItems : (this._items[ns] || null)
 
     /**
      * 2. If candidates list is null, then create a new list with prefix as the 
@@ -149,8 +141,8 @@ export class NamespacePrefixMap {
      * may contain duplicates of the same prefix value seen earlier 
      * (and that's OK).
      */
-    if (candidatesList === null) {
-      this._items.set(ns, [prefix])
+    if (ns !== null && candidatesList === null) {
+      this._items[ns] = [prefix]
     } else {
       candidatesList.push(prefix)
     }
