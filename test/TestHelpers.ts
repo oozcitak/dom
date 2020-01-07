@@ -14,7 +14,7 @@ import { DOMParser } from "../src/parser"
 import { XMLStringLexer } from "../src/parser/XMLStringLexer"
 // XMLSerializer
 import { XMLSerializer } from "../src/serializer"
-import { TupleSet } from "../src/serializer/TupleSet"
+import { LocalNameSet } from "../src/serializer/LocalNameSet"
 
 import { WhatToShow, FilterResult } from "../src/dom/interfaces"
 import * as util from "../src/util"
@@ -125,9 +125,8 @@ export default class TestHelpers {
   static DOMParser = DOMParser
   static XMLSerializer = XMLSerializer
 
+  static LocalNameSet = LocalNameSet
   static XMLStringLexer = XMLStringLexer
-
-  static TupleSet = TupleSet
 
   static WhatToShow = WhatToShow
   static FilterResult = FilterResult
