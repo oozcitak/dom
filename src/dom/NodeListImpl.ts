@@ -2,7 +2,7 @@ import { dom } from "./"
 import { Node, NodeList } from "./interfaces"
 
 /**
- * Represents an ordered list of nodes.
+ * Represents an ordered set of nodes.
  */
 export class NodeListImpl implements NodeList {
 
@@ -127,7 +127,7 @@ export class NodeListImpl implements NodeList {
   }
 
   /** @inheritdoc */
-  forEach(callback: (node: Node, index: number, list: NodeList) => any,
+  forEach(callback: ((node: Node, index: number, list: NodeList) => any),
     thisArg?: any): void {
     if (thisArg === undefined) {
       thisArg = dom.window
