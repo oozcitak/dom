@@ -38,7 +38,7 @@ export class PreSerializer {
   /**
    * Returns the current XML node.
    */
-  currentNode: Node = undefined as any
+  currentNode!: Node
 
   /**
    * Initializes a new instance of `PreSerializer`.
