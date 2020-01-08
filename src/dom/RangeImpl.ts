@@ -23,13 +23,18 @@ import { Guard } from "../util"
  */
 export class RangeImpl extends AbstractRangeImpl implements Range {
 
+  static START_TO_START = 0
+  static START_TO_END = 1
+  static END_TO_END = 2
+  static END_TO_START = 3
+
+  START_TO_START!: number
+  START_TO_END!: number
+  END_TO_END!: number
+  END_TO_START!: number
+
   _start: BoundaryPoint
   _end: BoundaryPoint
-
-  static START_TO_START: number = 0
-  static START_TO_END: number = 1
-  static END_TO_END: number = 2
-  static END_TO_START: number = 3
 
   /**
    * Initializes a new instance of `Range`.
@@ -641,3 +646,11 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     return range
   }
 }
+
+/**
+ * Define constants on prototype.
+ */
+RangeImpl.prototype.START_TO_START = 0
+RangeImpl.prototype.START_TO_END = 1
+RangeImpl.prototype.END_TO_END = 2
+RangeImpl.prototype.END_TO_START = 3

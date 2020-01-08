@@ -128,4 +128,10 @@ describe('Event', () => {
     expect(propagated).toBe(false)
   })
 
+  test('constants', () => {
+    const event = new $$.Event('custom', {})
+    expect(event.CAPTURING_PHASE).toBe(1)
+    expect($$.Event.CAPTURING_PHASE).toBe(1)
+  })
+
 })

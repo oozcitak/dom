@@ -8,10 +8,15 @@ import { event_setTheCanceledFlag, event_initialize } from "../algorithm"
  */
 export class EventImpl implements Event {
 
-  static NONE: number = 0
-  static CAPTURING_PHASE: number = 1
-  static AT_TARGET: number = 2
-  static BUBBLING_PHASE: number = 3
+  static NONE = 0
+  static CAPTURING_PHASE = 1
+  static AT_TARGET = 2
+  static BUBBLING_PHASE = 3
+
+  NONE!: number
+  CAPTURING_PHASE!: number
+  AT_TARGET!: number
+  BUBBLING_PHASE!: number
 
   _target: PotentialEventTarget = null
   _relatedTarget: PotentialEventTarget = null
@@ -290,3 +295,11 @@ export class EventImpl implements Event {
   }
 
 }
+
+/**
+ * Define constants on prototype.
+ */
+EventImpl.prototype.NONE = 0
+EventImpl.prototype.CAPTURING_PHASE = 1
+EventImpl.prototype.AT_TARGET = 2
+EventImpl.prototype.BUBBLING_PHASE = 3

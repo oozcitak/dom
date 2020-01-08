@@ -1,6 +1,5 @@
 import { NodeType, Comment, Document, Node } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
-import { EmptySet } from "../util"
 
 /**
  * Represents a comment node.
@@ -8,7 +7,6 @@ import { EmptySet } from "../util"
 export class CommentImpl extends CharacterDataImpl implements Comment {
 
   _nodeType: NodeType = NodeType.Comment
-  _children: Set<Node> = new EmptySet<Node>()
 
   /**
    * Initializes a new instance of `Comment`.

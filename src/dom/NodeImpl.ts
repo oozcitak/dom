@@ -5,7 +5,7 @@ import {
   Event, EventTarget
 } from "./interfaces"
 import { EventTargetImpl } from "./EventTargetImpl"
-import { Guard } from "../util"
+import { Guard, EmptySet } from "../util"
 import { NotSupportedError } from "./DOMException"
 import {
   tree_rootNode, tree_nodeLength, tree_index,
@@ -24,25 +24,45 @@ import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
  */
 export abstract class NodeImpl extends EventTargetImpl implements Node {
 
-  static ELEMENT_NODE: number = 1
-  static ATTRIBUTE_NODE: number = 2
-  static TEXT_NODE: number = 3
-  static CDATA_SECTION_NODE: number = 4
-  static ENTITY_REFERENCE_NODE: number = 5
-  static ENTITY_NODE: number = 6
-  static PROCESSING_INSTRUCTION_NODE: number = 7
-  static COMMENT_NODE: number = 8
-  static DOCUMENT_NODE: number = 9
-  static DOCUMENT_TYPE_NODE: number = 10
-  static DOCUMENT_FRAGMENT_NODE: number = 11
-  static NOTATION_NODE: number = 12
+  static ELEMENT_NODE = 1
+  static ATTRIBUTE_NODE = 2
+  static TEXT_NODE = 3
+  static CDATA_SECTION_NODE = 4
+  static ENTITY_REFERENCE_NODE = 5
+  static ENTITY_NODE = 6
+  static PROCESSING_INSTRUCTION_NODE = 7
+  static COMMENT_NODE = 8
+  static DOCUMENT_NODE = 9
+  static DOCUMENT_TYPE_NODE = 10
+  static DOCUMENT_FRAGMENT_NODE = 11
+  static NOTATION_NODE = 12
+  
+  static DOCUMENT_POSITION_DISCONNECTED = 0x01
+  static DOCUMENT_POSITION_PRECEDING = 0x02
+  static DOCUMENT_POSITION_FOLLOWING = 0x04
+  static DOCUMENT_POSITION_CONTAINS = 0x08
+  static DOCUMENT_POSITION_CONTAINED_BY = 0x10
+  static DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20
 
-  static DOCUMENT_POSITION_DISCONNECTED: number = 0x01
-  static DOCUMENT_POSITION_PRECEDING: number = 0x02
-  static DOCUMENT_POSITION_FOLLOWING: number = 0x04
-  static DOCUMENT_POSITION_CONTAINS: number = 0x08
-  static DOCUMENT_POSITION_CONTAINED_BY: number = 0x10
-  static DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number = 0x20
+  ELEMENT_NODE!: number
+  ATTRIBUTE_NODE!: number
+  TEXT_NODE!: number
+  CDATA_SECTION_NODE!: number
+  ENTITY_REFERENCE_NODE!: number
+  ENTITY_NODE!: number
+  PROCESSING_INSTRUCTION_NODE!: number
+  COMMENT_NODE!: number
+  DOCUMENT_NODE!: number
+  DOCUMENT_TYPE_NODE!: number
+  DOCUMENT_FRAGMENT_NODE!: number
+  NOTATION_NODE!: number
+
+  DOCUMENT_POSITION_DISCONNECTED!: number
+  DOCUMENT_POSITION_PRECEDING!: number
+  DOCUMENT_POSITION_FOLLOWING!: number
+  DOCUMENT_POSITION_CONTAINS!: number
+  DOCUMENT_POSITION_CONTAINED_BY!: number
+  DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC!: number
 
   private __childNodes?: NodeList
   get _childNodes(): NodeList {
@@ -60,7 +80,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
 
   abstract _nodeType: NodeType
   _parent: Node | null = null
-  abstract _children: Set<Node>
+  _children!: Set<Node>
   _firstChild: Node | null = null
   _lastChild: Node | null = null
   _previousSibling: Node | null = null
@@ -774,3 +794,33 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
   }
 
 }
+
+/**
+ * A performance tweak to share an empty set between all node classes. This will
+ * be overwritten by element, document and document fragment nodes to supply an
+ * actual set of nodes.
+ */
+NodeImpl.prototype._children = new EmptySet<Node>()
+
+/**
+ * Define constants on prototype.
+ */
+NodeImpl.prototype.ELEMENT_NODE = 1
+NodeImpl.prototype.ATTRIBUTE_NODE = 2
+NodeImpl.prototype.TEXT_NODE = 3
+NodeImpl.prototype.CDATA_SECTION_NODE = 4
+NodeImpl.prototype.ENTITY_REFERENCE_NODE = 5
+NodeImpl.prototype.ENTITY_NODE = 6
+NodeImpl.prototype.PROCESSING_INSTRUCTION_NODE = 7
+NodeImpl.prototype.COMMENT_NODE = 8
+NodeImpl.prototype.DOCUMENT_NODE = 9
+NodeImpl.prototype.DOCUMENT_TYPE_NODE = 10
+NodeImpl.prototype.DOCUMENT_FRAGMENT_NODE = 11
+NodeImpl.prototype.NOTATION_NODE = 12
+
+NodeImpl.prototype.DOCUMENT_POSITION_DISCONNECTED = 0x01
+NodeImpl.prototype.DOCUMENT_POSITION_PRECEDING = 0x02
+NodeImpl.prototype.DOCUMENT_POSITION_FOLLOWING = 0x04
+NodeImpl.prototype.DOCUMENT_POSITION_CONTAINS = 0x08
+NodeImpl.prototype.DOCUMENT_POSITION_CONTAINED_BY = 0x10
+NodeImpl.prototype.DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20

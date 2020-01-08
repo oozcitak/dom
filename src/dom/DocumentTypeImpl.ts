@@ -1,6 +1,5 @@
 import { Node, NodeType, DocumentType, Document } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
-import { EmptySet } from "../util"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -9,7 +8,6 @@ import { EmptySet } from "../util"
 export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
   _nodeType: NodeType = NodeType.DocumentType
-  _children: Set<Node> = new EmptySet<Node>()
 
   _name: string = ''
   _publicId: string = ''

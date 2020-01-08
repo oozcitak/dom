@@ -871,4 +871,10 @@ describe('Range', () => {
     expect(((root.childNodes.item(1) as any).childNodes.item(1) as any).localName).toBe('node3')
   })
 
+  test('constants', () => {
+		const range = new $$.Range()
+    expect(range.START_TO_END).toBe(1)
+    expect($$.Range.START_TO_END).toBe(1)
+  })
+
 })

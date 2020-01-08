@@ -49,4 +49,10 @@ describe('NodeFilter', () => {
     expect(str).toBe(':node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
   })
 
+  test('constants', () => {
+    const filter = $$.NodeFilter._create()
+    expect(filter.FILTER_ACCEPT).toBe(1)
+    expect($$.NodeFilter.FILTER_ACCEPT).toBe(1)
+  })
+
 })

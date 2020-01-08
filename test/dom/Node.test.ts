@@ -446,4 +446,9 @@ describe('Node', () => {
     expect(node1.nextSibling).toBe(node3)
   })
 
+  test('constants', () => {
+    expect(doc.ELEMENT_NODE).toBe(1)
+    expect($$.Node.ELEMENT_NODE).toBe(1)
+  })
+
 })

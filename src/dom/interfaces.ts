@@ -58,6 +58,11 @@ export interface Window extends EventTarget {
  */
 export interface Event {
 
+  NONE: number
+  CAPTURING_PHASE: number
+  AT_TARGET: number
+  BUBBLING_PHASE: number
+
   /**
    * Returns the type of event.
    */
@@ -416,6 +421,26 @@ export interface AbortSignal extends EventTarget {
  * Represents a generic XML node.
  */
 export interface Node extends EventTarget {
+
+  ELEMENT_NODE: number
+  ATTRIBUTE_NODE: number
+  TEXT_NODE: number
+  CDATA_SECTION_NODE: number
+  ENTITY_REFERENCE_NODE: number
+  ENTITY_NODE: number
+  PROCESSING_INSTRUCTION_NODE: number
+  COMMENT_NODE: number
+  DOCUMENT_NODE: number
+  DOCUMENT_TYPE_NODE: number
+  DOCUMENT_FRAGMENT_NODE: number
+  NOTATION_NODE: number
+
+  DOCUMENT_POSITION_DISCONNECTED: number
+  DOCUMENT_POSITION_PRECEDING: number
+  DOCUMENT_POSITION_FOLLOWING: number
+  DOCUMENT_POSITION_CONTAINS: number
+  DOCUMENT_POSITION_CONTAINED_BY: number
+  DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number
 
   /** 
    * Returns the type of node. 
@@ -1768,6 +1793,24 @@ export interface NamedNodeMap extends Iterable<Attr> {
  */
 export interface NodeFilter {
 
+  FILTER_ACCEPT: number
+  FILTER_REJECT: number
+  FILTER_SKIP: number
+
+  SHOW_ALL: number
+  SHOW_ELEMENT: number
+  SHOW_ATTRIBUTE: number
+  SHOW_TEXT: number
+  SHOW_CDATA_SECTION: number
+  SHOW_ENTITY_REFERENCE: number
+  SHOW_ENTITY: number
+  SHOW_PROCESSING_INSTRUCTION: number
+  SHOW_COMMENT: number
+  SHOW_DOCUMENT: number
+  SHOW_DOCUMENT_TYPE: number
+  SHOW_DOCUMENT_FRAGMENT: number
+  SHOW_NOTATION: number
+
   /** 
    * Callback function.
    */
@@ -2041,6 +2084,11 @@ export interface StaticRange extends AbstractRange { }
  * Represents a live range.
  */
 export interface Range extends AbstractRange {
+
+  START_TO_START: number
+  START_TO_END: number
+  END_TO_END: number
+  END_TO_START: number
 
   /**
    * Returns the node, furthest away from the document, that is an 
