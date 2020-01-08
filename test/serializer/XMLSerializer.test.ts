@@ -1,4 +1,5 @@
 import $$ from "../TestHelpers"
+import { JSDOM } from "jsdom"
 
 describe('XMLSerializer', () => {
 
@@ -381,7 +382,7 @@ describe('XMLSerializer', () => {
     if (doc.documentElement) {
       doc.documentElement.appendChild(invalid)
     }
-    Object.defineProperty(invalid, "_nodeType", { value: 0 })
+    Object.defineProperty(invalid, "nodeType", { value: 0 })
 
     const serializer = new $$.XMLSerializer()
     expect(() => serializer.serializeToString(doc)).toThrow()
@@ -391,6 +392,41 @@ describe('XMLSerializer', () => {
     const doc = $$.dom.createDocument(null, '')
     const serializer = new $$.XMLSerializer() as any
     expect(() => serializer._produceXMLSerialization(doc, true)).toThrow()
+  })
+
+  test('serialize document from another implementation', () => {
+    const jsdomImpl = new JSDOM().window.document.implementation
+    const doc = jsdomImpl.createDocument(null, 'root', null)
+    const de = doc.documentElement
+    if (de) {
+      const node1 = doc.createElement('node')
+      node1.setAttribute('att', 'val')
+      de.appendChild(node1)
+      de.appendChild(doc.createComment('same node below'))
+      const node2 = doc.createElement('node')
+      node2.setAttribute('att', 'val')
+      node2.setAttribute('att2', 'val2')
+      de.appendChild(node2)
+      de.appendChild(doc.createProcessingInstruction('kidding', 'itwas="different"'))
+      de.appendChild(doc.createProcessingInstruction('for', 'real'))
+      de.appendChild(doc.createCDATASection('<greeting>Hello, world!</greeting>'))
+      const node3 = doc.createElement('text')
+      node3.appendChild(doc.createTextNode('alien\'s pinky toe'))
+      de.appendChild(node3)
+    }
+
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc as any)).toBe(
+      '<root>' +
+      '<node att="val"/>' +
+      '<!--same node below-->' +
+      '<node att="val" att2="val2"/>' +
+      '<?kidding itwas="different"?>' +
+      '<?for real?>' +
+      '<![CDATA[<greeting>Hello, world!</greeting>]]>' +
+      '<text>alien\'s pinky toe</text>' +
+      '</root>'
+    )
   })
 
 })

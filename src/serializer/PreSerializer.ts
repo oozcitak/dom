@@ -30,17 +30,15 @@ export class PreSerializer {
   private _attribute: ((name: string, value: string) => void)
   private _namespace: ((name: string, value: string) => void)
 
-  private _level: number = 0
   /**
    * Returns the current depth of the XML tree.
    */
-  get level(): number { return this._level }
+  level: number = 0
 
-  private _currentNode: Node = undefined as any
   /**
    * Returns the current XML node.
    */
-  get currentNode(): Node { return this._currentNode }
+  currentNode: Node = undefined as any
 
   /**
    * Initializes a new instance of `PreSerializer`.
@@ -101,12 +99,13 @@ export class PreSerializer {
      * "InvalidStateError" DOMException.
      */
     try {
-      this._level = 0
-      this._currentNode = node
+      this.level = 0
+      this.currentNode = node
       this._serializeNode(node, namespace, prefixMap, prefixIndex,
         requireWellFormed)
-    } catch {
-      throw new InvalidStateError()
+    } catch (e) {
+      throw e
+      //throw new InvalidStateError()
     }
   }
 
@@ -123,9 +122,9 @@ export class PreSerializer {
     prefixMap: NamespacePrefixMap, prefixIndex: PrefixIndex,
     requireWellFormed: boolean): void {
 
-    this._currentNode = node
+    this.currentNode = node
 
-    switch (node._nodeType) {
+    switch (node.nodeType) {
       case NodeType.Element:
         this._serializeElement(<Element>node, namespace, prefixMap, prefixIndex, 
           requireWellFormed)
@@ -155,7 +154,7 @@ export class PreSerializer {
         this._serializeCData(<CDATASection>node, requireWellFormed)
         break
       default:
-        throw new Error(`Unknown node type: ${node._nodeType}`)
+        throw new Error(`Unknown node type: ${node.nodeType}`)
     }
   }
 
@@ -180,8 +179,8 @@ export class PreSerializer {
      * does not match the XML Name production, then throw an exception; the 
      * serialization of this node would not be a well-formed element.
      */
-    if (requireWellFormed && (node._localName.indexOf(":") !== -1 ||
-      !xml_isName(node._localName))) {
+    if (requireWellFormed && (node.localName.indexOf(":") !== -1 ||
+      !xml_isName(node.localName))) {
       throw new Error("Node local name contains invalid characters (well-formed required).")
     }
 
@@ -222,7 +221,7 @@ export class PreSerializer {
     let localPrefixesMap: { [key: string]: string } = {}
     let localDefaultNamespace = this._recordNamespaceInformation(node, map, localPrefixesMap)
     let inheritedNS = namespace
-    let ns = node._namespace
+    let ns = node.namespaceURI
 
     /** 11. If inherited ns is equal to ns, then: */
     if (inheritedNS === ns) {
@@ -240,9 +239,9 @@ export class PreSerializer {
        * localName. The node's prefix if it exists, is dropped.
        */
       if (ns === infraNamespace.XML) {
-        qualifiedName = 'xml:' + node._localName
+        qualifiedName = 'xml:' + node.localName
       } else {
-        qualifiedName = node._localName
+        qualifiedName = node.localName
       }
 
       /** 11.4. Append the value of qualified name to markup. */
@@ -258,7 +257,7 @@ export class PreSerializer {
        * prefix string prefix from map given namespace ns. The above may return
        * null if no namespace key ns exists in map.
        */
-      let prefix = node._namespacePrefix
+      let prefix = node.prefix
       let candidatePrefix = map.get(prefix, ns)
       /** 
        * 12.3. If the value of prefix matches "xmlns", then run the following 
@@ -307,7 +306,7 @@ export class PreSerializer {
          * define the XML namespace are omitted when serializing this node's 
          * attributes.
          */
-        qualifiedName = candidatePrefix + ':' + node._localName
+        qualifiedName = candidatePrefix + ':' + node.localName
         if (localDefaultNamespace !== null && localDefaultNamespace !== infraNamespace.XML) {
           inheritedNS = localDefaultNamespace || null
         }
@@ -343,7 +342,7 @@ export class PreSerializer {
          * 12.5.4. Append the value of qualified name to markup.
          */
         map.set(prefix, ns)
-        qualifiedName += prefix + ':' + node._localName
+        qualifiedName += prefix + ':' + node.localName
         this._openTagBegin(qualifiedName)
 
         /**
@@ -395,7 +394,7 @@ export class PreSerializer {
          * its children.
          */
         ignoreNamespaceDefinitionAttribute = true
-        qualifiedName += node._localName
+        qualifiedName += node.localName
         inheritedNS = ns
 
         /**
@@ -425,7 +424,7 @@ export class PreSerializer {
          * to markup.
          */
       } else {
-        qualifiedName += node._localName
+        qualifiedName += node.localName
         inheritedNS = ns
         this._openTagBegin(qualifiedName)
       }
@@ -455,11 +454,11 @@ export class PreSerializer {
      * 16. Append ">" (U+003E GREATER-THAN SIGN) to markup.
      */
     const isHTML = (ns === infraNamespace.HTML)
-    if (isHTML && node._children.size === 0 &&
-      PreSerializer._VoidElementNames.has(node._localName)) {
+    if (isHTML && node.childNodes.length === 0 &&
+      PreSerializer._VoidElementNames.has(node.localName)) {
       this._openTagEnd(true, true)
       skipEndTag = true
-    } else if (!isHTML && node._children.size === 0) {
+    } else if (!isHTML && node.childNodes.length === 0) {
       this._openTagEnd(true, false)
       skipEndTag = true
     } else {
@@ -487,16 +486,15 @@ export class PreSerializer {
      * providing inherited ns, map, prefix index, and the require well-formed 
      * flag.
      */
-    if (isHTML && node._localName === "template") {
+    if (isHTML && node.localName === "template") {
       // TODO: serialize template contents
     } else {
-      node._children.forEach(childNode => {
-        this._level++
+      for (const childNode of node.childNodes) {
+        this.level++
         this._serializeNode(childNode, inheritedNS, map, prefixIndex, requireWellFormed)
-        this._level--
-      })
+        this.level--
+      }
     }
-
 
     /**
      * 20. Append the following to markup, in the order listed:
@@ -544,9 +542,10 @@ export class PreSerializer {
      * 
      * 3. Return the value of serialized document.
     */
-    node._children.forEach(childNode =>
+   for (const childNode of node.childNodes) {
       this._serializeNode(childNode, namespace, prefixMap,
-        prefixIndex, requireWellFormed))
+        prefixIndex, requireWellFormed)
+    }
   }
 
   /**
@@ -564,15 +563,15 @@ export class PreSerializer {
      * ends with a "-" (U+002D HYPHEN-MINUS) character, then throw an exception;
      * the serialization of this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!xml_isLegalChar(node._data, this._xmlVersion) ||
-      node._data.indexOf("--") !== -1 || node._data.endsWith("-"))) {
+    if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
+      node.data.indexOf("--") !== -1 || node.data.endsWith("-"))) {
       throw new Error("Comment data contains invalid characters (well-formed required).")
     }
 
     /**
      * Otherwise, return the concatenation of "<!--", node's data, and "-->".
      */
-    this._comment(node._data)
+    this._comment(node.data)
   }
 
   /**
@@ -590,7 +589,7 @@ export class PreSerializer {
      * production, then throw an exception; the serialization of this node's 
      * data would not be well-formed.
      */
-    if (requireWellFormed && !xml_isLegalChar(node._data, this._xmlVersion)) {
+    if (requireWellFormed && !xml_isLegalChar(node.data, this._xmlVersion)) {
       throw new Error("Text data contains invalid characters (well-formed required).")
     }
 
@@ -601,7 +600,7 @@ export class PreSerializer {
      * 5. Replace any occurrences of ">" in markup by "&gt;".
      * 6. Return the value of markup.
      */
-    this._text(node._data)
+    this._text(node.data)
   }
 
   /**
@@ -625,9 +624,10 @@ export class PreSerializer {
      * index, and flag require well-formed. Concatenate the result to markup.
      * 3. Return the value of markup.
      */
-    node._children.forEach(childNode =>
+   for (const childNode of node.childNodes) {
       this._serializeNode(childNode, namespace, prefixMap,
-        prefixIndex, requireWellFormed))
+        prefixIndex, requireWellFormed)
+    }
   }
 
   /**
@@ -648,7 +648,7 @@ export class PreSerializer {
      *  production, then throw an exception; the serialization of this node 
      * would not be a well-formed document type declaration.
      */
-    if (requireWellFormed && !xml_isPubidChar(node._publicId)) {
+    if (requireWellFormed && !xml_isPubidChar(node.publicId)) {
       throw new Error("DocType public identifier does not match PubidChar construct (well-formed required).")
     }
 
@@ -660,8 +660,8 @@ export class PreSerializer {
      * of this node would not be a well-formed document type declaration.
      */
     if (requireWellFormed &&
-      (!xml_isLegalChar(node._systemId, this._xmlVersion) ||
-        (node._systemId.indexOf('"') !== -1 && node._systemId.indexOf("'") !== -1))) {
+      (!xml_isLegalChar(node.systemId, this._xmlVersion) ||
+        (node.systemId.indexOf('"') !== -1 && node.systemId.indexOf("'") !== -1))) {
       throw new Error("DocType system identifier contains invalid characters (well-formed required).")
     }
 
@@ -693,7 +693,7 @@ export class PreSerializer {
      * 10. Append ">" (U+003E GREATER-THAN SIGN) to markup.
      * 11. Return the value of markup.
      */
-    this._docType(node._name, node._publicId, node._systemId)
+    this._docType(node.name, node.publicId, node.systemId)
   }
 
   /**
@@ -711,7 +711,7 @@ export class PreSerializer {
      * case-insensitive match for the string "xml", then throw an exception; 
      * the serialization of this node's target would not be well-formed.
      */
-    if (requireWellFormed && (node._target.indexOf(":") !== -1 || (/^xml$/i).test(node._target))) {
+    if (requireWellFormed && (node.target.indexOf(":") !== -1 || (/^xml$/i).test(node.target))) {
       throw new Error("Processing instruction target contains invalid characters (well-formed required).")
     }
 
@@ -722,8 +722,8 @@ export class PreSerializer {
      * U+003E GREATER-THAN SIGN), then throw an exception; the serialization of
      * this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!xml_isLegalChar(node._data, this._xmlVersion) ||
-      node._data.indexOf("?>") !== -1)) {
+    if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
+      node.data.indexOf("?>") !== -1)) {
       throw new Error("Processing instruction data contains invalid characters (well-formed required).")
     }
 
@@ -736,7 +736,7 @@ export class PreSerializer {
      * 3.5. "?>" (U+003F QUESTION MARK, U+003E GREATER-THAN SIGN).
      * 4. Return the value of markup.
      */
-    this._instruction(node._target, node._data)
+    this._instruction(node.target, node.data)
   }
 
   /**
@@ -747,11 +747,11 @@ export class PreSerializer {
    */
   private _serializeCData(node: CDATASection, requireWellFormed: boolean): void {
 
-    if (requireWellFormed && (node._data.indexOf("]]>") !== -1)) {
+    if (requireWellFormed && (node.data.indexOf("]]>") !== -1)) {
       throw new Error("CDATA contains invalid characters (well-formed required).")
     }
 
-    this._cdata(node._data)
+    this._cdata(node.data)
   }
 
   /**
@@ -786,12 +786,13 @@ export class PreSerializer {
      * 3. Loop: For each attribute attr in element's attributes, in the order 
      * they are specified in the element's attribute list: 
      */
-    for (let i = 0; i < node._attributeList._attributeList.length; i++) {
-      const attr = node._attributeList._attributeList[i]
+    for (let i = 0; i < node.attributes.length; i++) {
+      const attr = node.attributes.item(i)
+      if (!attr) continue
 
       // Optimize common case
-      if (!requireWellFormed && attr._namespace === null) {
-        this._attribute(attr._localName, attr._value)
+      if (!requireWellFormed && attr.namespaceURI === null) {
+        this._attribute(attr.localName, attr.value)
         continue
       }
 
@@ -802,7 +803,7 @@ export class PreSerializer {
        * then throw an exception; the serialization of this attr would fail to
        * produce a well-formed element serialization.
        */
-      if (requireWellFormed && localNameSet && localNameSet.has(attr._namespace, attr._localName)) {
+      if (requireWellFormed && localNameSet && localNameSet.has(attr.namespaceURI, attr.localName)) {
         throw new Error("Element contains duplicate attributes (well-formed required).")
       }
 
@@ -812,8 +813,8 @@ export class PreSerializer {
        * 3.3. Let attribute namespace be the value of attr's namespaceURI value.
        * 3.4. Let candidate prefix be null.
        */
-      if (requireWellFormed && localNameSet) localNameSet.set(attr._namespace, attr._localName)
-      let attributeNamespace = attr._namespace
+      if (requireWellFormed && localNameSet) localNameSet.set(attr.namespaceURI, attr.localName)
+      let attributeNamespace = attr.namespaceURI
       let candidatePrefix: string | null = null
 
       /** 3.5. If attribute namespace is not null, then run these sub-steps: */
@@ -823,7 +824,7 @@ export class PreSerializer {
          * prefix string from map given namespace attribute namespace with 
          * preferred prefix being attr's prefix value.
          */
-        candidatePrefix = map.get(attr._namespacePrefix, attributeNamespace)
+        candidatePrefix = map.get(attr.prefix, attributeNamespace)
 
         /**
          * 3.5.2. If the value of attribute namespace is the XMLNS namespace, 
@@ -853,11 +854,11 @@ export class PreSerializer {
            * exactly defined previously--on an ancestor element not the current
            * element whose attributes are being processed).
            */
-          if (attr._value === infraNamespace.XML ||
-            (attr._namespacePrefix === null && ignoreNamespaceDefinitionAttribute) ||
-            (attr._namespacePrefix !== null && (!(attr._localName in localPrefixesMap) ||
-              localPrefixesMap[attr._localName] !== attr._value) &&
-              map.has(attr._localName, attr._value)))
+          if (attr.value === infraNamespace.XML ||
+            (attr.prefix === null && ignoreNamespaceDefinitionAttribute) ||
+            (attr.prefix !== null && (!(attr.localName in localPrefixesMap) ||
+              localPrefixesMap[attr.localName] !== attr.value) &&
+              map.has(attr.localName, attr.value)))
             continue
 
           /**
@@ -871,7 +872,7 @@ export class PreSerializer {
            * _Note:_ DOM APIs do allow creation of elements in the XMLNS
            * namespace but with strict qualifications.
            */
-          if (requireWellFormed && attr._value === infraNamespace.XMLNS) {
+          if (requireWellFormed && attr.value === infraNamespace.XMLNS) {
             throw new Error("XMLNS namespace is reserved (well-formed required).")
           }
 
@@ -882,7 +883,7 @@ export class PreSerializer {
            * to undeclare a namespace (use a default namespace declaration 
            * instead).
            */
-          if (requireWellFormed && attr._value === '') {
+          if (requireWellFormed && attr.value === '') {
             throw new Error("Namespace prefix declarations cannot be used to undeclare a namespace (well-formed required).")
           }
 
@@ -901,16 +902,16 @@ export class PreSerializer {
            * all attributes with namespaces.
            */
         } else if (candidatePrefix === null) {
-          if (attr._namespacePrefix !== null &&
-            (!map.hasPrefix(attr._namespacePrefix) ||
-              map.has(attr._namespacePrefix, attributeNamespace))) {
+          if (attr.prefix !== null &&
+            (!map.hasPrefix(attr.prefix) ||
+              map.has(attr.prefix, attributeNamespace))) {
             /**
              * Check if we can use the attribute's own prefix.  
              * We deviate from the spec here.
              * TODO: This is not an efficient way of searching for prefixes.
              * Follow developments to the spec.
              */
-            candidatePrefix = attr._namespacePrefix
+            candidatePrefix = attr.prefix
           } else {
             /**
              * 3.5.3.1. Let candidate prefix be the result of generating a prefix 
@@ -951,9 +952,9 @@ export class PreSerializer {
        * exception; the serialization of this attr would not be a 
        * well-formed attribute.
        */
-      if (requireWellFormed && (attr._localName.indexOf(":") !== -1 ||
-        !xml_isName(attr._localName) ||
-        (attr._localName === "xmlns" && attributeNamespace === null))) {
+      if (requireWellFormed && (attr.localName.indexOf(":") !== -1 ||
+        !xml_isName(attr.localName) ||
+        (attr.localName === "xmlns" && attributeNamespace === null))) {
         throw new Error("Attribute local name contains invalid characters (well-formed required).")
       }
 
@@ -965,8 +966,8 @@ export class PreSerializer {
        * attribute and the require well-formed flag as input;
        * 3.9.4. """ (U+0022 QUOTATION MARK).
        */
-      attrName += attr._localName
-      this._attribute(attrName, attr._value)
+      attrName += attr.localName
+      this._attribute(attrName, attr.value)
     }
 
     /**
@@ -994,8 +995,9 @@ export class PreSerializer {
      * 2. Main: For each attribute attr in element's attributes, in the order
      * they are specified in the element's attribute list:
      */
-    for (let i = 0; i < node._attributeList._attributeList.length; i++) {
-      const attr = node._attributeList._attributeList[i]
+    for (let i = 0; i < node.attributes.length; i++) {
+      const attr = node.attributes.item(i)
+      if (!attr) continue
       /**
        * _Note:_ The following conditional steps find namespace prefixes. Only 
        * attributes in the XMLNS namespace are considered (e.g., attributes made 
@@ -1005,9 +1007,9 @@ export class PreSerializer {
        */
 
       /** 2.1. Let attribute namespace be the value of attr's namespaceURI value. */
-      let attributeNamespace = attr._namespace
+      let attributeNamespace = attr.namespaceURI
       /** 2.2. Let attribute prefix be the value of attr's prefix. */
-      let attributePrefix = attr._namespacePrefix
+      let attributePrefix = attr.prefix
 
       /** 2.3. If the attribute namespace is the XMLNS namespace, then: */
       if (attributeNamespace === infraNamespace.XMLNS) {
@@ -1018,7 +1020,7 @@ export class PreSerializer {
          * attribute. 
          */
         if (attributePrefix === null) {
-          defaultNamespaceAttrValue = attr._value
+          defaultNamespaceAttrValue = attr.value
           continue
 
           /**
@@ -1027,9 +1029,9 @@ export class PreSerializer {
            */
         } else {
           /** 2.3.2.1. Let prefix definition be the value of attr's localName. */
-          let prefixDefinition = attr._localName
+          let prefixDefinition = attr.localName
           /** 2.3.2.2. Let namespace definition be the value of attr's value. */
-          let namespaceDefinition: string | null = attr._value
+          let namespaceDefinition: string | null = attr.value
 
           /** 
            * 2.3.2.3. If namespace definition is the XML namespace, then stop 
