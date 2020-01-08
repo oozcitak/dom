@@ -98,22 +98,7 @@ export class XMLStringLexer implements XMLLexer {
         return { type: TokenType.Declaration, version: version, encoding: encoding, standalone: standalone }
       } else {
         // attribute name
-        const attName = this.takeUntil('=', true)
-        this.skipSpace()
-        if (!this.skipIfStartsWith('=')) {
-          throw new Error('Missing equals sign before attribute value')
-        }
-
-        // attribute value
-        this.skipSpace()
-        const startQuote = this.take(1)
-        if (!XMLStringLexer.isQuote(startQuote)) {
-          throw new Error('Missing start quote character before attribute value')
-        }
-        const attValue = this.takeUntil(startQuote)
-        if (!this.skipIfStartsWith(startQuote)) {
-          throw new Error('Missing end quote character after attribute value')
-        }
+        const [attName, attValue] = this.attribute()
 
         if (attName === 'version')
           version = attValue
@@ -142,38 +127,10 @@ export class XMLStringLexer implements XMLLexer {
 
     this.skipSpace()
     if (this.skipIfStartsWith('PUBLIC')) {
-      // pubId
-      this.skipSpace()
-      let startQuote = this.take(1)
-      if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing start quote character before pubId value')
-      }
-      pubId = this.takeUntil(startQuote)
-      if (!this.skipIfStartsWith(startQuote)) {
-        throw new Error('Missing end quote character after pubId value')
-      }
-
-      // sysId
-      this.skipSpace()
-      startQuote = this.take(1)
-      if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing start quote character before sysId value')
-      }
-      sysId = this.takeUntil(startQuote)
-      if (!this.skipIfStartsWith(startQuote)) {
-        throw new Error('Missing end quote character after sysId value')
-      }
+      pubId = this.quotedString()
+      sysId = this.quotedString()
     } else if (this.skipIfStartsWith('SYSTEM')) {
-      // sysId
-      this.skipSpace()
-      const startQuote = this.take(1)
-      if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing start quote character before sysId value')
-      }
-      sysId = this.takeUntil(startQuote)
-      if (!this.skipIfStartsWith(startQuote)) {
-        throw new Error('Missing end quote character after sysId value')
-      }
+      sysId = this.quotedString()
     }
 
     // skip internal subset
@@ -274,24 +231,7 @@ export class XMLStringLexer implements XMLLexer {
         return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: true }
       }
 
-      // attribute name
-      const attName = this.takeUntil('=', true)
-      this.skipSpace()
-      if (!this.skipIfStartsWith('=')) {
-        throw new Error('Missing equals sign before attribute value')
-      }
-
-      // attribute value
-      this.skipSpace()
-      const startQuote = this.take(1)
-      if (!XMLStringLexer.isQuote(startQuote)) {
-        throw new Error('Missing start quote character before attribute value')
-      }
-      const attValue = this.takeUntil(startQuote)
-      if (!this.skipIfStartsWith(startQuote)) {
-        throw new Error('Missing end quote character after attribute value')
-      }
-
+      const [attName, attValue] = this.attribute()
       attributes[attName] = attValue
     }
 
@@ -311,6 +251,41 @@ export class XMLStringLexer implements XMLLexer {
     }
 
     return { type: TokenType.ClosingTag, name: name }
+  }
+
+  /**
+   * Reads an attribute name, value pair
+   */
+  private attribute(): [string, string] {
+    // attribute name
+    this.skipSpace()
+    const name = this.takeUntil('=', true)
+    this.skipSpace()
+    if (!this.skipIfStartsWith('=')) {
+      throw new Error('Missing equals sign before attribute value')
+    }
+
+    // attribute value
+    const value = this.quotedString()
+
+    return [name, value]
+  }
+
+  /**
+   * Reads a string between double or single quotes.
+   */
+  private quotedString(): string {
+    this.skipSpace()
+    const startQuote = this.take(1)
+    if (!XMLStringLexer.isQuote(startQuote)) {
+      throw new Error('Missing start quote character before quoted value')
+    }
+    const value = this.takeUntil(startQuote)
+    if (!this.skipIfStartsWith(startQuote)) {
+      throw new Error('Missing end quote character after quoted value')
+    }
+
+    return value
   }
 
   /**
