@@ -48,7 +48,8 @@ export class XMLStringLexer implements XMLLexer {
     }
 
     if (this._options.skipWhitespaceOnlyText) {
-      if (token.type === TokenType.Text && XMLStringLexer.isWhiteSpaceToken(token as TextToken)) {
+      if (token.type === TokenType.Text && 
+        XMLStringLexer.isWhiteSpaceToken(token as TextToken)) {
         token = this.nextToken()
       }
     }
@@ -60,30 +61,26 @@ export class XMLStringLexer implements XMLLexer {
    * Branches from an opening bracket (`<`).
    */
   private openBracket(): XMLToken {
-    switch (this.c()) {
-      case '?':
-        this.seek(1)
-        if (this.skipIfStartsWith('xml')) {
-          return this.declaration()
-        } else {
-          return this.pi()
-        }
-      case '!':
-        this.seek(1)
-        if (this.skipIfStartsWith('--')) {
-          return this.comment()
-        } else if (this.skipIfStartsWith('[CDATA[')) {
-          return this.cdata()
-        } else if (this.skipIfStartsWith('DOCTYPE')) {
-          return this.doctype()
-        } else {
-          throw new Error("Invalid '!' in opening tag.")
-        }
-      case '/':
-        this.seek(1)
-        return this.closeTag()
-      default:
-        return this.openTag()
+    if (this.skipIfStartsWith('?')) {
+      if (this.skipIfStartsWith('xml')) {
+        return this.declaration()
+      } else {
+        return this.pi()
+      }
+    } else if (this.skipIfStartsWith('!')) {
+      if (this.skipIfStartsWith('--')) {
+        return this.comment()
+      } else if (this.skipIfStartsWith('[CDATA[')) {
+        return this.cdata()
+      } else if (this.skipIfStartsWith('DOCTYPE')) {
+        return this.doctype()
+      } else {
+        throw new Error("Invalid '!' in opening tag.")
+      }
+    } else if (this.skipIfStartsWith('/')) {
+      return this.closeTag()
+    } else {
+      return this.openTag()
     }
   }
 
@@ -103,23 +100,20 @@ export class XMLStringLexer implements XMLLexer {
         // attribute name
         const attName = this.takeUntil('=', true)
         this.skipSpace()
-        if (this.c() !== '=') {
+        if (!this.skipIfStartsWith('=')) {
           throw new Error('Missing equals sign before attribute value')
         }
-        this.seek(1)
 
         // attribute value
         this.skipSpace()
-        const startQuote = this.c()
+        const startQuote = this.take(1)
         if (!XMLStringLexer.isQuote(startQuote)) {
           throw new Error('Missing start quote character before attribute value')
         }
-        this.seek(1)
         const attValue = this.takeUntil(startQuote)
-        if (this.c() !== startQuote) {
+        if (!this.skipIfStartsWith(startQuote)) {
           throw new Error('Missing end quote character after attribute value')
         }
-        this.seek(1)
 
         if (attName === 'version')
           version = attValue
@@ -150,60 +144,51 @@ export class XMLStringLexer implements XMLLexer {
     if (this.skipIfStartsWith('PUBLIC')) {
       // pubId
       this.skipSpace()
-      let startQuote = this.c()
+      let startQuote = this.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
         throw new Error('Missing start quote character before pubId value')
       }
-      this.seek(1)
       pubId = this.takeUntil(startQuote)
-      if (this.c() !== startQuote) {
+      if (!this.skipIfStartsWith(startQuote)) {
         throw new Error('Missing end quote character after pubId value')
       }
-      this.seek(1)
 
       // sysId
       this.skipSpace()
-      startQuote = this.c()
+      startQuote = this.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
         throw new Error('Missing start quote character before sysId value')
       }
-      this.seek(1)
       sysId = this.takeUntil(startQuote)
-      if (this.c() !== startQuote) {
+      if (!this.skipIfStartsWith(startQuote)) {
         throw new Error('Missing end quote character after sysId value')
       }
-      this.seek(1)
     } else if (this.skipIfStartsWith('SYSTEM')) {
       // sysId
       this.skipSpace()
-      const startQuote = this.c()
+      const startQuote = this.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
         throw new Error('Missing start quote character before sysId value')
       }
-      this.seek(1)
       sysId = this.takeUntil(startQuote)
-      if (this.c() !== startQuote) {
+      if (!this.skipIfStartsWith(startQuote)) {
         throw new Error('Missing end quote character after sysId value')
       }
-      this.seek(1)
     }
 
     // skip internal subset
     this.skipSpace()
-    if (this.c() === '[') {
-      this.seek(1)
+    if (this.skipIfStartsWith('[')) {
       // skip internal subset nodes
       this.skipUntil(']')
-      if (this.c() !== ']') {
+      if (!this.skipIfStartsWith(']')) {
         throw new Error('Missing end bracket of DTD internal subset')
       }
-      this.seek(1)
     }
     this.skipSpace()
-    if (this.c() !== '>') {
+    if (!this.skipIfStartsWith('>')) {
       throw new Error('Missing doctype end symbol `>`')
     }
-    this.seek(1)
 
     return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
   }
@@ -272,8 +257,7 @@ export class XMLStringLexer implements XMLLexer {
     // element name
     this.skipSpace()
     const name = this.takeUntil2('>', '/', true)
-    if (this.c() === '>') {
-      this.seek(1)
+    if (this.skipIfStartsWith('>')) {
       return { type: TokenType.Element, name: name, attributes: {}, selfClosing: false }
     } else if (this.skipIfStartsWith('/>')) {
       return { type: TokenType.Element, name: name, attributes: {}, selfClosing: true }
@@ -284,8 +268,7 @@ export class XMLStringLexer implements XMLLexer {
     while (!this.eof()) {
       // end tag
       this.skipSpace()
-      if (this.c() === '>') {
-        this.seek(1)
+      if (this.skipIfStartsWith('>')) {
         return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: false }
       } else if (this.skipIfStartsWith('/>')) {
         return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: true }
@@ -294,23 +277,20 @@ export class XMLStringLexer implements XMLLexer {
       // attribute name
       const attName = this.takeUntil('=', true)
       this.skipSpace()
-      if (this.c() !== '=') {
+      if (!this.skipIfStartsWith('=')) {
         throw new Error('Missing equals sign before attribute value')
       }
-      this.seek(1)
 
       // attribute value
       this.skipSpace()
-      const startQuote = this.c()
+      const startQuote = this.take(1)
       if (!XMLStringLexer.isQuote(startQuote)) {
         throw new Error('Missing start quote character before attribute value')
       }
-      this.seek(1)
       const attValue = this.takeUntil(startQuote)
-      if (this.c() !== startQuote) {
+      if (!this.skipIfStartsWith(startQuote)) {
         throw new Error('Missing end quote character after attribute value')
       }
-      this.seek(1)
 
       attributes[attName] = attValue
     }
@@ -326,10 +306,9 @@ export class XMLStringLexer implements XMLLexer {
     this.skipSpace()
     const name = this.takeUntil('>', true)
     this.skipSpace()
-    if (this.c() !== '>') {
+    if (!this.skipIfStartsWith('>')) {
       throw new Error('Missing closing element tag end symbol `>`')
     }
-    this.seek(1)
 
     return { type: TokenType.ClosingTag, name: name }
   }
@@ -351,8 +330,16 @@ export class XMLStringLexer implements XMLLexer {
    * @param str - the string to match
    */
   private skipIfStartsWith(str: string): boolean {
+    if (str.length === 1) {
+      if(this._str[this._index] === str) {
+        this._index++
+        return true
+      } else {
+        return false
+      }
+    }
+
     const strLength = str.length
-    if (this._index + strLength > this._length) return false
 
     for (let i = 0; i < strLength; i++) {
       if (this._str[this._index + i] !== str[i]) return false
@@ -377,10 +364,24 @@ export class XMLStringLexer implements XMLLexer {
    * Skips space characters.
    */
   private skipSpace(): void {
-    while (!this.eof()) {
-      if (!XMLStringLexer.isSpace(this._str[this._index])) break
+    while (!this.eof() && (XMLStringLexer.isSpace(this._str[this._index]))) {
       this._index++
     }
+  }
+
+  /**
+   * Takes a given number of characters.
+   * 
+   * @param count - character count
+   */
+  private take(count: number): string {
+    if (count === 1) {
+      return this._str[this._index++]
+    }
+    
+    const startIndex = this._index
+    this._index += count
+    return this._str.slice(startIndex, this._index)
   }
 
   /**
