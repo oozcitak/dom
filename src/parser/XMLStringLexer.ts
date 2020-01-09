@@ -9,7 +9,6 @@ import {
  */
 export class XMLStringLexer implements XMLLexer {
 
-  private static _WhiteSpace = /^[ \n\r\t\f]*$/
   private _str: string
   private _index: number
   private _length: number
@@ -452,7 +451,12 @@ export class XMLStringLexer implements XMLLexer {
    * @param token - the token to check
    */
   private static isWhiteSpaceToken(token: TextToken): boolean {
-    return XMLStringLexer._WhiteSpace.test(token.data)
+    const str = token.data
+    for (let i = 0; i < str.length; i++) {
+      const c = str [i]
+      if (c !== ' ' && c !== '\n' && c !== '\r' && c !== '\t' && c !== '\f') return false
+    }
+    return true
   }
 
   /**
