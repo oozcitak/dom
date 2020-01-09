@@ -1,12 +1,13 @@
-import { NodeType, ProcessingInstruction, Document, Node } from "./interfaces"
+import { NodeType, ProcessingInstruction, Document } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a processing instruction node.
  */
 export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstruction {
 
-  _nodeType: NodeType = NodeType.ProcessingInstruction
+  _nodeType!: NodeType
 
   _target: string
 
@@ -39,3 +40,8 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(ProcessingInstructionImpl.prototype, "_nodeType", NodeType.ProcessingInstruction)

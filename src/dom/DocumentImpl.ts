@@ -24,13 +24,14 @@ import {
   node_listOfElementsWithQualifiedName, node_listOfElementsWithNamespace,
   node_listOfElementsWithClassNames, node_clone
 } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a document node.
  */
 export class DocumentImpl extends NodeImpl implements Document {
 
-  _nodeType: NodeType = NodeType.Document
+  _nodeType!: NodeType
   _children: Set<Node> = new Set<Node>()
 
   _encoding: { name: string, labels: string[] } = {
@@ -480,3 +481,8 @@ export class DocumentImpl extends NodeImpl implements Document {
   querySelectorAll(selectors: string): NodeList { throw new Error("Mixin: ParentNode not implemented.") }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(DocumentImpl.prototype, "_nodeType", NodeType.Document)

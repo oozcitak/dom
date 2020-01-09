@@ -22,13 +22,14 @@ import {
   node_listOfElementsWithNamespace, node_listOfElementsWithClassNames,
   node_listOfElementsWithQualifiedName
 } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents an element node.
  */
 export class ElementImpl extends NodeImpl implements Element {
 
-  _nodeType: NodeType = NodeType.Element
+  _nodeType!: NodeType
   _children: Set<Node> = new Set<Node>()
 
   _namespace: string | null = null
@@ -640,3 +641,8 @@ export class ElementImpl extends NodeImpl implements Element {
     return node
   }
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(ElementImpl.prototype, "_nodeType", NodeType.Element)

@@ -1,12 +1,13 @@
 import { TextImpl } from "./TextImpl"
-import { NodeType, CDATASection, Document, Node } from "./interfaces"
+import { NodeType, CDATASection, Document } from "./interfaces"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a CDATA node.
  */
 export class CDATASectionImpl extends TextImpl implements CDATASection {
 
-  _nodeType: NodeType = NodeType.CData
+  _nodeType!: NodeType
 
   /**
    * Initializes a new instance of `CDATASection`.
@@ -30,3 +31,8 @@ export class CDATASectionImpl extends TextImpl implements CDATASection {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(CDATASectionImpl.prototype, "_nodeType", NodeType.CData)

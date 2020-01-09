@@ -103,4 +103,3 @@ export {
   WindowImpl as Window,
   XMLDocumentImpl as XMLDocument
 }
-

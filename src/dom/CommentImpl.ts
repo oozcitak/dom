@@ -1,12 +1,13 @@
-import { NodeType, Comment, Document, Node } from "./interfaces"
+import { NodeType, Comment, Document } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a comment node.
  */
 export class CommentImpl extends CharacterDataImpl implements Comment {
 
-  _nodeType: NodeType = NodeType.Comment
+  _nodeType!: NodeType
 
   /**
    * Initializes a new instance of `Comment`.
@@ -31,3 +32,8 @@ export class CommentImpl extends CharacterDataImpl implements Comment {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(CommentImpl.prototype, "_nodeType", NodeType.Comment)

@@ -2,13 +2,14 @@ import {
   Node, Element, NodeType, HTMLCollection, NodeList, DocumentFragment, Document
 } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a document fragment in the XML tree.
  */
 export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
-  _nodeType: NodeType = NodeType.DocumentFragment
+  _nodeType!: NodeType
   _children: Set<Node> = new Set<Node>()
 
   _host: Element | null
@@ -60,3 +61,8 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(DocumentFragmentImpl.prototype, "_nodeType", NodeType.DocumentFragment)

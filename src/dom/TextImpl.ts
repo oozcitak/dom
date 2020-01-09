@@ -1,13 +1,14 @@
-import { NodeType, Text, HTMLSlotElement, Document, Slot, Node } from "./interfaces"
+import { NodeType, Text, HTMLSlotElement, Document, Slot } from "./interfaces"
 import { CharacterDataImpl } from "./CharacterDataImpl"
 import { text_contiguousTextNodes, text_split } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a text node.
  */
 export class TextImpl extends CharacterDataImpl implements Text {
 
-  _nodeType: NodeType = NodeType.Text
+  _nodeType!: NodeType
 
   _name: string = ''
   _assignedSlot: Slot | null = null
@@ -62,3 +63,8 @@ export class TextImpl extends CharacterDataImpl implements Text {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(TextImpl.prototype, "_nodeType", NodeType.Text)

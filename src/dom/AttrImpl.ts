@@ -1,14 +1,14 @@
-import { Element, NodeType, Attr, Document, Node } from "./interfaces"
+import { Element, NodeType, Attr, Document } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
 import { attr_setAnExistingAttributeValue } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents an attribute of an element node.
  */
 export class AttrImpl extends NodeImpl implements Attr {
 
-  _nodeType: NodeType = NodeType.Attribute
-
+  _nodeType!: NodeType
   _localName: string
   _namespace: string | null = null
   _namespacePrefix: string | null = null
@@ -27,7 +27,7 @@ export class AttrImpl extends NodeImpl implements Attr {
   }
 
   /** @inheritdoc */
-  readonly specified: boolean = true
+  specified!: boolean
 
   /** @inheritdoc */
   get ownerElement(): Element | null { return this._element }
@@ -81,3 +81,9 @@ export class AttrImpl extends NodeImpl implements Attr {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(AttrImpl.prototype, "_nodeType", NodeType.Attribute)
+idl_defineConst(AttrImpl.prototype, "specified", true)

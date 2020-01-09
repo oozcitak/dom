@@ -1,5 +1,6 @@
 import { Node, NodeType, DocumentType, Document } from "./interfaces"
 import { NodeImpl } from "./NodeImpl"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -7,7 +8,7 @@ import { NodeImpl } from "./NodeImpl"
  */
 export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
-  _nodeType: NodeType = NodeType.DocumentType
+  _nodeType!: NodeType
 
   _name: string = ''
   _publicId: string = ''
@@ -63,3 +64,8 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentType {
   }
 
 }
+
+/**
+ * Initialize prototype properties
+ */
+idl_defineConst(DocumentTypeImpl.prototype, "_nodeType", NodeType.DocumentType)
