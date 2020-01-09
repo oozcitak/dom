@@ -28,7 +28,7 @@ export class XMLSerializer {
     let markup = ""
     const pre = new PreSerializer(this._xmlVersion, {
       openTagBegin: (name) => markup += "<" + name,
-      openTagEnd: (selfClosing, voidElement) => markup += voidElement ? " />" : selfClosing ? "/>" : ">",
+      openTagEnd: (name, selfClosing, voidElement) => markup += voidElement ? " />" : selfClosing ? "/>" : ">",
       closeTag: (name) => markup += "</" + name + ">",
       namespace: (name, value) => markup += " " + name + "=\"" + this._serializeAttributeValue(value) + "\"",
       attribute: (name, value) => markup += " " + name + "=\"" + this._serializeAttributeValue(value) + "\"",

@@ -25,7 +25,7 @@ export class PreSerializer {
   private _instruction: ((target: string, data: string) => void)
   private _cdata: ((data: string) => void)
   private _openTagBegin: ((name: string) => void)
-  private _openTagEnd: ((selfClosing: boolean, voidElement: boolean) => void)
+  private _openTagEnd: ((name: string, selfClosing: boolean, voidElement: boolean) => void)
   private _closeTag: ((name: string) => void)
   private _attribute: ((name: string, value: string) => void)
   private _namespace: ((name: string, value: string) => void)
@@ -456,13 +456,13 @@ export class PreSerializer {
     const isHTML = (ns === infraNamespace.HTML)
     if (isHTML && node.childNodes.length === 0 &&
       PreSerializer._VoidElementNames.has(node.localName)) {
-      this._openTagEnd(true, true)
+      this._openTagEnd(qualifiedName, true, true)
       skipEndTag = true
     } else if (!isHTML && node.childNodes.length === 0) {
-      this._openTagEnd(true, false)
+      this._openTagEnd(qualifiedName,true, false)
       skipEndTag = true
     } else {
-      this._openTagEnd(false, false)
+      this._openTagEnd(qualifiedName,false, false)
     }
 
     /**
@@ -1132,7 +1132,7 @@ type SerializerFunctions = {
   instruction: ((target: string, data: string) => void)
   cdata: ((data: string) => void)
   openTagBegin: ((name: string) => void)
-  openTagEnd: ((selfClosing: boolean, voidElement: boolean) => void)
+  openTagEnd: ((name: string, selfClosing: boolean, voidElement: boolean) => void)
   closeTag: ((name: string) => void)
   attribute: ((name: string, value: string) => void)
   namespace: ((name: string, value: string) => void)
