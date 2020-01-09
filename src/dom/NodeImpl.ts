@@ -18,6 +18,7 @@ import {
   node_locateANamespace, tree_getFirstDescendantNode, tree_getNextDescendantNode
 } from "../algorithm"
 import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a generic XML node.
@@ -805,22 +806,22 @@ NodeImpl.prototype._children = new EmptySet<Node>()
 /**
  * Define constants on prototype.
  */
-NodeImpl.prototype.ELEMENT_NODE = 1
-NodeImpl.prototype.ATTRIBUTE_NODE = 2
-NodeImpl.prototype.TEXT_NODE = 3
-NodeImpl.prototype.CDATA_SECTION_NODE = 4
-NodeImpl.prototype.ENTITY_REFERENCE_NODE = 5
-NodeImpl.prototype.ENTITY_NODE = 6
-NodeImpl.prototype.PROCESSING_INSTRUCTION_NODE = 7
-NodeImpl.prototype.COMMENT_NODE = 8
-NodeImpl.prototype.DOCUMENT_NODE = 9
-NodeImpl.prototype.DOCUMENT_TYPE_NODE = 10
-NodeImpl.prototype.DOCUMENT_FRAGMENT_NODE = 11
-NodeImpl.prototype.NOTATION_NODE = 12
+idl_defineConst(NodeImpl.prototype, "ELEMENT_NODE", 1)
+idl_defineConst(NodeImpl.prototype, "ATTRIBUTE_NODE", 2)
+idl_defineConst(NodeImpl.prototype, "TEXT_NODE", 3)
+idl_defineConst(NodeImpl.prototype, "CDATA_SECTION_NODE", 4)
+idl_defineConst(NodeImpl.prototype, "ENTITY_REFERENCE_NODE", 5)
+idl_defineConst(NodeImpl.prototype, "ENTITY_NODE", 6)
+idl_defineConst(NodeImpl.prototype, "PROCESSING_INSTRUCTION_NODE", 7)
+idl_defineConst(NodeImpl.prototype, "COMMENT_NODE", 8)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_NODE", 9)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_TYPE_NODE", 10)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_FRAGMENT_NODE", 11)
+idl_defineConst(NodeImpl.prototype, "NOTATION_NODE", 12)
 
-NodeImpl.prototype.DOCUMENT_POSITION_DISCONNECTED = 0x01
-NodeImpl.prototype.DOCUMENT_POSITION_PRECEDING = 0x02
-NodeImpl.prototype.DOCUMENT_POSITION_FOLLOWING = 0x04
-NodeImpl.prototype.DOCUMENT_POSITION_CONTAINS = 0x08
-NodeImpl.prototype.DOCUMENT_POSITION_CONTAINED_BY = 0x10
-NodeImpl.prototype.DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_DISCONNECTED", 0x01)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_PRECEDING", 0x02)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_FOLLOWING", 0x04)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_CONTAINS", 0x08)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_CONTAINED_BY", 0x10)
+idl_defineConst(NodeImpl.prototype, "DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", 0x20)

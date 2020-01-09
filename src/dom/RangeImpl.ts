@@ -16,6 +16,7 @@ import {
   range_cloneTheContents, range_insert, range_getPartiallyContainedNodes,
   mutation_remove, mutation_replaceAll, mutation_append, create_range
 } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 import { Guard } from "../util"
 
 /**
@@ -650,7 +651,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
 /**
  * Define constants on prototype.
  */
-RangeImpl.prototype.START_TO_START = 0
-RangeImpl.prototype.START_TO_END = 1
-RangeImpl.prototype.END_TO_END = 2
-RangeImpl.prototype.END_TO_START = 3
+idl_defineConst(RangeImpl.prototype, "START_TO_START", 0)
+idl_defineConst(RangeImpl.prototype, "START_TO_END", 1)
+idl_defineConst(RangeImpl.prototype, "END_TO_END", 2)
+idl_defineConst(RangeImpl.prototype, "END_TO_START", 3)

@@ -2,6 +2,7 @@ import {
   EventInit, EventTarget, EventPhase, PotentialEventTarget, EventPathItem, Event
 } from "./interfaces"
 import { event_setTheCanceledFlag, event_initialize } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a DOM event.
@@ -299,7 +300,7 @@ export class EventImpl implements Event {
 /**
  * Define constants on prototype.
  */
-EventImpl.prototype.NONE = 0
-EventImpl.prototype.CAPTURING_PHASE = 1
-EventImpl.prototype.AT_TARGET = 2
-EventImpl.prototype.BUBBLING_PHASE = 3
+idl_defineConst(EventImpl.prototype, "NONE",  0)
+idl_defineConst(EventImpl.prototype, "CAPTURING_PHASE",  1)
+idl_defineConst(EventImpl.prototype, "AT_TARGET",  2)
+idl_defineConst(EventImpl.prototype, "BUBBLING_PHASE",  3)

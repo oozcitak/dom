@@ -1,4 +1,5 @@
 import { Node, FilterResult, NodeFilter } from "./interfaces"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents a node filter.
@@ -8,7 +9,7 @@ export class NodeFilterImpl implements NodeFilter {
   static FILTER_ACCEPT = 1
   static FILTER_REJECT = 2
   static FILTER_SKIP = 3
-  
+
   static SHOW_ALL = 0xffffffff
   static SHOW_ELEMENT = 0x1
   static SHOW_ATTRIBUTE = 0x2
@@ -66,20 +67,20 @@ export class NodeFilterImpl implements NodeFilter {
 /**
  * Define constants on prototype.
  */
-NodeFilterImpl.prototype.FILTER_ACCEPT = 1
-NodeFilterImpl.prototype.FILTER_REJECT = 2
-NodeFilterImpl.prototype.FILTER_SKIP = 3
+idl_defineConst(NodeFilterImpl.prototype, "FILTER_ACCEPT", 1)
+idl_defineConst(NodeFilterImpl.prototype, "FILTER_REJECT", 2)
+idl_defineConst(NodeFilterImpl.prototype, "FILTER_SKIP", 3)
 
-NodeFilterImpl.prototype.SHOW_ALL = 0xffffffff
-NodeFilterImpl.prototype.SHOW_ELEMENT = 0x1
-NodeFilterImpl.prototype.SHOW_ATTRIBUTE = 0x2
-NodeFilterImpl.prototype.SHOW_TEXT = 0x4
-NodeFilterImpl.prototype.SHOW_CDATA_SECTION = 0x8
-NodeFilterImpl.prototype.SHOW_ENTITY_REFERENCE = 0x10
-NodeFilterImpl.prototype.SHOW_ENTITY = 0x20
-NodeFilterImpl.prototype.SHOW_PROCESSING_INSTRUCTION = 0x40
-NodeFilterImpl.prototype.SHOW_COMMENT = 0x80
-NodeFilterImpl.prototype.SHOW_DOCUMENT = 0x100
-NodeFilterImpl.prototype.SHOW_DOCUMENT_TYPE = 0x200
-NodeFilterImpl.prototype.SHOW_DOCUMENT_FRAGMENT = 0x400
-NodeFilterImpl.prototype.SHOW_NOTATION = 0x800
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_ALL", 0xffffffff)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_ELEMENT", 0x1)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_ATTRIBUTE", 0x2)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_TEXT", 0x4)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_CDATA_SECTION", 0x8)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_ENTITY_REFERENCE", 0x10)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_ENTITY", 0x20)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_PROCESSING_INSTRUCTION", 0x40)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_COMMENT", 0x80)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_DOCUMENT", 0x100)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_DOCUMENT_TYPE", 0x200)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_DOCUMENT_FRAGMENT", 0x400)
+idl_defineConst(NodeFilterImpl.prototype, "SHOW_NOTATION", 0x800)
