@@ -39,12 +39,7 @@ export class XMLStringLexer implements XMLLexer {
       return { type: TokenType.EOF }
     }
 
-    let token: XMLToken = { type: TokenType.EOF }
-    if (this.skipIfStartsWith('<')) {
-      token = this.openBracket()
-    } else {
-      token = this.text()
-    }
+    let token = (this.skipIfStartsWith('<') ? this.openBracket() : this.text())
 
     if (this._options.skipWhitespaceOnlyText) {
       if (token.type === TokenType.Text && 
@@ -154,6 +149,9 @@ export class XMLStringLexer implements XMLLexer {
    */
   private pi(): PIToken {
     const target = this.takeUntilStartsWith('?>', true)
+    if (this.eof()) {
+      throw new Error('Missing processing instruction end symbol `?>`')
+    }
     this.skipSpace()
     if (this.skipIfStartsWith('?>')) {
       return { type: TokenType.PI, target: target, data: '' }
@@ -304,7 +302,9 @@ export class XMLStringLexer implements XMLLexer {
    * @param str - the string to match
    */
   private skipIfStartsWith(str: string): boolean {
-    if (str.length === 1) {
+    const strLength = str.length
+
+    if (strLength === 1) {
       if(this._str[this._index] === str) {
         this._index++
         return true
@@ -312,8 +312,6 @@ export class XMLStringLexer implements XMLLexer {
         return false
       }
     }
-
-    const strLength = str.length
 
     for (let i = 0; i < strLength; i++) {
       if (this._str[this._index + i] !== str[i]) return false
