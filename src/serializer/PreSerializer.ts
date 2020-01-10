@@ -900,7 +900,7 @@ export class PreSerializer {
            * 3.5.2.4. the attr's prefix matches the string "xmlns", then let 
            * candidate prefix be the string "xmlns".
            */
-          candidatePrefix = 'xmlns'
+          if (attr.prefix === 'xmlns') candidatePrefix = 'xmlns'
 
           /**
            * 3.5.3. Otherwise, the attribute namespace is not the XMLNS namespace. 

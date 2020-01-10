@@ -56,6 +56,23 @@ describe('XMLSerializer', () => {
       expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
   })
 
+  test('namespace declaration attribute', () => {
+    const doc = $$.dom.createDocument('ns', 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns')
+      doc.documentElement.appendChild(doc.createElement('foo'))
+    }
+
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns="ns"><foo xmlns=""/></root>'
+    )
+    expect($$.printTree(doc)).toBe($$.t`
+      root (ns:ns) xmlns="ns" (ns:http://www.w3.org/2000/xmlns/)
+        foo
+      `)
+  })
+
   test('default namespace', () => {
     const ns = 'uri:myns'
     const doc = $$.dom.createDocument(ns, 'root')
