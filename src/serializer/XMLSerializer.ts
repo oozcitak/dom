@@ -30,7 +30,6 @@ export class XMLSerializer {
       openTagBegin: (name) => markup += "<" + name,
       openTagEnd: (name, selfClosing, voidElement) => markup += voidElement ? " />" : selfClosing ? "/>" : ">",
       closeTag: (name) => markup += "</" + name + ">",
-      namespace: (name, value) => markup += " " + name + "=\"" + this._serializeAttributeValue(value) + "\"",
       attribute: (name, value) => markup += " " + name + "=\"" + this._serializeAttributeValue(value) + "\"",
       comment: (data) => markup += "<!--" + data + "-->",
       text: (data) => markup += this._serializeTextData(data),
