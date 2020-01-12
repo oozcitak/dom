@@ -1,4 +1,4 @@
-import $$ from "./TestHelpers
+import $$ from "./TestHelpers"
 import { DOMImplementation, DOMParser, XMLSerializer } from "../src"
 
 describe('module exports', () => {
