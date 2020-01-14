@@ -16,7 +16,7 @@
  */
 export class NamespacePrefixMap {
 
-  private _items: { [key: string]: string[] } = { }
+  private _items: { [key: string]: string[] } = {}
   private _nullItems: string[] = []
 
   /**
@@ -61,7 +61,7 @@ export class NamespacePrefixMap {
      */
     let prefix: string | null = null
     for (let i = 0; i < candidatesList.length; i++) {
-      prefix = candidatesList[i];
+      prefix = candidatesList[i]
       /**
        * 2.1. If prefix matches preferred prefix, then stop running these steps
        * and return prefix.

@@ -25,7 +25,7 @@ export class LocalNameSet {
     } else if (this._items[ns]) {
       this._items[ns][localName] = true
     } else {
-      this._items[ns] = { }
+      this._items[ns] = {}
       this._items[ns][localName] = true
     }
   }
