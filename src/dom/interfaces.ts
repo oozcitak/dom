@@ -1859,6 +1859,12 @@ export interface NodeList extends Collection, Iterable<Node> {
   item(index: number): Node | null
 
   /**
+   * Returns the node at the given index from the collection. Returns `undefined`
+   * if the index is out-of-bounds.
+   */
+  [index: number]: Node | undefined
+
+  /**
    * Returns an iterator for the node list.
    */
   [Symbol.iterator](): Iterator<Node>

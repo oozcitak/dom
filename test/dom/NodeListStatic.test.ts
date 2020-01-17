@@ -44,6 +44,17 @@ describe('NodeListStatic', () => {
     expect(list.item(1001)).toBeNull()
   })
 
+  test('index', () => {
+    if (list === undefined) throw new Error("List is undefined")
+    expect(list[0]).toBe(ele1)
+    expect(list[1]).toBe(ele2)
+    expect(list[2]).toBe(ele3)
+    expect(list[3]).toBe(ele4)
+    expect(list[4]).toBe(ele5)
+    expect(list[-1]).toBeUndefined()
+    expect(list[1001]).toBeUndefined()
+  })
+  
   test('keys()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect([...list.keys()]).toEqual([0, 1, 2, 3, 4])

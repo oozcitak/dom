@@ -18,6 +18,8 @@ export class NodeListImpl implements NodeList {
    */
   private constructor(root: Node) {
     this._root = root
+
+    return new Proxy<NodeListImpl>(this, this)
   }
 
   /** @inheritdoc */
@@ -57,6 +59,9 @@ export class NodeListImpl implements NodeList {
       return node
     }
   }
+
+  /** @inheritdoc */
+  [index: number]: Node | undefined
 
   /** @inheritdoc */
   keys(): Iterable<number> {
@@ -138,6 +143,21 @@ export class NodeListImpl implements NodeList {
       callback.call(thisArg, node, index++, this))
   }
 
+  /**
+   * Implements a proxy get trap to provide array-like access.
+   */
+  get(target: NodeList, key: string | symbol, receiver: any): Node | undefined {
+    if (typeof key === 'string') {
+      const index = Number(key)
+      if (isNaN(Number(index)))
+        return Reflect.get(target, key, receiver)
+      else
+        return target.item(index) || undefined
+    } else {
+      return Reflect.get(target, key, receiver)
+    }
+  }
+  
   /**
    * Creates a new `NodeList`.
    * 
