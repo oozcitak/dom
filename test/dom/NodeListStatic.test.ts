@@ -44,7 +44,7 @@ describe('NodeListStatic', () => {
     expect(list.item(1001)).toBeNull()
   })
 
-  test('index', () => {
+  test('indexed getter', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect(list[0]).toBe(ele1)
     expect(list[1]).toBe(ele2)
@@ -55,6 +55,20 @@ describe('NodeListStatic', () => {
     expect(list[1001]).toBeUndefined()
   })
   
+  test('indexed setter', () => {
+    if (list === undefined) throw new Error("List is undefined")
+    const newEle = root._nodeDocument.createElement('tagX')
+    list[2] = newEle
+    expect(list[0]).toBe(ele1)
+    expect(list[1]).toBe(ele2)
+    expect(list[2]).toBe(newEle)
+    expect(list[3]).toBe(ele4)
+    expect(list[4]).toBe(ele5)
+    expect(list[-1]).toBeUndefined()
+    expect(list[1001]).toBeUndefined()
+    list[2] = ele3
+  })
+
   test('keys()', () => {
     if (list === undefined) throw new Error("List is undefined")
     expect([...list.keys()]).toEqual([0, 1, 2, 3, 4])

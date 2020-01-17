@@ -32,7 +32,7 @@ describe('DocumentFragment', () => {
   })
 
   test('cloneNode()', () => {
-    const clonedNode = <any>node.cloneNode()
+    const clonedNode = node.cloneNode()
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(11)
     expect(clonedNode.nodeName).toBe('#document-fragment')
@@ -40,7 +40,7 @@ describe('DocumentFragment', () => {
   })
 
   test('cloneNode(deep : true)', () => {
-    const clonedNode = <any>node.cloneNode(true)
+    const clonedNode = node.cloneNode(true)
     expect(clonedNode).not.toBe(node)
     expect(clonedNode.nodeType).toBe(11)
     expect(clonedNode.nodeName).toBe('#document-fragment')

@@ -1,7 +1,8 @@
 import { Node, Element, HTMLCollection } from "./interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
-import { tree_getFirstDescendantNode, tree_getNextDescendantNode } from "../algorithm"
+import { tree_getFirstDescendantNode, tree_getNextDescendantNode, mutation_replace } from "../algorithm"
 import { Guard } from "../util"
+import { isString } from "@oozcitak/util"
 
 /**
  * Represents a collection of elements.
@@ -13,7 +14,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
   _filter: ((element: Element) => boolean)
 
   protected static reservedNames = ['_root', '_live', '_filter', 'length',
-    'item', 'namedItem', 'get']
+    'item', 'namedItem', 'get', 'set']
 
   /**
    * Initializes a new instance of `HTMLCollection`.
@@ -132,18 +133,38 @@ export class HTMLCollectionImpl implements HTMLCollection {
   /**
    * Implements a proxy get trap to provide array-like access.
    */
-  get(target: HTMLCollection, key: string | symbol, receiver: any): Element | null | undefined {
-    if (typeof key === 'string' && HTMLCollectionImpl.reservedNames.indexOf(key) === -1) {
-      const index = Number(key)
-      if (isNaN(Number(index)))
-        return target.namedItem(key)
-      else
-        return target.item(index) || undefined
-    } else {
+  get(target: HTMLCollection, key: PropertyKey, receiver: any): Element | null | undefined {
+    if (!isString(key) || HTMLCollectionImpl.reservedNames.indexOf(key) !== -1) {
       return Reflect.get(target, key, receiver)
+    }
+
+    const index = Number(key)
+    if (isNaN(index)) {
+      return target.namedItem(key) || undefined
+    } else {
+      return target.item(index) || undefined
     }
   }
 
+  /**
+   * Implements a proxy set trap to provide array-like access.
+   */
+  set(target: HTMLCollection, key: PropertyKey, value: Element, receiver: any): boolean {
+    if (!isString(key) || HTMLCollectionImpl.reservedNames.indexOf(key) !== -1) {
+      return Reflect.set(target, key, value, receiver)
+    }
+
+    const index = Number(key)
+    const node = isNaN(index) ?
+      target.namedItem(key) || undefined : target.item(index) || undefined
+      
+    if (node && node._parent) {
+      mutation_replace(node, value, node._parent)
+      return true
+    } else {
+      return false
+    }
+  }
 
   /**
    * Creates a new `HTMLCollection`.

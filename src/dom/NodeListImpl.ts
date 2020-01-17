@@ -1,5 +1,7 @@
 import { dom } from "./"
 import { Node, NodeList } from "./interfaces"
+import { isString } from "@oozcitak/util"
+import { mutation_replace } from "../algorithm"
 
 /**
  * Represents an ordered set of nodes.
@@ -146,18 +148,43 @@ export class NodeListImpl implements NodeList {
   /**
    * Implements a proxy get trap to provide array-like access.
    */
-  get(target: NodeList, key: string | symbol, receiver: any): Node | undefined {
-    if (typeof key === 'string') {
-      const index = Number(key)
-      if (isNaN(Number(index)))
-        return Reflect.get(target, key, receiver)
-      else
-        return target.item(index) || undefined
-    } else {
+  get(target: NodeList, key: PropertyKey, receiver: any): Node | undefined {
+    if (!isString(key)) {
       return Reflect.get(target, key, receiver)
     }
+
+    const index = Number(key)
+    if (isNaN(index)) {
+      return Reflect.get(target, key, receiver)
+    }
+
+    return target.item(index) || undefined
   }
   
+  /**
+   * Implements a proxy set trap to provide array-like access.
+   */
+  set(target: NodeList, key: PropertyKey, value: Node, receiver: any): boolean {
+    if (!isString(key)) {
+      return Reflect.set(target, key, value, receiver)
+    }
+
+    const index = Number(key)
+    if (isNaN(index)) {
+      return Reflect.set(target, key, value, receiver)
+    }
+
+    const node = target.item(index) || undefined
+    if (!node) return false
+
+    if (node._parent) {
+      mutation_replace(node, value, node._parent)
+      return true
+    } else {
+      return false
+    }
+  }
+
   /**
    * Creates a new `NodeList`.
    * 

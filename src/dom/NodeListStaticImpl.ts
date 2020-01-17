@@ -1,5 +1,6 @@
 import { dom } from "./"
 import { Node, NodeList } from "./interfaces"
+import { isString } from "@oozcitak/util"
 
 /**
  * Represents an ordered list of nodes.
@@ -133,15 +134,37 @@ export class NodeListStaticImpl implements NodeList {
   /**
    * Implements a proxy get trap to provide array-like access.
    */
-  get(target: NodeList, key: string | symbol, receiver: any): Node | undefined {
-    if (typeof key === 'string') {
-      const index = Number(key)
-      if (isNaN(Number(index)))
-        return Reflect.get(target, key, receiver)
-      else
-        return target.item(index) || undefined
-    } else {
+  get(target: NodeListStaticImpl, key: PropertyKey, receiver: any): Node | undefined {
+    if (!isString(key)) {
       return Reflect.get(target, key, receiver)
+    }
+
+    const index = Number(key)
+    if (isNaN(index)) {
+      return Reflect.get(target, key, receiver)
+    }
+
+    return target._items[index] || undefined
+  }
+  
+  /**
+   * Implements a proxy set trap to provide array-like access.
+   */
+  set(target: NodeListStaticImpl, key: PropertyKey, value: Node, receiver: any): boolean {
+    if (!isString(key)) {
+      return Reflect.set(target, key, value, receiver)
+    }
+
+    const index = Number(key)
+    if (isNaN(index)) {
+      return Reflect.set(target, key, value, receiver)
+    }
+
+    if (index >= 0 && index < target._items.length) {
+      target._items[index] = value
+      return true
+    } else {
+      return false
     }
   }
   

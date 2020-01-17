@@ -53,13 +53,27 @@ describe('HTMLCollection', () => {
     expect(htmlList.namedItem('my div')).toBe(htmlDiv)
   })
 
-  test('indexers', () => {
+  test('indexed getter', () => {
     expect(list[0]).toBe(ele1)
     expect(list[1]).toBe(ele3)
     expect(list[2]).toBe(ele2)
     expect(list['ele1']).toBe(ele1)
     expect(list['ele2']).toBe(ele2)
     expect(list['ele3']).toBe(ele3)
+  })
+
+  test('indexed setter', () => {
+    const newEle = doc.createElement('tagged')
+    newEle.id = 'eleX'
+    list[1] = newEle
+    expect(list[0]).toBe(ele1)
+    expect(list[1]).toBe(newEle)
+    expect(list[2]).toBe(ele2)
+    expect(list['ele1']).toBe(ele1)
+    expect(list['eleX']).toBe(newEle)
+    expect(list['ele2']).toBe(ele2)
+    expect(list['ele3']).toBeUndefined()
+    list[1] = ele3
   })
 
   test('iteration', () => {
