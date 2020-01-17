@@ -124,7 +124,7 @@ export class HTMLCollectionImpl implements HTMLCollection {
   }
 
   /** @inheritdoc */
-  [index: number]: any
+  [index: number]: Element | undefined
 
   /** @inheritdoc */
   [key: string]: any
@@ -132,13 +132,13 @@ export class HTMLCollectionImpl implements HTMLCollection {
   /**
    * Implements a proxy get trap to provide array-like access.
    */
-  get(target: HTMLCollection, key: string | symbol, receiver: any): Element | null {
+  get(target: HTMLCollection, key: string | symbol, receiver: any): Element | null | undefined {
     if (typeof key === 'string' && HTMLCollectionImpl.reservedNames.indexOf(key) === -1) {
       const index = Number(key)
       if (isNaN(Number(index)))
         return target.namedItem(key)
       else
-        return target.item(index)
+        return target.item(index) || undefined
     } else {
       return Reflect.get(target, key, receiver)
     }

@@ -784,7 +784,7 @@ export interface HTMLCollection extends Collection, Iterable<Element> {
    * Returns the element with index index from the collection. The 
    * elements are sorted in tree order.
    */
-  [index: number]: any
+  [index: number]: Element | undefined
 
   /*
    * Returns the first element with ID or name name from the 
