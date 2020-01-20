@@ -2,6 +2,8 @@ import { Document } from "../dom/interfaces"
 
 /**
  * Represents a parser for XML and HTML content.
+ * 
+ * See: https://w3c.github.io/DOM-Parsing/#the-domparser-interface
  */
 export interface DOMParser {
 

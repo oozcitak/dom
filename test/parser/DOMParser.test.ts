@@ -194,4 +194,11 @@ describe('DOMParser - XML', () => {
       `)
   })
 
+  test('invalid nodes', () => {
+    const parser = new $$.DOMParser()
+    expect(() => parser.parseFromString('<?xml version="1.0"?><root>\x00</root>', "application/xml")).toThrow()
+    expect(() => parser.parseFromString('<?xml version="1.0"?><root>\x01</root>', "application/xml")).toThrow()
+    expect(() => parser.parseFromString('<?xml version="1.1"?><root>\x00</root>', "application/xml")).toThrow()
+  })
+
 })

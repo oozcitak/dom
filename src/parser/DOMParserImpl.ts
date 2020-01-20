@@ -1,22 +1,31 @@
 import { XMLStringLexer } from "./XMLStringLexer"
-import { TokenType, DOMParser, MimeType } from "./interfaces"
+import { TokenType, DOMParser, MimeType, DeclarationToken } from "./interfaces"
 import { Document, Node } from "../dom/interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
   ElementToken, ClosingTagToken
 } from "./interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
-import { create_document, namespace_extractQName } from "../algorithm"
+import { create_document, namespace_extractQName, xml_isName, xml_isLegalChar, xml_isPubidChar } from "../algorithm"
+import { LocalNameSet } from "../serializer/LocalNameSet"
 
 /**
  * Represents a parser for XML and HTML content.
+ * 
+ * See: https://w3c.github.io/DOM-Parsing/#the-domparser-interface
  */
 export class DOMParserImpl implements DOMParser {
 
+  private _xmlVersion?: "1.0" | "1.1"
+
   /**
-   * Initializes a new instance of `DOMParser`.
+   * Initializes a new instance of `XMLSerializer`.
+   * 
+   * @param xmlVersion - XML specification version
    */
-  constructor() { }
+  constructor(xmlVersion?: "1.0" | "1.1") {
+    this._xmlVersion = xmlVersion
+  }
 
   /** @inheritdoc */
   parseFromString(source: string, mimeType: MimeType): Document {
@@ -27,34 +36,66 @@ export class DOMParserImpl implements DOMParser {
 
       const doc = create_document()
       doc._contentType = mimeType
+      let xmlVersion = this._xmlVersion || "1.0"
 
       let context: Node = doc
       let token = lexer.nextToken()
       while (token.type !== TokenType.EOF) {
         switch (token.type) {
           case TokenType.Declaration:
-            // no-op
+            if (this._xmlVersion === undefined) {
+              const declaration = <DeclarationToken>token
+              if (declaration.version === "1.0" || declaration.version === "1.1") {
+                xmlVersion = declaration.version
+              } else if (declaration.version !== "") {
+                throw new Error("Invalid xml version: " + declaration.version)
+              }
+            }
             break
           case TokenType.DocType:
             const doctype = <DocTypeToken>token
+            if (!xml_isPubidChar(doctype.pubId)) {
+              throw new Error("DocType public identifier does not match PubidChar construct.")
+            }
+            if (!xml_isLegalChar(doctype.sysId, xmlVersion) ||
+                (doctype.sysId.indexOf('"') !== -1 && doctype.sysId.indexOf("'") !== -1)) {
+              throw new Error("DocType system identifier contains invalid characters.")
+            }
             context.appendChild(doc.implementation.createDocumentType(
               doctype.name, doctype.pubId, doctype.sysId))
             break
           case TokenType.CDATA:
             const cdata = <CDATAToken>token
+            if (!xml_isLegalChar(cdata.data, xmlVersion) ||
+              cdata.data.indexOf("]]>") !== -1) {
+              throw new Error("CDATA contains invalid characters.")
+            }
             context.appendChild(doc.createCDATASection(cdata.data))
             break
           case TokenType.Comment:
             const comment = <CommentToken>token
+            if (!xml_isLegalChar(comment.data, xmlVersion) ||
+              comment.data.indexOf("--") !== -1 || comment.data.endsWith("-")) {
+              throw new Error("Comment data contains invalid characters.")
+            }
             context.appendChild(doc.createComment(comment.data))
             break
           case TokenType.PI:
             const pi = <PIToken>token
+            if (pi.target.indexOf(":") !== -1 || (/^xml$/i).test(pi.target)) {
+              throw new Error("Processing instruction target contains invalid characters.")
+            }
+            if (!xml_isLegalChar(pi.data, xmlVersion) || pi.data.indexOf("?>") !== -1) {
+              throw new Error("Processing instruction data contains invalid characters.")
+            }
             context.appendChild(doc.createProcessingInstruction(
               pi.target, pi.data))
             break
           case TokenType.Text:
             const text = <TextToken>token
+            if (!xml_isLegalChar(text.data, xmlVersion)) {
+              throw new Error("Text data contains invalid characters.")
+            }
             context.appendChild(doc.createTextNode(text.data))
             break
           case TokenType.Element:
@@ -62,6 +103,12 @@ export class DOMParserImpl implements DOMParser {
 
             // inherit namespace from parent
             const [prefix, localName] = namespace_extractQName(element.name)
+            if (localName.indexOf(":") !== -1 || !xml_isName(localName)) {
+              throw new Error("Node local name contains invalid characters.")
+            }
+            if (prefix === "xmlns") {
+              throw new Error("An element cannot have the 'xmlns' prefix.")
+            }
             let namespace = context.lookupNamespaceURI(prefix)
 
             // override namespace if there is a namespace declaration
@@ -86,6 +133,8 @@ export class DOMParserImpl implements DOMParser {
             context.appendChild(elementNode)
 
             // assign attributes
+            const localNameSet = new LocalNameSet()
+
             for (const attName in element.attributes) {
               const attValue = element.attributes[attName]
               // skip the default namespace declaration attribute
@@ -94,17 +143,37 @@ export class DOMParserImpl implements DOMParser {
               }
 
               const [attPrefix, attLocalName] = namespace_extractQName(attName)
+              let attNamespace: string | null = null
               if (attPrefix === "xmlns") {
                 // prefixed namespace declaration attribute
-                elementNode.setAttributeNS(infraNamespace.XMLNS, attName, attValue)
+                attNamespace = infraNamespace.XMLNS
               } else {
-                const attNamespace = elementNode.lookupNamespaceURI(attPrefix)
-                if (attNamespace !== null && !elementNode.isDefaultNamespace(attNamespace)) {
-                  elementNode.setAttributeNS(attNamespace, attName, attValue)
-                } else {
-                  elementNode.setAttribute(attName, attValue)
+                attNamespace = elementNode.lookupNamespaceURI(attPrefix)
+                if (attNamespace !== null && elementNode.isDefaultNamespace(attNamespace)) {
+                  attNamespace = null
                 }
               }
+              if (localNameSet.has(attNamespace, attLocalName)) {
+                throw new Error("Element contains duplicate attributes.")
+              }
+              localNameSet.set(attNamespace, attLocalName)
+              if (attNamespace === infraNamespace.XMLNS) {
+                if (attValue === infraNamespace.XMLNS) {
+                  throw new Error("XMLNS namespace is reserved.")
+                }
+                if (attValue === "") {
+                  throw new Error("Namespace prefix declarations cannot be used to undeclare a namespace.")
+                }
+              }
+              if (attLocalName.indexOf(":") !== -1 || !xml_isName(attLocalName) ||
+                (attLocalName === "xmlns" && attNamespace === null)) {
+                throw new Error("Attribute local name contains invalid characters.")
+              }
+
+              if (attNamespace !== null)
+                elementNode.setAttributeNS(attNamespace, attName, attValue)
+              else
+                elementNode.setAttribute(attName, attValue)
             }
 
             if (!element.selfClosing) {
