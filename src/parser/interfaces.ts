@@ -1,3 +1,25 @@
+import { Document } from "../dom/interfaces"
+
+/**
+ * Represents a parser for XML and HTML content.
+ */
+export interface DOMParser {
+
+  /**
+   * Parses the given string and returns a document object.
+   * 
+   * @param source - the string containing the document tree.
+   * @param mimeType - the mime type of the document
+   */
+  parseFromString(source: string, mimeType: MimeType): Document
+}
+
+/**
+ * Defines the mime type of the document.
+ */
+export type MimeType = 'text/html' | 'text/xml' | 'application/xml' |
+  'application/xhtml+xml' | 'image/svg+xml'
+
 /**
  * Represents a token.
  */

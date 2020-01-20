@@ -1,2 +1,2 @@
 // Export classes
-export { DOMParser } from "./DOMParser"
+export { DOMParserImpl as DOMParser } from "./DOMParserImpl"

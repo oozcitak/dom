@@ -7,6 +7,7 @@ import { NamespacePrefixMap } from "./NamespacePrefixMap"
 import { InvalidStateError } from "../dom/DOMException"
 import { namespace as infraNamespace } from "@oozcitak/infra"
 import { xml_isName, xml_isLegalChar, xml_isPubidChar } from "../algorithm"
+import { XMLSerializer } from "./interfaces"
 
 /**
  * Stores the last generated prefix. An object is used instead of a number so
@@ -19,7 +20,7 @@ type PrefixIndex = { value: number }
  * 
  * Implements: https://www.w3.org/TR/DOM-Parsing/#serializing
  */
-export class XMLSerializer {
+export class XMLSerializerImpl implements XMLSerializer {
 
   private static _VoidElementNames = new Set(['area', 'base', 'basefont',
   'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'img', 'input', 'keygen',
@@ -36,12 +37,7 @@ export class XMLSerializer {
     this._xmlVersion = xmlVersion
   }
 
-  /**
-   * Produces an XML serialization of the given node.
-   * 
-   * @param root - node to serialize
-   * @param requireWellFormed - whether to check conformance
-   */
+  /** @inheritdoc */
   serializeToString(root: Node): string {
     /**
      * The serializeToString(root) method must produce an XML serialization
@@ -442,7 +438,7 @@ export class XMLSerializer {
      */
     const isHTML = (ns === infraNamespace.HTML)
     if (isHTML && node.childNodes.length === 0 &&
-      XMLSerializer._VoidElementNames.has(node.localName)) {
+      XMLSerializerImpl._VoidElementNames.has(node.localName)) {
         markup += " /"
       skipEndTag = true
     } else if (!isHTML && node.childNodes.length === 0) {

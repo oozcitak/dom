@@ -1,5 +1,5 @@
 import { XMLStringLexer } from "./XMLStringLexer"
-import { TokenType } from "./interfaces"
+import { TokenType, DOMParser, MimeType } from "./interfaces"
 import { Document, Node } from "../dom/interfaces"
 import {
   DocTypeToken, CDATAToken, CommentToken, TextToken, PIToken,
@@ -11,19 +11,14 @@ import { create_document, namespace_extractQName } from "../algorithm"
 /**
  * Represents a parser for XML and HTML content.
  */
-export class DOMParser {
+export class DOMParserImpl implements DOMParser {
 
   /**
    * Initializes a new instance of `DOMParser`.
    */
   constructor() { }
 
-  /**
-   * Parses the given string and returns a document object.
-   * 
-   * @param source - the string containing the document tree.
-   * @param mimeType - the mime type of the document
-   */
+  /** @inheritdoc */
   parseFromString(source: string, mimeType: MimeType): Document {
     if (mimeType === "text/html") {
       throw new Error('HTML parser not implemented.')
@@ -133,9 +128,3 @@ export class DOMParser {
     }
   }
 }
-
-/**
- * Defines the mime type of the document.
- */
-export type MimeType = 'text/html' | 'text/xml' | 'application/xml' |
-  'application/xhtml+xml' | 'image/svg+xml'
