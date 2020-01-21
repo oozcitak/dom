@@ -10,7 +10,8 @@ export function xml_isName(name: string): boolean {
     if (c1 >= 0xD800 && c1 <= 0xDBFF && i < name.length - 1) {
       const c2 = name.charCodeAt(i + 1)
       if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000 
+        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+        i++
       }
     }
 
@@ -59,7 +60,8 @@ export function xml_isQName(name: string): boolean {
     if (c1 >= 0xD800 && c1 <= 0xDBFF && i < name.length - 1) {
       const c2 = name.charCodeAt(i + 1)
       if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000 
+        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+        i++
       }
     }
 
@@ -113,7 +115,8 @@ export function xml_isLegalChar(chars: string, xmlVersion: "1.0" | "1.1" = "1.0"
     if (c1 >= 0xD800 && c1 <= 0xDBFF && i < chars.length - 1) {
       const c2 = chars.charCodeAt(i + 1)
       if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000 
+        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+        i++
       }
     }
 
@@ -149,24 +152,17 @@ export function xml_isLegalChar(chars: string, xmlVersion: "1.0" | "1.1" = "1.0"
  */
 export function xml_isPubidChar(chars: string): boolean {
   for (let i = 0; i < chars.length; i++) {
-    const c1 = chars.charCodeAt(i)
-    let n = c1
-    if (c1 >= 0xD800 && c1 <= 0xDBFF && i < chars.length - 1) {
-      const c2 = chars.charCodeAt(i + 1)
-      if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000 
-      }
-    }
+    // PubId chars are all in the ASCII range, no need to check surrogates
+    const n = chars.charCodeAt(i)
 
     // #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]
     if ((n >= 97 && n <= 122) || // [a-z]
       (n >= 65 && n <= 90) || // [A-Z]
-      (n >= 48 && n <= 57) || // [0-9]
-      n === 0x20 || n === 0xD || n === 0xA ||
-      n === 45 || n === 39 || n === 40 || n === 41 || n === 43 || n === 44 ||
-      n === 46 || n === 47 || n === 58 || n === 61 || n === 63 || n === 59 ||
-      n === 33 || n === 42 || n === 35 || n === 64 || n === 36 || n === 95 ||
-      n === 37) {
+      (n >= 39 && n <= 59) || // ['()*+,-./] | [0-9] | [:;]
+      n === 0x20 || n === 0xD || n === 0xA || // #x20 | #xD | #xA
+      (n >= 35 && n <= 37) || // [#$%]
+      n === 33 || // !
+      n === 61 || n === 63 || n === 64 || n === 95) { // [=?@_]
       continue
     } else {
       return false
