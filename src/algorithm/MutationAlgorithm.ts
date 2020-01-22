@@ -53,7 +53,7 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
    * "HierarchyRequestError" DOMException.
    */
   if (tree_isHostIncludingAncestorOf(parent, node, true))
-    throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
+    throw new HierarchyRequestError(`The node to be inserted cannot be an inclusive ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
    * 3. If child is not null and its parent is not parent, then throw a

@@ -223,7 +223,7 @@ export function tree_getFirstAncestorNode(node: Node, self: boolean = false,
   filter?: ((ancestorNode: Node) => boolean)):
   Node | null {
 
-  let firstNode: Node | null = self ? node : node._parent
+  let firstNode = self ? node : node._parent
 
   while (firstNode && filter && !filter(firstNode)) {
     firstNode = firstNode._parent
@@ -243,7 +243,7 @@ export function tree_getNextAncestorNode(node: Node, currentNode: Node, self: bo
   filter?: ((ancestorNode: Node) => boolean)):
   Node | null {
 
-  let nextNode: Node | null = currentNode._parent
+  let nextNode = currentNode._parent
 
   while (nextNode && filter && !filter(nextNode)) {
     nextNode = nextNode._parent
@@ -303,12 +303,12 @@ export function tree_getCommonAncestor(nodeA: Node, nodeB: Node): Node | null {
   const parentsA: Node[] = []
   const parentsB: Node[] = []
   let pA = tree_getFirstAncestorNode(nodeA, true)
-  while(pA !== null) { 
+  while (pA !== null) {
     parentsA.push(pA)
     pA = tree_getNextAncestorNode(nodeA, pA, true)
   }
   let pB = tree_getFirstAncestorNode(nodeB, true)
-  while(pB !== null) { 
+  while (pB !== null) {
     parentsB.push(pB)
     pB = tree_getNextAncestorNode(nodeB, pB, true)
   }
@@ -562,13 +562,17 @@ export function tree_isDescendantOf(node: Node, other: Node,
  */
 export function tree_isAncestorOf(node: Node, other: Node,
   self: boolean = false, shadow: boolean = false): boolean {
-	/**
-		* An object A is called an ancestor of an object B if and only if B is a
-		* descendant of A.
-		* 
-		* An inclusive ancestor is an object or one of its ancestors.
-		*/
-  return tree_isDescendantOf(other, node, self, shadow)
+
+  let ancestor = self ? node : shadow && Guard.isShadowRoot(node) ?
+    node._host : node._parent
+
+  while (ancestor !== null) {
+    if (ancestor === other) return true
+    ancestor = shadow && Guard.isShadowRoot(ancestor) ?
+      ancestor._host : ancestor._parent
+  }
+
+  return false
 }
 
 
@@ -589,8 +593,8 @@ export function tree_isHostIncludingAncestorOf(node: Node, other: Node,
 
   const root = tree_rootNode(node)
   if (Guard.isDocumentFragmentNode(root) && root._host !== null &&
-    tree_isAncestorOf(root._host, other, true)) return true
-  
+    tree_isHostIncludingAncestorOf(root._host, other, self)) return true
+
   return false
 }
 
