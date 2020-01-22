@@ -1039,6 +1039,8 @@ export interface Document extends Node, NonElementParentNode,
   _origin: Origin
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
+  
+  _documentElement: Element | null
 }
 
 /**

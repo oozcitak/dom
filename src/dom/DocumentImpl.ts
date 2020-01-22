@@ -56,6 +56,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
   protected _implementation?: DOMImplementation
+  _documentElement: Element | null = null
 
   _nodeDocumentOverwrite: Document | null = null
   get _nodeDocument(): Document { return this._nodeDocumentOverwrite || this }
@@ -146,11 +147,7 @@ export class DocumentImpl extends NodeImpl implements Document {
     /**
      * The documentElement attribute’s getter must return the document element.
      */
-    for (const child of this._children) {
-      if (Guard.isElementNode(child))
-        return child
-    }
-    return null
+    return this._documentElement
   }
 
   /** @inheritdoc */

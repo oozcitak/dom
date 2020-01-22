@@ -294,6 +294,12 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    */
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
+
+    // set document element node
+    if (Guard.isDocumentNode(parent) && Guard.isElementNode(node)) {
+      parent._documentElement = node
+    }
+    
     /**
      * 7.1. If child is null, then append node to parent’s children.
      * 7.2. Otherwise, insert node into parent’s children before child’s
@@ -454,6 +460,11 @@ function mutation_insert_single(node: Node, parent: Node,
    * child if child is null.
    */
   const previousSibling = parent._lastChild
+
+  // set document element node
+  if (Guard.isDocumentNode(parent) && Guard.isElementNode(node)) {
+    parent._documentElement = node
+  }
 
   /**
    * 7. For each node in nodes, in tree order:
@@ -916,6 +927,11 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    */
   const oldPreviousSibling = node._previousSibling
   const oldNextSibling = node._nextSibling
+
+  // set document element node
+  if (Guard.isDocumentNode(parent) && Guard.isElementNode(node)) {
+    parent._documentElement = null
+  }
 
   /**
    * 9. Remove node from its parent’s children.
