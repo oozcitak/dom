@@ -26,6 +26,21 @@ export default class TestHelpers {
   static t = dedent
 
   /**
+   * Runs callback for each character in range.
+   * 
+   * @param c1 - start character, inclusive
+   * @param c2 - end character, inclusive
+   * @param callback - callback function
+   */
+  static charRange(c1: number | string, c2: number | string, callback: ((c: string) => any)): void {
+    const n1 = (typeof c1 === 'number' ? c1 : (c1.codePointAt(0) || 0))
+    const n2 = (typeof c2 === 'number' ? c2 : (c2.codePointAt(0) || 0))
+    for (let n = n1; n <= n2; n++) {
+      callback(String.fromCodePoint(n))
+    }
+  }
+
+  /**
    * Returns a string representation of the XML tree rooted at `node`.
    * 
    * @param node - the root node of the tree

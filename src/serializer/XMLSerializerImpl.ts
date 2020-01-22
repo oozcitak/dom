@@ -23,19 +23,8 @@ type PrefixIndex = { value: number }
 export class XMLSerializerImpl implements XMLSerializer {
 
   private static _VoidElementNames = new Set(['area', 'base', 'basefont',
-  'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'img', 'input', 'keygen',
-  'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
-
-  private _xmlVersion: "1.0" | "1.1"
-
-  /**
-   * Initializes a new instance of `XMLSerializer`.
-   * 
-   * @param xmlVersion - XML specification version
-   */
-  constructor(xmlVersion: "1.0" | "1.1" = "1.0") {
-    this._xmlVersion = xmlVersion
-  }
+    'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'img', 'input', 'keygen',
+    'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
 
   /** @inheritdoc */
   serializeToString(root: Node): string {
@@ -340,7 +329,7 @@ export class XMLSerializerImpl implements XMLSerializer {
          * the require well-formed flag as input;
          * 12.5.5.6. """ (U+0022 QUOTATION MARK).
          */
-        markup += " xmlns:" + prefix + "=\"" + 
+        markup += " xmlns:" + prefix + "=\"" +
           this._serializeAttributeValue(ns, requireWellFormed) + "\""
 
         /**
@@ -397,7 +386,7 @@ export class XMLSerializerImpl implements XMLSerializer {
          * and the require well-formed flag as input;
          * 12.6.5.5. """ (U+0022 QUOTATION MARK).
          */
-        markup += " xmlns" + "=\"" + 
+        markup += " xmlns" + "=\"" +
           this._serializeAttributeValue(ns, requireWellFormed) + "\""
 
         /**
@@ -439,7 +428,7 @@ export class XMLSerializerImpl implements XMLSerializer {
     const isHTML = (ns === infraNamespace.HTML)
     if (isHTML && node.childNodes.length === 0 &&
       XMLSerializerImpl._VoidElementNames.has(node.localName)) {
-        markup += " /"
+      markup += " /"
       skipEndTag = true
     } else if (!isHTML && node.childNodes.length === 0) {
       markup += "/"
@@ -526,7 +515,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * 
      * 3. Return the value of serialized document.
     */
-   let serializedDocument = ""
+    let serializedDocument = ""
     for (const childNode of node.childNodes) {
       serializedDocument += this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed)
@@ -549,7 +538,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * ends with a "-" (U+002D HYPHEN-MINUS) character, then throw an exception;
      * the serialization of this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
+    if (requireWellFormed && (!xml_isLegalChar(node.data) ||
       node.data.indexOf("--") !== -1 || node.data.endsWith("-"))) {
       throw new Error("Comment data contains invalid characters (well-formed required).")
     }
@@ -575,7 +564,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * production, then throw an exception; the serialization of this node's 
      * data would not be well-formed.
      */
-    if (requireWellFormed && !xml_isLegalChar(node.data, this._xmlVersion)) {
+    if (requireWellFormed && !xml_isLegalChar(node.data)) {
       throw new Error("Text data contains invalid characters (well-formed required).")
     }
 
@@ -660,7 +649,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * of this node would not be a well-formed document type declaration.
      */
     if (requireWellFormed &&
-      (!xml_isLegalChar(node.systemId, this._xmlVersion) ||
+      (!xml_isLegalChar(node.systemId) ||
         (node.systemId.indexOf('"') !== -1 && node.systemId.indexOf("'") !== -1))) {
       throw new Error("DocType system identifier contains invalid characters (well-formed required).")
     }
@@ -729,7 +718,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * U+003E GREATER-THAN SIGN), then throw an exception; the serialization of
      * this node's data would not be well-formed.
      */
-    if (requireWellFormed && (!xml_isLegalChar(node.data, this._xmlVersion) ||
+    if (requireWellFormed && (!xml_isLegalChar(node.data) ||
       node.data.indexOf("?>") !== -1)) {
       throw new Error("Processing instruction data contains invalid characters (well-formed required).")
     }
@@ -938,8 +927,8 @@ export class XMLSerializerImpl implements XMLSerializer {
            * attribute namespace and the require well-formed flag as input;
            * 3.5.3.2.6. """ (U+0022 QUOTATION MARK).
           */
-         result += " xmlns:" + candidatePrefix + "=\"" +
-           this._serializeAttributeValue(attributeNamespace, requireWellFormed) + "\""
+          result += " xmlns:" + candidatePrefix + "=\"" +
+            this._serializeAttributeValue(attributeNamespace, requireWellFormed) + "\""
         }
       }
 
@@ -975,7 +964,7 @@ export class XMLSerializerImpl implements XMLSerializer {
        * attribute and the require well-formed flag as input;
        * 3.9.4. """ (U+0022 QUOTATION MARK).
        */
-      result += attr.localName + "=\"" + 
+      result += attr.localName + "=\"" +
         this._serializeAttributeValue(attr.value, requireWellFormed) + "\""
     }
 
@@ -1145,7 +1134,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * production, then throw an exception; the serialization of this attribute
      * value would fail to produce a well-formed element serialization.
      */
-    if (requireWellFormed && value !== null && !xml_isLegalChar(value, this._xmlVersion)) {
+    if (requireWellFormed && value !== null && !xml_isLegalChar(value)) {
       throw new Error("Invalid characters in attribute value.")
     }
 

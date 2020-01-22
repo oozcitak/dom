@@ -16,17 +16,6 @@ import { LocalNameSet } from "../serializer/LocalNameSet"
  */
 export class DOMParserImpl implements DOMParser {
 
-  private _xmlVersion?: "1.0" | "1.1"
-
-  /**
-   * Initializes a new instance of `XMLSerializer`.
-   * 
-   * @param xmlVersion - XML specification version
-   */
-  constructor(xmlVersion?: "1.0" | "1.1") {
-    this._xmlVersion = xmlVersion
-  }
-
   /** @inheritdoc */
   parseFromString(source: string, mimeType: MimeType): Document {
     if (mimeType === "text/html") {
@@ -36,20 +25,15 @@ export class DOMParserImpl implements DOMParser {
 
       const doc = create_document()
       doc._contentType = mimeType
-      let xmlVersion = this._xmlVersion || "1.0"
 
       let context: Node = doc
       let token = lexer.nextToken()
       while (token.type !== TokenType.EOF) {
         switch (token.type) {
           case TokenType.Declaration:
-            if (this._xmlVersion === undefined) {
-              const declaration = <DeclarationToken>token
-              if (declaration.version === "1.0" || declaration.version === "1.1") {
-                xmlVersion = declaration.version
-              } else if (declaration.version !== "") {
-                throw new Error("Invalid xml version: " + declaration.version)
-              }
+            const declaration = <DeclarationToken>token
+            if (declaration.version !== "1.0") {
+              throw new Error("Invalid xml version: " + declaration.version)
             }
             break
           case TokenType.DocType:
@@ -57,8 +41,8 @@ export class DOMParserImpl implements DOMParser {
             if (!xml_isPubidChar(doctype.pubId)) {
               throw new Error("DocType public identifier does not match PubidChar construct.")
             }
-            if (!xml_isLegalChar(doctype.sysId, xmlVersion) ||
-                (doctype.sysId.indexOf('"') !== -1 && doctype.sysId.indexOf("'") !== -1)) {
+            if (!xml_isLegalChar(doctype.sysId) ||
+              (doctype.sysId.indexOf('"') !== -1 && doctype.sysId.indexOf("'") !== -1)) {
               throw new Error("DocType system identifier contains invalid characters.")
             }
             context.appendChild(doc.implementation.createDocumentType(
@@ -66,7 +50,7 @@ export class DOMParserImpl implements DOMParser {
             break
           case TokenType.CDATA:
             const cdata = <CDATAToken>token
-            if (!xml_isLegalChar(cdata.data, xmlVersion) ||
+            if (!xml_isLegalChar(cdata.data) ||
               cdata.data.indexOf("]]>") !== -1) {
               throw new Error("CDATA contains invalid characters.")
             }
@@ -74,7 +58,7 @@ export class DOMParserImpl implements DOMParser {
             break
           case TokenType.Comment:
             const comment = <CommentToken>token
-            if (!xml_isLegalChar(comment.data, xmlVersion) ||
+            if (!xml_isLegalChar(comment.data) ||
               comment.data.indexOf("--") !== -1 || comment.data.endsWith("-")) {
               throw new Error("Comment data contains invalid characters.")
             }
@@ -85,7 +69,7 @@ export class DOMParserImpl implements DOMParser {
             if (pi.target.indexOf(":") !== -1 || (/^xml$/i).test(pi.target)) {
               throw new Error("Processing instruction target contains invalid characters.")
             }
-            if (!xml_isLegalChar(pi.data, xmlVersion) || pi.data.indexOf("?>") !== -1) {
+            if (!xml_isLegalChar(pi.data) || pi.data.indexOf("?>") !== -1) {
               throw new Error("Processing instruction data contains invalid characters.")
             }
             context.appendChild(doc.createProcessingInstruction(
@@ -93,7 +77,7 @@ export class DOMParserImpl implements DOMParser {
             break
           case TokenType.Text:
             const text = <TextToken>token
-            if (!xml_isLegalChar(text.data, xmlVersion)) {
+            if (!xml_isLegalChar(text.data)) {
               throw new Error("Text data contains invalid characters.")
             }
             context.appendChild(doc.createTextNode(text.data))
