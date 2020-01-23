@@ -12,6 +12,8 @@ A Javascript implementation of the [DOM Living Standard](https://dom.spec.whatwg
 # Version
 Current version implements the standard as of commit [57512fa](https://dom.spec.whatwg.org/commit-snapshots/57512fac17cf2f1c4c85be4aec178c8086ee5ee4/) (Last Updated 24 September 2019).
 
+This DOM implementation is for _XML documents only_.
+
 # Installation
 ```
 npm install @oozcitak/dom
