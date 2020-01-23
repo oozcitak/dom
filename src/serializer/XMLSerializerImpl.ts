@@ -789,7 +789,8 @@ export class XMLSerializerImpl implements XMLSerializer {
 
       // Optimize common case
       if (!requireWellFormed && attr.namespaceURI === null) {
-        result += " " + attr.localName + "=\"" + attr.value + "\""
+        result += " " + attr.localName + "=\"" + 
+          this._serializeAttributeValue(attr.value, requireWellFormed) + "\""
         continue
       }
 
