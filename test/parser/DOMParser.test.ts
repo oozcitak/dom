@@ -93,7 +93,8 @@ describe('DOMParser - XML', () => {
       `
 
     const parser = new $$.DOMParser()
-    expect(() => parser.parseFromString(xmlStr, "application/xml")).toThrow()
+    const doc = parser.parseFromString(xmlStr, "application/xml")
+    expect(doc.getElementsByTagName("parsererror").length).toBe(1)
   })
 
   test('default namespace', () => {
@@ -196,9 +197,12 @@ describe('DOMParser - XML', () => {
 
   test('invalid nodes', () => {
     const parser = new $$.DOMParser()
-    expect(() => parser.parseFromString('<?xml version="1.0"?><root>\x00</root>', "application/xml")).toThrow()
-    expect(() => parser.parseFromString('<?xml version="1.0"?><root>\x01</root>', "application/xml")).toThrow()
-    expect(() => parser.parseFromString('<?xml version="1.1"?><root/>', "application/xml")).toThrow()
+    const doc1 = parser.parseFromString('<?xml version="1.0"?><root>\x00</root>', "application/xml")
+    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    const doc2 = parser.parseFromString('<?xml version="1.0"?><root>\x01</root>', "application/xml")
+    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    const doc3 = parser.parseFromString('<?xml version="1.1"?><root/>', "application/xml")
+    expect(doc3.getElementsByTagName("parsererror").length).toBe(1)
   })
 
 })
