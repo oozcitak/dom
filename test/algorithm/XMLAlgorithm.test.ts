@@ -46,7 +46,7 @@ describe('XMLAlgorithm', () => {
     $$.charRange(0xFDD0, 0xFDEF, (c => expect(xml_isName(c)).toBe(false)))
     $$.charRange(0xFDF0, 0xFFFD, (c => expect(xml_isName(c)).toBe(true)))
     $$.charRange(0xFFFF, 0xFFFF, (c => expect(xml_isName(c)).toBe(false)))
-    // The last takes too long to complete
+    // The last test takes too long to complete
     // $$.charRange(0x10000, 0xEFFFF, (c => expect(xml_isName(c)).toBe(true)))
     // We test a simpler version since algorithm is the same
     $$.charRange(0x10000, 0x100F0, (c => expect(xml_isName(c)).toBe(true)))
@@ -99,7 +99,7 @@ describe('XMLAlgorithm', () => {
     $$.charRange(0xFDD0, 0xFDEF, (c => expect(xml_isName('A' + c)).toBe(false)))
     $$.charRange(0xFDF0, 0xFFFD, (c => expect(xml_isName('A' + c)).toBe(true)))
     $$.charRange(0xFFFF, 0xFFFF, (c => expect(xml_isName('A' + c)).toBe(false)))
-    // The last takes too long to complete
+    // The last test takes too long to complete
     // $$.charRange(0x10000, 0xEFFFF, (c => expect(xml_isName('A' + c)).toBe(true)))
     // We test a simpler version since algorithm is the same
     $$.charRange(0x10000, 0x100F0, (c => expect(xml_isName('A' + c)).toBe(true)))
@@ -144,7 +144,7 @@ describe('XMLAlgorithm', () => {
     $$.charRange(0xFDD0, 0xFDEF, (c => expect(xml_isQName(c)).toBe(false)))
     $$.charRange(0xFDF0, 0xFFFD, (c => expect(xml_isQName(c)).toBe(true)))
     $$.charRange(0xFFFF, 0xFFFF, (c => expect(xml_isQName(c)).toBe(false)))
-    // The last takes too long to complete
+    // The last test takes too long to complete
     // $$.charRange(0x10000, 0xEFFFF, (c => expect(xml_isQName(c)).toBe(true)))
     // We test a simpler version since algorithm is the same
     $$.charRange(0x10000, 0x100F0, (c => expect(xml_isQName(c)).toBe(true)))
@@ -163,7 +163,7 @@ describe('XMLAlgorithm', () => {
     $$.charRange(0xD800, 0xDFFF, (c => expect(xml_isLegalChar(c)).toBe(false)))
     $$.charRange(0xE000, 0xFFFD, (c => expect(xml_isLegalChar(c)).toBe(true)))
     $$.charRange(0xFFFF, 0xFFFF, (c => expect(xml_isLegalChar(c)).toBe(false)))
-    // The last takes too long to complete
+    // The last test takes too long to complete
     // $$.charRange(0x10000, 0x10FFFF, (c => expect(xml_isLegalChar(c)).toBe(true)))
     // We test a simpler version since algorithm is the same
     $$.charRange(0x10000, 0x100F0, (c => expect(xml_isLegalChar(c)).toBe(true)))
@@ -192,7 +192,7 @@ describe('XMLAlgorithm', () => {
     $$.charRange(91, 94, (c => expect(xml_isPubidChar(c)).toBe(false)))
     expect(xml_isPubidChar('_')).toBe(true) // 95
     $$.charRange('a', 'z', (c => expect(xml_isPubidChar(c)).toBe(true))) // 97-122
-    // The last takes too long to complete
+    // The last test takes too long to complete
     // $$.charRange(0x7B, 0x10FFFF, (c => expect(xml_isPubidChar(c)).toBe(false)))
     // We test a simpler version since algorithm is the same
     $$.charRange(0x7B, 0x8B, (c => expect(xml_isPubidChar(c)).toBe(false)))
