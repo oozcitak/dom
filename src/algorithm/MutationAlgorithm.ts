@@ -295,9 +295,16 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
 
-    // set document element node
-    if (Guard.isDocumentNode(parent) && Guard.isElementNode(node)) {
-      parent._documentElement = node
+    if (Guard.isElementNode(node)) {
+      // set document element node
+      if (Guard.isDocumentNode(parent)) {
+        parent._documentElement = node
+      }
+      // mark that the document has namespaces
+      if (!node._nodeDocument._hasNamespaces && (node._namespace !== null || 
+        node._namespacePrefix !== null)) {
+        node._nodeDocument._hasNamespaces = true
+      }
     }
     
     /**
@@ -462,8 +469,16 @@ function mutation_insert_single(node: Node, parent: Node,
   const previousSibling = parent._lastChild
 
   // set document element node
-  if (Guard.isDocumentNode(parent) && Guard.isElementNode(node)) {
-    parent._documentElement = node
+  if (Guard.isElementNode(node)) {
+    // set document element node
+    if (Guard.isDocumentNode(parent)) {
+      parent._documentElement = node
+    }
+    // mark that the document has namespaces
+    if (!node._nodeDocument._hasNamespaces && (node._namespace !== null || 
+      node._namespacePrefix !== null)) {
+      node._nodeDocument._hasNamespaces = true
+    }
   }
 
   /**

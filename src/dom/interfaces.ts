@@ -1041,6 +1041,7 @@ export interface Document extends Node, NonElementParentNode,
   _mode: "no-quirks" | "quirks" | "limited-quirks"
   
   _documentElement: Element | null
+  _hasNamespaces: boolean
 }
 
 /**

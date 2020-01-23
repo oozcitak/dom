@@ -120,6 +120,12 @@ export function element_append(attribute: Attr, element: Element): void {
    */
   element._attributeList._attributeList.push(attribute)
   attribute._element = element
+
+  // mark that the document has namespaces
+  if (!element._nodeDocument._hasNamespaces && (attribute._namespace !== null ||
+    attribute._namespacePrefix !== null || attribute._localName === "xmlns")) {
+    element._nodeDocument._hasNamespaces = true
+  }
 }
 
 /**
@@ -222,6 +228,12 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
   }
   oldAttr._element = null
   newAttr._element = element
+
+  // mark that the document has namespaces
+  if (!element._nodeDocument._hasNamespaces && (newAttr._namespace !== null ||
+    newAttr._namespacePrefix !== null || newAttr._localName === "xmlns")) {
+    element._nodeDocument._hasNamespaces = true
+  }
 }
 
 /**

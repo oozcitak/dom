@@ -3,7 +3,7 @@ import {
   DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
   HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
   ProcessingInstruction, Comment, CDATASection, NodeIterator, TreeWalker,
-  FilterResult, Range, Event, EventTarget, Origin, Document
+  FilterResult, Range, Event, EventTarget, Document
 } from "./interfaces"
 import {
   NotSupportedError, InvalidCharacterError, HierarchyRequestError
@@ -13,7 +13,6 @@ import { Guard } from "../util"
 import { isFunction, isString } from "@oozcitak/util"
 import { namespace as infraNamespace } from "@oozcitak/infra"
 import { urlSerializer } from "@oozcitak/url/lib/URLAlgorithm"
-import { URLRecord } from "@oozcitak/url/lib/interfaces"
 import {
   create_domImplementation, create_documentFragment, create_text,
   create_cdataSection, create_comment, create_processingInstruction,
@@ -32,14 +31,14 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 export class DocumentImpl extends NodeImpl implements Document {
 
   _nodeType!: NodeType
-  _children: Set<Node> = new Set<Node>()
+  _children = new Set<Node>()
 
-  _encoding: { name: string, labels: string[] } = {
+  _encoding = {
     name: "UTF-8",
     labels: ["unicode-1-1-utf-8", "utf-8", "utf8"]
   }
-  _contentType: string = 'application/xml'
-  _URL: URLRecord = {
+  _contentType = 'application/xml'
+  _URL = {
     scheme: "about",
     username: "",
     password: "",
@@ -51,12 +50,13 @@ export class DocumentImpl extends NodeImpl implements Document {
     _cannotBeABaseURLFlag: true,
     _blobURLEntry: null
   }
-  _origin: Origin = null
+  _origin = null
   _type: "xml" | "html" = "xml"
   _mode: "no-quirks" | "quirks" | "limited-quirks" = "no-quirks"
 
   protected _implementation?: DOMImplementation
-  _documentElement: Element | null = null
+  _documentElement = null
+  _hasNamespaces = false
 
   _nodeDocumentOverwrite: Document | null = null
   get _nodeDocument(): Document { return this._nodeDocumentOverwrite || this }
