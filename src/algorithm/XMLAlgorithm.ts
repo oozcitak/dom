@@ -5,8 +5,7 @@
  */
 export function xml_isName(name: string): boolean {
   for (let i = 0; i < name.length; i++) {
-    const c1 = name.charCodeAt(i)
-    let n = c1
+    let n = name.charCodeAt(i)
 
     // NameStartChar
     if ((n >= 97 && n <= 122) || // [a-z]
@@ -33,10 +32,10 @@ export function xml_isName(name: string): boolean {
       continue
     }
 
-    if (c1 >= 0xD800 && c1 <= 0xDBFF && i < name.length - 1) {
-      const c2 = name.charCodeAt(i + 1)
-      if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+    if (n >= 0xD800 && n <= 0xDBFF && i < name.length - 1) {
+      const n2 = name.charCodeAt(i + 1)
+      if (n2 >= 0xDC00 && n2 <= 0xDFFF) {
+        n = (n - 0xD800) * 0x400 + n2 - 0xDC00 + 0x10000
         i++
 
         if (n >= 0x10000 && n <= 0xEFFFF) {
@@ -59,8 +58,7 @@ export function xml_isName(name: string): boolean {
 export function xml_isQName(name: string): boolean {
   let colonFound = false
   for (let i = 0; i < name.length; i++) {
-    const c1 = name.charCodeAt(i)
-    let n = c1
+    let n = name.charCodeAt(i)
 
     // NameStartChar
     if ((n >= 97 && n <= 122) || // [a-z]
@@ -92,10 +90,10 @@ export function xml_isQName(name: string): boolean {
       continue
     }
 
-    if (c1 >= 0xD800 && c1 <= 0xDBFF && i < name.length - 1) {
-      const c2 = name.charCodeAt(i + 1)
-      if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+    if (n >= 0xD800 && n <= 0xDBFF && i < name.length - 1) {
+      const n2 = name.charCodeAt(i + 1)
+      if (n2 >= 0xDC00 && n2 <= 0xDFFF) {
+        n = (n - 0xD800) * 0x400 + n2 - 0xDC00 + 0x10000
         i++
 
         if (n >= 0x10000 && n <= 0xEFFFF) {
@@ -117,8 +115,7 @@ export function xml_isQName(name: string): boolean {
  */
 export function xml_isLegalChar(chars: string): boolean {
   for (let i = 0; i < chars.length; i++) {
-    const c1 = chars.charCodeAt(i)
-    let n = c1
+    let n = chars.charCodeAt(i)
 
     // #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
     if (n === 0x9 || n === 0xA || n === 0xD ||
@@ -127,10 +124,10 @@ export function xml_isLegalChar(chars: string): boolean {
       continue
     }
 
-    if (c1 >= 0xD800 && c1 <= 0xDBFF && i < chars.length - 1) {
-      const c2 = chars.charCodeAt(i + 1)
-      if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
-        n = (c1 - 0xD800) * 0x400 + c2 - 0xDC00 + 0x10000
+    if (n >= 0xD800 && n <= 0xDBFF && i < chars.length - 1) {
+      const n2 = chars.charCodeAt(i + 1)
+      if (n2 >= 0xDC00 && n2 <= 0xDFFF) {
+        n = (n - 0xD800) * 0x400 + n2 - 0xDC00 + 0x10000
         i++
 
         if (n >= 0x10000 && n <= 0x10FFFF) {
