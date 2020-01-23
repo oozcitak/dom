@@ -5,7 +5,7 @@ import {
   XMLSerializer as XMLDOMSerializer
 } from "xmldom"
 import { JSDOM } from "jsdom"
-import { parse as fastXMLParse } from "fast-xml-parser"
+import { parse as fastXMLParse, validate as fastXMLValidate } from "fast-xml-parser"
 import { Suite } from "benchmark"
 import { benchmarkTitle, processBenchmark } from "./"
 import { readFileSync } from "fs"
@@ -63,7 +63,10 @@ function createTestDoc(impl: any): any {
   suite.add("dom", () => domParser.parseFromString(xml, "application/xml"))
   suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
   suite.add("jsdom", () => jsdomParser(xml))
-  suite.add("fast-xml-parser", () => fastXMLParse(xml, {}, true))
+  suite.add("fast-xml-parser", () => {
+    if (fastXMLValidate(xml) !== true) throw new Error()
+    fastXMLParse(xml, {}, true)
+  })
 
   suite.on("complete", () => processBenchmark(suite, "dom"))
   suite.on("error", (evt: any) => { throw evt.target.error })
@@ -85,7 +88,10 @@ function createTestDoc(impl: any): any {
   suite.add("dom", () => domParser.parseFromString(xml, "application/xml"))
   suite.add("xmldom", () => xmldomParser.parseFromString(xml, "application/xml"))
   suite.add("jsdom", () => jsdomParser(xml))
-  suite.add("fast-xml-parser", () => fastXMLParse(xml, {}, true))
+  suite.add("fast-xml-parser", () => {
+    if (fastXMLValidate(xml) !== true) throw new Error()
+    fastXMLParse(xml, {}, true)
+  })
 
   suite.on("complete", () => processBenchmark(suite, "dom"))
   suite.on("error", (evt: any) => { throw evt.target.error })
