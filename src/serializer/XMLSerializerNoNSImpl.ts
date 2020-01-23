@@ -2,7 +2,6 @@ import {
   Node, Element, NodeType, Document, Comment, Text, DocumentFragment,
   DocumentType, ProcessingInstruction, CDATASection
 } from "../dom/interfaces"
-import { LocalNameSet } from "./LocalNameSet"
 import { InvalidStateError } from "../dom/DOMException"
 import { xml_isName, xml_isLegalChar, xml_isPubidChar } from "../algorithm"
 import { XMLSerializer } from "./interfaces"
@@ -74,30 +73,22 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
     switch (node.nodeType) {
       case NodeType.Element:
         return this._serializeElement(<Element>node, requireWellFormed)
-        break
       case NodeType.Document:
         return this._serializeDocument(<Document>node, requireWellFormed)
-        break
       case NodeType.Comment:
         return this._serializeComment(<Comment>node, requireWellFormed)
-        break
       case NodeType.Text:
         return this._serializeText(<Text>node, requireWellFormed)
-        break
       case NodeType.DocumentFragment:
-        return this._serializeDocumentFragment(<DocumentFragment>node, 
+        return this._serializeDocumentFragment(<DocumentFragment>node,
           requireWellFormed)
-        break
       case NodeType.DocumentType:
         return this._serializeDocumentType(<DocumentType>node, requireWellFormed)
-        break
       case NodeType.ProcessingInstruction:
         return this._serializeProcessingInstruction(<ProcessingInstruction>node,
           requireWellFormed)
-        break
       case NodeType.CData:
         return this._serializeCData(<CDATASection>node, requireWellFormed)
-        break
       default:
         throw new Error(`Unknown node type: ${node.nodeType}`)
     }
@@ -501,7 +492,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
    * @param node - node to serialize
    * @param requireWellFormed - whether to check conformance
   */
-  private _serializeAttributes(node: Element, 
+  private _serializeAttributes(node: Element,
     requireWellFormed: boolean): string {
 
     /**
@@ -515,7 +506,8 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * element differ only by their prefix values.
      */
     let result = ""
-    const localNameSet = requireWellFormed ? new LocalNameSet() : undefined
+    const localNameSet: { [key: string]: boolean } | undefined =
+      requireWellFormed ? {} : undefined
 
     /** 
      * 3. Loop: For each attribute attr in element's attributes, in the order 
@@ -532,7 +524,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
        * then throw an exception; the serialization of this attr would fail to
        * produce a well-formed element serialization.
        */
-      if (requireWellFormed && localNameSet && localNameSet.has(attr.namespaceURI, attr.localName)) {
+      if (requireWellFormed && localNameSet && (attr.localName in localNameSet)) {
         throw new Error("Element contains duplicate attributes (well-formed required).")
       }
 
@@ -542,7 +534,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
        * 3.3. Let attribute namespace be the value of attr's namespaceURI value.
        * 3.4. Let candidate prefix be null.
        */
-      if (requireWellFormed && localNameSet) localNameSet.set(attr.namespaceURI, attr.localName)
+      if (requireWellFormed && localNameSet) localNameSet[attr.localName] = true
 
       /** 3.5. If attribute namespace is not null, then run these sub-steps: */
       /**
@@ -550,8 +542,6 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
        * 3.7. If candidate prefix is not null, then append to result the 
        * concatenation of candidate prefix with ":" (U+003A COLON).
        */
-      result += " "
-
       /**
        * 3.8. If the require well-formed flag is set (its value is true), and 
        * this attr's localName attribute contains the character 
@@ -573,7 +563,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
        * attribute and the require well-formed flag as input;
        * 3.9.4. """ (U+0022 QUOTATION MARK).
        */
-      result += attr.localName + "=\"" +
+      result += " " + attr.localName + "=\"" +
         this._serializeAttributeValue(attr.value, requireWellFormed) + "\""
     }
 

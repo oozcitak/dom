@@ -97,31 +97,23 @@ export class XMLSerializerNSImpl implements XMLSerializer {
       case NodeType.Element:
         return this._serializeElement(<Element>node, namespace, prefixMap, prefixIndex,
           requireWellFormed)
-        break
       case NodeType.Document:
         return this._serializeDocument(<Document>node, namespace, prefixMap,
           prefixIndex, requireWellFormed)
-        break
       case NodeType.Comment:
         return this._serializeComment(<Comment>node, requireWellFormed)
-        break
       case NodeType.Text:
         return this._serializeText(<Text>node, requireWellFormed)
-        break
       case NodeType.DocumentFragment:
         return this._serializeDocumentFragment(<DocumentFragment>node, namespace,
           prefixMap, prefixIndex, requireWellFormed)
-        break
       case NodeType.DocumentType:
         return this._serializeDocumentType(<DocumentType>node, requireWellFormed)
-        break
       case NodeType.ProcessingInstruction:
         return this._serializeProcessingInstruction(<ProcessingInstruction>node,
           requireWellFormed)
-        break
       case NodeType.CData:
         return this._serializeCData(<CDATASection>node, requireWellFormed)
-        break
       default:
         throw new Error(`Unknown node type: ${node.nodeType}`)
     }
