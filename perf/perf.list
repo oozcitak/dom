@@ -206,7 +206,7 @@
       "jsdom": 793.6381892118264
     }
   },
-  "1.12.0*": {
+  "1.13.0": {
     "createDocument + createElement + appendChild": {
       "xmldom": 3489.864599621133,
       "dom": 1737.216617527991,
