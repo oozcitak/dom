@@ -1725,9 +1725,9 @@ export interface DOMTokenList extends Iterable<string> {
 }
 
 /**
- * Represents a collection of nodes.
+ * Represents a collection of attributes.
  */
-export interface NamedNodeMap extends Iterable<Attr> {
+export interface NamedNodeMap {
 
   /** 
    * Returns the number of attribute in the collection.
@@ -1787,8 +1787,19 @@ export interface NamedNodeMap extends Iterable<Attr> {
    */
   removeNamedItemNS(namespace: string | null, localName: string): Attr
 
+  /**
+   * Returns the attribute with index `index` from the collection. Returns
+   * `undefined` is index is out of bounds.
+   */
+  [index: number]: Attr
+
+  /**
+   * Iterates over all attribute in the collection.
+   */
+  [Symbol.iterator](): IterableIterator<Attr>
+
   _element: Element
-  _attributeList: Attr[]
+  _asArray(): Array<Attr>
 }
 
 /**

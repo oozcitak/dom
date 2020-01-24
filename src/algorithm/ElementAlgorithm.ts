@@ -28,7 +28,7 @@ export function element_has(attribute: Attr, element: Element): boolean {
   /**
    * An element has an attribute A if its attribute list contains A.
    */
-  return element._attributeList._attributeList.includes(attribute)
+  return element._attributeList._asArray().indexOf(attribute) !== -1
 }
 
 /**
@@ -118,7 +118,7 @@ export function element_append(attribute: Attr, element: Element): void {
    * 4. Append attribute to element’s attribute list.
    * 5. Set attribute’s element to element.
    */
-  element._attributeList._attributeList.push(attribute)
+  element._attributeList._asArray().push(attribute)
   attribute._element = element
 
   // mark that the document has namespaces
@@ -171,8 +171,8 @@ export function element_remove(attribute: Attr, element: Element): void {
    * 3. Remove attribute from element’s attribute list.
    * 5. Set attribute’s element to null.
    */
-  const index = element._attributeList._attributeList.indexOf(attribute)
-  element._attributeList._attributeList.splice(index, 1)
+  const index = element._attributeList._asArray().indexOf(attribute)
+  element._attributeList._asArray().splice(index, 1)
   attribute._element = null
 }
 
@@ -222,9 +222,9 @@ export function element_replace(oldAttr: Attr, newAttr: Attr,
    * 5. Set oldAttr’s element to null.
    * 6. Set newAttr’s element to element.
    */
-  const index = element._attributeList._attributeList.indexOf(oldAttr)
+  const index = element._attributeList._asArray().indexOf(oldAttr)
   if (index !== -1) {
-    element._attributeList._attributeList[index] = newAttr
+    element._attributeList._asArray()[index] = newAttr
   }
   oldAttr._element = null
   newAttr._element = element
@@ -254,9 +254,8 @@ export function element_getAnAttributeByName(qualifiedName: string, element: Ele
     qualifiedName = qualifiedName.toLowerCase()
   }
 
-  const index = element._attributeList._attributeList.findIndex(
-    attr => attr._qualifiedName === qualifiedName)
-  return (index === -1 ? null : element._attributeList._attributeList[index])
+  return element._attributeList._asArray().find(
+    attr => attr._qualifiedName === qualifiedName) || null
 }
 
 /**
@@ -275,9 +274,8 @@ export function element_getAnAttributeByNamespaceAndLocalName(namespace: string,
    * namespace and local name is localName, if any, and null otherwise.
    */
   const ns: string | null = namespace || null
-  const index = element._attributeList._attributeList.findIndex(
-    attr => attr._namespace === ns && attr._localName === localName)
-  return (index === -1 ? null : element._attributeList._attributeList[index])
+  return element._attributeList._asArray().find(
+    attr => attr._namespace === ns && attr._localName === localName) || null
 }
 
 /**

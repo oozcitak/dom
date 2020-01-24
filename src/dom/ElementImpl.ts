@@ -104,7 +104,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
   /** @inheritdoc */
   hasAttributes(): boolean {
-    return !infraList.isEmpty(this._attributeList._attributeList)
+    return this._attributeList.length !== 0
   }
 
   /** @inheritdoc */
@@ -119,7 +119,9 @@ export class ElementImpl extends NodeImpl implements Element {
      */
     const names: string[] = []
 
-    this._attributeList._attributeList.forEach(attr => names.push(attr._qualifiedName))
+    for (const attr of this._attributeList) {
+      names.push(attr._qualifiedName)
+    }
 
     return names
   }
@@ -171,8 +173,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * list whose qualified name is qualifiedName, and null otherwise.
      */
     let attribute: Attr | null = null
-    for (let i = 0; i < this._attributeList._attributeList.length; i++) {
-      const attr = this._attributeList._attributeList[i]
+    for (let i = 0; i < this._attributeList.length; i++) {
+      const attr = this._attributeList[i]
       if (attr._qualifiedName === qualifiedName) {
         attribute = attr
         break
@@ -246,8 +248,8 @@ export class ElementImpl extends NodeImpl implements Element {
       qualifiedName = qualifiedName.toLowerCase()
     }
 
-    for (let i = 0; i < this._attributeList._attributeList.length; i++) {
-      const attr = this._attributeList._attributeList[i]
+    for (let i = 0; i < this._attributeList.length; i++) {
+      const attr = this._attributeList[i]
       if (attr._qualifiedName === qualifiedName) {
         return true
       }
@@ -279,8 +281,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * list whose qualified name is qualifiedName, and null otherwise.
      */
     let attribute: Attr | null = null
-    for (let i = 0; i < this._attributeList._attributeList.length; i++) {
-      const attr = this._attributeList._attributeList[i]
+    for (let i = 0; i < this._attributeList.length; i++) {
+      const attr = this._attributeList[i]
       if (attr._qualifiedName === qualifiedName) {
         attribute = attr
         break
@@ -327,8 +329,8 @@ export class ElementImpl extends NodeImpl implements Element {
      */
     const ns = namespace || null
 
-    for (let i = 0; i < this._attributeList._attributeList.length; i++) {
-      const attr = this._attributeList._attributeList[i]
+    for (let i = 0; i < this._attributeList.length; i++) {
+      const attr = this._attributeList[i]
       if (attr._namespace === ns && attr._localName === localName) {
         return true
       }
@@ -381,8 +383,8 @@ export class ElementImpl extends NodeImpl implements Element {
      * 3. Return attr.
      */
     let found = false
-    for (let i = 0; i < this._attributeList._attributeList.length; i++) {
-      const attribute = this._attributeList._attributeList[i]
+    for (let i = 0; i < this._attributeList.length; i++) {
+      const attribute = this._attributeList[i]
       if (attribute === attr) {
         found = true
         break

@@ -7,12 +7,11 @@ import {
 } from "../algorithm"
 
 /**
- * Represents a collection of nodes.
+ * Represents a collection of attributes.
  */
-export class NamedNodeMapImpl implements NamedNodeMap {
+export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
 
   _element: Element
-  _attributeList: Attr[] = []
 
   /**
    * Initializes a new instance of `NamedNodeMap`.
@@ -20,16 +19,11 @@ export class NamedNodeMapImpl implements NamedNodeMap {
    * @param element - parent element
    */
   private constructor(element: Element) {
+    super()
     this._element = element
   }
 
-  /** @inheritdoc */
-  get length(): number {
-    /**
-     * The length attribute’s getter must return the attribute list’s size.
-     */
-    return this._attributeList.length
-  }
+  _asArray(): Array<Attr> { return this }
 
   /** @inheritdoc */
   item(index: number): Attr | null {
@@ -39,7 +33,7 @@ export class NamedNodeMapImpl implements NamedNodeMap {
      * 2. Otherwise, return context object’s attribute list[index].
      * 
      */
-    return this._attributeList[index] || null
+    return this[index] || null
   }
 
   /** @inheritdoc */
@@ -107,19 +101,6 @@ export class NamedNodeMapImpl implements NamedNodeMap {
       throw new NotFoundError()
 
     return attr
-  }
-
-  /**
-   * Returns an iterator for attributes.
-   */
-  [Symbol.iterator](): Iterator<Attr> {
-    const it = this._attributeList[Symbol.iterator]()
-
-    return {
-      next(): IteratorResult<Attr> {
-        return it.next()
-      }
-    }
   }
 
   /**

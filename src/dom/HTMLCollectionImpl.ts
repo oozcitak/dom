@@ -88,8 +88,8 @@ export class HTMLCollectionImpl implements HTMLCollection {
       if (ele._uniqueIdentifier === key) {
         return ele
       } else if (ele._namespace === infraNamespace.HTML) {
-        for (let i = 0; i < ele._attributeList._attributeList.length; i++) {
-          const attr = ele._attributeList._attributeList[i];
+        for (let i = 0; i < ele._attributeList.length; i++) {
+          const attr = ele._attributeList[i];
           if (attr._localName === "name" && attr._namespace === null &&
             attr._namespacePrefix === null && attr._value === key)
             return ele

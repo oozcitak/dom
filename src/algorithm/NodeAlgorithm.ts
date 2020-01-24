@@ -63,10 +63,10 @@ export function node_clone(node: Node, document: Document | null = null,
      */
     copy = element_createAnElement(document, node._localName,
       node._namespace, node._namespacePrefix, node._is, false)
-    node._attributeList._attributeList.forEach(attribute => {
+    for (const attribute of node._attributeList) {
       const copyAttribute = node_clone(attribute, document)
       element_append(copyAttribute as Attr, copy as Element)
-    })
+    }
   } else {
     /**
      * 3. Otherwise, let copy be a node that implements the same interfaces as
@@ -191,7 +191,7 @@ export function node_equals(a: Node, b: Node): boolean {
   } else if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
     if (a._namespace !== b._namespace || a._namespacePrefix !== b._namespacePrefix ||
       a._localName !== b._localName ||
-      a._attributeList._attributeList.length !== b._attributeList._attributeList.length) return false
+      a._attributeList.length !== b._attributeList.length) return false
   } else if (Guard.isAttrNode(a) && Guard.isAttrNode(b)) {
     if (a._namespace !== b._namespace || a._localName !== b._localName ||
       a._value !== b._value) return false
@@ -206,13 +206,13 @@ export function node_equals(a: Node, b: Node): boolean {
    * that equals an attribute in B’s attribute list.
    */
   if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
-    if (a._attributeList._attributeList.length !== b._attributeList._attributeList.length) return false
+    if (a._attributeList.length !== b._attributeList.length) return false
     const attrMap = new Map<string, Attr>()
-    a._attributeList._attributeList.forEach(attrA =>
+    for(const attrA of a._attributeList) {
       attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
-    )
-    for (let i = 0; i < b._attributeList._attributeList.length; i++) {
-      const attrB = b._attributeList._attributeList[i]
+    }
+    for (let i = 0; i < b._attributeList.length; i++) {
+      const attrB = b._attributeList[i]
       const attrA = attrMap.get((attrB._namespace || '') + attrB._localName + attrB._value)
       if (!attrA) return false
       if (!node_equals(attrA, attrB)) return false
@@ -388,8 +388,8 @@ export function node_locateANamespacePrefix(element: Element,
    * value is namespace, then return element’s first such attribute’s 
    * local name.
    */
-  for (let i = 0; i < element._attributeList._attributeList.length; i++) {
-    const attr = element._attributeList._attributeList[i]
+  for (let i = 0; i < element._attributeList.length; i++) {
+    const attr = element._attributeList[i]
     if (attr._namespacePrefix === "xmlns" && attr._value === namespace) {
       return attr._localName
     }
@@ -433,8 +433,8 @@ export function node_locateANamespace(node: Node, prefix: string | null): string
      * namespace prefix is null, and local name is "xmlns", then return its
      * value if it is not the empty string, and null otherwise.
      */
-    for (let i = 0; i < node._attributeList._attributeList.length; i++) {
-      const attr = node._attributeList._attributeList[i];
+    for (let i = 0; i < node._attributeList.length; i++) {
+      const attr = node._attributeList[i];
       if (attr._namespace === infraNamespace.XMLNS &&
         attr._namespacePrefix === "xmlns" &&
         attr._localName === prefix) {

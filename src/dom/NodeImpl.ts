@@ -530,8 +530,8 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
         /**
          * 5.2. For each attr in node2’s attribute list:
          */
-        for (let i = 0; i < (node2 as Element)._attributeList._attributeList.length; i++) {
-          const attr = (node2 as Element)._attributeList._attributeList[i]
+        for (let i = 0; i < (node2 as Element)._attributeList.length; i++) {
+          const attr = (node2 as Element)._attributeList[i]
           /**
            * 5.2.1. If attr equals attr1, then return the result of adding
            * DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC and
