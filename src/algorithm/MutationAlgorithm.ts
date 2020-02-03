@@ -9,8 +9,8 @@ import {
   customElement_tryToUpgrade
 } from "./CustomElementAlgorithm"
 import {
-  tree_index, tree_rootNode, tree_isDescendantOf, 
-  tree_getFirstDescendantNode, tree_getNextDescendantNode, 
+  tree_index, tree_rootNode, tree_isDescendantOf,
+  tree_getFirstDescendantNode, tree_getNextDescendantNode,
   tree_getFirstAncestorNode, tree_getNextAncestorNode, tree_isHostIncludingAncestorOf
 } from "./TreeAlgorithm"
 import { nodeIterator_iteratorList } from "./NodeIteratorAlgorithm"
@@ -107,20 +107,20 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
   if (parentNodeType === NodeType.Document) {
     if (nodeNodeType === NodeType.DocumentFragment) {
       let eleCount = 0
-      node._children.forEach(childNode => {
+      for (const childNode of node._children) {
         if (childNode._nodeType === NodeType.Element)
           eleCount++
         else if (childNode._nodeType === NodeType.Text)
           throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
-      })
+      }
 
       if (eleCount > 1) {
         throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
       } else if (eleCount === 1) {
-        parent._children.forEach(ele => {
+        for (const ele of parent._children) {
           if (ele._nodeType === NodeType.Element)
             throw new HierarchyRequestError(`The document node already has a document element node.`)
-        })
+        }
 
         if (child) {
           if (childNodeType === NodeType.DocumentType)
@@ -135,10 +135,10 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
         }
       }
     } else if (nodeNodeType === NodeType.Element) {
-      parent._children.forEach(ele => {
+      for (const ele of parent._children) {
         if (ele._nodeType === NodeType.Element)
           throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
-      })
+      }
 
       if (child) {
         if (childNodeType === NodeType.DocumentType)
@@ -152,10 +152,10 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
         }
       }
     } else if (nodeNodeType === NodeType.DocumentType) {
-      parent._children.forEach(ele => {
+      for (const ele of parent._children) {
         if (ele._nodeType === NodeType.DocumentType)
           throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
-      })
+      }
 
       if (child) {
         let elementChild = child._previousSibling
@@ -244,14 +244,14 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
      */
     if (dom.rangeList.size !== 0) {
       const index = tree_index(child)
-      dom.rangeList.forEach(range => {
+      for (const range of dom.rangeList) {
         if (range._start[0] === parent && range._start[1] > index) {
           range._start[1] += count
         }
         if (range._end[0] === parent && range._end[1] > index) {
           range._end[1] += count
         }
-      })
+      }
     }
   }
 
@@ -301,12 +301,12 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
         parent._documentElement = node
       }
       // mark that the document has namespaces
-      if (!node._nodeDocument._hasNamespaces && (node._namespace !== null || 
+      if (!node._nodeDocument._hasNamespaces && (node._namespace !== null ||
         node._namespacePrefix !== null)) {
         node._nodeDocument._hasNamespaces = true
       }
     }
-    
+
     /**
      * 7.1. If child is null, then append node to parent’s children.
      * 7.2. Otherwise, insert node into parent’s children before child’s
@@ -475,7 +475,7 @@ function mutation_insert_single(node: Node, parent: Node,
       parent._documentElement = node
     }
     // mark that the document has namespaces
-    if (!node._nodeDocument._hasNamespaces && (node._namespace !== null || 
+    if (!node._nodeDocument._hasNamespaces && (node._namespace !== null ||
       node._namespacePrefix !== null)) {
       node._nodeDocument._hasNamespaces = true
     }
@@ -683,20 +683,20 @@ export function mutation_replace(child: Node, node: Node,
   if (parent._nodeType === NodeType.Document) {
     if (node._nodeType === NodeType.DocumentFragment) {
       let eleCount = 0
-      node._children.forEach(childNode => {
+      for (const childNode of node._children) {
         if (childNode._nodeType === NodeType.Element)
           eleCount++
         else if (childNode._nodeType === NodeType.Text)
           throw new HierarchyRequestError(`Cannot insert text a node as a child of a document node. Node is ${childNode.nodeName}.`)
-      })
+      }
 
       if (eleCount > 1) {
         throw new HierarchyRequestError(`A document node can only have one document element node. Document fragment to be inserted has ${eleCount} element nodes.`)
       } else if (eleCount === 1) {
-        parent._children.forEach(ele => {
+        for (const ele of parent._children) {
           if (ele._nodeType === NodeType.Element && ele !== child)
             throw new HierarchyRequestError(`The document node already has a document element node.`)
-        })
+        }
 
         let doctypeChild = child._nextSibling
         while (doctypeChild) {
@@ -706,10 +706,10 @@ export function mutation_replace(child: Node, node: Node,
         }
       }
     } else if (node._nodeType === NodeType.Element) {
-      parent._children.forEach(ele => {
+      for (const ele of parent._children) {
         if (ele._nodeType === NodeType.Element && ele !== child)
           throw new HierarchyRequestError(`Document already has a document element node. Node is ${node.nodeName}.`)
-      })
+      }
 
       let doctypeChild = child._nextSibling
       while (doctypeChild) {
@@ -718,10 +718,10 @@ export function mutation_replace(child: Node, node: Node,
         doctypeChild = doctypeChild._nextSibling
       }
     } else if (node._nodeType === NodeType.DocumentType) {
-      parent._children.forEach(ele => {
+      for (const ele of parent._children) {
         if (ele._nodeType === NodeType.DocumentType && ele !== child)
           throw new HierarchyRequestError(`Document already has a document type node. Node is ${node.nodeName}.`)
-      })
+      }
 
       let elementChild = child._previousSibling
       while (elementChild) {
@@ -829,7 +829,9 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
    * 6. Remove all parent’s children, in tree order, with the suppress 
    * observers flag set.
    */
-  removedNodes.forEach(childNode => mutation_remove(childNode, parent, true))
+  for (const childNode of removedNodes) {
+    mutation_remove(childNode, parent, true)
+  }
 
   /**
    * 7. If node is not null, then insert node into parent before null with the 
@@ -892,7 +894,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
      * 3. For each live range whose end node is an inclusive descendant of 
      * node, set its end to (parent, index).
      */
-    dom.rangeList.forEach(range => {
+    for (const range of dom.rangeList) {
       if (tree_isDescendantOf(node, range._start[0], true)) {
         range._start = [parent, index]
       }
@@ -905,7 +907,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
       if (range._end[0] === parent && range._end[1] > index) {
         range._end[1]--
       }
-    })
+    }
 
     /**
      * 4. For each live range whose start node is parent and start offset is 
@@ -913,14 +915,14 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
      * 5. For each live range whose end node is parent and end offset is greater 
      * than index, decrease its end offset by 1.
      */
-    dom.rangeList.forEach(range => {
+    for (const range of dom.rangeList) {
       if (range._start[0] === parent && range._start[1] > index) {
         range._start[1] -= 1
       }
       if (range._end[0] === parent && range._end[1] > index) {
         range._end[1] -= 1
       }
-    })
+    }
   }
 
   /**
@@ -929,11 +931,11 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
    * and iterator.
    */
   if (dom.features.steps) {
-    nodeIterator_iteratorList().forEach(iterator => {
+    for (const iterator of nodeIterator_iteratorList()) {
       if (iterator._root._nodeDocument === node._nodeDocument) {
         dom_runNodeIteratorPreRemovingSteps(iterator, node)
       }
-    })
+    }
   }
 
   /**
@@ -1061,7 +1063,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   if (dom.features.mutationObservers) {
     let inclusiveAncestor = tree_getFirstAncestorNode(parent, true)
     while (inclusiveAncestor !== null) {
-      inclusiveAncestor._registeredObserverList.forEach(registered => {
+      for (const registered of inclusiveAncestor._registeredObserverList) {
         if (registered.options.subtree) {
           node._registeredObserverList.push({
             observer: registered.observer,
@@ -1069,7 +1071,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
             source: registered
           })
         }
-      })
+      }
       inclusiveAncestor = tree_getNextAncestorNode(parent, inclusiveAncestor, true)
     }
   }

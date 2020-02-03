@@ -452,7 +452,7 @@ export class XMLSerializerNSImpl implements XMLSerializer {
     if (isHTML && node.localName === "template") {
       // TODO: serialize template contents
     } else {
-      for (const childNode of node.childNodes) {
+      for (const childNode of node._children || node.childNodes) {
         markup += this._serializeNode(childNode, inheritedNS, map, prefixIndex, requireWellFormed)
       }
     }
@@ -508,7 +508,7 @@ export class XMLSerializerNSImpl implements XMLSerializer {
      * 3. Return the value of serialized document.
     */
     let serializedDocument = ""
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children || node.childNodes) {
       serializedDocument += this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed)
     }
@@ -604,7 +604,7 @@ export class XMLSerializerNSImpl implements XMLSerializer {
      * 3. Return the value of markup.
      */
     let markup = ""
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children || node.childNodes) {
       markup += this._serializeNode(childNode, namespace, prefixMap,
         prefixIndex, requireWellFormed)
     }
@@ -772,10 +772,7 @@ export class XMLSerializerNSImpl implements XMLSerializer {
      * 3. Loop: For each attribute attr in element's attributes, in the order 
      * they are specified in the element's attribute list: 
      */
-    for (let i = 0; i < node.attributes.length; i++) {
-      const attr = node.attributes.item(i)
-      if (!attr) continue
-
+    for (const attr of node.attributes) {
       // Optimize common case
       if (!requireWellFormed && attr.namespaceURI === null) {
         result += " " + attr.localName + "=\"" + 

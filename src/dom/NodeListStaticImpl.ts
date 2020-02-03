@@ -127,8 +127,9 @@ export class NodeListStaticImpl implements NodeList {
     }
 
     let index = 0
-    this._items.forEach(node =>
-      callback.call(thisArg, node, index++, this))    
+    for (const node of this._items) {
+      callback.call(thisArg, node, index++, this)
+    }
   }
 
   /**
@@ -146,7 +147,7 @@ export class NodeListStaticImpl implements NodeList {
 
     return target._items[index] || undefined
   }
-  
+
   /**
    * Implements a proxy set trap to provide array-like access.
    */
@@ -167,7 +168,7 @@ export class NodeListStaticImpl implements NodeList {
       return false
     }
   }
-  
+
   /**
    * Creates a new `NodeList`.
    * 

@@ -279,14 +279,14 @@ export function range_extract(range: AbstractRange): DocumentFragment {
    * "HierarchyRequestError" DOMException.
    */
   const containedChildren: Node[] = []
-  commonAncestor._children.forEach(child => {
+  for (const child of commonAncestor._children) {
     if (range_isContained(child, range)) {
       if (Guard.isDocumentTypeNode(child)) {
         throw new HierarchyRequestError()
       }
       containedChildren.push(child)
     }
-  })
+  }
 
   let newNode: Node
   let newOffset: number
@@ -370,7 +370,9 @@ export function range_extract(range: AbstractRange): DocumentFragment {
    * 17. For each contained child in contained children, append contained
    * child to fragment.
    */
-  containedChildren.forEach(child => mutation_append(child, fragment))
+  for (const child of containedChildren) {
+    mutation_append(child, fragment)
+  }
 
   if (Guard.isCharacterDataNode(lastPartiallyContainedChild)) {
     /**
@@ -516,14 +518,14 @@ export function range_cloneTheContents(range: AbstractRange): DocumentFragment {
    * "HierarchyRequestError" DOMException.
    */
   const containedChildren: Node[] = []
-  commonAncestor._children.forEach(child => {
+  for (const child of commonAncestor._children) {
     if (range_isContained(child, range)) {
       if (Guard.isDocumentTypeNode(child)) {
         throw new HierarchyRequestError()
       }
       containedChildren.push(child)
     }
-  })
+  }
 
   if (Guard.isCharacterDataNode(firstPartiallyContainedChild)) {
     /**
@@ -568,10 +570,10 @@ export function range_cloneTheContents(range: AbstractRange): DocumentFragment {
    * flag set.
    * 15.2. Append clone to fragment.
    */
-  containedChildren.forEach(child => {
+  for (const child of containedChildren) {
     const clone = node_clone(child)
     mutation_append(clone, fragment)
-  })
+  }
 
   if (Guard.isCharacterDataNode(lastPartiallyContainedChild)) {
     /**

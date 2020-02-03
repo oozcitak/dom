@@ -92,7 +92,9 @@ export function eventTarget_removeEventListener(eventTarget: EventTarget,
  */
 export function eventTarget_removeAllEventListeners(eventTarget: EventTarget): void {
   // check if the listener is defined
-  eventTarget._eventListenerList.forEach(e => e.removed = true)
+  for (const e of eventTarget._eventListenerList) {
+    e.removed = true
+  }
 
   // empty list
   eventTarget._eventListenerList = []

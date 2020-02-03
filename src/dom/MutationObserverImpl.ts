@@ -79,7 +79,7 @@ export class MutationObserverImpl implements MutationObserver {
      */
     let isRegistered = false
     const coptions = options
-    target._registeredObserverList.forEach(registered => {
+    for (const registered of target._registeredObserverList) {
       if (registered.observer === this) {
         isRegistered = true
         /**
@@ -87,17 +87,17 @@ export class MutationObserverImpl implements MutationObserver {
          * transient registered observers whose source is registered from node’s
          * registered observer list.
          */
-        this._nodeList.forEach(node => {
-          infraList.remove((node)._registeredObserverList, (ob) =>
+        for (const node of this._nodeList) {
+          infraList.remove(node._registeredObserverList, (ob) =>
             Guard.isTransientRegisteredObserver(ob) && ob.source === registered
           )
-        })
+        }
         /**
          * 7.2. Set registered’s options to options.
          */
         registered.options = coptions
       }
-    })
+    }
 
     /**
      * 8. Otherwise:
@@ -118,11 +118,11 @@ export class MutationObserverImpl implements MutationObserver {
      * registered observer from node’s registered observer list for which the 
      * context object is the observer.
      */
-    this._nodeList.forEach(node => {
+    for (const node of this._nodeList) {
       infraList.remove((node)._registeredObserverList, (ob) =>
         ob.observer === this
       )
-    })
+    }
 
     /**
      * 2. Empty the context object’s record queue.

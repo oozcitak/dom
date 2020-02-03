@@ -397,7 +397,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
            */
           const cn = currentNode
           const index = tree_index(cn)
-          dom.rangeList.forEach(range => {
+          for (const range of dom.rangeList) {
             if (range._start[0] === cn) {
               range._start[0] = node
               range._start[1] += length
@@ -414,7 +414,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
               range._end[0] = node
               range._end[1] = length
             }
-          })
+          }
           /**
            * 6.5. Add currentNode’s length to length.
            * 6.6. Set currentNode to its next sibling.

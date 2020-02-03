@@ -66,8 +66,9 @@ export function dom_runAttributeChangeSteps(element: Element, localName: string,
   updateAnElementID.call(element, element, localName, value, namespace)
 
   // run custom steps
-  element._attributeChangeSteps.forEach(a => 
-    a.call(element, element, localName, oldValue, value, namespace))
+  for (const step of element._attributeChangeSteps) {
+    step.call(element, element, localName, oldValue, value, namespace)
+  }
 }
 
 /**

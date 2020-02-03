@@ -211,7 +211,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * providing inherited ns, map, prefix index, and the require well-formed 
      * flag.
      */
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children || node.childNodes) {
       markup += this._serializeNode(childNode, requireWellFormed)
     }
 
@@ -261,7 +261,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * 3. Return the value of serialized document.
     */
     let serializedDocument = ""
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children || node.childNodes) {
       serializedDocument += this._serializeNode(childNode, requireWellFormed)
     }
     return serializedDocument
@@ -352,7 +352,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * 3. Return the value of markup.
      */
     let markup = ""
-    for (const childNode of node.childNodes) {
+    for (const childNode of node._children || node.childNodes) {
       markup += this._serializeNode(childNode, requireWellFormed)
     }
     return markup
@@ -513,10 +513,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * 3. Loop: For each attribute attr in element's attributes, in the order 
      * they are specified in the element's attribute list: 
      */
-    for (let i = 0; i < node.attributes.length; i++) {
-      const attr = node.attributes.item(i)
-      if (!attr) continue
-
+    for (const attr of node.attributes) {
       /**
        * 3.1. If the require well-formed flag is set (its value is true), and the 
        * localname set contains a tuple whose values match those of a new tuple 

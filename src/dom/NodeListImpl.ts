@@ -135,8 +135,9 @@ export class NodeListImpl implements NodeList {
     }
 
     let index = 0
-    this._root._children.forEach(node =>
-      callback.call(thisArg, node, index++, this))
+    for (const node of this._root._children) {
+      callback.call(thisArg, node, index++, this)
+    }
   }
 
   /**

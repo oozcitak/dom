@@ -109,7 +109,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * 2. For each token in tokens, append token to context object’s token set.
      * 3. Run the update steps.
      */
-    tokens.forEach(token => {
+    for (const token of tokens) {
       if (token === '') {
         throw new SyntaxError("Cannot add an empty token.")
       } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
@@ -117,7 +117,7 @@ export class DOMTokenListImpl implements DOMTokenList {
       } else {
         this._tokenSet.add(token)
       }
-    })
+    }
     tokenList_updateSteps(this)
   }
 
@@ -132,7 +132,7 @@ export class DOMTokenListImpl implements DOMTokenList {
      * 2. For each token in tokens, remove token from context object’s token set.
      * 3. Run the update steps.
      */
-    tokens.forEach(token => {
+    for (const token of tokens) {
       if (token === '') {
         throw new SyntaxError("Cannot remove an empty token.")
       } else if (infraCodePoint.ASCIIWhiteSpace.test(token)) {
@@ -140,7 +140,7 @@ export class DOMTokenListImpl implements DOMTokenList {
       } else {
         this._tokenSet.delete(token)
       }
-    })
+    }
     tokenList_updateSteps(this)
   }
 

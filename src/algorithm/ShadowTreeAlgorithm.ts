@@ -53,7 +53,7 @@ export function shadowTree_isAssigned(slotable: Slotable): boolean {
  * @param slotable - a slotable
  * @param openFlag - `true` to search open shadow tree's only
  */
-export function shadowTree_findASlot(slotable: Slotable, openFlag: 
+export function shadowTree_findASlot(slotable: Slotable, openFlag:
   boolean = false): Slot | null {
   /**
    * 1. If slotable’s parent is null, then return null.
@@ -74,7 +74,7 @@ export function shadowTree_findASlot(slotable: Slotable, openFlag:
   let child = tree_getFirstDescendantNode(shadow, false, true, (e) => Guard.isSlot(e))
   while (child !== null) {
     if ((child as Slot)._name === slotable._name) return (child as Slot)
-    child = tree_getNextDescendantNode(shadow, child, false, true, (e) => Guard.isSlot(e))    
+    child = tree_getNextDescendantNode(shadow, child, false, true, (e) => Guard.isSlot(e))
   }
 
   return null
@@ -99,7 +99,7 @@ export function shadowTree_findSlotables(slot: Slot): Slotable[] {
    * 4. For each slotable child of host, slotable, in tree order:
    */
   const host = root._host
-  host._children.forEach(slotable => {
+  for (const slotable of host._children) {
     if (Guard.isSlotable(slotable)) {
       /**
        * 4.1. Let foundSlot be the result of finding a slot given slotable.
@@ -110,7 +110,7 @@ export function shadowTree_findSlotables(slot: Slot): Slotable[] {
         result.push(slotable)
       }
     }
-  })
+  }
 
   /**
    * 5. Return result.
@@ -139,17 +139,17 @@ export function shadowTree_findFlattenedSlotables(slot: Slot): Slotable[] {
    */
   const slotables = shadowTree_findSlotables(slot)
   if (isEmpty(slotables)) {
-    slot._children.forEach(slotable => {
+    for (const slotable of slot._children) {
       if (Guard.isSlotable(slotable)) {
         slotables.push(slotable)
       }
-    })
+    }
   }
 
   /**
    * 5. For each node in slotables:
    */
-  slotables.forEach(node => {
+  for (const node of slotables) {
     /**
      * 5.1. If node is a slot whose root is a shadow root, then:
      */
@@ -166,7 +166,7 @@ export function shadowTree_findFlattenedSlotables(slot: Slot): Slotable[] {
        */
       result.push(node)
     }
-  })
+  }
 
   /**
    * 6. Return result.
@@ -204,7 +204,9 @@ export function shadowTree_assignSlotables(slot: Slot): void {
    * 4. For each slotable in slotables, set slotable’s assigned slot to slot.
    */
   slot._assignedNodes = slotables
-  slotables.forEach(slotable => slotable._assignedSlot = slot)
+  for (const slotable of slotables) {
+    slotable._assignedSlot = slot
+  }
 }
 
 /**

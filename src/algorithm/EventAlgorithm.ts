@@ -180,9 +180,9 @@ export function event_dispatch(event: Event, target: EventTarget,
      * event.
      */
     let touchTargets: PotentialEventTarget[] = []
-    event._touchTargetList.forEach(touchTarget =>
+    for (const touchTarget of event._touchTargetList) {
       touchTargets.push(tree_retarget(touchTarget, target))
-    )
+    }
 
     event_appendToAnEventPath(event, target, targetOverride, relatedTarget,
       touchTargets, false)
@@ -236,9 +236,9 @@ export function event_dispatch(event: Event, target: EventTarget,
       relatedTarget = tree_retarget(event._relatedTarget, parent)
 
       touchTargets = []
-      event._touchTargetList.forEach(touchTarget =>
+      for (const touchTarget of event._touchTargetList) {
         touchTargets.push(tree_retarget(touchTarget, parent))
-      )
+      }
 
       /**
        * 5.9.6. If parent is a Window object, or parent is a node and target's 

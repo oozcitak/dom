@@ -147,10 +147,10 @@ export function node_clone(node: Node, document: Document | null = null,
    * flag being set.
    */
   if (cloneChildrenFlag) {
-    node._children.forEach(child => {
+    for (const child of node._children) {
       const childCopy = node_clone(child, document, true)
       mutation_append(childCopy, copy)
-    })
+    }
   }
 
   /**
