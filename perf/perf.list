@@ -208,30 +208,6 @@
   },
   "1.13.0": {
     "createDocument + createElement + appendChild": {
-      "xmldom": 3489.864599621133,
-      "dom": 1737.216617527991,
-      "jsdom": 181.02451843235454
-    },
-    "parse 2 kB sample xml": {
-      "fast-xml-parser": 15711.775861192506,
-      "dom": 15452.10576945654,
-      "xmldom": 12636.896460670265,
-      "jsdom": 1047.4195979342178
-    },
-    "parse 2 MB sample xml": {
-      "fast-xml-parser": 11.58829283052862,
-      "dom": 8.922968612779098,
-      "xmldom": 7.537381646631903,
-      "jsdom": 0.9197318605640071
-    },
-    "serializer": {
-      "dom": 4271.95092198754,
-      "xmldom": 2392.97178575729,
-      "jsdom": 1336.4596964699072
-    }
-  },
-  "1.13.0*": {
-    "createDocument + createElement + appendChild": {
       "xmldom": 3453.2368881047228,
       "dom": 1653.20442620063,
       "jsdom": 176.97701512175664
