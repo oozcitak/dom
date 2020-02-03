@@ -124,13 +124,7 @@ export class NodeListImpl implements NodeList {
 
   /** @inheritdoc */
   [Symbol.iterator](): Iterator<Node> {
-    const it = this._root._children[Symbol.iterator]()
-
-    return {
-      next(): IteratorResult<Node> {
-        return it.next()
-      }
-    }
+    return this._root._children[Symbol.iterator]()
   }
 
   /** @inheritdoc */
