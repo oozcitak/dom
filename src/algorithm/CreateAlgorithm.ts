@@ -83,8 +83,8 @@ export function create_abortSignal(): AbortSignal {
  * @param publicId - `PUBLIC` identifier
  * @param systemId - `SYSTEM` identifier
  */
-export function create_documentType(document: Document, name: string, publicId: string = '',
-  systemId: string = ''): DocumentType {
+export function create_documentType(document: Document, name: string, 
+  publicId: string, systemId: string): DocumentType {
   return DocumentTypeImpl._create(document, name, publicId, systemId)
 }
 
@@ -96,8 +96,8 @@ export function create_documentType(document: Document, name: string, publicId: 
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_element(document: Document, localName: string, namespace: string | null = null,
-  prefix: string | null = null): Element {
+export function create_element(document: Document, localName: string, 
+  namespace: string | null, prefix: string | null): Element {
   return ElementImpl._create(document, localName, namespace, prefix)
 }
 
@@ -109,8 +109,8 @@ export function create_element(document: Document, localName: string, namespace:
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_htmlElement(document: Document, localName: string, namespace: string | null = null,
-  prefix: string | null = null): Element {
+export function create_htmlElement(document: Document, localName: string, 
+  namespace: string | null, prefix: string | null): Element {
   // TODO: Implement in HTML DOM
   return ElementImpl._create(document, localName, namespace, prefix)
 }
@@ -123,8 +123,8 @@ export function create_htmlElement(document: Document, localName: string, namesp
  * @param namespace - namespace
  * @param prefix - namespace prefix
  */
-export function create_htmlUnknownElement(document: Document, localName: string, namespace: string | null = null,
-  prefix: string | null = null): Element {
+export function create_htmlUnknownElement(document: Document, localName: string,
+  namespace: string | null, prefix: string | null): Element {
   // TODO: Implement in HTML DOM
   return ElementImpl._create(document, localName, namespace, prefix)
 }
@@ -164,7 +164,7 @@ export function create_attr(document: Document, localName: string): Attr {
  * @param document - owner document
  * @param data - node contents
  */
-export function create_text(document: Document, data: string = ''): Text {
+export function create_text(document: Document, data: string): Text {
   return TextImpl._create(document, data)
 }
 
@@ -174,7 +174,7 @@ export function create_text(document: Document, data: string = ''): Text {
  * @param document - owner document
  * @param data - node contents
  */
-export function create_cdataSection(document: Document, data: string = ''): CDATASection {
+export function create_cdataSection(document: Document, data: string): CDATASection {
   return CDATASectionImpl._create(document, data)
 }
 
@@ -184,7 +184,7 @@ export function create_cdataSection(document: Document, data: string = ''): CDAT
  * @param document - owner document
  * @param data - node contents
  */
-export function create_comment(document: Document, data: string = ''): Comment {
+export function create_comment(document: Document, data: string): Comment {
   return CommentImpl._create(document, data)
 }
 
@@ -196,7 +196,7 @@ export function create_comment(document: Document, data: string = ''): Comment {
  * @param data - node contents
  */
 export function create_processingInstruction(document: Document, target: string,
-  data: string = ''): ProcessingInstruction {
+  data: string): ProcessingInstruction {
   return ProcessingInstructionImpl._create(document, target, data)
 }
 
