@@ -1,7 +1,7 @@
-import { BoundaryPoint, BoundaryPosition, Node } from "../dom/interfaces"
+import { BoundaryPoint, BoundaryPosition } from "../dom/interfaces"
 import { 
   tree_index, tree_isAncestorOf, tree_isChildOf, tree_isFollowing, 
-  tree_nodeLength, tree_rootNode
+  tree_rootNode
 } from "./TreeAlgorithm"
 
 /**
@@ -20,9 +20,8 @@ export function boundaryPoint_position(bp: BoundaryPoint, relativeTo: BoundaryPo
   /**
    * 1. Assert: nodeA and nodeB have the same root.
    */
-  if (tree_rootNode(nodeA) !== tree_rootNode(nodeB)) {
-    throw new Error("Boundary points must share the same root node.")
-  }
+  console.assert(tree_rootNode(nodeA) === tree_rootNode(nodeB),
+    "Boundary points must share the same root node.")
 
   /**
    * 2. If nodeA is nodeB, then return equal if offsetA is offsetB, before 
@@ -81,22 +80,4 @@ export function boundaryPoint_position(bp: BoundaryPoint, relativeTo: BoundaryPo
    * 5. Return before.
    */
   return BoundaryPosition.Before
-}
-
-/**
- * Returns the boundary point for the start of a node.
- * 
- * @param node - a node
- */
-export function boundaryPoint_nodeStart(node: Node): BoundaryPoint {
-  return [node, 0]
-}
-
-/**
- * Returns the boundary point for the end of a node.
- * 
- * @param node - a node
- */
-export function boundaryPoint_nodeEnd(node: Node): BoundaryPoint {
-  return [node, tree_nodeLength(node)]
 }
