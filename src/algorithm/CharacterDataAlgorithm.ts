@@ -69,10 +69,10 @@ export function characterData_replaceData(node: CharacterData, offset: number, c
    */
   for (const range of  dom.rangeList) {
     if (range._start[0] === node && range._start[1] > offset && range._start[1] <= offset + count) {
-      range._start[1] += offset
+      range._start[1] = offset
     }
     if (range._end[0] === node && range._end[1] > offset && range._end[1] <= offset + count) {
-      range._end[1] += offset
+      range._end[1] = offset
     }
     if (range._start[0] === node && range._start[1] > offset + count) {
       range._start[1] += data.length - count
