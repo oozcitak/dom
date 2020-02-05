@@ -8,6 +8,11 @@ describe('DOMImplementation', () => {
     expect(impl1).toBe(impl2)
   })
 
+  test('ID', () => {
+    const impl = $$.dom
+    expect(impl._ID).toBe("@oozcitak/dom")
+  })
+
   test('createDocumentType()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     expect($$.printTree(doctype)).toBe($$.t`

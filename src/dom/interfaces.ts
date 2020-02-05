@@ -1639,6 +1639,7 @@ export interface DOMImplementation {
    */
   hasFeature(): boolean
 
+  _ID: string
   _associatedDocument: Document
 }
 

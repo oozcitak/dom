@@ -7,6 +7,7 @@ import {
   create_documentType, create_xmlDocument, create_document, create_text,
   namespace_validate, document_internalCreateElementNS, element_createAnElement
 } from "../algorithm"
+import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
  * Represents an object providing methods which are not dependent on 
@@ -14,6 +15,7 @@ import {
  */
 export class DOMImplementationImpl implements DOMImplementation {
 
+  _ID!: string
   _associatedDocument: Document
 
   /**
@@ -168,4 +170,7 @@ export class DOMImplementationImpl implements DOMImplementation {
   static _create(document: Document): DOMImplementationImpl {
     return new DOMImplementationImpl(document)
   }
+
 }
+
+idl_defineConst(DOMImplementationImpl.prototype, "_ID", "@oozcitak/dom")
