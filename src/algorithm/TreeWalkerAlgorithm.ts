@@ -46,7 +46,7 @@ export function treeWalker_traverseChildren(walker: TreeWalker, first: boolean):
     /**
      * 3.4. While node is non-null:
      */
-    while (node) {
+    while (node !== null) {
       /**
        * 3.4.1. Let sibling be node’s next sibling if type is first, and
        * node’s previous sibling if type is last.
@@ -93,7 +93,7 @@ export function treeWalker_traverseSiblings(walker: TreeWalker, next: boolean): 
    * 2. If node is root, then return null.
    * 3. While node is non-null:
    */
-  let node = walker._current
+  let node: Node | null = walker._current
   if (node === walker._root) return null
 
   while (true) {
@@ -102,9 +102,9 @@ export function treeWalker_traverseSiblings(walker: TreeWalker, next: boolean): 
      * previous sibling if type is previous.
      * 3.2. While sibling is non-null:
      */
-    let sibling = (next ? node._nextSibling : node._previousSibling)
+    let sibling: Node | null = (next ? node._nextSibling : node._previousSibling)
 
-    while (sibling) {
+    while (sibling !== null) {
       /**
        * 3.2.1. Set node to sibling.
        * 3.2.2. Let result be the result of filtering node within walker.
@@ -135,11 +135,8 @@ export function treeWalker_traverseSiblings(walker: TreeWalker, next: boolean): 
      * 3.3. Set node to node’s parent.
      * 3.4. If node is null or walker’s root, then return null.
      */
-    if (node._parent === null) {
-      return null
-    }
     node = node._parent
-    if (node === walker._root) {
+    if (node === null || node === walker._root) {
       return null
     }
 

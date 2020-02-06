@@ -60,7 +60,7 @@ describe('TreeWalker', () => {
   })
 
   test('nextNode() with user filter', () => {
-    const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
+    const iter = doc.createTreeWalker(node1, $$.WhatToShow.All, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
 
@@ -109,7 +109,7 @@ describe('TreeWalker', () => {
   })
 
   test('previousNode() with user filter', () => {
-    const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
+    const iter = doc.createTreeWalker(node1, $$.WhatToShow.All, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
 
@@ -167,10 +167,16 @@ describe('TreeWalker', () => {
     const child1 = node1.firstElementChild
     if (!child1)
       throw new Error("firstElementChild is null")
-    const child2 = child1.nextElementSibling
-    if (!child2)
-      throw new Error("nextElementSibling is null")
+    expect(iter.firstChild()).toBe(child1)
+  })
 
+  test('firstChild() with user filter', () => {
+    const iter = doc.createTreeWalker(node1, $$.WhatToShow.All, (node) =>
+      node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
+    )
+    const child1 = node1.firstElementChild
+    if (!child1)
+      throw new Error("firstElementChild is null")
     expect(iter.firstChild()).toBe(child1)
   })
 
@@ -183,6 +189,19 @@ describe('TreeWalker', () => {
     if (!child2)
       throw new Error("nextElementSibling is null")
 
+    expect(iter.lastChild()).toBe(child2)
+  })
+
+  test('lastChild() with user filter', () => {
+    const iter = doc.createTreeWalker(node1, $$.WhatToShow.All, (node) =>
+      node.nodeName.endsWith('2') ? $$.FilterResult.Accept : $$.FilterResult.Reject
+    )
+    const child1 = node1.firstElementChild
+    if (!child1)
+      throw new Error("firstElementChild is null")
+    const child2 = child1.nextElementSibling
+    if (!child2)
+      throw new Error("nextElementSibling is null")
     expect(iter.lastChild()).toBe(child2)
   })
 
