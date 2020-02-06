@@ -3,7 +3,8 @@ import {
   tree_getDescendantNodes, tree_getDescendantElements, tree_getSiblingNodes, 
   tree_isConstrained, tree_nodeLength, tree_isEmpty, tree_rootNode, 
   tree_isDescendantOf, tree_isAncestorOf, tree_isSiblingOf, tree_isPreceding,
-  tree_isFollowing, tree_firstChild, tree_lastChild
+  tree_isFollowing, tree_firstChild, tree_lastChild, tree_getAncestorNodes, 
+  tree_getCommonAncestor
 } from "../../src/algorithm"
 
 describe('Tree', () => {
@@ -32,6 +33,49 @@ describe('Tree', () => {
     expect(str).toBe('text shtext ')
   })
 
+  test('getDescendantNodes() with no descendants', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+
+    let str = ''
+    for (const childNode of tree_getDescendantNodes(de)) {
+        str += childNode.nodeValue + ' '
+    }
+    expect(str).toBe('')
+  })
+
+  test('getDescendantNodes() with self=true', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    de.appendChild(doc.createElement('node'))
+    de.appendChild(doc.createElement('node'))
+
+    let str = ''
+    for (const childNode of tree_getDescendantNodes(de, true)) {
+        str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('root node node ')
+  })
+
+  test('getDescendantNodes() with self=false', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    de.appendChild(doc.createElement('node'))
+    de.appendChild(doc.createElement('node'))
+
+    let str = ''
+    for (const childNode of tree_getDescendantNodes(de)) {
+        str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('node node ')
+  })
+
   test('getDescendantElements()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
@@ -54,6 +98,19 @@ describe('Tree', () => {
         str += childNode.nodeName + ' '
     }
     expect(str).toBe('sele sh1 sh2 ')
+  })
+
+  test('getDescendantElements() with no descendants', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+
+    let str = ''
+    for (const childNode of tree_getDescendantElements(de)) {
+        str += childNode.nodeValue + ' '
+    }
+    expect(str).toBe('')
   })
 
   test('getSiblingNodes()', () => {
@@ -85,6 +142,121 @@ describe('Tree', () => {
       count++
     }
     expect(count).toBe(3)
+  })
+
+  test('getSiblingNodes() with no siblings', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const node = doc.createElement('node')
+
+    let str = ''
+    for (const childNode of tree_getSiblingNodes(node)) {
+        str += childNode.nodeValue + ' '
+    }
+    expect(str).toBe('')
+  })
+
+  test('getAncestorNodes()', () => {
+    const doc = $$.dom.createDocument('my ns', 'root', null)
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    const node1 = doc.createElement('node1')
+    const node2 = doc.createElement('node2')
+    const node3 = doc.createElement('node3')
+    const node4 = doc.createElement('node4')
+    de.appendChild(node1)
+    node1.appendChild(node2)
+    node2.appendChild(node3)
+    node3.appendChild(node4)
+
+    let str = ''
+    for (const childNode of tree_getAncestorNodes(node4)) {
+      str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('node3 node2 node1 root #document ')
+  })
+
+  test('getAncestorNodes() with self=true', () => {
+    const doc = $$.dom.createDocument('my ns', 'root', null)
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    const node1 = doc.createElement('node1')
+    const node2 = doc.createElement('bode2')
+    const node3 = doc.createElement('node3')
+    const node4 = doc.createElement('bode4')
+    de.appendChild(node1)
+    node1.appendChild(node2)
+    node2.appendChild(node3)
+    node3.appendChild(node4)
+
+    let str = ''
+    for (const childNode of tree_getAncestorNodes(node4, true, (node) => { return (node.nodeName.startsWith('n')) })) {
+      str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('node3 node1 ')
+  })
+
+  test('getAncestorNodes() with self=false', () => {
+    const doc = $$.dom.createDocument('my ns', 'root', null)
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    const node1 = doc.createElement('node1')
+    const node2 = doc.createElement('bode2')
+    const node3 = doc.createElement('node3')
+    const node4 = doc.createElement('node4')
+    de.appendChild(node1)
+    node1.appendChild(node2)
+    node2.appendChild(node3)
+    node3.appendChild(node4)
+
+    let str = ''
+    for (const childNode of tree_getAncestorNodes(node4, false, (node) => { return (node.nodeName.startsWith('n')) })) {
+      str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('node3 node1 ')
+  })
+
+  test('getAncestorNodes() without ancestors', () => {
+    const doc = $$.dom.createDocument('my ns', 'root', null)
+    const node = doc.createElement('node')
+
+    let str = ''
+    for (const childNode of tree_getAncestorNodes(node)) {
+      str += childNode.nodeName + ' '
+    }
+    expect(str).toBe('')
+  })
+
+  test('getCommonAncestor()', () => {
+    const doc = $$.dom.createDocument('my ns', 'root', null)
+    if (!doc.documentElement)
+      throw new Error("documentElement is null")
+    const de = doc.documentElement
+    const node11 = doc.createElement('node1-1')
+    const node12 = doc.createElement('node1-2')
+    const node13 = doc.createElement('node1-3')
+    const node14 = doc.createElement('node1-4')
+    de.appendChild(node11)
+    node11.appendChild(node12)
+    node12.appendChild(node13)
+    node13.appendChild(node14)
+    const node21 = doc.createElement('node2-1')
+    const node22 = doc.createElement('node2-2')
+    const node23 = doc.createElement('node2-3')
+    const node24 = doc.createElement('node2-4')
+    de.appendChild(node21)
+    node21.appendChild(node22)
+    node22.appendChild(node23)
+    node23.appendChild(node24)
+
+    expect(tree_getCommonAncestor(node11, node11)).toBe(de)
+    expect(tree_getCommonAncestor(node24, node13)).toBe(de)
+    expect(tree_getCommonAncestor(node11, node13)).toBe(node11)
+
+    const node3 = doc.createElement('node3')
+    expect(tree_getCommonAncestor(node11, node3)).toBeNull()
   })
 
   test('isConstrained()', () => {
