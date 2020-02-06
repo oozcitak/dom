@@ -25,9 +25,9 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@oozcitak/util": "8.0.0",
     "@oozcitak/infra": "1.0.5",
-    "@oozcitak/url": "1.0.0"
+    "@oozcitak/url": "1.0.0",
+    "@oozcitak/util": "8.0.0"
   },
   "devDependencies": {
     "@types/benchmark": "*",
@@ -35,6 +35,7 @@
     "@types/jest": "*",
     "@types/jsdom": "*",
     "@types/node": "*",
+    "@types/semver": "*",
     "@types/xmldom": "*",
     "benchmark": "*",
     "chalk": "*",
@@ -43,6 +44,7 @@
     "glob": "*",
     "jest": "*",
     "jsdom": "*",
+    "semver": "*",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*",
