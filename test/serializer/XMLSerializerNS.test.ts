@@ -51,9 +51,9 @@ describe('XMLSerializer', () => {
       '</signing>' +
       '</section>'
 
-      const serializer = new XMLSerializer()
-      const parser = new $$.DOMParser()
-      expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
+    const serializer = new XMLSerializer()
+    const parser = new $$.DOMParser()
+    expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
   })
 
   test('namespace declaration attribute', () => {
@@ -71,6 +71,18 @@ describe('XMLSerializer', () => {
       root (ns:ns) xmlns="ns" (ns:http://www.w3.org/2000/xmlns/)
         foo
       `)
+  })
+
+  test('skip XML namespace declaration attribute', () => {
+    const doc = $$.dom.createDocument('ns', 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:ns', 'http://www.w3.org/XML/1998/namespace')
+    }
+
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns="ns"/>'
+    )
   })
 
   test('default namespace', () => {
@@ -422,6 +434,9 @@ describe('XMLSerializer', () => {
     node2.setAttribute('att', 'val1')
     node2.attributes[0]._localName = 'att\0'
     expect(() => serializer._xmlSerialization(node2, true)).toThrow()
+    const node3 = doc.createElement('node')
+    node3.setAttribute('xmlns', 'val1')
+    expect(() => serializer._xmlSerialization(node3, true)).toThrow()    
   })
 
   test('invalid attributes value', () => {
@@ -429,6 +444,22 @@ describe('XMLSerializer', () => {
     const node = doc.createElement('node')
     node.setAttribute('att', 'val')
     node.attributes[0]._value = 'val\0'
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+  })
+
+  test('invalid attributes value - XMLNS', () => {
+    const doc = $$.dom.createDocument(null, '')
+    const node = doc.createElement('node')
+    node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'http://www.w3.org/2000/xmlns/')
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+  })
+
+  test('invalid attributes value - undeclare namespace', () => {
+    const doc = $$.dom.createDocument(null, '')
+    const node = doc.createElement('node')
+    node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', '')
     const serializer = new XMLSerializer() as any
     expect(() => serializer._xmlSerialization(node, true)).toThrow()
   })
@@ -482,6 +513,269 @@ describe('XMLSerializer', () => {
     node.attributes[1]._localName = 'att'
     const serializer = new XMLSerializer() as any
     expect(() => serializer._xmlSerialization(node, true)).toThrow()
+  })
+
+  test('XML namespace', () => {
+    const doc = $$.dom.createDocument('http://www.w3.org/XML/1998/namespace', 'root')
+    if (doc.documentElement) {
+      doc.documentElement.appendChild(doc.createElement('foo'))
+      doc.documentElement.appendChild(doc.createElement('bar'))
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<xml:root>' +
+      '<foo/>' +
+      '<bar/>' +
+      '</xml:root>'
+    )
+  })
+
+  test('duplicate namespaces', () => {
+    const doc = $$.dom.createDocument('ns1', 'd:root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:d', 'ns1')
+      const e = doc.createElementNS('ns1', 'e:foo')
+      e.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:e', 'ns1')
+      doc.documentElement.appendChild(e)
+      doc.documentElement.appendChild(doc.createElement('bar'))
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<d:root xmlns:d="ns1">' +
+      '<e:foo xmlns:e="ns1"/>' +
+      '<bar/>' +
+      '</d:root>'
+    )
+  })
+
+  test('attribute with namespace and no prefix', () => {
+    const doc = $$.dom.createDocument(null, 'r')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', "xmlns:x0", "ns")
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', "xmlns:x2", "ns")
+      const b = doc.createElement('b')
+      b.setAttributeNS('http://www.w3.org/2000/xmlns/', "xmlns:x1", "ns")
+      b.setAttributeNS("ns", "name", "v")
+      doc.documentElement.appendChild(b)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<r xmlns:x0="ns" xmlns:x2="ns">' +
+      '<b xmlns:x1="ns" x1:name="v"/>' +
+      '</r>'
+    )
+  })
+
+  test('nested default namespace declaration attributes with same namespace are ignored', () => {
+    const doc = $$.dom.createDocument('ns', 'r')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns')
+      const n = doc.createElementNS('ns', 'n')
+      n.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns')
+      doc.documentElement.appendChild(n)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<r xmlns="ns">' +
+      '<n/>' +
+      '</r>'
+    )
+  })
+
+  test('prefix of an attribute is replaced with another existing prefix mapped to the same namespace URI', () => {
+    const doc = $$.dom.createDocument(null, 'r')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xx', 'uri')
+      doc.documentElement.setAttributeNS('uri', 'p:name', 'v')
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<r xmlns:xx="uri" xx:name="v"/>'
+    )
+
+    const doc2 = $$.dom.createDocument(null, 'r')
+    if (doc2.documentElement) {
+      doc2.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xx', 'uri')
+      const b = doc2.createElement('b')
+      b.setAttributeNS('uri', 'p:name', 'v')
+      doc2.documentElement.appendChild(b)
+    }
+    expect(serializer.serializeToString(doc2)).toBe(
+      '<r xmlns:xx="uri">' +
+      '<b xx:name="v"/>' +
+      '</r>'
+    )
+  })
+
+  test('prefix of an attribute is NOT preserved if neither its prefix nor its namespace URI is not already used', () => {
+    const doc = $$.dom.createDocument(null, 'r')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xx', 'uri')
+      doc.documentElement.setAttributeNS('uri2', 'xx:name', 'value')
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<r xmlns:xx="uri" xmlns:ns1="uri2" ns1:name="value"/>'
+    )
+  })
+
+  test('same prefix declared in an ancestor element', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri1')
+      const child = doc.createElement('child')
+      child.setAttributeNS('uri2', 'p:foobar', 'value')
+      doc.documentElement.appendChild(child)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:p="uri1">' +
+      '<child xmlns:ns1="uri2" ns1:foobar="value"/>' +
+      '</root>'
+    )
+  })
+
+  test('drop element prefix if the namespace is same as inherited default namespace', () => {
+    const doc = $$.dom.createDocument('uri', 'root')
+    if (doc.documentElement) {
+      const child = doc.createElementNS('uri', 'p:child')
+      child.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri')
+      doc.documentElement.appendChild(child)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns="uri">' +
+      '<child xmlns:p="uri"/>' +
+      '</root>'
+    )
+  })
+
+  test('find an appropriate prefix', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p1', 'u1')
+      const child = doc.createElement('child')
+      child.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p2', 'u1')
+      doc.documentElement.appendChild(child)
+      const child2 = doc.createElementNS('u1', 'child2')
+      child.appendChild(child2)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:p1="u1">' +
+      '<child xmlns:p2="u1">' +
+      '<p2:child2/>' +
+      '</child>' +
+      '</root>'
+    )
+  })
+
+  test('xmlns:* attributes', () => {
+    const doc = $$.dom.createDocument('uri1', 'p:root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri2')
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<ns1:root xmlns:ns1="uri1" xmlns:p="uri2"/>'
+    )
+  })
+
+  test('prefix re-declared in ancestor element', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri2')
+      doc.documentElement.appendChild(doc.createElementNS('uri1', 'p:child'))
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:p="uri2">' +
+      '<p:child xmlns:p="uri1"/>' +
+      '</root>'
+    )
+  })
+
+  test('default namespace does not apply if was declared in an ancestor', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'uri1')
+      const table = doc.createElementNS('uri1', 'table')
+      table.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'uri1')
+      doc.documentElement.appendChild(table)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:x="uri1">' +
+      '<x:table xmlns="uri1"/>' +
+      '</root>'
+    )
+  })
+
+  test('multiple generated prefixes', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      const child1 = doc.createElement('child1')
+      child1.setAttributeNS('uri1', 'attr1', 'value1')
+      child1.setAttributeNS('uri2', 'attr2', 'value2')
+      doc.documentElement.appendChild(child1)
+      const child2 = doc.createElement('child2')
+      child2.setAttributeNS('uri3', 'attr3', 'value3')
+      doc.documentElement.appendChild(child2)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root>' +
+      '<child1 xmlns:ns1="uri1" ns1:attr1="value1" xmlns:ns2="uri2" ns2:attr2="value2"/>' +
+      '<child2 xmlns:ns3="uri3" ns3:attr3="value3"/>' +
+      '</root>'
+    )
+  })
+
+  test('attributes in same namespace', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      const child1 = doc.createElement('child')
+      child1.setAttributeNS('uri', 'attr', 'value')
+      doc.documentElement.appendChild(child1)
+      const child2 = doc.createElement('child')
+      child2.setAttributeNS('uri', 'attr', 'value')
+      doc.documentElement.appendChild(child2)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root>' +
+      '<child xmlns:ns1="uri" ns1:attr="value"/>' +
+      '<child xmlns:ns2="uri" ns2:attr="value"/>' +
+      '</root>'
+    )
+  })
+
+  test('attributes in same namespace in a single element', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('uri', 'attr1', 'value1')
+      doc.documentElement.setAttributeNS('uri', 'attr2', 'value2')
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:ns1="uri" ns1:attr1="value1" ns1:attr2="value2"/>'
+    )
+  })
+
+  test('skip namespace definition attribute if it was already defined in an ancestor', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    if (doc.documentElement) {
+      doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'v')
+      const child = doc.createElement('child')
+      child.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'v')
+      doc.documentElement.appendChild(child)
+    }
+    const serializer = new $$.XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root xmlns:x="v">' +
+      '<child/>' +
+      '</root>'
+    )
   })
 
 })

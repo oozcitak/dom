@@ -981,9 +981,7 @@ export class XMLSerializerNSImpl implements XMLSerializer {
      * 2. Main: For each attribute attr in element's attributes, in the order
      * they are specified in the element's attribute list:
      */
-    for (let i = 0; i < node.attributes.length; i++) {
-      const attr = node.attributes.item(i)
-      if (!attr) continue
+    for (const attr of node.attributes) {
       /**
        * _Note:_ The following conditional steps find namespace prefixes. Only 
        * attributes in the XMLNS namespace are considered (e.g., attributes made 
