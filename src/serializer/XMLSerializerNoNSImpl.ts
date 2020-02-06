@@ -184,7 +184,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * tag flag to true.
      * 16. Append ">" (U+003E GREATER-THAN SIGN) to markup.
      */
-    if (node.childNodes.length === 0) {
+    if (node._children.size === 0) {
       markup += "/"
       skipEndTag = true
     }
@@ -211,7 +211,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * providing inherited ns, map, prefix index, and the require well-formed 
      * flag.
      */
-    for (const childNode of node._children || node.childNodes) {
+    for (const childNode of node._children) {
       markup += this._serializeNode(childNode, requireWellFormed)
     }
 
@@ -261,7 +261,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * 3. Return the value of serialized document.
     */
     let serializedDocument = ""
-    for (const childNode of node._children || node.childNodes) {
+    for (const childNode of node._children) {
       serializedDocument += this._serializeNode(childNode, requireWellFormed)
     }
     return serializedDocument
@@ -352,7 +352,7 @@ export class XMLSerializerNoNSImpl implements XMLSerializer {
      * 3. Return the value of markup.
      */
     let markup = ""
-    for (const childNode of node._children || node.childNodes) {
+    for (const childNode of node._children) {
       markup += this._serializeNode(childNode, requireWellFormed)
     }
     return markup

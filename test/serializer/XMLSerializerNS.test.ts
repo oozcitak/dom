@@ -1,10 +1,10 @@
 import $$ from "../TestHelpers"
-import { gte } from 'semver'
+import { XMLSerializerNSImpl as XMLSerializer } from "../../src/serializer/XMLSerializerNSImpl"
 
 describe('XMLSerializer', () => {
 
   test('basic', () => {
-    const doc = $$.dom.createDocument(null, 'root')
+    const doc = $$.dom.createDocument('ns', 'root')
     const de = doc.documentElement
     if (de) {
       const node1 = doc.createElement('node')
@@ -23,16 +23,16 @@ describe('XMLSerializer', () => {
       de.appendChild(node3)
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
-      '<root>' +
-      '<node att="val"/>' +
+      '<root xmlns="ns">' +
+      '<node xmlns="" att="val"/>' +
       '<!--same node below-->' +
-      '<node att="val" att2="val2"/>' +
+      '<node xmlns="" att="val" att2="val2"/>' +
       '<?kidding itwas="different"?>' +
       '<?for real?>' +
       '<![CDATA[<greeting>Hello, world!</greeting>]]>' +
-      '<text>alien\'s pinky toe</text>' +
+      '<text xmlns="">alien\'s pinky toe</text>' +
       '</root>'
     )
   })
@@ -51,7 +51,7 @@ describe('XMLSerializer', () => {
       '</signing>' +
       '</section>'
 
-      const serializer = new $$.XMLSerializer()
+      const serializer = new XMLSerializer()
       const parser = new $$.DOMParser()
       expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
   })
@@ -63,7 +63,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(doc.createElement('foo'))
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<root xmlns="ns"><foo xmlns=""/></root>'
     )
@@ -84,7 +84,7 @@ describe('XMLSerializer', () => {
     node1.appendChild(node2)
     node2.appendChild(doc.createTextNode('text'))
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<root xmlns="uri:myns"><node1><node2>text</node2></node1></root>'
     )
@@ -103,7 +103,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation', 'uri:myschema.xsd')
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<root xmlns="uri:myns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:myschema.xsd"/>'
     )
@@ -127,7 +127,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(script)
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
       '<script type="text/ecmascript" xlink:href="foo.js"/>' +
@@ -148,7 +148,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(script)
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns=""/>' +
@@ -170,7 +170,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(script)
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns="http://www.w3.org/1999/xlink"/>' +
@@ -199,7 +199,7 @@ describe('XMLSerializer', () => {
       node3.appendChild(doc.createElementNS(ns1, 'p:child'))
     }
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<p:root xmlns:p="uri:my ns1">' +
       '<p:node><p:child/></p:node>' +
@@ -224,9 +224,19 @@ describe('XMLSerializer', () => {
     if (!doc.documentElement) throw new Error("Document element is null.")
     doc.documentElement.append(doc.createElement('foo'), doc.createElement('bar'))
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<xml:root><foo/><bar/></xml:root>'
+    )
+  })
+
+  test('element with xmlns prefix (not well-formed)', () => {
+    const doc = $$.dom.createDocument('ns', 'root')
+    const node = doc.createElementNS('http://www.w3.org/2000/xmlns/', 'xmlns:foo')
+
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(node)).toBe(
+      '<xmlns:foo/>'
     )
   })
 
@@ -237,7 +247,7 @@ describe('XMLSerializer', () => {
     frag.appendChild(doc.createElementNS(ns, 'node1'))
     frag.appendChild(doc.createElementNS(ns, 'node2'))
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(frag)).toBe(
       '<node1 xmlns="uri:myns"/><node2 xmlns="uri:myns"/>'
     )
@@ -248,7 +258,7 @@ describe('XMLSerializer', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', 'sysId')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<!DOCTYPE root PUBLIC "pubId" "sysId"><root xmlns="uri:myns"/>'
     )
@@ -259,7 +269,7 @@ describe('XMLSerializer', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', '')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<!DOCTYPE root PUBLIC "pubId"><root xmlns="uri:myns"/>'
     )
@@ -270,7 +280,7 @@ describe('XMLSerializer', () => {
     const doctype = $$.dom.createDocumentType('root', '', 'sysId')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<!DOCTYPE root SYSTEM "sysId"><root xmlns="uri:myns"/>'
     )
@@ -281,7 +291,7 @@ describe('XMLSerializer', () => {
     const doctype = $$.dom.createDocumentType('root', '', '')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<!DOCTYPE root><root xmlns="uri:myns"/>'
     )
@@ -289,108 +299,138 @@ describe('XMLSerializer', () => {
 
   test('invalid document type pubId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId\x09', 'sysId')
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(doctype, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
   })
 
   test('invalid document type sysId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', 'sysId\x00')
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(doctype, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
   })
 
   test('invalid document type sysId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', '"sysId\'')
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(doctype, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
   })
 
   test('invalid element name', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createElement('name') as any
+    const ele = doc.createElement('name')
     ele._localName = "invalid:name"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+  })
+
+  test('invalid element name', () => {
+    const doc = $$.dom.createDocument('ns', 'root')
+    const ele = doc.createElementNS('otherNS', 'name')
+    ele._namespacePrefix = "xmlns"
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid element name', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createElement('name') as any
+    const ele = doc.createElement('name')
     ele._localName = "invalidname\0"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createComment('name') as any
+    const ele = doc.createComment('name')
     ele._data = "invalid\0"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createComment('name') as any
+    const ele = doc.createComment('name')
     ele._data = "comment--invalid"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createComment('name') as any
+    const ele = doc.createComment('name')
     ele._data = "comment-invalid-"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid text', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createTextNode('name') as any
+    const ele = doc.createTextNode('name')
     ele._data = "invalid\0"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createProcessingInstruction('name', 'value') as any
+    const ele = doc.createProcessingInstruction('name', 'value')
     ele._target = "invalid:target"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createProcessingInstruction('name', 'value') as any
+    const ele = doc.createProcessingInstruction('name', 'value')
     ele._target = "xml"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createProcessingInstruction('name', 'value') as any
+    const ele = doc.createProcessingInstruction('name', 'value')
     ele._data = "value\0"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createProcessingInstruction('name', 'value') as any
+    const ele = doc.createProcessingInstruction('name', 'value')
     ele._data = "value?>"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
   })
 
   test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
-    const ele = doc.createCDATASection('name') as any
+    const ele = doc.createCDATASection('name')
     ele._data = "value]]>"
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(ele, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+  })
+
+  test('invalid attribute name', () => {
+    const doc = $$.dom.createDocument(null, '')
+    const node1 = doc.createElement('node')
+    node1.setAttribute('att', 'val1')
+    node1.attributes[0]._localName = 'att:name'
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(node1, true)).toThrow()
+    const node2 = doc.createElement('node')
+    node2.setAttribute('att', 'val1')
+    node2.attributes[0]._localName = 'att\0'
+    expect(() => serializer._xmlSerialization(node2, true)).toThrow()
+  })
+
+  test('invalid attributes value', () => {
+    const doc = $$.dom.createDocument(null, '')
+    const node = doc.createElement('node')
+    node.setAttribute('att', 'val')
+    node.attributes[0]._value = 'val\0'
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(node, true)).toThrow()
   })
 
   test('invalid node type', () => {
@@ -401,53 +441,47 @@ describe('XMLSerializer', () => {
     }
     Object.defineProperty(invalid, "nodeType", { value: 0 })
 
-    const serializer = new $$.XMLSerializer()
+    const serializer = new XMLSerializer()
     expect(() => serializer.serializeToString(doc)).toThrow()
   })
 
   test('null document element', () => {
     const doc = $$.dom.createDocument(null, '')
-    const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._produceXMLSerialization(doc, true)).toThrow()
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(doc, true)).toThrow()
   })
 
-  if (gte(process.version, '10.0.0')) {
-    // only run if node version >=10 since this is the minimum requirement for jsdom
-    test('serialize document from another implementation', () => {
-      const { JSDOM } = require("jsdom")
-      const jsdomImpl = new JSDOM().window.document.implementation
-      const doc = jsdomImpl.createDocument(null, 'root', null)
-      const de = doc.documentElement
-      if (de) {
-        const node1 = doc.createElement('node')
-        node1.setAttribute('att', 'val')
-        de.appendChild(node1)
-        de.appendChild(doc.createComment('same node below'))
-        const node2 = doc.createElement('node')
-        node2.setAttribute('att', 'val')
-        node2.setAttribute('att2', 'val2')
-        de.appendChild(node2)
-        de.appendChild(doc.createProcessingInstruction('kidding', 'itwas="different"'))
-        de.appendChild(doc.createProcessingInstruction('for', 'real'))
-        de.appendChild(doc.createCDATASection('<greeting>Hello, world!</greeting>'))
-        const node3 = doc.createElement('text')
-        node3.appendChild(doc.createTextNode('alien\'s pinky toe'))
-        de.appendChild(node3)
-      }
+  test('escape text', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const txt = doc.createTextNode('abc&<>abc')
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(txt)).toBe('abc&amp;&lt;&gt;abc')
+  })
 
-      const serializer = new $$.XMLSerializer()
-      expect(serializer.serializeToString(doc as any)).toBe(
-        '<root>' +
-        '<node att="val"/>' +
-        '<!--same node below-->' +
-        '<node att="val" att2="val2"/>' +
-        '<?kidding itwas="different"?>' +
-        '<?for real?>' +
-        '<![CDATA[<greeting>Hello, world!</greeting>]]>' +
-        '<text>alien\'s pinky toe</text>' +
-        '</root>'
-      )
-    })
-  }
+  test('escape attribute value', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const node = doc.createElement('node')
+    node.setAttribute('att', 'abc"&<>abc')
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(node)).toBe('<node att="abc&quot;&amp;&lt;&gt;abc"/>')
+  })
+
+  test('null attribute value', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const node = doc.createElement('node')
+    node.setAttribute('att', null as unknown as string)
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(node)).toBe('<node att=""/>')
+  })
+
+  test('multiple attributes with same name', () => {
+    const doc = $$.dom.createDocument(null, '')
+    const node = doc.createElement('node')
+    node.setAttribute('att', 'val1')
+    node.setAttribute('att2', 'val1')
+    node.attributes[1]._localName = 'att'
+    const serializer = new XMLSerializer() as any
+    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+  })
 
 })
