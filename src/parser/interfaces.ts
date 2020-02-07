@@ -101,7 +101,7 @@ export interface PIToken extends CharacterDataToken {
 export interface ElementToken extends XMLToken {
   readonly type: TokenType.Element
   readonly name: string
-  readonly attributes: { [key: string]: string }
+  readonly attributes: Array<[string, string]>
   readonly selfClosing: boolean
 }
 

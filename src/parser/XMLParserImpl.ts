@@ -100,8 +100,7 @@ export class XMLParserImpl {
 
           // override namespace if there is a namespace declaration
           // attribute
-          for (const attName in element.attributes) {
-            const attValue = element.attributes[attName]
+          for (const [attName, attValue] of element.attributes) {
             if (attName === "xmlns") {
               namespace = attValue
             } else {
@@ -122,8 +121,7 @@ export class XMLParserImpl {
           // assign attributes
           const localNameSet = new LocalNameSet()
 
-          for (const attName in element.attributes) {
-            const attValue = element.attributes[attName]
+          for (const [attName, attValue] of element.attributes) {
             // skip the default namespace declaration attribute
             if (attName === "xmlns") {
               continue
@@ -172,6 +170,7 @@ export class XMLParserImpl {
           if (closingTag.name !== context.nodeName) {
             throw new Error('Closing tag name does not match opening tag name.')
           }
+          /* istanbul ignore else */
           if (context._parent) {
             context = context._parent
           }

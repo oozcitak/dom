@@ -212,13 +212,13 @@ export class XMLStringLexer implements XMLLexer {
     this.skipSpace()
     const name = this.takeUntil2('>', '/', true)
     if (this.skipIfStartsWith('>')) {
-      return { type: TokenType.Element, name: name, attributes: {}, selfClosing: false }
+      return { type: TokenType.Element, name: name, attributes: [], selfClosing: false }
     } else if (this.skipIfStartsWith('/>')) {
-      return { type: TokenType.Element, name: name, attributes: {}, selfClosing: true }
+      return { type: TokenType.Element, name: name, attributes: [], selfClosing: true }
     }
 
     // attributes
-    const attributes: { [name: string]: string } = {}
+    const attributes: Array<[string, string]> = []
     while (!this.eof()) {
       // end tag
       this.skipSpace()
@@ -228,8 +228,8 @@ export class XMLStringLexer implements XMLLexer {
         return { type: TokenType.Element, name: name, attributes: attributes, selfClosing: true }
       }
 
-      const [attName, attValue] = this.attribute()
-      attributes[attName] = attValue
+      const attr = this.attribute()
+      attributes.push(attr)
     }
 
     throw new Error('Missing opening element tag end symbol `>`')
@@ -291,11 +291,6 @@ export class XMLStringLexer implements XMLLexer {
   private eof(): boolean { return this._index >= this._length }
 
   /**
-   * Returns the current character.
-   */
-  private c(): string { return this._str[this._index] }
-
-  /**
    * Skips the length of the given string if the string from current position 
    * starts with the given string.
    * 
@@ -352,7 +347,7 @@ export class XMLStringLexer implements XMLLexer {
     }
     
     const startIndex = this._index
-    this._index += count
+    this.seek(count)
     return this._str.slice(startIndex, this._index)
   }
 

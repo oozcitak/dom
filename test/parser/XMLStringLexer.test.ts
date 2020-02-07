@@ -3,6 +3,11 @@ import { TokenType } from "../../src/parser/interfaces"
 
 describe('XMLStringLexer', () => {
 
+  test('constructor', () => {
+    const lexer = new $$.XMLStringLexer('', {}) as any
+    expect(lexer._options.skipWhitespaceOnlyText).toBe(false)
+  })
+
   test('basic', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
@@ -22,13 +27,13 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
       { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
       { type: TokenType.Text, data: '\n' },
-      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: false },
+      { type: TokenType.Element, name: 'root', attributes: [], selfClosing: false },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val' }, selfClosing: true },
+      { type: TokenType.Element, name: 'node', attributes: [['att', 'val']], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.Comment, data: ' same node below ' },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val', 'att2': 'val2' }, selfClosing: true },
+      { type: TokenType.Element, name: 'node', attributes: [['att', 'val'], ['att2', 'val2']], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.PI, target: 'kidding', data: 'itwas="different"' },
       { type: TokenType.Text, data: '\n  ' },
@@ -36,7 +41,7 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.CDATA, data: 'here be dragons' },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'text', attributes: {}, selfClosing: false },
+      { type: TokenType.Element, name: 'text', attributes: [], selfClosing: false },
       { type: TokenType.Text, data: 'alien\'s pinky toe' },
       { type: TokenType.ClosingTag, name: 'text' },
       { type: TokenType.Text, data: '\n' },
@@ -65,19 +70,19 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
       { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
       { type: TokenType.Text, data: '\n' },
-      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: false },
+      { type: TokenType.Element, name: 'root', attributes: [], selfClosing: false },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val' }, selfClosing: true },
+      { type: TokenType.Element, name: 'node', attributes: [['att', 'val']], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.Comment, data: ' same node below ' },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'node', attributes: { 'att': 'val', 'att2': 'val2' }, selfClosing: true },
+      { type: TokenType.Element, name: 'node', attributes: [['att', 'val'], ['att2', 'val2']], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.PI, target: 'kidding', data: 'itwas="different"' },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.CDATA, data: 'here be dragons' },
       { type: TokenType.Text, data: '\n  ' },
-      { type: TokenType.Element, name: 'text', attributes: {}, selfClosing: false },
+      { type: TokenType.Element, name: 'text', attributes: [], selfClosing: false },
       { type: TokenType.Text, data: 'alien\'s pinky toe' },
       { type: TokenType.ClosingTag, name: 'text' },
       { type: TokenType.Text, data: '\n' },
@@ -99,7 +104,7 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
       { type: TokenType.DocType, name: 'root', pubId: '-//W3C//DTD HTML 4.01//EN', sysId: 'http://www.w3.org/TR/html4/strict.dtd' },
       { type: TokenType.Text, data: '\n' },
-      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
+      { type: TokenType.Element, name: 'root', attributes: [], selfClosing: true }
     ]
 
     const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
@@ -117,7 +122,7 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
       { type: TokenType.DocType, name: 'root', pubId: '', sysId: 'http://www.w3.org/Math/DTD/mathml1/mathml.dtd' },
       { type: TokenType.Text, data: '\n' },
-      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
+      { type: TokenType.Element, name: 'root', attributes: [], selfClosing: true }
     ]
 
     const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
@@ -135,11 +140,29 @@ describe('XMLStringLexer', () => {
       { type: TokenType.Text, data: '\n' }, // lexer preserves whitespace
       { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
       { type: TokenType.Text, data: '\n' },
-      { type: TokenType.Element, name: 'root', attributes: {}, selfClosing: true }
+      { type: TokenType.Element, name: 'root', attributes: [], selfClosing: true }
     ]
 
     const lexerTokens = [...new $$.XMLStringLexer(xmlStr)]
     expect(lexerTokens).toEqual(tokens)
+  })
+
+  test('invalid DTD', () => {
+    const xmlStr = $$.t`
+      <!DOCK_TYPE root >
+      <root/>
+      `
+    const lexer = new $$.XMLStringLexer(xmlStr)
+    expect(() => lexer.nextToken()).toThrow()
+  })
+
+  test('missing DTD closing bracket', () => {
+    const xmlStr = $$.t`
+      <!DOCTYPE root[ <!ELEMENT root (#PCDATA)>>
+      <root/>
+      `
+    const lexer = new $$.XMLStringLexer(xmlStr)
+    expect(() => lexer.nextToken()).toThrow()
   })
 
   test('declaration attribute without quote', () => {
@@ -211,6 +234,14 @@ describe('XMLStringLexer', () => {
 
   test('incomplete processing instruction', () => {
     const xmlStr = $$.t`
+      <?target"
+      `
+    const lexer = new $$.XMLStringLexer(xmlStr)
+    expect(() => lexer.nextToken()).toThrow()
+  })
+
+  test('incomplete processing instruction', () => {
+    const xmlStr = $$.t`
       <?target name="content"
       `
     const lexer = new $$.XMLStringLexer(xmlStr)
@@ -273,6 +304,23 @@ describe('XMLStringLexer', () => {
     lexer.nextToken() // <root>
     lexer.nextToken() // hello
     expect(() => lexer.nextToken()).toThrow()
+  })
+
+  test('seek() beyond str', () => {
+    const lexer = new $$.XMLStringLexer('a') as any
+    lexer.seek(-10)
+    expect(lexer._index).toBe(0)
+    lexer.seek(10)
+    expect(lexer._index).toBe(1)
+  })
+
+  test('take()', () => {
+    const lexer = new $$.XMLStringLexer('abc') as any
+    expect(lexer._index).toBe(0)
+    expect(lexer.take(1)).toBe('a')
+    expect(lexer._index).toBe(1)
+    expect(lexer.take(5)).toBe('bc')
+    expect(lexer._index).toBe(3)
   })
 
 })
