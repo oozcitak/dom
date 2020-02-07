@@ -90,6 +90,15 @@ describe('Document', () => {
     const list = doc.getElementsByClassName('para')
     expect(list.length).toBe(1)
     expect(list.item(0)).toBe(nele1)
+    const list2 = doc.getElementsByClassName('PaRa')
+    expect(list2.length).toBe(0)
+    // class names are not case-sensitive in quirks mode
+    const mode = doc._mode
+    doc._mode = "quirks"
+    const list3 = doc.getElementsByClassName('PaRa')
+    expect(list3.length).toBe(1)
+    expect(list3.item(0)).toBe(nele1)
+    doc._mode = mode
   })
 
   test('createElement()', () => {

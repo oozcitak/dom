@@ -47,7 +47,7 @@ export function orderedSet_sanitize(value: string): string {
  * @param caseSensitive - whether matches are case-sensitive
  */
 export function orderedSet_contains(set1: Set<string>, set2: Set<string>,
-  caseSensitive: boolean = true): boolean {
+  caseSensitive: boolean): boolean {
 
   for (const val2 of set2) {
     let found = false
