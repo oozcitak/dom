@@ -7,7 +7,7 @@ import { NodeImpl } from "./NodeImpl"
 import {
   InvalidCharacterError, NotFoundError, NotSupportedError, NotImplementedError
 } from "./DOMException"
-import { list as infraList, namespace as infraNamespace } from "@oozcitak/infra"
+import { namespace as infraNamespace } from "@oozcitak/infra"
 import {
   create_namedNodeMap, create_attr, create_domTokenList, create_shadowRoot,
   create_text, customElement_isValidCustomElementName,

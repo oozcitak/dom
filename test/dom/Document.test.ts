@@ -111,6 +111,11 @@ describe('Document', () => {
     expect(() => { doc.createElementNS('some ns', 'xmlns') }).toThrow()
     expect(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'some:name') }).toThrow()
     expect(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'somename') }).toThrow()
+    // is value
+    const ele2 = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div', {is: 'my-div'})
+    expect(ele2._is).toBe('my-div')
+    const ele3 = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div', 'my-div')
+    expect(ele3._is).toBe('my-div')
   })
 
   test('createDocumentFragment()', () => {
@@ -182,6 +187,7 @@ describe('Document', () => {
   test('adoptNode()', () => {
     const otherDoc = $$.dom.createDocument('myns', 'otherroot')
     const otherEle = otherDoc.createElement('othernode')
+    otherEle.setAttribute('att', 'val')
     const anotherEle = otherDoc.createElement('anothernode')
 
     if (otherDoc.documentElement) {
@@ -192,6 +198,7 @@ describe('Document', () => {
 
     doc.adoptNode(otherEle)
     expect(otherEle.ownerDocument).toBe(doc)
+    expect(otherEle.attributes[0].ownerDocument).toBe(doc)
     expect(anotherEle.ownerDocument).toBe(doc)
     if (otherDoc.documentElement) {
       expect(otherDoc.documentElement.firstChild).toBeNull()

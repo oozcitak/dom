@@ -64,9 +64,8 @@ export function boundaryPoint_position(bp: BoundaryPoint, relativeTo: BoundaryPo
     let child = nodeB
 
     while (!tree_isChildOf(nodeA, child)) {
-      if (child._parent === null) {
-        throw new Error("Node has no parent node.")
-      } else {
+      /* istanbul ignore else */
+      if (child._parent !== null) {
         child = child._parent
       }
     }
