@@ -1,7 +1,7 @@
 import $$ from "../TestHelpers"
 import { AbortSignal } from "../../src/dom/interfaces"
 import { AbortError } from "../../src/dom/DOMException"
-import { abort_add } from "../../src/algorithm/AbortAlgorithm"
+import { abort_add } from "../../src/algorithm"
 
 // an example function using the abort API, from:
 // https://dom.spec.whatwg.org/#aborting-ongoing-activities-spec-example
@@ -44,12 +44,7 @@ describe('AbortController', () => {
     doAmazingness({ signal }).then(
       () => { throw new Error("Should have been aborted!") },
       () => {
-        expect(signal.aborted).toBe(true)
-
-        // aborting twice has no effect
-        controller.abort()
-        expect(signal.aborted).toBe(true)
-    
+        expect(signal.aborted).toBe(true)    
         done() 
       }
     )
