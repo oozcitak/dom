@@ -71,6 +71,47 @@ describe('Text', () => {
     expect(range.endContainer).toBe(txt2)
     expect(range.endOffset).toBe(5)
     expect(range.cloneContents().textContent).toBe("beautiful")
+
+    txt.data = "aaxxxaa"
+    range.setStart(txt, 5)
+    range.setEnd(txt, 7)
+    const txt3 = txt.splitText(2)
+    expect(range.startContainer).toBe(txt3)
+    expect(range.startOffset).toBe(3)
+    expect(range.endContainer).toBe(txt3)
+    expect(range.endOffset).toBe(5)
+  })
+
+  test('splitText() live range moves', () => {
+    const ele = $$.newDoc
+    const txt1 = new $$.Text("aa")
+    const txt2 = new $$.Text("bb")
+    ele.append(txt1, txt2)
+    const range = new $$.Range()
+    range.setStart(ele, 1)
+    range.setEnd(ele, 2)
+    
+    txt1.splitText(1)
+    expect(range.startContainer).toBe(ele)
+    expect(range.startOffset).toBe(2)
+    expect(range.endContainer).toBe(ele)
+    expect(range.endOffset).toBe(3)
+  })
+
+  test('splitText() live range grows to include new node', () => {
+    const ele = $$.newDoc
+    const txt1 = new $$.Text("aa")
+    const txt2 = new $$.Text("bb")
+    ele.append(txt1, txt2)
+    const range = new $$.Range()
+    range.setStart(ele, 0)
+    range.setEnd(ele, 1)
+    
+    txt1.splitText(1)
+    expect(range.startContainer).toBe(ele)
+    expect(range.startOffset).toBe(0)
+    expect(range.endContainer).toBe(ele)
+    expect(range.endOffset).toBe(2)
   })
 
   test('cloneNode()', () => {
