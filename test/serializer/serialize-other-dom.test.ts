@@ -48,7 +48,7 @@ if (gte(process.version, '10.0.0')) {
       const frag = doc.createDocumentFragment()
       frag.appendChild(doc.createElement('node1'))
       frag.appendChild(doc.createElement('node2'))
-  
+
       const serializer = new $$.XMLSerializer()
       expect(serializer.serializeToString(frag)).toBe(
         '<node1/><node2/>'
@@ -57,4 +57,6 @@ if (gte(process.version, '10.0.0')) {
 
   })
 
+} else {
+  describe.skip('serialize from another DOM implementation', () => { })
 }
