@@ -58,5 +58,7 @@ if (gte(process.version, '10.0.0')) {
   })
 
 } else {
-  describe.skip('serialize from another DOM implementation', () => { })
+  describe.skip('serialize from another DOM implementation', () => {
+    test.skip('skip', () => { })
+  })
 }
