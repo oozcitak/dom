@@ -778,4 +778,59 @@ describe('XMLSerializer', () => {
     )
   })
 
+  test('void element', () => {
+    const doc = $$.dom.createHTMLDocument('title')
+    const body = doc.getElementsByTagName('body')[0]
+    if (body) {
+      body.appendChild(doc.createElement('hr'))
+    }
+
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<!DOCTYPE html>' +
+      '<html xmlns="http://www.w3.org/1999/xhtml">' +
+      '<head>' +
+      '<title>title</title>' + 
+      '</head>' +
+      '<body>' +
+      '<hr />' +
+      '</body>' +
+      '</html>'
+    )
+  })
+
+  test('local default namespace attribute', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const de = doc.documentElement
+    if (de) {
+      const node = doc.createElementNS('ns1', 'x:node')
+      node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns2')
+      de.appendChild(node)
+    }
+
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root>' +
+      '<x:node xmlns:x="ns1" xmlns="ns2"/>' + 
+      '</root>'
+    )
+  })
+
+  test('empty local default namespace attribute', () => {
+    const doc = $$.dom.createDocument(null, 'root')
+    const de = doc.documentElement
+    if (de) {
+      const node = doc.createElementNS('ns1', 'x:node')
+      node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', '')
+      de.appendChild(node)
+    }
+
+    const serializer = new XMLSerializer()
+    expect(serializer.serializeToString(doc)).toBe(
+      '<root>' +
+      '<x:node xmlns:x="ns1" xmlns=""/>' + 
+      '</root>'
+    )
+  })
+
 })
