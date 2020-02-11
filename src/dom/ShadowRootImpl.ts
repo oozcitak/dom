@@ -19,7 +19,7 @@ export class ShadowRootImpl extends DocumentFragmentImpl implements ShadowRoot {
    * @param host - shadow root's host element
    * @param mode - shadow root's mode
    */
-  private constructor(host: Element, mode: ShadowRootMode = "closed") {
+  private constructor(host: Element, mode: ShadowRootMode) {
     super()
 
     this._host = host
