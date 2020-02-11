@@ -206,14 +206,12 @@ export function node_equals(a: Node, b: Node): boolean {
    * that equals an attribute in B’s attribute list.
    */
   if (Guard.isElementNode(a) && Guard.isElementNode(b)) {
-    if (a._attributeList.length !== b._attributeList.length) return false
-    const attrMap = new Map<string, Attr>()
-    for(const attrA of a._attributeList) {
-      attrMap.set((attrA._namespace || '') + attrA._localName + attrA._value, attrA)
+    const attrMap: { [key: string]: Attr } = {}
+    for (const attrA of a._attributeList) {
+      attrMap[attrA._localName] = attrA
     }
-    for (let i = 0; i < b._attributeList.length; i++) {
-      const attrB = b._attributeList[i]
-      const attrA = attrMap.get((attrB._namespace || '') + attrB._localName + attrB._value)
+    for (const attrB of b._attributeList) {
+      const attrA = attrMap[attrB._localName]
       if (!attrA) return false
       if (!node_equals(attrA, attrB)) return false
     }
@@ -434,7 +432,7 @@ export function node_locateANamespace(node: Node, prefix: string | null): string
      * value if it is not the empty string, and null otherwise.
      */
     for (let i = 0; i < node._attributeList.length; i++) {
-      const attr = node._attributeList[i];
+      const attr = node._attributeList[i]
       if (attr._namespace === infraNamespace.XMLNS &&
         attr._namespacePrefix === "xmlns" &&
         attr._localName === prefix) {

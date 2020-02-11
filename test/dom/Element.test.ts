@@ -316,11 +316,43 @@ describe('Element', () => {
     expect(de.getElementsByTagName('withtext')[0]).toBe(ele4)
   })
 
+  test('getElementsByTagName()', () => {
+    const sdoc = $$.dom.createHTMLDocument('my doc')
+    const sbody = sdoc.getElementsByTagName('body')[0]
+    if (!sbody)
+      throw new Error("body element is null")  
+    const sele1 = sdoc.createElementNS('http://www.w3.org/1999/xhtml', 'my-custom-element')
+    const sele2 = sdoc.createElementNS('ns', 'my-custom-element')
+    sbody.append(sele1, sele2)
+
+    expect(Array.from(sbody.getElementsByTagName('MY-custom-element'))).toEqual([sele1])
+    expect(Array.from(sbody.getElementsByTagName('my-custom-element'))).toEqual([sele1, sele2])
+  })
+
   test('getElementsByTagNameNS()', () => {
     expect(de.getElementsByTagNameNS('myns', 'root')[0]).toBe(ele1)
   })
 
+  test('getElementsByTagNameNS()', () => {
+    const doc1 = $$.dom.createDocument(null, 'doc')
+    const de1 = doc1.documentElement
+    if (!de1)
+      throw new Error("document element is null")  
+    const e = doc1.createElement('tag1')
+    const e11 = doc1.createElementNS('ns1', 'tag1')
+    const e12 = doc1.createElementNS('ns1', 'tag2')
+    const e21 = doc1.createElementNS('ns2', 'tag1')
+    const e22 = doc1.createElementNS('ns2', 'tag2')
+    de1.append(e, e11, e12, e21, e22)
+
+    expect(Array.from(de1.getElementsByTagNameNS('*', '*'))).toEqual([e, e11, e12, e21, e22])
+    expect(Array.from(de1.getElementsByTagNameNS('', '*'))).toEqual([e])
+    expect(Array.from(de1.getElementsByTagNameNS('*', 'tag1'))).toEqual([e, e11, e21])
+    expect(Array.from(de1.getElementsByTagNameNS('ns2', '*'))).toEqual([e21, e22])
+  })
+
   test('getElementsByClassName()', () => {
+    expect(de.getElementsByClassName('').length).toBe(0)
     expect(de.getElementsByClassName('d e f')[0]).toBe(ele2)
   })
 

@@ -257,8 +257,38 @@ describe('Node', () => {
 
     expect(newEle1.isEqualNode(newEle2)).toBe(true)
     expect(newEle1.isEqualNode(newEle3)).toBe(false)
-
     expect(newEle1.isEqualNode()).toBe(false)
+
+    const pi1 = doc.createProcessingInstruction('t1', 'v1')
+    const pi2 = doc.createProcessingInstruction('t1', 'v2')
+    const pi3 = doc.createProcessingInstruction('t2', 'v1')
+    const pi4 = doc.createProcessingInstruction('t1', 'v1')
+    expect(pi1.isEqualNode(pi2)).toBe(false)
+    expect(pi1.isEqualNode(pi3)).toBe(false)
+    expect(pi2.isEqualNode(pi3)).toBe(false)
+    expect(pi1.isEqualNode(pi4)).toBe(true)
+
+    const t1 = doc.createTextNode('t1')
+    const t2 = doc.createTextNode('t2')
+    const t3 = doc.createTextNode('t1')
+    expect(t1.isEqualNode(t2)).toBe(false)
+    expect(t1.isEqualNode(t3)).toBe(true)
+
+    const e1 = doc.createElement('ele')
+    e1.setAttribute('a1', 'v1')
+    const e2 = doc.createElement('ele')
+    e2.setAttribute('a1', 'v1')
+    e2.setAttribute('a1', 'v2')
+    expect(e1.isEqualNode(e2)).toBe(false)
+    e1.setAttribute('a2', 'vx')
+    expect(e1.isEqualNode(e2)).toBe(false)
+
+    const f1 = doc.createDocumentFragment()
+    const f2 = doc.createDocumentFragment()
+    f1.appendChild(doc.createTextNode('t1'))
+    f2.appendChild(doc.createTextNode('t1'))
+    f2.appendChild(doc.createTextNode('t2'))
+    expect(f1.isEqualNode(f2)).toBe(false)
   })
 
   test('isSameNode()', () => {
