@@ -29,6 +29,17 @@ describe('EventTarget', () => {
     expect((ele as any)._eventListenerList[0].callback).toEqual({ handleEvent: callback })
   })
 
+  test('adding same listener has no effect', () => {
+    const ele = doc.createElement('ele')
+    de.appendChild(ele)
+
+    const callback = (e: any) => false
+    ele.addEventListener('custom', callback)
+    expect((ele as any)._eventListenerList.length).toBe(1)
+    ele.addEventListener('custom', callback)
+    expect((ele as any)._eventListenerList.length).toBe(1)
+  })
+
   test('addEventListener() with event handler', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
