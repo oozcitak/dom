@@ -39,6 +39,24 @@ describe('Range', () => {
 		expect(range.endContainer).toBe(node2)
 	})
 
+  test('setStart(), setEnd() errors', () => {
+    const dtd = $$.dom.createDocumentType('root', 'pub', 'sys')
+    const doc = $$.dom.createDocument(null, 'root', dtd)
+    const de = doc.documentElement
+    if (!de)
+      throw new Error("Document element is null")
+    const com1 = doc.createComment('comment')
+    const com2 = doc.createComment('comment')
+    doc.insertBefore(com1, dtd)
+    doc.insertBefore(com2, de)
+
+		const range = new $$.Range()
+		expect(() => range.setStart(dtd, 0)).toThrow()
+		expect(() => range.setEnd(dtd, 0)).toThrow()
+		expect(() => range.setStart(de, 100)).toThrow()
+		expect(() => range.setEnd(de, 100)).toThrow()
+  })
+  
 	test('setStartBefore(), setStartAfter()', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
@@ -116,7 +134,10 @@ describe('Range', () => {
 		const range = new $$.Range()
 		range.selectNode(node2)
 		expect(range.startOffset).toBe(1)
-		expect(range.endOffset).toBe(2)
+    expect(range.endOffset).toBe(2)
+    
+    const noParent = root._nodeDocument.createElement('ele')
+		expect(() => range.selectNode(noParent)).toThrow()
 	})
 
 	test('selectNodeContents()', () => {
@@ -458,6 +479,7 @@ describe('Range', () => {
 		range.setStart(root, 1)
 		range.setEnd(root, 3)
 
+		expect(() => range.insertNode(root)).toThrow()
 		const newNode = root._nodeDocument.createElement('new')
 		range.insertNode(newNode)
 		expect(range.startOffset).toBe(1)
@@ -751,8 +773,8 @@ describe('Range', () => {
 		expect(((root.childNodes.item(0) as any).childNodes.item(0) as any).localName).toBe('child1')
 		expect(((root.childNodes.item(0) as any).childNodes.item(0) as any).childNodes.length).toBe(1)
 		expect((((root.childNodes.item(0) as any).childNodes.item(0) as any).childNodes.item(0) as any).localName).toBe('grandChild1')
-	})
-
+  })
+  
 	test('surroundContents() guards', () => {
 		const docType = $$.dom.createDocumentType('name', 'pub', 'sys')
     const doc = $$.dom.createDocument('ns', 'name', docType)
