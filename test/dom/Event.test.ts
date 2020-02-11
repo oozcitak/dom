@@ -134,4 +134,13 @@ describe('Event', () => {
     expect($$.Event.CAPTURING_PHASE).toBe(1)
   })
 
+  test('set returnValue', () => {
+    const event = new $$.Event('custom', { cancelable: true })
+    event.returnValue = false
+    expect(event.returnValue).toBe(false)
+    const event2 = new $$.Event('custom', { cancelable: false })
+    event2.returnValue = false
+    expect(event2.returnValue).toBe(true)
+  })
+
 })
