@@ -57,6 +57,7 @@ describe('XMLStringLexer', () => {
       <?xml version = "1.0" ?>
       <!DOCTYPE root >
       <root >
+        < node />
         <node  att = "val" />
         <!-- same node below -->
         <node att= "val"   att2 = 'val2' />
@@ -71,6 +72,8 @@ describe('XMLStringLexer', () => {
       { type: TokenType.DocType, name: 'root', pubId: '', sysId: '' },
       { type: TokenType.Text, data: '\n' },
       { type: TokenType.Element, name: 'root', attributes: [], selfClosing: false },
+      { type: TokenType.Text, data: '\n  ' },
+      { type: TokenType.Element, name: 'node', attributes: [], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },
       { type: TokenType.Element, name: 'node', attributes: [['att', 'val']], selfClosing: true },
       { type: TokenType.Text, data: '\n  ' },

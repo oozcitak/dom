@@ -211,6 +211,7 @@ export class XMLStringLexer implements XMLLexer {
     // element name
     this.skipSpace()
     const name = this.takeUntil2('>', '/', true)
+    this.skipSpace()
     if (this.skipIfStartsWith('>')) {
       return { type: TokenType.Element, name: name, attributes: [], selfClosing: false }
     } else if (this.skipIfStartsWith('/>')) {
