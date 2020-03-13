@@ -228,10 +228,8 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<root><?x:target?></root>', "application/xml")
     expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
-    const doc2 = parser.parseFromString('<root><?xml_target?></root>', "application/xml")
+    const doc2 = parser.parseFromString('<root><?target val\0?></root>', "application/xml")
     expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
-    const doc3 = parser.parseFromString('<root><?target val\0?></root>', "application/xml")
-    expect(doc3.getElementsByTagName("parsererror").length).toBe(1)
   })
 
   test('invalid element name', () => {
