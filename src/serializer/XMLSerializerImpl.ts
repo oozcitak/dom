@@ -763,7 +763,7 @@ export class XMLSerializerImpl implements XMLSerializer {
      * 3.5. "?>" (U+003F QUESTION MARK, U+003E GREATER-THAN SIGN).
      * 4. Return the value of markup.
      */
-    return "<?" + node.target + " " + node.data + "?>"
+    return "<?" + (node.data === "" ? node.target : node.target + " " + node.data) + "?>"
   }
 
   /**

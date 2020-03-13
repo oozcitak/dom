@@ -57,7 +57,13 @@ export class XMLStringLexer implements XMLLexer {
   private openBracket(): XMLToken {
     if (this.skipIfStartsWith('?')) {
       if (this.skipIfStartsWith('xml')) {
-        return this.declaration()
+        if (XMLStringLexer.isSpace(this._str[this._index])) {
+          return this.declaration()
+        } else {
+          // a processing instruction starting with xml. e.g. <?xml-stylesheet href="doc.xsl" type="text/xsl"?>
+          this.seek(-3)
+          return this.pi()
+        }
       } else {
         return this.pi()
       }
