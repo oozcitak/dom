@@ -20,7 +20,7 @@ npm install @oozcitak/dom
 ```
 
 # Usage
-Create an instance of the `DOMImplementation` class to construct the DOM tree.
+Create an instance of the [`DOMImplementation`](https://dom.spec.whatwg.org/#interface-domimplementation) class to construct the DOM tree.
 
 ```js
 const { DOMImplementation } = require("@oozcitak/dom");
@@ -29,4 +29,4 @@ const dom = new DOMImplementation();
 const doc = dom.createDocument('ns', 'root');
 ```
 
-The module also exports `DOMParser` and `XMLSerializer` classes as in the browser.
+The module also exports [`DOMParser`](https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#domparser) and [`XMLSerializer`](https://w3c.github.io/DOM-Parsing/#the-xmlserializer-interface) classes as in the browser.
