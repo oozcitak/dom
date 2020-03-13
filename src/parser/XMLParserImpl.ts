@@ -100,13 +100,18 @@ export class XMLParserImpl {
 
           // override namespace if there is a namespace declaration
           // attribute
+          // also lookup namespace declaration attributes
+          const nsDeclarations: { [key: string]: string } = {}
           for (const [attName, attValue] of element.attributes) {
             if (attName === "xmlns") {
               namespace = attValue
             } else {
               const [attPrefix, attLocalName] = namespace_extractQName(attName)
-              if (attPrefix === "xmlns" && attLocalName === prefix) {
-                namespace = attValue
+              if (attPrefix === "xmlns") {
+                if (attLocalName === prefix) {
+                  namespace = attValue
+                }
+                nsDeclarations[attLocalName] = attValue
               }
             }
           }
@@ -122,20 +127,17 @@ export class XMLParserImpl {
           const localNameSet = new LocalNameSet()
 
           for (const [attName, attValue] of element.attributes) {
-            // skip the default namespace declaration attribute
-            if (attName === "xmlns") {
-              continue
-            }
-
             const [attPrefix, attLocalName] = namespace_extractQName(attName)
             let attNamespace: string | null = null
-            if (attPrefix === "xmlns") {
-              // prefixed namespace declaration attribute
+            if (attPrefix === "xmlns" || (attPrefix === null && attLocalName === "xmlns")) {
+              // namespace declaration attribute
               attNamespace = infraNamespace.XMLNS
             } else {
               attNamespace = elementNode.lookupNamespaceURI(attPrefix)
               if (attNamespace !== null && elementNode.isDefaultNamespace(attNamespace)) {
                 attNamespace = null
+              } else if (attNamespace === null && attPrefix !== null) {
+                attNamespace = nsDeclarations[attPrefix] || null
               }
             }
             if (localNameSet.has(attNamespace, attLocalName)) {
@@ -146,13 +148,13 @@ export class XMLParserImpl {
               if (attValue === infraNamespace.XMLNS) {
                 throw new Error("XMLNS namespace is reserved.")
               }
-              if (attValue === "") {
-                throw new Error("Namespace prefix declarations cannot be used to undeclare a namespace.")
-              }
             }
-            if (attLocalName.indexOf(":") !== -1 || !xml_isName(attLocalName) ||
-              (attLocalName === "xmlns" && attNamespace === null)) {
+            if (attLocalName.indexOf(":") !== -1 || !xml_isName(attLocalName)) {
               throw new Error("Attribute local name contains invalid characters.")
+            }
+
+            if (attPrefix === "xmlns" && attValue === "") {
+              throw new Error("Empty XML namespace is not allowed.")
             }
 
             if (attNamespace !== null)

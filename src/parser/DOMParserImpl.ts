@@ -21,10 +21,10 @@ export class DOMParserImpl implements DOMParser {
       doc._contentType = mimeType
       return doc
     } catch (e) {
+      const errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml"
       const doc = create_xmlDocument()
-      const root = doc.createElementNS(
-        "http://www.mozilla.org/newlayout/xml/parsererror.xml", "parsererror") 
-      const ele = doc.createElement("error")
+      const root = doc.createElementNS(errorNS, "parsererror") 
+      const ele = doc.createElementNS(errorNS, "error")
       ele.setAttribute("message", (e as Error).message)
       root.appendChild(ele)
       doc.appendChild(root)

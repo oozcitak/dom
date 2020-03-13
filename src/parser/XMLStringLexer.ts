@@ -16,6 +16,8 @@ export class XMLStringLexer implements XMLLexer {
     skipWhitespaceOnlyText: false
   }
 
+  err: { line: number, col: number, index: number, str: string } = { line: -1, col: -1, index: -1, str: "" }
+
   /**
    * Initializes a new instance of `XMLStringLexer`.
    * 
@@ -42,7 +44,7 @@ export class XMLStringLexer implements XMLLexer {
     let token = (this.skipIfStartsWith('<') ? this.openBracket() : this.text())
 
     if (this._options.skipWhitespaceOnlyText) {
-      if (token.type === TokenType.Text && 
+      if (token.type === TokenType.Text &&
         XMLStringLexer.isWhiteSpaceToken(token as TextToken)) {
         token = this.nextToken()
       }
@@ -75,7 +77,7 @@ export class XMLStringLexer implements XMLLexer {
       } else if (this.skipIfStartsWith('DOCTYPE')) {
         return this.doctype()
       } else {
-        throw new Error("Invalid '!' in opening tag.")
+        this.throwError("Invalid '!' in opening tag.")
       }
     } else if (this.skipIfStartsWith('/')) {
       return this.closeTag()
@@ -107,11 +109,11 @@ export class XMLStringLexer implements XMLLexer {
         else if (attName === 'standalone')
           standalone = attValue
         else
-          throw new Error('Invalid attribute name: ' + attName)
+          this.throwError('Invalid attribute name: ' + attName)
       }
     }
 
-    throw new Error('Missing declaration end symbol `?>`')
+    this.throwError('Missing declaration end symbol `?>`')
   }
 
   /**
@@ -139,12 +141,12 @@ export class XMLStringLexer implements XMLLexer {
       // skip internal subset nodes
       this.skipUntil(']')
       if (!this.skipIfStartsWith(']')) {
-        throw new Error('Missing end bracket of DTD internal subset')
+        this.throwError('Missing end bracket of DTD internal subset')
       }
     }
     this.skipSpace()
     if (!this.skipIfStartsWith('>')) {
-      throw new Error('Missing doctype end symbol `>`')
+      this.throwError('Missing doctype end symbol `>`')
     }
 
     return { type: TokenType.DocType, name: name, pubId: pubId, sysId: sysId }
@@ -156,7 +158,7 @@ export class XMLStringLexer implements XMLLexer {
   private pi(): PIToken {
     const target = this.takeUntilStartsWith('?>', true)
     if (this.eof()) {
-      throw new Error('Missing processing instruction end symbol `?>`')
+      this.throwError('Missing processing instruction end symbol `?>`')
     }
     this.skipSpace()
     if (this.skipIfStartsWith('?>')) {
@@ -165,7 +167,7 @@ export class XMLStringLexer implements XMLLexer {
 
     const data = this.takeUntilStartsWith('?>')
     if (this.eof()) {
-      throw new Error('Missing processing instruction end symbol `?>`')
+      this.throwError('Missing processing instruction end symbol `?>`')
     }
     this.seek(2)
 
@@ -189,7 +191,7 @@ export class XMLStringLexer implements XMLLexer {
   private comment(): CommentToken {
     const data = this.takeUntilStartsWith('-->')
     if (this.eof()) {
-      throw new Error('Missing comment end symbol `-->`')
+      this.throwError('Missing comment end symbol `-->`')
     }
     this.seek(3)
 
@@ -203,7 +205,7 @@ export class XMLStringLexer implements XMLLexer {
   private cdata(): CDATAToken {
     const data = this.takeUntilStartsWith(']]>')
     if (this.eof()) {
-      throw new Error('Missing CDATA end symbol `]>`')
+      this.throwError('Missing CDATA end symbol `]>`')
     }
     this.seek(3)
 
@@ -239,7 +241,7 @@ export class XMLStringLexer implements XMLLexer {
       attributes.push(attr)
     }
 
-    throw new Error('Missing opening element tag end symbol `>`')
+    this.throwError('Missing opening element tag end symbol `>`')
   }
 
   /**
@@ -251,7 +253,7 @@ export class XMLStringLexer implements XMLLexer {
     const name = this.takeUntil('>', true)
     this.skipSpace()
     if (!this.skipIfStartsWith('>')) {
-      throw new Error('Missing closing element tag end symbol `>`')
+      this.throwError('Missing closing element tag end symbol `>`')
     }
 
     return { type: TokenType.ClosingTag, name: name }
@@ -266,7 +268,7 @@ export class XMLStringLexer implements XMLLexer {
     const name = this.takeUntil('=', true)
     this.skipSpace()
     if (!this.skipIfStartsWith('=')) {
-      throw new Error('Missing equals sign before attribute value')
+      this.throwError('Missing equals sign before attribute value')
     }
 
     // attribute value
@@ -282,11 +284,11 @@ export class XMLStringLexer implements XMLLexer {
     this.skipSpace()
     const startQuote = this.take(1)
     if (!XMLStringLexer.isQuote(startQuote)) {
-      throw new Error('Missing start quote character before quoted value')
+      this.throwError('Missing start quote character before quoted value')
     }
     const value = this.takeUntil(startQuote)
     if (!this.skipIfStartsWith(startQuote)) {
-      throw new Error('Missing end quote character after quoted value')
+      this.throwError('Missing end quote character after quoted value')
     }
 
     return value
@@ -307,7 +309,7 @@ export class XMLStringLexer implements XMLLexer {
     const strLength = str.length
 
     if (strLength === 1) {
-      if(this._str[this._index] === str) {
+      if (this._str[this._index] === str) {
         this._index++
         return true
       } else {
@@ -352,7 +354,7 @@ export class XMLStringLexer implements XMLLexer {
     if (count === 1) {
       return this._str[this._index++]
     }
-    
+
     const startIndex = this._index
     this.seek(count)
     return this._str.slice(startIndex, this._index)
@@ -453,7 +455,7 @@ export class XMLStringLexer implements XMLLexer {
   private static isWhiteSpaceToken(token: TextToken): boolean {
     const str = token.data
     for (let i = 0; i < str.length; i++) {
-      const c = str [i]
+      const c = str[i]
       if (c !== ' ' && c !== '\n' && c !== '\r' && c !== '\t' && c !== '\f') return false
     }
     return true
@@ -475,6 +477,40 @@ export class XMLStringLexer implements XMLLexer {
    */
   private static isQuote(char: string): boolean {
     return (char === '"' || char === '\'')
+  }
+
+  /**
+   * Throws a parser error and records the line and column numbers in the parsed
+   * string.
+   * 
+   * @param msg - error message
+   */
+  private throwError(msg: string): never {
+    const regexp = /\r\n|\r|\n/g
+    let match: RegExpExecArray | null = null
+    let line = 0
+    let firstNewLineIndex = 0
+    let lastNewlineIndex = this._str.length
+    while ((match = regexp.exec(this._str)) !== null) {
+      if (match === null) break
+      line++
+      if (match.index < this._index) firstNewLineIndex = regexp.lastIndex
+      if (match.index > this._index) {
+        lastNewlineIndex = match.index
+        break
+      }
+    }
+
+    this.err = {
+      line: line,
+      col: this._index - firstNewLineIndex,
+      index: this._index,
+      str: this._str.substring(firstNewLineIndex, lastNewlineIndex)
+    }
+
+    throw new Error(msg + "\nIndex: " + this.err.index +
+      "\nLn: " + this.err.line + ", Col: " + this.err.col +
+      "\nInput: " + this.err.str)
   }
 
   /**

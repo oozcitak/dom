@@ -99,7 +99,7 @@ describe('XMLParser', () => {
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
-      root (ns:uri:myns)
+      root (ns:uri:myns) xmlns="uri:myns" (ns:http://www.w3.org/2000/xmlns/)
         node1 (ns:uri:myns)
           node2 (ns:uri:myns)
             # text    
@@ -116,7 +116,7 @@ describe('XMLParser', () => {
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
-      root (ns:uri:myns) xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" (ns:http://www.w3.org/2000/xmlns/) xsi:schemaLocation="uri:myschema.xsd" (ns:http://www.w3.org/2001/XMLSchema-instance)
+      root (ns:uri:myns) xmlns="uri:myns" (ns:http://www.w3.org/2000/xmlns/) xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" (ns:http://www.w3.org/2000/xmlns/) xsi:schemaLocation="uri:myschema.xsd" (ns:http://www.w3.org/2001/XMLSchema-instance)
         node1 (ns:uri:myns)
           node2 (ns:uri:myns)
             # text
@@ -133,7 +133,7 @@ describe('XMLParser', () => {
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
-      svg (ns:http://www.w3.org/2000/svg) xmlns:xlink="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
+      svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/) xmlns:xlink="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
         script (ns:http://www.w3.org/2000/svg) type="text/ecmascript" xlink:href="foo.js" (ns:http://www.w3.org/1999/xlink)
       `)
   })
@@ -148,8 +148,8 @@ describe('XMLParser', () => {
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
-      svg (ns:http://www.w3.org/2000/svg)
-        script
+      svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/)
+        script xmlns="" (ns:http://www.w3.org/2000/xmlns/)
       `)
   })
 
@@ -163,8 +163,8 @@ describe('XMLParser', () => {
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
     expect($$.printTree(doc)).toBe($$.t`
-      svg (ns:http://www.w3.org/2000/svg)
-        script (ns:http://www.w3.org/1999/xlink)
+      svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/)
+        script (ns:http://www.w3.org/1999/xlink) xmlns="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
       `)
   })
 
@@ -252,6 +252,82 @@ describe('XMLParser', () => {
     expect(doc4.getElementsByTagName("parsererror").length).toBe(1)
     const doc5 = parser.parseFromString('<root d:att\0="val"/>', "application/xml")
     expect(doc5.getElementsByTagName("parsererror").length).toBe(1)
+  })
+
+  // https://www.w3.org/TR/xml-c14n2-testcases/
+  test('Tests from Canonical XML - 1', () => {
+    const str = $$.t`
+    <?xml version="1.0"?>
+
+    <?xml-stylesheet   href="doc.xsl"
+       type="text/xsl"   ?>
+    
+    <!DOCTYPE doc SYSTEM "doc.dtd">
+    
+    <doc>Hello, world!<!-- Comment 1 --></doc>
+    
+    <?pi-without-data     ?>
+    
+    <!-- Comment 2 -->
+    
+    <!-- Comment 3 -->       
+    `
+    const parser = new $$.DOMParser()
+    const doc = parser.parseFromString(str, "application/xml")
+    const ser = new $$.XMLSerializer()
+    
+    expect(ser.serializeToString(doc)).toBe(
+      '<?xml-stylesheet href="doc.xsl"\n   type="text/xsl"   ?>' +
+      '<!DOCTYPE doc SYSTEM "doc.dtd">' + 
+      '<doc>Hello, world!<!-- Comment 1 --></doc>' +
+      '<?pi-without-data?>' +
+      '<!-- Comment 2 -->' +
+      '<!-- Comment 3 -->'
+    )
+  })
+
+  test('Tests from Canonical XML - 2', () => {
+    const str = $$.t`
+    <!DOCTYPE doc [<!ATTLIST e9 attr CDATA "default">]>
+    <doc>
+       <e1   />
+       <e2   ></e2>
+       <e3   name = "elem3"   id="elem3"   />
+       <e4   name="elem4"   id="elem4"   ></e4>
+       <e5 a:attr="out" b:attr="sorted" attr2="all" attr="I'm"
+          xmlns:b="http://www.ietf.org"
+          xmlns:a="http://www.w3.org"
+          xmlns="http://example.org"/>
+       <e6 xmlns="" xmlns:a="http://www.w3.org">
+          <e7 xmlns="http://www.ietf.org">
+             <e8 xmlns="" xmlns:a="http://www.w3.org">
+                <e9 xmlns="" xmlns:a="http://www.ietf.org"/>
+             </e8>
+          </e7>
+       </e6>
+    </doc>     
+    `
+    const parser = new $$.DOMParser()
+    const doc = parser.parseFromString(str, "application/xml")
+    const ser = new $$.XMLSerializer()
+    
+    expect(ser.serializeToString(doc)).toBe(
+      '<!DOCTYPE doc>' +
+      '<doc>' +
+         '<e1/>' +
+         '<e2/>' +
+         '<e3 name="elem3" id="elem3"/>' +
+         '<e4 name="elem4" id="elem4"/>' +
+         '<e5 a:attr="out" b:attr="sorted" attr2="all" attr="I\'m" xmlns:b="http://www.ietf.org" xmlns:a="http://www.w3.org" xmlns="http://example.org"/>' +
+         '<e6 xmlns:a="http://www.w3.org">' +
+            '<e7 xmlns="http://www.ietf.org">' +
+               '<e8 xmlns="">' +
+                  '<e9 xmlns:a="http://www.ietf.org"/>' +
+               '</e8>' +
+            '</e7>' +
+         '</e6>' +
+      '</doc>'
+    )
   })
 
 })
