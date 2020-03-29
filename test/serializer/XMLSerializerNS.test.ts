@@ -705,7 +705,7 @@ describe('XMLSerializer', () => {
     const serializer = new $$.XMLSerializer()
     expect(serializer.serializeToString(doc)).toBe(
       '<root xmlns:x="uri1">' +
-      '<x:table xmlns="uri1"/>' +
+      '<table xmlns="uri1"/>' +
       '</root>'
     )
   })
@@ -832,4 +832,16 @@ describe('XMLSerializer', () => {
     )
   })
 
+  test('Check if start tag serialization does NOT apply the default namespace if its namespace is declared in an ancestor.', () => {
+    // see: https://github.com/web-platform-tests/wpt/pull/16703
+    const str = `<root xmlns:x="uri1"><table xmlns="uri1"/></root>`
+
+    const parser = new $$.DOMParser()
+    const doc = parser.parseFromString(str, "application/xml")
+
+    const serializer = new $$.XMLSerializer()
+    const newStr = serializer.serializeToString(doc)
+
+    expect(newStr).toBe(str)
+  })
 })
