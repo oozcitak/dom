@@ -27,7 +27,7 @@
   "dependencies": {
     "@oozcitak/infra": "1.0.5",
     "@oozcitak/url": "1.0.0",
-    "@oozcitak/util": "8.0.0"
+    "@oozcitak/util": "8.3.4"
   },
   "devDependencies": {
     "@types/benchmark": "*",
