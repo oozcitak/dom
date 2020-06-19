@@ -1,4 +1,4 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import { HierarchyRequestError, NotFoundError } from "../dom/DOMException"
 import { NodeType, Node, Element } from "../dom/interfaces"
 import { Guard } from "../util"

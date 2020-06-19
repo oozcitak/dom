@@ -1,10 +1,9 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import {
   EventPhase, PotentialEventTarget, EventPathItem, EventListenerEntry,
   EventHandler, Event, EventTarget
 } from "../dom/interfaces"
 import { Guard } from "../util"
-import { forEachObject } from "@oozcitak/util"
 import { CustomEventImpl } from "../dom/CustomEventImpl"
 import { EventImpl } from "../dom/EventImpl"
 import { NotSupportedError } from "../dom/DOMException"

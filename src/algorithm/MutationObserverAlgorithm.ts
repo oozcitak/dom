@@ -1,4 +1,4 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import { MutationRecord, MutationObserver, Node } from "../dom/interfaces"
 import { Guard } from "../util"
 import { list as infraList, set as infraSet } from "@oozcitak/infra"

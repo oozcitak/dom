@@ -1,6 +1,6 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import { FilterResult, Node, NodeIterator } from "../dom/interfaces"
-import { ObjectCache, FixedSizeSet } from "@oozcitak/util"
+import { FixedSizeSet } from "@oozcitak/util"
 import { traversal_filter } from "./TraversalAlgorithm"
 import { tree_getFollowingNode, tree_getPrecedingNode } from "./TreeAlgorithm"
 

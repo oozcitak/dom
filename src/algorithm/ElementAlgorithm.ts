@@ -1,4 +1,4 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import { Attr, Element, Document, Node } from "../dom/interfaces"
 import { namespace as infraNamespace } from "@oozcitak/infra"
 import { Guard } from "../util"

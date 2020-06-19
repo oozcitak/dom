@@ -1,4 +1,4 @@
-import { dom } from "../dom"
+import { dom } from "../dom/DOMImpl"
 import { Element, Document, Node } from "../dom/interfaces"
 import { Guard } from "../util"
 import { isString } from "@oozcitak/util"

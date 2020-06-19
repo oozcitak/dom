@@ -1,6 +1,6 @@
 import { DOMFeatures, Window, Node, Range } from "./interfaces"
 import { CompareCache, FixedSizeSet, Lazy, isObject } from "@oozcitak/util"
-import { create_window } from "../algorithm"
+import { create_window } from "../algorithm/CreateAlgorithm"
 
 type RegExpDict = { 
   Name: Lazy<RegExp> 
