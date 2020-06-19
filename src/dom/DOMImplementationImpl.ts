@@ -1,4 +1,4 @@
-import { dom } from "./"
+import { dom } from "./DOMImpl"
 import {
   DocumentType, Document, XMLDocument, DOMImplementation, Element
 } from "./interfaces"

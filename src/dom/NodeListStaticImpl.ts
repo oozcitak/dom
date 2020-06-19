@@ -1,4 +1,4 @@
-import { dom } from "./"
+import { dom } from "./DOMImpl"
 import { Node, NodeList } from "./interfaces"
 import { isString } from "@oozcitak/util"
 

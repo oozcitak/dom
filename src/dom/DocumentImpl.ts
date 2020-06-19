@@ -1,4 +1,4 @@
-import { dom } from "./"
+import { dom } from "./DOMImpl"
 import {
   DOMImplementation, DocumentType, Element, Text, NodeFilter, NodeType, Node,
   HTMLCollection, DocumentFragment, NodeList, WhatToShow, Attr,
