@@ -21,6 +21,8 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
   private constructor(element: Element) {
     super()
     this._element = element
+    // TODO: This workaround is needed to extend Array in ES5
+    Object.setPrototypeOf(this, NamedNodeMapImpl.prototype)
   }
 
   _asArray(): Array<Attr> { return this }
