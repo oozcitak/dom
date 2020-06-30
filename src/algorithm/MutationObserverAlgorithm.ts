@@ -129,7 +129,7 @@ export function observer_queueMutationRecord(type: "attributes" | "characterData
       if (node !== target && !options.subtree) continue
       if (type === "attributes" && !options.attributes) continue
       if (type === "attributes" && options.attributeFilter &&
-        (!options.attributeFilter.includes(name || '') || namespace !== null)) continue
+        (!options.attributeFilter.indexOf(name || '') || namespace !== null)) continue
       if (type === "characterData" && !options.characterData) continue
       if (type === "childList" && !options.childList) continue
 
