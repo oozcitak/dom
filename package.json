@@ -45,7 +45,7 @@
     "jest": "*",
     "jsdom": "*",
     "semver": "*",
-    "ts-jest": "*",
+    "ts-jest": "^26.3.0",
     "ts-node": "*",
     "typescript": "*",
     "xmldom": "*"
