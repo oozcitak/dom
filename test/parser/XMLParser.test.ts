@@ -330,4 +330,18 @@ describe('XMLParser', () => {
     )
   })
 
+  test('decode entities', () => {
+    const xmlStr = $$.t`
+      <?xml version="1.0"?>
+      <root>hello &lt;&amp;&gt; world</root>
+      `
+    const parser = new $$.DOMParser()
+    const doc = parser.parseFromString(xmlStr, "application/xml")
+
+    expect($$.printTree(doc)).toBe($$.t`
+      root
+        # hello <&> world
+      `)
+  })
+
 })

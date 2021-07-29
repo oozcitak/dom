@@ -11,6 +11,7 @@ import {
   xml_isPubidChar
 } from "../algorithm"
 import { LocalNameSet } from "../serializer/LocalNameSet"
+import { decode } from "he"
 
 /**
  * Represents a parser for XML content.
@@ -83,7 +84,7 @@ export class XMLParserImpl {
           if (!xml_isLegalChar(text.data)) {
             throw new Error("Text data contains invalid characters.")
           }
-          context.appendChild(doc.createTextNode(text.data))
+          context.appendChild(doc.createTextNode(decode(text.data)))
           break
         case TokenType.Element:
           const element = <ElementToken>token

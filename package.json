@@ -27,7 +27,8 @@
   "dependencies": {
     "@oozcitak/infra": "1.0.8",
     "@oozcitak/url": "1.0.4",
-    "@oozcitak/util": "8.3.8"
+    "@oozcitak/util": "8.3.8",
+    "he": "1.2.0"
   },
   "devDependencies": {
     "@types/benchmark": "*",
@@ -37,6 +38,7 @@
     "@types/node": "*",
     "@types/semver": "*",
     "@types/xmldom": "*",
+    "@types/he": "*",
     "benchmark": "*",
     "chalk": "*",
     "dedent": "*",
