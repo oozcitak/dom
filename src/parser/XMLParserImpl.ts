@@ -11,7 +11,6 @@ import {
   xml_isPubidChar
 } from "../algorithm"
 import { LocalNameSet } from "../serializer/LocalNameSet"
-import { decode } from "he"
 
 /**
  * Represents a parser for XML content.
@@ -84,7 +83,7 @@ export class XMLParserImpl {
           if (!xml_isLegalChar(text.data)) {
             throw new Error("Text data contains invalid characters.")
           }
-          context.appendChild(doc.createTextNode(decode(text.data)))
+          context.appendChild(doc.createTextNode(this._decodeText(text.data)))
           break
         case TokenType.Element:
           const element = <ElementToken>token
@@ -159,9 +158,9 @@ export class XMLParserImpl {
             }
 
             if (attNamespace !== null)
-              elementNode.setAttributeNS(attNamespace, attName, attValue)
+              elementNode.setAttributeNS(attNamespace, attName, this._decodeAttributeValue(attValue))
             else
-              elementNode.setAttribute(attName, attValue)
+              elementNode.setAttribute(attName, this._decodeAttributeValue(attValue))
           }
 
           if (!element.selfClosing) {
@@ -183,5 +182,27 @@ export class XMLParserImpl {
       token = lexer.nextToken()
     }
     return doc
+  }
+
+  /**
+   * Decodes serialized text.
+   * 
+   * @param text - text value to serialize
+   */
+  private _decodeText(text: string): string {
+    return text == null ? text : text.replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+  }
+
+  /**
+   * Decodes serialized attribute value.
+   * 
+   * @param text - attribute value to serialize
+   */
+  private _decodeAttributeValue(text: string): string {
+    return text == null ? text : text.replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
   }
 }
