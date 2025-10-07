@@ -1,54 +1,54 @@
 import $$ from "../TestHelpers"
 
-describe('DocumentType', () => {
+$$.suite('DocumentType', () => {
 
-  test('constructor()', () => {
+  $$.test('constructor()', () => {
     const node = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
-    expect(node.nodeType).toBe(10)
-    expect(node.nodeName).toBe('qname')
-    expect(node.name).toBe('qname')
-    expect(node.publicId).toBe('pubid')
-    expect(node.systemId).toBe('sysid')
+    $$.deepEqual(node.nodeType, 10)
+    $$.deepEqual(node.nodeName, 'qname')
+    $$.deepEqual(node.name, 'qname')
+    $$.deepEqual(node.publicId, 'pubid')
+    $$.deepEqual(node.systemId, 'sysid')
   })
 
-  test('constructor() invalid name', () => {
-    expect(() => $$.dom.createDocumentType('not_a_qname:', 'pub', 'sys')).toThrow()
-    expect(() => $$.dom.createDocumentType('not a name', 'pub', 'sys')).toThrow()
+  $$.test('constructor() invalid name', () => {
+    $$.throws(() => $$.dom.createDocumentType('not_a_qname:', 'pub', 'sys'))
+    $$.throws(() => $$.dom.createDocumentType('not a name', 'pub', 'sys'))
   })
 
-  test('isEqualNode()', () => {
+  $$.test('isEqualNode()', () => {
     const node = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const otherNode = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
-    expect(node).not.toBe(otherNode)
-    expect(node.isEqualNode(otherNode)).toBe(true)
+    $$.notStrictEqual(node, otherNode)
+    $$.deepEqual(node.isEqualNode(otherNode), true)
 
     const anotherNode = $$.dom.createDocumentType('qname1', 'pubid1', 'sysid1')
-    expect(node.isEqualNode(anotherNode)).toBe(false)
+    $$.deepEqual(node.isEqualNode(anotherNode), false)
 
-    expect(node.isEqualNode()).toBe(false)
-    expect(node.isEqualNode($$.dom.createDocument('ns', 'name'))).toBe(false)
+    $$.deepEqual(node.isEqualNode(), false)
+    $$.deepEqual(node.isEqualNode($$.dom.createDocument('ns', 'name')), false)
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const node = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const clonedNode = <any>node.cloneNode()
-    expect(clonedNode.nodeType).toBe(10)
-    expect(clonedNode.nodeName).toBe('qname')
-    expect(clonedNode.name).toBe('qname')
-    expect(clonedNode.publicId).toBe('pubid')
-    expect(clonedNode.systemId).toBe('sysid')
+    $$.deepEqual(clonedNode.nodeType, 10)
+    $$.deepEqual(clonedNode.nodeName, 'qname')
+    $$.deepEqual(clonedNode.name, 'qname')
+    $$.deepEqual(clonedNode.publicId, 'pubid')
+    $$.deepEqual(clonedNode.systemId, 'sysid')
   })
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const doc = $$.dom.createDocument('ns', 'qname')
     const node1 = $$.DocumentType._create(doc as any, 'name', 'pub', 'sys')
-    expect(node1.name).toBe('name')
-    expect(node1.publicId).toBe('pub')
-    expect(node1.systemId).toBe('sys')
+    $$.deepEqual(node1.name, 'name')
+    $$.deepEqual(node1.publicId, 'pub')
+    $$.deepEqual(node1.systemId, 'sys')
     const node2 = $$.DocumentType._create(doc as any, 'name')
-    expect(node2.name).toBe('name')
-    expect(node2.publicId).toBe('')
-    expect(node2.systemId).toBe('')
+    $$.deepEqual(node2.name, 'name')
+    $$.deepEqual(node2.publicId, '')
+    $$.deepEqual(node2.systemId, '')
   })
 
 })

@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('NamedNodeMap', () => {
+$$.suite('NamedNodeMap', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -16,96 +16,96 @@ describe('NamedNodeMap', () => {
   elex.setAttribute('att2', 'val2')
   const list = ele.attributes
 
-  test('length', () => {
-    expect(list.length).toBe(2)
+  $$.test('length', () => {
+    $$.deepEqual(list.length, 2)
   })
 
-  test('item()', () => {
+  $$.test('item()', () => {
     const attr1 = list.item(0)
-    expect(attr1).not.toBeNull()
+    $$.notDeepEqual(attr1, null)
     if (attr1) {
-      expect(attr1.name).toBe('att')
-      expect(attr1.value).toBe('val')
+      $$.deepEqual(attr1.name, 'att')
+      $$.deepEqual(attr1.value, 'val')
     }
     const attr2 = list.item(1)
-    expect(attr2).not.toBeNull()
+    $$.notDeepEqual(attr2, null)
     if (attr2) {
-      expect(attr2.name).toBe('d:att2')
-      expect(attr2.value).toBe('val2')
+      $$.deepEqual(attr2.name, 'd:att2')
+      $$.deepEqual(attr2.value, 'val2')
     }
-    expect(list.item(-1)).toBeNull()
+    $$.deepEqual(list.item(-1), null)
   })
 
-  test('getNamedItem()', () => {
+  $$.test('getNamedItem()', () => {
     let attr = list.getNamedItem('att')
-    expect(attr).not.toBeNull()
+    $$.notDeepEqual(attr, null)
     if (attr) {
-      expect(attr.value).toBe('val')
+      $$.deepEqual(attr.value, 'val')
     }
   })
 
-  test('getNamedItemNS()', () => {
+  $$.test('getNamedItemNS()', () => {
     let attr = list.getNamedItemNS('myns', 'att2')
-    expect(attr).not.toBeNull()
+    $$.notDeepEqual(attr, null)
     if (attr) {
-      expect(attr.value).toBe('val2')
+      $$.deepEqual(attr.value, 'val2')
     }
   })
 
-  test('setNamedItem()', () => {
+  $$.test('setNamedItem()', () => {
     let attr = doc.createAttribute('att')
     attr.value = 'newval'
     let oldattr = list.setNamedItem(attr)
-    expect(oldattr).not.toBeNull()
+    $$.notDeepEqual(oldattr, null)
     if (oldattr) {
-      expect(oldattr.value).toBe('val')
+      $$.deepEqual(oldattr.value, 'val')
     }
     let newattr = list.getNamedItem('att')
-    expect(newattr).not.toBeNull()
+    $$.notDeepEqual(newattr, null)
     if (newattr) {
-      expect(newattr.value).toBe('newval')
+      $$.deepEqual(newattr.value, 'newval')
     }
   })
 
-  test('setNamedItemNS()', () => {
+  $$.test('setNamedItemNS()', () => {
     let attr = doc.createAttributeNS('myns', 'd:att2')
     attr.value = 'newval'
     let oldattr = list.setNamedItemNS(attr)
     if (!oldattr)
       throw new Error("Atribute is null")
-    expect(oldattr.value).toBe('val2')
-    expect(list.setNamedItemNS(attr)).toBe(attr)
+    $$.deepEqual(oldattr.value, 'val2')
+    $$.deepEqual(list.setNamedItemNS(attr), attr)
     let newattr = list.getNamedItemNS('myns', 'att2')
     if (!newattr)
       throw new Error("Atribute is null")
-    expect(newattr.value).toBe('newval')
+    $$.deepEqual(newattr.value, 'newval')
     const attx = elex.attributes.item(0)
     if (!attx)
       throw new Error("Atribute is null")
-    expect(() => list.setNamedItemNS(attx)).toThrow()
+    $$.throws(() => list.setNamedItemNS(attx))
   })
 
-  test('removeNamedItem()', () => {
+  $$.test('removeNamedItem()', () => {
     let oldattr = list.removeNamedItem('att')
-    expect(oldattr).not.toBeNull()
+    $$.notDeepEqual(oldattr, null)
     if (oldattr) {
-      expect(oldattr.value).toBe('newval')
+      $$.deepEqual(oldattr.value, 'newval')
     }
-    expect(list.getNamedItem('att')).toBeNull()
-    expect(() => list.removeNamedItem('none')).toThrow()
+    $$.deepEqual(list.getNamedItem('att'), null)
+    $$.throws(() => list.removeNamedItem('none'))
   })
 
-  test('removeNamedItemNS()', () => {
+  $$.test('removeNamedItemNS()', () => {
     let oldattr = list.removeNamedItemNS('myns', 'att2')
-    expect(oldattr).not.toBeNull()
+    $$.notDeepEqual(oldattr, null)
     if (oldattr) {
-      expect(oldattr.value).toBe('newval')
+      $$.deepEqual(oldattr.value, 'newval')
     }
-    expect(list.getNamedItemNS('myns', 'att2')).toBeNull()
-    expect(() => list.removeNamedItemNS('none', 'none')).toThrow()
+    $$.deepEqual(list.getNamedItemNS('myns', 'att2'), null)
+    $$.throws(() => list.removeNamedItemNS('none', 'none'))
   })
 
-  test('iteration', () => {
+  $$.test('iteration', () => {
     ele.setAttribute('att', 'val')
     ele.setAttributeNS('myns', 'd:att2', 'val2')
 
@@ -115,8 +115,8 @@ describe('NamedNodeMap', () => {
       names += '_' + att.name
       values += '_' + att.value
     }
-    expect(names).toBe('_att_d:att2')
-    expect(values).toBe('_val_val2')
+    $$.deepEqual(names, '_att_d:att2')
+    $$.deepEqual(values, '_val_val2')
   })
 
 })

@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('HTMLCollection', () => {
+$$.suite('HTMLCollection', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -31,62 +31,62 @@ describe('HTMLCollection', () => {
   htmlDE.appendChild(htmlDiv)
   const htmlList = htmlDoc.getElementsByTagName('div')
 
-  test('length', () => {
-    expect(list.length).toBe(3)
+  $$.test('length', () => {
+    $$.deepEqual(list.length, 3)
   })
 
-  test('item', () => {
-    expect(list.item(0)).toBe(ele1)
-    expect(list.item(1)).toBe(ele3)
-    expect(list.item(2)).toBe(ele2)
-    expect(list.item(-1)).toBeNull()
-    expect(list.item(1001)).toBeNull()
+  $$.test('item', () => {
+    $$.deepEqual(list.item(0), ele1)
+    $$.deepEqual(list.item(1), ele3)
+    $$.deepEqual(list.item(2), ele2)
+    $$.deepEqual(list.item(-1), null)
+    $$.deepEqual(list.item(1001), null)
   })
 
-  test('namedItem', () => {
-    expect(list.namedItem('ele1')).toBe(ele1)
-    expect(list.namedItem('ele2')).toBe(ele2)
-    expect(list.namedItem('ele3')).toBe(ele3)
-    expect(list.namedItem('')).toBeNull()
-    expect(list.namedItem('none')).toBeNull()
+  $$.test('namedItem', () => {
+    $$.deepEqual(list.namedItem('ele1'), ele1)
+    $$.deepEqual(list.namedItem('ele2'), ele2)
+    $$.deepEqual(list.namedItem('ele3'), ele3)
+    $$.deepEqual(list.namedItem(''), null)
+    $$.deepEqual(list.namedItem('none'), null)
 
-    expect(htmlList.namedItem('my div')).toBe(htmlDiv)
+    $$.deepEqual(htmlList.namedItem('my div'), htmlDiv)
   })
 
-  test('indexed getter', () => {
-    expect(list[0]).toBe(ele1)
-    expect(list[1]).toBe(ele3)
-    expect(list[2]).toBe(ele2)
-    expect(list['ele1']).toBe(ele1)
-    expect(list['ele2']).toBe(ele2)
-    expect(list['ele3']).toBe(ele3)
+  $$.test('indexed getter', () => {
+    $$.deepEqual(list[0], ele1)
+    $$.deepEqual(list[1], ele3)
+    $$.deepEqual(list[2], ele2)
+    $$.deepEqual(list['ele1'], ele1)
+    $$.deepEqual(list['ele2'], ele2)
+    $$.deepEqual(list['ele3'], ele3)
   })
 
-  test('indexed setter', () => {
+  $$.test('indexed setter', () => {
     const newEle = doc.createElement('tagged')
     newEle.id = 'eleX'
     list[1] = newEle
-    expect(list[0]).toBe(ele1)
-    expect(list[1]).toBe(newEle)
-    expect(list[2]).toBe(ele2)
-    expect(list['ele1']).toBe(ele1)
-    expect(list['eleX']).toBe(newEle)
-    expect(list['ele2']).toBe(ele2)
-    expect(list['ele3']).toBeUndefined()
+    $$.deepEqual(list[0], ele1)
+    $$.deepEqual(list[1], newEle)
+    $$.deepEqual(list[2], ele2)
+    $$.deepEqual(list['ele1'], ele1)
+    $$.deepEqual(list['eleX'], newEle)
+    $$.deepEqual(list['ele2'], ele2)
+    $$.deepEqual(list['ele3'], undefined)
     list[1] = ele3
   })
 
-  test('iteration', () => {
+  $$.test('iteration', () => {
     let names = ''
     for (const ele of list) {
       names += '_' + ele.id
     }
-    expect(names).toBe('_ele1_ele3_ele2')
+    $$.deepEqual(names, '_ele1_ele3_ele2')
   })
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const list2 = $$.HTMLCollection._create(de)
-    expect(list2._root).toBe(de)
+    $$.deepEqual(list2._root, de)
   })
 
 })

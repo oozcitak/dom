@@ -7,7 +7,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class ProcessingInstructionImpl extends CharacterDataImpl implements ProcessingInstruction {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.ProcessingInstruction
 
   _target: string
 
@@ -20,14 +20,14 @@ export class ProcessingInstructionImpl extends CharacterDataImpl implements Proc
     this._target = target
   }
 
-  /** 
+  /**
    * Gets the target of the {@link ProcessingInstruction} node.
    */
   get target(): string { return this._target }
 
   /**
    * Creates a new `ProcessingInstruction`.
-   * 
+   *
    * @param document - owner document
    * @param target - instruction target
    * @param data - node contents

@@ -7,12 +7,12 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class CDATASectionImpl extends TextImpl implements CDATASection {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.CData
 
   /**
    * Initializes a new instance of `CDATASection`.
-   * 
-   * @param data - node contents   
+   *
+   * @param data - node contents
    */
   private constructor(data: string) {
     super(data)
@@ -20,9 +20,9 @@ export class CDATASectionImpl extends TextImpl implements CDATASection {
 
   /**
    * Creates a new `CDATASection`.
-   * 
+   *
    * @param document - owner document
-   * @param data - node contents   
+   * @param data - node contents
    */
   static _create(document: Document, data: string = ''): CDATASectionImpl {
     const node = new CDATASectionImpl(data)

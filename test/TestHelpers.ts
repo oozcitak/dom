@@ -1,4 +1,6 @@
 import dedent from "dedent"
+import { suite, test } from 'node:test'
+import { deepEqual, throws, doesNotThrow, notDeepEqual, strictEqual, notStrictEqual } from 'node:assert'
 import {
   AbortController, AbortSignal, Attr, CDATASection,
   CharacterData, Comment, CustomEvent, DocumentFragment,
@@ -20,6 +22,15 @@ import { WhatToShow, FilterResult } from "../src/dom/interfaces"
 import * as util from "../src/util"
 
 export default class TestHelpers {
+  static suite = suite
+  static test = test
+  static deepEqual = deepEqual
+  static notDeepEqual = notDeepEqual
+  static strictEqual = strictEqual
+  static notStrictEqual = notStrictEqual
+  static throws = throws
+  static doesNotThrow = doesNotThrow
+
   /**
    * De-indents template literals.
    */
@@ -27,7 +38,7 @@ export default class TestHelpers {
 
   /**
    * Runs callback for each character in range.
-   * 
+   *
    * @param c1 - start character, inclusive
    * @param c2 - end character, inclusive
    * @param callback - callback function
@@ -42,7 +53,7 @@ export default class TestHelpers {
 
   /**
    * Returns a string representation of the XML tree rooted at `node`.
-   * 
+   *
    * @param node - the root node of the tree
    * @param level - indentation level
    */

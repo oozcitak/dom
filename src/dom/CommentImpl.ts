@@ -7,7 +7,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class CommentImpl extends CharacterDataImpl implements Comment {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.Comment
 
   /**
    * Initializes a new instance of `Comment`.
@@ -21,9 +21,9 @@ export class CommentImpl extends CharacterDataImpl implements Comment {
 
   /**
    * Creates a new `Comment`.
-   * 
+   *
    * @param document - owner document
-   * @param data - node contents   
+   * @param data - node contents
    */
   static _create(document: Document, data: string = ''): CommentImpl {
     const node = new CommentImpl(data)

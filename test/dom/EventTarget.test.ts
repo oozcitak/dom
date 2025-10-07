@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('EventTarget', () => {
+$$.suite('EventTarget', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -9,59 +9,59 @@ describe('EventTarget', () => {
 
   const de = doc.documentElement
 
-  test('addEventListener() with null callback', () => {
+  $$.test('addEventListener() with null callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
-    expect((ele as any)._eventListenerList.length).toBe(0)
+    $$.deepEqual((ele as any)._eventListenerList.length, 0)
     ele.addEventListener('custom', null)
-    expect((ele as any)._eventListenerList.length).toBe(0)
+    $$.deepEqual((ele as any)._eventListenerList.length, 0)
   })
 
-  test('addEventListener() with function callback', () => {
+  $$.test('addEventListener() with function callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
-    expect((ele as any)._eventListenerList.length).toBe(0)
+    $$.deepEqual((ele as any)._eventListenerList.length, 0)
     const callback = (e: any) => false
     ele.addEventListener('custom', callback)
-    expect((ele as any)._eventListenerList.length).toBe(1)
-    expect((ele as any)._eventListenerList[0].callback).toEqual({ handleEvent: callback })
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
+    $$.deepEqual((ele as any)._eventListenerList[0].callback, { handleEvent: callback })
   })
 
-  test('adding same listener has no effect', () => {
+  $$.test('adding same listener has no effect', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
     const callback = (e: any) => false
     ele.addEventListener('custom', callback)
-    expect((ele as any)._eventListenerList.length).toBe(1)
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
     ele.addEventListener('custom', callback)
-    expect((ele as any)._eventListenerList.length).toBe(1)
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
   })
 
-  test('addEventListener() with event handler', () => {
+  $$.test('addEventListener() with event handler', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
-    expect((ele as any)._eventListenerList.length).toBe(0)
+    $$.deepEqual((ele as any)._eventListenerList.length, 0)
     const handler = { handleEvent: (e: any) => false }
     ele.addEventListener('custom', handler)
-    expect((ele as any)._eventListenerList.length).toBe(1)
-    expect((ele as any)._eventListenerList[0].callback).toEqual(handler)
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
+    $$.deepEqual((ele as any)._eventListenerList[0].callback, handler)
   })
 
-  test('removeEventListener() with null callback', () => {
+  $$.test('removeEventListener() with null callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
     ele.addEventListener('custom', (e: any) => false, false)
-    expect((ele as any)._eventListenerList.length).toBe(1)
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
     ele.removeEventListener('custom', null)
-    expect((ele as any)._eventListenerList.length).toBe(1)
+    $$.deepEqual((ele as any)._eventListenerList.length, 1)
   })
 
-  test('removeEventListener() with function callback', () => {
+  $$.test('removeEventListener() with function callback', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -69,12 +69,12 @@ describe('EventTarget', () => {
     ele.addEventListener('other', (e: any) => true, false)
     ele.addEventListener('custom', (e: any) => true, false)
     ele.addEventListener('custom', callback, false)
-    expect((ele as any)._eventListenerList.length).toBe(3)
+    $$.deepEqual((ele as any)._eventListenerList.length, 3)
     ele.removeEventListener('custom', callback, false)
-    expect((ele as any)._eventListenerList.length).toBe(2)
+    $$.deepEqual((ele as any)._eventListenerList.length, 2)
   })
 
-  test('removeEventListener() with event handler', () => {
+  $$.test('removeEventListener() with event handler', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -82,12 +82,12 @@ describe('EventTarget', () => {
     ele.addEventListener('other', (e: any) => true, false)
     ele.addEventListener('custom', (e: any) => true, false)
     ele.addEventListener('custom', handler, false)
-    expect((ele as any)._eventListenerList.length).toBe(3)
+    $$.deepEqual((ele as any)._eventListenerList.length, 3)
     ele.removeEventListener('custom', handler, false)
-    expect((ele as any)._eventListenerList.length).toBe(2)
+    $$.deepEqual((ele as any)._eventListenerList.length, 2)
   })
 
-  test('dispatchEvent()', () => {
+  $$.test('dispatchEvent()', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -95,15 +95,15 @@ describe('EventTarget', () => {
     const event = new $$.Event("custom")
     ele.addEventListener('custom', (e: any) => num = 1, false)
     ele.dispatchEvent(event)
-    expect(num).toBe(1)
+    $$.deepEqual(num, 1)
   })
 
-  test('dispatchEvent() cant be nested', () => {
+  $$.test('dispatchEvent() cant be nested', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
     const event = new $$.Event("custom")
-    ele.addEventListener('custom', (e: any) => expect(() => ele.dispatchEvent(event)).toThrow(), false)
+    ele.addEventListener('custom', (e: any) => $$.throws(() => ele.dispatchEvent(event)), false)
     ele.dispatchEvent(event)
   })
 

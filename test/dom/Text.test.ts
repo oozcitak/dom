@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('Text', () => {
+$$.suite('Text', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -20,28 +20,28 @@ describe('Text', () => {
   doc.documentElement.appendChild(node3)
   doc.documentElement.appendChild(node4)
 
-  test('constructor()', () => {
-    expect(node1.nodeType).toBe(3)
-    expect(node1.nodeName).toBe('#text')
-    expect(node1.data).toBe('peace')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node1.nodeType, 3)
+    $$.deepEqual(node1.nodeName, '#text')
+    $$.deepEqual(node1.data, 'peace')
   })
 
-  test('wholeText', () => {
-    expect(node1.wholeText).toBe('peaceintheworld')
-    expect(node2.wholeText).toBe('peaceintheworld')
-    expect(node3.wholeText).toBe('peaceintheworld')
-    expect(node4.wholeText).toBe('peaceintheworld')
-    expect(node.wholeText).toBe('peaceathome')
+  $$.test('wholeText', () => {
+    $$.deepEqual(node1.wholeText, 'peaceintheworld')
+    $$.deepEqual(node2.wholeText, 'peaceintheworld')
+    $$.deepEqual(node3.wholeText, 'peaceintheworld')
+    $$.deepEqual(node4.wholeText, 'peaceintheworld')
+    $$.deepEqual(node.wholeText, 'peaceathome')
   })
 
-  test('splitText()', () => {
+  $$.test('splitText()', () => {
     const node5 = node.splitText(5)
     const node6 = node5.splitText(2)
-    expect(node.data).toBe('peace')
-    expect(node5.data).toBe('at')
-    expect(node6.data).toBe('home')
-    expect(node.wholeText).toBe('peaceathome')
-    expect(() => node.splitText(1001)).toThrow()
+    $$.deepEqual(node.data, 'peace')
+    $$.deepEqual(node5.data, 'at')
+    $$.deepEqual(node6.data, 'home')
+    $$.deepEqual(node.wholeText, 'peaceathome')
+    $$.throws(() => node.splitText(1001))
 
     node.textContent = 'peaceathome'
     node5.remove()
@@ -50,39 +50,39 @@ describe('Text', () => {
     const node7 = node.splitText(5)
     node7.remove()
     const node8 = node7.splitText(2)
-    expect(node.data).toBe('peace')
-    expect(node7.data).toBe('at')
-    expect(node8.data).toBe('home')
-    expect(node.wholeText).toBe('peace')
+    $$.deepEqual(node.data, 'peace')
+    $$.deepEqual(node7.data, 'at')
+    $$.deepEqual(node8.data, 'home')
+    $$.deepEqual(node.wholeText, 'peace')
   })
 
-  test('splitText() updates live ranges', () => {
+  $$.test('splitText() updates live ranges', () => {
     const ele = $$.newDoc
     const txt = new $$.Text("hello beautiful world")
     ele.appendChild(txt)
     const range = new $$.Range()
     range.setStart(txt, 6)
     range.setEnd(txt, 15)
-    expect(range.cloneContents().textContent).toBe("beautiful")
-    
+    $$.deepEqual(range.cloneContents().textContent, "beautiful")
+
     const txt2 = txt.splitText(10)
-    expect(range.startContainer).toBe(txt)
-    expect(range.startOffset).toBe(6)
-    expect(range.endContainer).toBe(txt2)
-    expect(range.endOffset).toBe(5)
-    expect(range.cloneContents().textContent).toBe("beautiful")
+    $$.deepEqual(range.startContainer, txt)
+    $$.deepEqual(range.startOffset, 6)
+    $$.deepEqual(range.endContainer, txt2)
+    $$.deepEqual(range.endOffset, 5)
+    $$.deepEqual(range.cloneContents().textContent, "beautiful")
 
     txt.data = "aaxxxaa"
     range.setStart(txt, 5)
     range.setEnd(txt, 7)
     const txt3 = txt.splitText(2)
-    expect(range.startContainer).toBe(txt3)
-    expect(range.startOffset).toBe(3)
-    expect(range.endContainer).toBe(txt3)
-    expect(range.endOffset).toBe(5)
+    $$.deepEqual(range.startContainer, txt3)
+    $$.deepEqual(range.startOffset, 3)
+    $$.deepEqual(range.endContainer, txt3)
+    $$.deepEqual(range.endOffset, 5)
   })
 
-  test('splitText() live range moves', () => {
+  $$.test('splitText() live range moves', () => {
     const ele = $$.newDoc
     const txt1 = new $$.Text("aa")
     const txt2 = new $$.Text("bb")
@@ -90,15 +90,15 @@ describe('Text', () => {
     const range = new $$.Range()
     range.setStart(ele, 1)
     range.setEnd(ele, 2)
-    
+
     txt1.splitText(1)
-    expect(range.startContainer).toBe(ele)
-    expect(range.startOffset).toBe(2)
-    expect(range.endContainer).toBe(ele)
-    expect(range.endOffset).toBe(3)
+    $$.deepEqual(range.startContainer, ele)
+    $$.deepEqual(range.startOffset, 2)
+    $$.deepEqual(range.endContainer, ele)
+    $$.deepEqual(range.endOffset, 3)
   })
 
-  test('splitText() live range grows to include new node', () => {
+  $$.test('splitText() live range grows to include new node', () => {
     const ele = $$.newDoc
     const txt1 = new $$.Text("aa")
     const txt2 = new $$.Text("bb")
@@ -106,29 +106,29 @@ describe('Text', () => {
     const range = new $$.Range()
     range.setStart(ele, 0)
     range.setEnd(ele, 1)
-    
+
     txt1.splitText(1)
-    expect(range.startContainer).toBe(ele)
-    expect(range.startOffset).toBe(0)
-    expect(range.endContainer).toBe(ele)
-    expect(range.endOffset).toBe(2)
+    $$.deepEqual(range.startContainer, ele)
+    $$.deepEqual(range.startOffset, 0)
+    $$.deepEqual(range.endContainer, ele)
+    $$.deepEqual(range.endOffset, 2)
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedNode = <any>node1.cloneNode()
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(3)
-    expect(clonedNode.nodeName).toBe('#text')
-    expect(clonedNode.data).toBe('peace')
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 3)
+    $$.deepEqual(clonedNode.nodeName, '#text')
+    $$.deepEqual(clonedNode.data, 'peace')
   })
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const node1 = $$.Text._create(doc as any, 'data')
-    expect(node1.nodeType).toBe(3)
-    expect(node1.nodeName).toBe('#text')
-    expect(node1.data).toBe('data')
+    $$.deepEqual(node1.nodeType, 3)
+    $$.deepEqual(node1.nodeName, '#text')
+    $$.deepEqual(node1.data, 'data')
     const node2 = $$.Text._create(doc as any)
-    expect(node2.data).toBe('')
+    $$.deepEqual(node2.data, '')
   })
 
 })

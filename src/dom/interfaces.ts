@@ -31,9 +31,9 @@ export type DOMFeatures = {
 export interface Window extends EventTarget {
   /**
    * Returns the Event which is currently being handled.
-   * 
+   *
    * _Note:_ Note: This property can be fragile, in that there may be situations
-   * in which the returned Event is not the expected value. In addition, 
+   * in which the returned Event is not the expected value. In addition,
    * Window.event is not accurate for events dispatched within shadow trees.
    */
   readonly event?: Event
@@ -85,8 +85,8 @@ export interface Event {
   readonly currentTarget: EventTarget | null
 
   /**
-   * Returns the event's path (objects on which listeners will be 
-   * invoked). This does not include nodes in shadow trees if the 
+   * Returns the event's path (objects on which listeners will be
+   * invoked). This does not include nodes in shadow trees if the
    * shadow root was created with its `mode` `"closed"`.
    */
   composedPath(): EventTarget[]
@@ -97,7 +97,7 @@ export interface Event {
   readonly eventPhase: EventPhase
 
   /**
-   * Prevents event from reaching any objects other than the current 
+   * Prevents event from reaching any objects other than the current
    * object.
    */
   stopPropagation(): void
@@ -108,7 +108,7 @@ export interface Event {
   cancelBubble: boolean
 
   /**
-   * Prevents event from reaching any registered event listeners after 
+   * Prevents event from reaching any registered event listeners after
    * the current one finishes running.
    */
   stopImmediatePropagation(): void
@@ -158,7 +158,7 @@ export interface Event {
 
   /**
    * Historical method to initializes the value of an event.
-   * 
+   *
    * @param type - the type of event.
    * @param bubbles - whether the event propagates in reverse.
    * @param cancelable - whether the event can be cancelled.
@@ -200,7 +200,7 @@ export interface CustomEvent extends Event {
 
   /**
    * Initializes the value of an event.
-   * 
+   *
    * @param type - the type of event.
    * @param bubbles - whether the event propagates in reverse.
    * @param cancelable - whether the event can be cancelled.
@@ -215,7 +215,7 @@ export interface CustomEvent extends Event {
 export interface MutationObserver {
   /**
    * Observes a given target and reports any mutations based on options.
-   * 
+   *
    * @param target - the node to observe
    * @param options - mutation criteria to observe
    */
@@ -242,7 +242,7 @@ export interface MutationObserver {
 export interface MutationRecord {
   /**
    * Returns `"attributes"` if it was an attribute mutation,
-   * `"characterData"` if it was a mutation to a CharacterData node, 
+   * `"characterData"` if it was a mutation to a CharacterData node,
    * and `"childList"` if it was a mutation to the tree of nodes.
    */
   readonly type: "attributes" | "characterData" | "childList"
@@ -297,7 +297,7 @@ export interface MutationRecord {
 export interface EventListener {
   /**
    * A callback function that is called when an event occurs.
-   * 
+   *
    * @param event - the event to handle.
    */
   handleEvent: (event: Event) => void
@@ -309,7 +309,7 @@ export interface EventListener {
 export interface EventTarget {
   /**
    * Registers an event handler.
-   * 
+   *
    * @param type - event type to listen for.
    * @param callback - object to receive a notification when an event occurs.
    * @param options - object that specifies event characteristics.
@@ -320,7 +320,7 @@ export interface EventTarget {
 
   /**
    * Removes an event listener.
-   * 
+   *
    * @param type - event type to listen for.
    * @param callback - object to receive a notification when an event occurs.
    * @param options - object that specifies event characteristics.
@@ -331,7 +331,7 @@ export interface EventTarget {
 
   /**
    * Dispatches an event to this event target.
-   * 
+   *
    * @param event - the event to dispatch.
    */
   dispatchEvent(event: Event): boolean
@@ -341,20 +341,20 @@ export interface EventTarget {
 
   /**
    * Gets the parent event target for the given event.
-   * 
+   *
    * @param event - an event
    */
   _getTheParent(event: Event): EventTarget | null
 
   /**
    * Defines optional activation behavior for the given event.
-   * 
+   *
    * _Note:_ This exists because user agents perform certain actions for certain
    * EventTarget objects, e.g., the area element, in response to synthetic
    * MouseEvent events whose type attribute is click. Web compatibility
    * prevented it from being removed and it is now the enshrined way of
    * defining an activation of something.
-   * 
+   *
    * @param event - an event
    */
   _activationBehavior?(event: Event): void
@@ -364,7 +364,7 @@ export interface EventTarget {
    *
    * _Note:_ These algorithms only exist for checkbox and radio input elements
    * and are not to be used for anything else.
-   * 
+   *
    * @param event - an event
    */
   _legacyPreActivationBehavior?(event: Event): void
@@ -374,7 +374,7 @@ export interface EventTarget {
    *
    * _Note:_ These algorithms only exist for checkbox and radio input elements
    * and are not to be used for anything else.
-   * 
+   *
    * @param event - an event
    */
   _legacyCanceledActivationBehavior?(event: Event): void
@@ -442,13 +442,13 @@ export interface Node extends EventTarget {
   DOCUMENT_POSITION_CONTAINED_BY: number
   DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number
 
-  /** 
-   * Returns the type of node. 
+  /**
+   * Returns the type of node.
    */
   readonly nodeType: NodeType
 
-  /** 
-   * Returns a string appropriate for the type of node. 
+  /**
+   * Returns a string appropriate for the type of node.
    */
   readonly nodeName: string
 
@@ -457,81 +457,81 @@ export interface Node extends EventTarget {
    */
   readonly baseURI: string
 
-  /** 
-   * Returns whether the node is rooted to a document node. 
+  /**
+   * Returns whether the node is rooted to a document node.
    */
   readonly isConnected: boolean
 
-  /** 
-   * Returns the parent document. 
+  /**
+   * Returns the parent document.
    */
   readonly ownerDocument: Document | null
 
   /**
    * Returns the root node.
-   * 
+   *
    * @param options - if options has `composed = true` this function
    * returns the node's shadow-including root, otherwise it returns
    * the node's root node.
    */
   getRootNode(options?: GetRootNodeOptions): Node
 
-  /** 
-   * Returns the parent node. 
+  /**
+   * Returns the parent node.
    */
   readonly parentNode: Node | null
 
-  /** 
-   * Returns the parent element. 
+  /**
+   * Returns the parent element.
    */
   readonly parentElement: Element | null
 
-  /** 
+  /**
    * Determines whether a node has any children.
    */
   hasChildNodes(): boolean
 
-  /** 
-   * Returns a {@link NodeList} of child nodes. 
+  /**
+   * Returns a {@link NodeList} of child nodes.
    */
   readonly childNodes: NodeList
 
-  /** 
-   * Returns the first child node. 
+  /**
+   * Returns the first child node.
    */
   readonly firstChild: Node | null
 
-  /** 
-   * Returns the last child node. 
+  /**
+   * Returns the last child node.
    */
   readonly lastChild: Node | null
 
-  /** 
-   * Returns the previous sibling node. 
+  /**
+   * Returns the previous sibling node.
    */
   readonly previousSibling: Node | null
 
-  /** 
-   * Returns the next sibling node. 
+  /**
+   * Returns the next sibling node.
    */
   readonly nextSibling: Node | null
 
-  /** 
+  /**
    * Gets or sets the data associated with a {@link CharacterData} node.
-   * For other node types returns `null`. 
+   * For other node types returns `null`.
    */
   nodeValue: string | null
 
-  /** 
+  /**
    * Returns the concatenation of data of all the {@link CharacterData}
-   * node descendants in tree order. When set, replaces the text 
-   * contents of the node with the given value. 
+   * node descendants in tree order. When set, replaces the text
+   * contents of the node with the given value.
    */
   textContent: string | null
 
   /**
    * Puts all {@link Text} nodes in the full depth of the sub-tree
-   * underneath this node into a "normal" form where only markup 
+   * underneath this node into a "normal" form where only markup
    * (e.g., tags, comments, processing instructions, CDATA sections,
    * and entity references) separates {@link Text} nodes, i.e., there
    * are no adjacent text nodes.
@@ -539,26 +539,26 @@ export interface Node extends EventTarget {
   normalize(): void
 
   /**
-   * Returns a duplicate of this node, i.e., serves as a generic copy 
-   * constructor for nodes. The duplicate node has no parent 
+   * Returns a duplicate of this node, i.e., serves as a generic copy
+   * constructor for nodes. The duplicate node has no parent
    * ({@link parentNode} returns `null`).
    *
-   * @param deep - if `true`, recursively clone the subtree under the 
-   * specified node if `false`, clone only the node itself (and its 
+   * @param deep - if `true`, recursively clone the subtree under the
+   * specified node if `false`, clone only the node itself (and its
    * attributes, if it is an {@link Element}).
    */
   cloneNode(deep?: boolean): Node
 
   /**
    * Determines if the given node is equal to this one.
-   * 
+   *
    * @param node - the node to compare with
    */
   isEqualNode(node?: Node | null): boolean
 
   /**
    * Determines if the given node is reference equal to this one.
-   * 
+   *
    * @param node - the node to compare with
    */
   isSameNode(node?: Node | null): boolean
@@ -572,15 +572,15 @@ export interface Node extends EventTarget {
   /**
    * Returns `true` if given node is an inclusive descendant of this
    * node, and `false` otherwise (including when other node is `null`).
-   * 
+   *
    * @param node - the node to check
    */
   contains(node: Node | null): boolean
 
   /**
-   * Returns the prefix for a given namespace URI, if present, and 
+   * Returns the prefix for a given namespace URI, if present, and
    * `null` if not.
-   * 
+   *
    * @param namespace - the namespace to search
    */
   lookupPrefix(namespace: string | null): string | null
@@ -588,7 +588,7 @@ export interface Node extends EventTarget {
   /**
    * Returns the namespace URI for a given prefix if present, and `null`
    * if not.
-   * 
+   *
    * @param prefix - the prefix to search
    */
   lookupNamespaceURI(prefix: string | null): string | null
@@ -596,7 +596,7 @@ export interface Node extends EventTarget {
   /**
    * Returns `true` if the namespace is the default namespace on this
    * node or `false` if not.
-   * 
+   *
    * @param namespace - the namespace to check
    */
   isDefaultNamespace(namespace: string | null): boolean
@@ -606,7 +606,7 @@ export interface Node extends EventTarget {
    * `refChild`. If `refChild` is `null`, inserts `newChild` at the end
    * of the list of children.
    *
-   * If `newChild` is a {@link DocumentFragment} object, all of its 
+   * If `newChild` is a {@link DocumentFragment} object, all of its
    * children are inserted, in the same order, before `refChild`.
    *
    * If `newChild` is already in the tree, it is first removed.
@@ -614,7 +614,7 @@ export interface Node extends EventTarget {
    * @param newChild - the node to insert
    * @param refChild - the node before which the new node must be
    *   inserted
-   * 
+   *
    * @returns the newly inserted child node
    */
   insertBefore(newChild: Node, refChild: Node | null): Node
@@ -624,24 +624,24 @@ export interface Node extends EventTarget {
    * node, and returns it. If `newChild` is already in the tree, it is
    * first removed.
    *
-   * If `newChild` is a {@link DocumentFragment} object, the entire 
+   * If `newChild` is a {@link DocumentFragment} object, the entire
    * contents of the document fragment are moved into the child list of
    * this node.
    *
    * @param newChild - the node to add
-   * 
+   *
    * @returns the newly inserted child node
    */
   appendChild(newChild: Node): Node
 
   /**
-   * Replaces the child node `oldChild` with `newChild` in the list of 
+   * Replaces the child node `oldChild` with `newChild` in the list of
    * children, and returns the `oldChild` node. If `newChild` is already
    * in the tree, it is first removed.
    *
    * @param newChild - the new node to put in the child list
    * @param oldChild - the node being replaced in the list
-   * 
+   *
    * @returns the removed child node
    */
   replaceChild(newChild: Node, oldChild: Node): Node
@@ -651,7 +651,7 @@ export interface Node extends EventTarget {
   * children, and returns it.
   *
   * @param oldChild - the node being removed from the list
-  * 
+  *
   * @returns the removed child node
   */
   removeChild(oldChild: Node): Node
@@ -660,7 +660,7 @@ export interface Node extends EventTarget {
   _registeredObserverList: Array<RegisteredObserver | TransientRegisteredObserver>
 
   /**
-   * Used to keep track of parent-child relations in the tree. These are 
+   * Used to keep track of parent-child relations in the tree. These are
    * non-standard properties.
    */
   _nodeType: NodeType
@@ -678,12 +678,12 @@ export interface Node extends EventTarget {
 export interface CharacterData extends Node,
   NonDocumentTypeChildNode, ChildNode {
 
-  /** 
-   * Gets or sets the text data of the node. 
+  /**
+   * Gets or sets the text data of the node.
    */
   data: string
 
-  /** 
+  /**
    * Returns the number of code units in {@link data}.
    */
   readonly length: number
@@ -691,7 +691,7 @@ export interface CharacterData extends Node,
   /**
    * Returns `count` number of characters from node data starting at
    * the given `offset`.
-   * 
+   *
    * @param offset - the offset at which retrieval starts
    * @param count - the number of characters to return
    */
@@ -699,7 +699,7 @@ export interface CharacterData extends Node,
 
   /**
    * Appends the given string to text data of the node.
-   * 
+   *
    * @param data - the string of text to add to node data
    */
   appendData(data: string): void
@@ -707,7 +707,7 @@ export interface CharacterData extends Node,
   /**
    * Inserts the given string into the text data of the node starting at
    * the given `offset`.
-   * 
+   *
    * @param offset - the offset at which insertion starts
    * @param data - the string of text to add to node data
    */
@@ -716,7 +716,7 @@ export interface CharacterData extends Node,
   /**
    * Deletes `count` number of characters from node data starting at
    * the given `offset`.
-   * 
+   *
    * @param offset - the offset at which removal starts
    * @param count - the number of characters to delete
    */
@@ -725,7 +725,7 @@ export interface CharacterData extends Node,
   /**
    * Deletes `count` number of characters from node data starting at
    * the given `offset` and replaces it with the given `data`.
-   * 
+   *
    * @param offset - the offset at which removal starts
    * @param count - the number of characters to delete
    * @param data - the string of text to add to node data
@@ -743,12 +743,12 @@ export interface Text extends CharacterData, Slotable {
   /**
    * Splits data at the given offset and returns the remainder as a text
    * node.
-   * 
+   *
    * @param offset - the offset at which to split nodes.
    */
   splitText(offset: number): Text
 
-  /** 
+  /**
    * Returns the combined data of all direct text node siblings.
    */
   readonly wholeText: string
@@ -760,34 +760,34 @@ export interface Text extends CharacterData, Slotable {
  */
 export interface HTMLCollection extends Collection, Iterable<Element> {
 
-  /** 
+  /**
    * Returns the number of elements in the collection.
    */
   readonly length: number
 
-  /** 
+  /**
    * Returns the element with index `index` from the collection.
-   * 
+   *
    * @param index - the zero-based index of the element to return
    */
   item(index: number): Element | null
 
-  /** 
+  /**
    * Returns the first element with ID or name `name` from the
    * collection.
-   * 
+   *
    * @param name - the name of the element to return
    */
   namedItem(name: string): Element | null
 
   /**
-   * Returns the element with index index from the collection. The 
+   * Returns the element with index index from the collection. The
    * elements are sorted in tree order.
    */
   [index: number]: Element | undefined
 
   /*
-   * Returns the first element with ID or name name from the 
+   * Returns the first element with ID or name name from the
    * collection.
    */
   [key: string]: any
@@ -800,8 +800,8 @@ export interface HTMLCollection extends Collection, Iterable<Element> {
 export interface Document extends Node, NonElementParentNode,
   DocumentOrShadowRoot, ParentNode {
 
-  /** 
-   * Returns the {@link DOMImplementation} object that is associated 
+  /**
+   * Returns the {@link DOMImplementation} object that is associated
    * with the document.
    */
   readonly implementation: DOMImplementation
@@ -847,49 +847,49 @@ export interface Document extends Node, NonElementParentNode,
    */
   readonly contentType: string
 
-  /** 
+  /**
    * Returns the {@link DocType} or `null` if there is none.
    */
   readonly doctype: DocumentType | null
 
-  /** 
+  /**
    * Returns the document element or `null` if there is none.
    */
   readonly documentElement: Element | null
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
+   * Returns a {@link HTMLCollection} of all descendant elements
    * whose qualified name is `qualifiedName`.
-   * 
+   *
    * @param qualifiedName - the qualified name to match or `*` to match all
    * descendant elements.
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
   getElementsByTagName(qualifiedName: string): HTMLCollection
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
+   * Returns a {@link HTMLCollection} of all descendant elements
    * whose namespace is `namespace` and local name is `localName`.
-   * 
+   *
    * @param namespace - the namespace to match or `*` to match any
    * namespace.
    * @param localName - the local name to match or `*` to match any
    * local name.
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
   getElementsByTagNameNS(namespace: string | null, localName: string): HTMLCollection
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
-   * whose classes are contained in the list of classes given in 
+   * Returns a {@link HTMLCollection} of all descendant elements
+   * whose classes are contained in the list of classes given in
    * `classNames`.
-   * 
+   *
    * @param classNames - a space-separated list of classes
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
@@ -897,10 +897,10 @@ export interface Document extends Node, NonElementParentNode,
 
   /**
    * Returns a new {@link Element} with the given `localName`.
-   * 
+   *
    * @param localName - local name
    * @param options - element options
-   * 
+   *
    * @returns the new {@link Element}
    */
   createElement(localName: string, options?: string | { is: string }): Element
@@ -908,11 +908,11 @@ export interface Document extends Node, NonElementParentNode,
   /**
    * Returns a new {@link Element} with the given `namespace` and
    * `qualifiedName`.
-   * 
+   *
    * @param namespace - namespace URL
    * @param qualifiedName - qualified name
    * @param options - element options
-   * 
+   *
    * @returns the new {@link Element}
    */
   createElementNS(namespace: string | null, qualifiedName: string,
@@ -920,34 +920,34 @@ export interface Document extends Node, NonElementParentNode,
 
   /**
    * Returns a new {@link DocumentFragment}.
-   * 
+   *
    * @returns the new {@link DocumentFragment}
    */
   createDocumentFragment(): DocumentFragment
 
   /**
    * Returns a new {@link Text} with the given `data`.
-   * 
+   *
    * @param data - text content
-   * 
+   *
    * @returns the new {@link Text}
    */
   createTextNode(data: string): Text
 
   /**
    * Returns a new {@link CDATASection} with the given `data`.
-   * 
+   *
    * @param data - text content
-   * 
+   *
    * @returns the new {@link CDATASection}
    */
   createCDATASection(data: string): CDATASection
 
   /**
    * Returns a new {@link Comment} with the given `data`.
-   * 
+   *
    * @param data - text content
-   * 
+   *
    * @returns the new {@link Comment}
    */
   createComment(data: string): Comment
@@ -955,19 +955,19 @@ export interface Document extends Node, NonElementParentNode,
   /**
    * Returns a new {@link ProcessingInstruction} with the given `target`
    * and `data`.
-   * 
+   *
    * @param target - instruction target
    * @param data - text content
-   * 
+   *
    * @returns the new {@link ProcessingInstruction}
    */
   createProcessingInstruction(target: string, data: string): ProcessingInstruction
 
   /**
    * Returns a copy of `node`.
-   * 
+   *
    * @param deep - true to include descendant nodes.
-   * 
+   *
    * @returns clone of node
    */
   importNode(node: Node, deep?: boolean): Node
@@ -975,18 +975,18 @@ export interface Document extends Node, NonElementParentNode,
   /**
    * Moves `node` from another document into this document and returns
    * it.
-   * 
+   *
    * @param node - node to move.
-   * 
+   *
    * @returns the adopted node
    */
   adoptNode(node: Node): Node
 
   /**
    * Returns a new {@link Attr} with the given `localName`.
-   * 
+   *
    * @param localName - local name
-   * 
+   *
    * @returns the new {@link Attr}
    */
   createAttribute(localName: string): Attr
@@ -994,18 +994,18 @@ export interface Document extends Node, NonElementParentNode,
   /**
    * Returns a new {@link Attr} with the given `namespace` and
    * `qualifiedName`.
-   * 
+   *
    * @param namespace - namespace URL
    * @param qualifiedName - qualified name
-   * 
+   *
    * @returns the new {@link Attr}
    */
   createAttributeNS(namespace: string | null, qualifiedName: string): Attr
 
   /**
    * Creates an event of the type specified.
-   * 
-   * @param eventInterface - a string representing the type of event 
+   *
+   * @param eventInterface - a string representing the type of event
    * to be created
    */
   createEvent(eventInterface: string): Event
@@ -1039,7 +1039,7 @@ export interface Document extends Node, NonElementParentNode,
   _origin: Origin
   _type: "xml" | "html"
   _mode: "no-quirks" | "quirks" | "limited-quirks"
-  
+
   _documentElement: Element | null
   _hasNamespaces: boolean
 }
@@ -1063,12 +1063,12 @@ export interface DocumentFragment extends Node, NonElementParentNode,
  * Represents a shadow root.
  */
 export interface ShadowRoot extends DocumentFragment, DocumentOrShadowRoot {
-  /** 
+  /**
    * Gets the shadow root's mode.
    */
   readonly mode: ShadowRootMode
 
-  /** 
+  /**
    * Gets the shadow root's host.
    */
   readonly host: Element
@@ -1083,45 +1083,45 @@ export interface ShadowRoot extends DocumentFragment, DocumentOrShadowRoot {
 export interface Element extends Node, ParentNode,
   NonDocumentTypeChildNode, ChildNode, Slotable {
 
-  /** 
+  /**
    * Gets the namespace URI.
    */
   readonly namespaceURI: string | null
 
-  /** 
+  /**
    * Gets the namespace prefix.
    */
   readonly prefix: string | null
 
-  /** 
+  /**
    * Gets the local name.
    */
   readonly localName: string
 
-  /** 
+  /**
    * If namespace prefix is not `null`, returns the concatenation of
    * namespace prefix, `":"`, and local name. Otherwise it returns the
    * local name.
    */
   readonly tagName: string
 
-  /** 
+  /**
    * Gets or sets the identifier of this element.
    */
   id: string
 
-  /** 
+  /**
    * Gets or sets the class name of this element.
    */
   className: string
 
-  /** 
-   * Returns a {@link DOMTokenList} with tokens from the class 
+  /**
+   * Returns a {@link DOMTokenList} with tokens from the class
    * attribute.
    */
   readonly classList: DOMTokenList
 
-  /** 
+  /**
    * Gets or sets the slot attribute of this element.
    */
   slot: string
@@ -1131,7 +1131,7 @@ export interface Element extends Node, ParentNode,
    */
   hasAttributes(): boolean
 
-  /** 
+  /**
    * Returns a {@link NamedNodeMap} of attributes.
    */
   readonly attributes: NamedNodeMap
@@ -1143,15 +1143,15 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Returns the value of the attribute with the given `name`.
-   * 
+   *
    * @param qualifiedName - attribute name
    */
   getAttribute(qualifiedName: string): string | null
 
   /**
-   * Returns the value of the attribute with the given `namespace` and 
+   * Returns the value of the attribute with the given `namespace` and
    * `localName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1159,16 +1159,16 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Sets the value of the attribute with the given `name`.
-   * 
+   *
    * @param qualifiedName - attribute name
    * @param value - attribute value to set
    */
   setAttribute(qualifiedName: string, value: string): void
 
   /**
-   * Sets the value of the attribute with the given `namespace` and 
+   * Sets the value of the attribute with the given `namespace` and
    * `qualifiedName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param qualifiedName - qualified name to search for
    * @param value - attribute value to set
@@ -1178,14 +1178,14 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Removes the attribute with the given `name`.
-   * 
+   *
    * @param qualifiedName - attribute name
    */
   removeAttribute(qualifiedName: string): void
 
   /**
    * Removes the attribute with the given `namespace` and  `localName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1193,7 +1193,7 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Determines whether the attribute with the given `name` exists.
-   * 
+   *
    * @param qualifiedName - attribute name
    */
   hasAttribute(qualifiedName: string): boolean
@@ -1201,17 +1201,17 @@ export interface Element extends Node, ParentNode,
   /**
    * Toggles a boolean attribute (removing it if it is present and adding it
    * if it is not present).
-   * 
+   *
    * @param qualifiedName - attribute name
-   * @param force - whether the attribute should be added or removed, 
+   * @param force - whether the attribute should be added or removed,
    * no matter whether the attribute is present or not
    */
   toggleAttribute(qualifiedName: string, force?: boolean): boolean
 
   /**
-   * Determines whether the attribute with the given `namespace` and 
+   * Determines whether the attribute with the given `namespace` and
    * `localName` exists.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1219,15 +1219,15 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Returns the attribute with the given `name`.
-   * 
+   *
    * @param qualifiedName - attribute name
    */
   getAttributeNode(qualifiedName: string): Attr | null
 
   /**
-   * Returns the attribute with the given `namespace` and 
+   * Returns the attribute with the given `namespace` and
    * `localName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1236,28 +1236,28 @@ export interface Element extends Node, ParentNode,
 
   /**
    * Sets the attribute given with `attr`.
-   * 
+   *
    * @param attr - attribute to set
    */
   setAttributeNode(attr: Attr): Attr | null
 
   /**
    * Sets the attribute given with `attr`.
-   * 
+   *
    * @param attr - attribute to set
    */
   setAttributeNodeNS(attr: Attr): Attr | null
 
   /**
    * Removes the given attribute.
-   * 
+   *
    * @param attr - attribute to remove
    */
   removeAttributeNode(attr: Attr): Attr
 
   /**
    * Creates a shadow root for element and returns it.
-   * 
+   *
    * @param init - A ShadowRootInit dictionary.
    */
   attachShadow(init: { mode: ShadowRootMode }): ShadowRoot
@@ -1271,16 +1271,16 @@ export interface Element extends Node, ParentNode,
   /**
    * Returns the first (starting at element) inclusive ancestor that
    * matches selectors, and `null` otherwise.
-   * 
-   * @param selectors 
+   *
+   * @param selectors
    */
   closest(selectors: string): Element | null
 
   /**
-   * Returns `true` if matching selectors against element's root yields 
+   * Returns `true` if matching selectors against element's root yields
    * element, and `false` otherwise.
-   * 
-   * @param selectors 
+   *
+   * @param selectors
    */
   matches(selectors: string): boolean
 
@@ -1290,26 +1290,26 @@ export interface Element extends Node, ParentNode,
   webkitMatchesSelector(selectors: string): boolean
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
+   * Returns a {@link HTMLCollection} of all descendant elements
    * whose qualified name is `qualifiedName`.
-   * 
+   *
    * @param qualifiedName - the qualified name to match or `*` to match
    * all descendant elements.
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
   getElementsByTagName(qualifiedName: string): HTMLCollection
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
+   * Returns a {@link HTMLCollection} of all descendant elements
    * whose namespace is `namespace` and local name is `localName`.
-   * 
+   *
    * @param namespace - the namespace to match or `*` to match any
    * namespace.
    * @param localName - the local name to match or `*` to match any
    * local name.
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
@@ -1317,12 +1317,12 @@ export interface Element extends Node, ParentNode,
     localName: string): HTMLCollection
 
   /**
-   * Returns a {@link HTMLCollection} of all descendant elements 
-   * whose classes are contained in the list of classes given in 
+   * Returns a {@link HTMLCollection} of all descendant elements
+   * whose classes are contained in the list of classes given in
    * `classNames`.
-   * 
+   *
    * @param classNames - a space-separated list of classes
-   * 
+   *
    * @returns an {@link HTMLCollection} of matching descendant
    * elements
    */
@@ -1331,14 +1331,14 @@ export interface Element extends Node, ParentNode,
   /**
    * Inserts a given element node at a given position relative to this
    * node.
-   * 
+   *
    * @param where - a string defining where to insert the element node.
    *   - `beforebegin` before this element itself.
    *   - `afterbegin` before the first child.
    *   - `beforeend` after the last child.
    *   - `afterend` after this element itself.
    * @param element - the element to insert
-   * 
+   *
    * @returns the inserted element
    */
   insertAdjacentElement(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
@@ -1347,14 +1347,14 @@ export interface Element extends Node, ParentNode,
   /**
    * Inserts a given text node at a given position relative to this
    * node.
-   * 
+   *
    * @param where - a string defining where to insert the element node.
    *   - `beforebegin` before this element itself.
    *   - `afterbegin` before the first child.
    *   - `beforeend` after the last child.
    *   - `afterend` after this element itself.
-   * @param data - text node data 
-   * 
+   * @param data - text node data
+   *
    * @returns the inserted element
    */
   insertAdjacentText(where: "beforebegin" | "afterbegin" | "beforeend" | "afterend",
@@ -1379,7 +1379,7 @@ export interface Element extends Node, ParentNode,
 }
 
 /**
- * Represents an object providing methods which are not dependent on 
+ * Represents an object providing methods which are not dependent on
  * any particular document
  */
 export interface DocumentType extends Node, ChildNode {
@@ -1412,7 +1412,7 @@ export interface NonElementParentNode {
 
   /**
    * Returns an {@link Element}  who has an id attribute `elementId`.
-   * 
+   *
    * @param id - the value of the `id` attribute to match
    */
   getElementById(id: string): Element | null
@@ -1458,7 +1458,7 @@ export interface ParentNode {
   /**
    * Prepends the list of nodes or strings before the first child node.
    * Strings are converted into {@link Text} nodes.
-   * 
+   *
    * @param nodes - the array of nodes or strings
    */
   prepend(...nodes: (Node | string)[]): void
@@ -1466,7 +1466,7 @@ export interface ParentNode {
   /**
    * Appends the list of nodes or strings after the last child node.
    * Strings are converted into {@link Text} nodes.
-   * 
+   *
    * @param nodes - the array of nodes or strings
    */
   append(...nodes: (Node | string)[]): void
@@ -1474,14 +1474,14 @@ export interface ParentNode {
   /**
    * Returns the first element that is a descendant of node that
    * matches selectors.
-   * 
+   *
    * @param selectors - a selectors string
    */
   querySelector(selectors: string): Element | null
 
   /**
    * Returns all element descendants of node that match selectors.
-   * 
+   *
    * @param selectors - a selectors string
    */
   querySelectorAll(selectors: string): NodeList
@@ -1548,40 +1548,40 @@ export interface Slotable {
  */
 export interface Attr extends Node {
 
-  /** 
+  /**
    * Gets the namespace URI.
    */
   readonly namespaceURI: string | null
 
-  /** 
+  /**
    * Gets the namespace prefix.
    */
   readonly prefix: string | null
 
-  /** 
+  /**
    * Gets the local name.
    */
   readonly localName: string
 
-  /** 
+  /**
    * If namespace prefix is not `null`, returns the concatenation of
    * namespace prefix, `":"`, and local name. Otherwise it returns the
    * local name.
    */
   readonly name: string
 
-  /** 
+  /**
    * Gets or sets the attribute value.
    */
   value: string
 
-  /** 
+  /**
    * Gets the owner element node.
    */
   readonly ownerElement: Element | null
 
-  /** 
-   * Useless always returns true 
+  /**
+   * Useless always returns true
    */
   readonly specified: boolean
 
@@ -1609,7 +1609,7 @@ export interface Comment extends CharacterData {
 }
 
 /**
- * Represents an object providing methods which are not dependent on 
+ * Represents an object providing methods which are not dependent on
  * any particular document
  */
 export interface DOMImplementation {
@@ -1619,7 +1619,7 @@ export interface DOMImplementation {
 
   /**
    * Creates and returns an {@link XMLDocument}.
-   * 
+   *
    * @param namespace - the namespace of the document element
    * @param qualifiedName - the qualified name of the document element
    * @param doctype - a {@link DocType} to assign to this document
@@ -1629,7 +1629,7 @@ export interface DOMImplementation {
 
   /**
    * Creates and returns a HTML document.
-   * 
+   *
    * @param title - document title
    */
   createHTMLDocument(title?: string): Document
@@ -1655,28 +1655,28 @@ export interface DOMTokenList extends Iterable<string> {
 
   /**
    * Returns the token at the given index.
-   * 
+   *
    * @param index - the index to of the token
    */
   item(index: number): string | null
 
   /**
    * Returns true if the set contains the given token.
-   * 
+   *
    * @param tokens - the token to check
    */
   contains(token: string): boolean
 
   /**
    * Adds the given tokens to the set.
-   * 
+   *
    * @param tokens - the list of tokens to add
    */
   add(...tokens: string[]): void
 
   /**
    * Removes the given tokens from the set.
-   * 
+   *
    * @param tokens - the list of tokens to remove
    */
   remove(...tokens: string[]): void
@@ -1684,23 +1684,23 @@ export interface DOMTokenList extends Iterable<string> {
   /**
    * Removes a given token from the set and returns `false` if it exists,
    * otherwise adds the token and returns `true`.
-   * 
+   *
    * @param token - the token to toggle
    * @param force - if `false` the token will only be removed but not
    * added again otherwise if `true` the token will only be added but
    * not removed again.
-   * 
-   * @returns `false` if the token is not in the list after the call, 
+   *
+   * @returns `false` if the token is not in the list after the call,
    * or `true` if the token is in the list after the call.
    */
   toggle(token: string, force?: boolean | undefined): boolean
 
   /**
    * Replaces the given token with a new token.
-   * 
+   *
    * @param token - the token to replace
    * @param newToken - the new token
-   * 
+   *
    * @returns `true` if `token` was replaced with `newToken`,
    * and `false` otherwise.
    */
@@ -1709,7 +1709,7 @@ export interface DOMTokenList extends Iterable<string> {
   /**
    * Determines if a given token is in the associated attribute's
    * supported tokens
-   * 
+   *
    * @param token - the token to check
    */
   supports(token: string): boolean
@@ -1730,29 +1730,29 @@ export interface DOMTokenList extends Iterable<string> {
  */
 export interface NamedNodeMap {
 
-  /** 
+  /**
    * Returns the number of attribute in the collection.
    */
   readonly length: number
 
-  /** 
+  /**
    * Returns the attribute with index `index` from the collection.
-   * 
+   *
    * @param index - the zero-based index of the attribute to return
    */
   item(index: number): Attr | null
 
   /**
    * Returns the attribute with the given `qualifiedName`.
-   * 
+   *
    * @param qualifiedName - qualified name to search for
    */
   getNamedItem(qualifiedName: string): Attr | null
 
   /**
-   * Returns the attribute with the given `namespace` and 
+   * Returns the attribute with the given `namespace` and
    * `qualifiedName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1760,29 +1760,29 @@ export interface NamedNodeMap {
 
   /**
    * Sets the attribute given with `attr`.
-   * 
+   *
    * @param attr - attribute to set
    */
   setNamedItem(attr: Attr): Attr | null
 
   /**
    * Sets the attribute given with `attr`.
-   * 
+   *
    * @param attr - attribute to set
    */
   setNamedItemNS(attr: Attr): Attr | null
 
   /**
    * Removes the attribute with the given `qualifiedName`.
-   * 
+   *
    * @param qualifiedName - qualified name to search for
    */
   removeNamedItem(qualifiedName: string): Attr
 
   /**
-   * Removes the attribute with the given `namespace` and 
+   * Removes the attribute with the given `namespace` and
    * `qualifiedName`.
-   * 
+   *
    * @param namespace - namespace to search for
    * @param localName - local name to search for
    */
@@ -1826,7 +1826,7 @@ export interface NodeFilter {
   SHOW_DOCUMENT_FRAGMENT: number
   SHOW_NOTATION: number
 
-  /** 
+  /**
    * Callback function.
    */
   acceptNode(node: Node): FilterResult
@@ -1866,9 +1866,9 @@ export interface NodeList extends Collection, Iterable<Node> {
    */
   entries(): Iterable<[number, Node]>
 
-  /** 
+  /**
    * Returns the node with index `index` from the collection.
-   * 
+   *
    * @param index - the zero-based index of the node to return
    */
   item(index: number): Node | null
@@ -1890,9 +1890,9 @@ export interface NodeList extends Collection, Iterable<Node> {
    *   - the current node
    *   - index of the current node
    *   - the node list object
-   * 
-   * @param callback - function to execute for each node 
-   * @param thisArg - value to use as `this` when executing callback 
+   *
+   * @param callback - function to execute for each node
+   * @param thisArg - value to use as `this` when executing callback
    */
   forEach(callback: (node: Node, index: number, list: NodeList) => any,
     thisArg?: any): void
@@ -1926,7 +1926,7 @@ export interface NonDocumentTypeChildNode {
  */
 export interface ProcessingInstruction extends CharacterData {
 
-  /** 
+  /**
    * Gets the target of the node.
    */
   readonly target: string
@@ -1972,7 +1972,7 @@ export interface NodeIterator extends Traverser {
 
   /**
    * Gets a flag that indicates whether the iterator is anchored before
-   * or after  the reference node. If is `true`, the iterator is anchored 
+   * or after  the reference node. If is `true`, the iterator is anchored
    * before the node, otherwise it is anchored after the node.
    */
   readonly pointerBeforeReferenceNode: boolean
@@ -1990,7 +1990,7 @@ export interface NodeIterator extends Traverser {
 
   /**
    * Removes a range object from its owner document.
-   * 
+   *
    * _Note:_ According to the specification, this method is a no-op.
    * However, since JavaScript lacks weak references, there is no reliable
    * method of detecting out-of-scope variables. So, it is recommended to
@@ -2112,14 +2112,14 @@ export interface Range extends AbstractRange {
   END_TO_START: number
 
   /**
-   * Returns the node, furthest away from the document, that is an 
+   * Returns the node, furthest away from the document, that is an
    * ancestor of both range's start node and end node.
    */
   readonly commonAncestorContainer: Node
 
   /**
    * Sets the start of the range to the given boundary point.
-   * 
+   *
    * @param node - node of the boundary point
    * @param offset - offset of the boundary point along node's content
    */
@@ -2127,7 +2127,7 @@ export interface Range extends AbstractRange {
 
   /**
    * Sets the end of the range to the given boundary point.
-   * 
+   *
    * @param node - node of the boundary point
    * @param offset - offset of the boundary point along node's content
    */
@@ -2135,35 +2135,35 @@ export interface Range extends AbstractRange {
 
   /**
    * Sets the start of the range to just before the given node.
-   * 
+   *
    * @param node - node of the boundary point
    */
   setStartBefore(node: Node): void
 
   /**
    * Sets the start of the range to just after the given node.
-   * 
+   *
    * @param node - node of the boundary point
    */
   setStartAfter(node: Node): void
 
   /**
    * Sets the end of the range to just before the given node.
-   * 
+   *
    * @param node - node of the boundary point
    */
   setEndBefore(node: Node): void
 
   /**
    * Sets the end of the range to just after the given node.
-   * 
+   *
    * @param node - node of the boundary point
    */
   setEndAfter(node: Node): void
 
   /**
    * Collapses the range.
-   * 
+   *
    * @param toStart - `true` to collapse to start node, otherwise
    * `false` to collapse to the end node.
    */
@@ -2171,21 +2171,21 @@ export interface Range extends AbstractRange {
 
   /**
    * Sets the range to contain the given node.
-   * 
+   *
    * @param node - the range to select
    */
   selectNode(node: Node): void
 
   /**
    * Sets the range to contain the given node's contens.
-   * 
+   *
    * @param node - the range to select
    */
   selectNodeContents(node: Node): void
 
   /**
    * Compares the boundary points of this range with another one.
-   * 
+   *
    * @param how - comparison method:
    * * `EndToEnd` - compares the end boundary-point of `sourceRange` to the end
    * boundary-point of this range.
@@ -2196,7 +2196,7 @@ export interface Range extends AbstractRange {
    * * `StartToStart` - compares the start boundary-point of `sourceRange` to
    * the start boundary-point of this range.
    * @param sourceRange - the range to compare to
-   * 
+   *
    * @returns a number depending on boundaries of ranges relative to each other:
    * * `-1` if the corresponding boundary point of this is range comes before
    * that of `sourceRange`
@@ -2223,15 +2223,15 @@ export interface Range extends AbstractRange {
 
   /**
    * Inserts a node at the start boundary point.
-   * 
+   *
    * @param node - the node to insert
    */
   insertNode(node: Node): void
 
   /**
-   * Moves content of the Range into a new node, placing the new node 
+   * Moves content of the Range into a new node, placing the new node
    * at the start of the range.
-   * 
+   *
    * @param newParent - a node to receive range's content
    */
   surroundContents(newParent: Node): void
@@ -2248,7 +2248,7 @@ export interface Range extends AbstractRange {
 
   /**
    * Determines whether the range contains the given boundary point.
-   * 
+   *
    * @param node - the node of the boundary point
    * @param offset - the offset of the boundary point
    */
@@ -2257,7 +2257,7 @@ export interface Range extends AbstractRange {
   /**
    * Returns `-1`, `0`, or `1` depending on whether `node` is
    * before, the same as, or after the range.
-   * 
+   *
    * @param node - the node to compare
    * @param offset - an offset within node
    */
@@ -2265,7 +2265,7 @@ export interface Range extends AbstractRange {
 
   /**
    * Determines whether the given node intersects the range.
-   * 
+   *
    * @param node - the node to check
    */
   intersectsNode(node: Node): boolean
@@ -2325,6 +2325,7 @@ export enum NodeType {
  * node.
  */
 export enum Position {
+  SameNode = 0,
   Disconnected = 0x01,
   Preceding = 0x02,
   Following = 0x04,
@@ -2471,7 +2472,7 @@ export type BoundaryPoint = [Node, number]
 /**
  * Defines a callback function which is invoked after nodes registered with the
  * observe() method, are mutated.
- * 
+ *
  * @param mutations - a list of `MutationRecord` objects
  * @param observer - the constructed `MutationObserver` object
  */
@@ -2487,7 +2488,7 @@ export type RegisteredObserver = {
 
 /**
  * Represents a transient registered observer associated with a node.
- * Transient registered observers are used to track mutations within a given 
+ * Transient registered observers are used to track mutations within a given
  * node's descendants after node has been removed so they do not get lost when
  * subtree is set to true on node's parent.
  */

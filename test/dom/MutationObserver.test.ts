@@ -2,9 +2,9 @@ import $$ from "../TestHelpers"
 import { MutationRecord } from "../../src/dom/interfaces"
 
 
-describe('MutationObserver', () => {
+$$.suite('MutationObserver', () => {
 
-	test('childList - append', (done) => {
+	$$.test('childList - append', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
 		const node2 = root._nodeDocument.createElement('node2')
@@ -12,22 +12,17 @@ describe('MutationObserver', () => {
 		root.append(node1, node2, node3)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'childList') {
-				    expect(mutation.target).toBe(root)
-					  expect([...mutation.addedNodes]).toEqual([node4])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBe(node3)
-					  expect(mutation.nextSibling).toBeNull()
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'childList') {
+					$$.deepEqual(mutation.target, root)
+					$$.deepEqual([...mutation.addedNodes], [node4])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, node3)
+					$$.deepEqual(mutation.nextSibling, null)
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
     }
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(root, { childList: true })
 		const node4 = root._nodeDocument.createElement('node4')
@@ -37,7 +32,7 @@ describe('MutationObserver', () => {
     observer.disconnect()
 	})
 
-	test('childList - remove', (done) => {
+	$$.test('childList - remove', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
 		const node2 = root._nodeDocument.createElement('node2')
@@ -45,23 +40,17 @@ describe('MutationObserver', () => {
 		root.append(node1, node2, node3)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-        for (let mutation of mutations) {
-  				if (mutation.type === 'childList') {
-	  				expect(mutation.target).toBe(root)
-		  			expect([...mutation.addedNodes]).toEqual([])
-			  		expect([...mutation.removedNodes]).toEqual([node2])
-				  	expect(mutation.previousSibling).toBe(node1)
-					  expect(mutation.nextSibling).toBe(node3)
-					  done()
-				  }
-        }
-				done()
-			} catch (e) {
-				done(e)
-			}        
+			for (let mutation of mutations) {
+				if (mutation.type === 'childList') {
+					$$.deepEqual(mutation.target, root)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [node2])
+					$$.deepEqual(mutation.previousSibling, node1)
+					$$.deepEqual(mutation.nextSibling, node3)
+				}
+			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(root, { childList: true })
     root.removeChild(node2)
@@ -70,7 +59,7 @@ describe('MutationObserver', () => {
     observer.disconnect()
 	})
 
-	test('childList - replace', (done) => {
+	$$.test('childList - replace', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
 		const node2 = root._nodeDocument.createElement('node2')
@@ -78,23 +67,17 @@ describe('MutationObserver', () => {
 		root.append(node1, node2, node3)
 
 		const callback = (mutations: MutationRecord[]) => {
-      try {
-			  for (let mutation of mutations) {
-				  if (mutation.type === 'childList') {
-					  expect(mutation.target).toBe(root)
-					  expect([...mutation.addedNodes]).toEqual([node4])
-					  expect([...mutation.removedNodes]).toEqual([node2])
-					  expect(mutation.previousSibling).toBe(node1)
-					  expect(mutation.nextSibling).toBe(node3)
-					  done()
-				  }
-        }
-				done()
-			} catch (e) {
-				done(e)
-			}        
+			for (let mutation of mutations) {
+				if (mutation.type === 'childList') {
+					$$.deepEqual(mutation.target, root)
+					$$.deepEqual([...mutation.addedNodes], [node4])
+					$$.deepEqual([...mutation.removedNodes], [node2])
+					$$.deepEqual(mutation.previousSibling, node1)
+					$$.deepEqual(mutation.nextSibling, node3)
+				}
+			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(root, { childList: true })
 		const node4 = root._nodeDocument.createElement('node4')
@@ -104,7 +87,7 @@ describe('MutationObserver', () => {
     observer.disconnect()
    })
 
-	test('childList - replace', (done) => {
+	$$.test('childList - replace', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
 		const node2 = root._nodeDocument.createElement('node2')
@@ -112,23 +95,17 @@ describe('MutationObserver', () => {
 		root.append(node1, node2, node3)
 
 		const callback = (mutations: MutationRecord[]) => {
-      try {
-			  for (let mutation of mutations) {
-				  if (mutation.type === 'childList') {
-					  expect(mutation.target).toBe(root)
-					  expect([...mutation.addedNodes]).toEqual([node4])
-					  expect([...mutation.removedNodes]).toEqual([node2])
-					  expect(mutation.previousSibling).toBe(node1)
-					  expect(mutation.nextSibling).toBe(node3)
-					  done()
-				  }
-        }
-				done()
-			} catch (e) {
-				done(e)
-			}        
+			for (let mutation of mutations) {
+				if (mutation.type === 'childList') {
+					$$.deepEqual(mutation.target, root)
+					$$.deepEqual([...mutation.addedNodes], [node4])
+					$$.deepEqual([...mutation.removedNodes], [node2])
+					$$.deepEqual(mutation.previousSibling, node1)
+					$$.deepEqual(mutation.nextSibling, node3)
+				}
+			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(root, { childList: true })
 		const node4 = root._nodeDocument.createElement('node4')
@@ -138,29 +115,24 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('characterData', (done) => {
+	$$.test('characterData', () => {
 		const root = $$.newDoc
 		const text = root._nodeDocument.createTextNode('abc')
 		root.append(text)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'characterData') {
-				    expect(mutation.target).toBe(text)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBeNull()
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'characterData') {
+					$$.deepEqual(mutation.target, text)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, null)
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(text as any, { characterData: true })
     text.textContent = 'def'
@@ -168,30 +140,25 @@ describe('MutationObserver', () => {
     if (records) callback(records)
     observer.disconnect()
   })
-  
-	test('characterData - observe old value', (done) => {
+
+	$$.test('characterData - observe old value', () => {
 		const root = $$.newDoc
 		const text = root._nodeDocument.createTextNode('abc')
 		root.append(text)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'characterData') {
-				    expect(mutation.target).toBe(text)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBe('abc')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'characterData') {
+					$$.deepEqual(mutation.target, text)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, 'abc')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(text as any, { characterData: true, characterDataOldValue: true })
     text.textContent = 'def'
@@ -200,32 +167,27 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('attributes', (done) => {
+	$$.test('attributes', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
     root.append(node)
     node.setAttributeNS('ns', 'att', 'val')
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'attributes') {
-				    expect(mutation.target).toBe(node)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBeNull()
-					  expect(mutation.attributeNamespace).toBe('ns')
-					  expect(mutation.attributeName).toBe('att')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					$$.deepEqual(mutation.target, node)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, null)
+					$$.deepEqual(mutation.attributeNamespace, 'ns')
+					$$.deepEqual(mutation.attributeName, 'att')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node as any, { attributes: true })
     node.setAttributeNS('ns', 'att', 'new val')
@@ -234,32 +196,27 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('attributes - observe old value', (done) => {
+	$$.test('attributes - observe old value', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
     root.append(node)
     node.setAttributeNS('ns', 'att', 'val')
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'attributes') {
-				    expect(mutation.target).toBe(node)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.attributeNamespace).toBe('ns')
-					  expect(mutation.attributeName).toBe('att')
-					  expect(mutation.oldValue).toBe('val')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					$$.deepEqual(mutation.target, node)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.attributeNamespace, 'ns')
+					$$.deepEqual(mutation.attributeName, 'att')
+					$$.deepEqual(mutation.oldValue, 'val')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node as any, { attributes: true, attributeOldValue: true })
     node.setAttributeNS('ns', 'att', 'new val')
@@ -268,7 +225,7 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('attributes- filter', (done) => {
+	$$.test('attributes- filter', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
     root.append(node)
@@ -276,25 +233,20 @@ describe('MutationObserver', () => {
     node.setAttributeNS('ns', 'att2', 'val')
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'attributes') {
-				    expect(mutation.target).toBe(node)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBeNull()
-					  expect(mutation.attributeNamespace).toBe('ns')
-					  expect(mutation.attributeName).toBe('att')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					$$.deepEqual(mutation.target, node)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, null)
+					$$.deepEqual(mutation.attributeNamespace, 'ns')
+					$$.deepEqual(mutation.attributeName, 'att')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node as any, { attributes: true, attributeFilter: ["att"] })
     node.setAttributeNS('ns', 'att', 'new val')
@@ -304,7 +256,7 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('subtree', (done) => {
+	$$.test('subtree', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
 		const text = root._nodeDocument.createTextNode('abc')
@@ -312,65 +264,55 @@ describe('MutationObserver', () => {
 		node.append(text)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'characterData') {
-				    expect(mutation.target).toBe(text)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBe('abc')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'characterData') {
+					$$.deepEqual(mutation.target, text)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, 'abc')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(root, { characterData: true, characterDataOldValue: true, subtree: true })
     text.textContent = 'def'
     const records = observer.takeRecords()
-    if (records) callback(records)    
+    if (records) callback(records)
     observer.disconnect()
   })
 
-	test('observe() - invalid options', () => {
+	$$.test('observe() - invalid options', () => {
 		const root = $$.newDoc
 
     const observer = new $$.MutationObserver((mutations) => { })
 
-		expect(() => observer.observe(root)).toThrow()
-		expect(() => observer.observe(root, { characterDataOldValue: true, characterData: false, childList: true })).toThrow()
-		expect(() => observer.observe(root, { attributeOldValue: true, attributes: false, childList: true })).toThrow()
-		expect(() => observer.observe(root, { attributeFilter: ["match"], attributes: false, childList: true })).toThrow()
+		$$.throws(() => observer.observe(root))
+		$$.throws(() => observer.observe(root, { characterDataOldValue: true, characterData: false, childList: true }))
+		$$.throws(() => observer.observe(root, { attributeOldValue: true, attributes: false, childList: true }))
+		$$.throws(() => observer.observe(root, { attributeFilter: ["match"], attributes: false, childList: true }))
   })
-  
-	test('observe() - options without characterData', (done) => {
+
+	$$.test('observe() - options without characterData', () => {
 		const root = $$.newDoc
 		const text = root._nodeDocument.createTextNode('abc')
 		root.append(text)
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'characterData') {
-				    expect(mutation.target).toBe(text)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBe('abc')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'characterData') {
+					$$.deepEqual(mutation.target, text)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.oldValue, 'abc')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(text as any, { characterDataOldValue: true })
     text.textContent = 'def'
@@ -379,32 +321,27 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('observe() - options without attributes', (done) => {
+	$$.test('observe() - options without attributes', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
     root.append(node)
     node.setAttributeNS('ns', 'att', 'val')
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'attributes') {
-				    expect(mutation.target).toBe(node)
-					  expect([...mutation.addedNodes]).toEqual([])
-					  expect([...mutation.removedNodes]).toEqual([])
-					  expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.attributeNamespace).toBe('ns')
-					  expect(mutation.attributeName).toBe('att')
-					  expect(mutation.oldValue).toBe('val')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					$$.deepEqual(mutation.target, node)
+					$$.deepEqual([...mutation.addedNodes], [])
+					$$.deepEqual([...mutation.removedNodes], [])
+					$$.deepEqual(mutation.previousSibling, null)
+					$$.deepEqual(mutation.nextSibling, null)
+					$$.deepEqual(mutation.attributeNamespace, 'ns')
+					$$.deepEqual(mutation.attributeName, 'att')
+					$$.deepEqual(mutation.oldValue, 'val')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node as any, { attributeOldValue: true })
     node.setAttributeNS('ns', 'att', 'new val')
@@ -413,22 +350,17 @@ describe('MutationObserver', () => {
     observer.disconnect()
   })
 
-	test('observe() - multiple calls with different types', (done) => {
+	$$.test('observe() - multiple calls with different types', () => {
 		const root = $$.newDoc
 		const node = root._nodeDocument.createElement('node')
     root.append(node)
     node.setAttributeNS('ns', 'att', 'val')
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-		  	for (let mutation of mutations) {
-			    if (mutation.type === 'attributes') {
-					  expect(mutation.attributeName).toBe('att')
-			    }
+			for (let mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					$$.deepEqual(mutation.attributeName, 'att')
 				}
-				done()
-			} catch (e) {
-				done(e)
 			}
 		}
     const observer = new $$.MutationObserver(callback)

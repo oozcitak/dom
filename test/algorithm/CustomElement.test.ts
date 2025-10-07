@@ -4,22 +4,22 @@ import {
   customElement_isVoidElementName
 } from "../../src/algorithm"
 
-describe('CustomElement', () => {
+$$.suite('CustomElement', () => {
 
-  test('isValidCustomElementName()', () => {
-    expect(customElement_isValidCustomElementName('.name')).toBe(false)
-    expect(customElement_isValidCustomElementName('font-face')).toBe(false)
-    expect(customElement_isValidCustomElementName('my-custom')).toBe(true)
+  $$.test('isValidCustomElementName()', () => {
+    $$.deepEqual(customElement_isValidCustomElementName('.name'), false)
+    $$.deepEqual(customElement_isValidCustomElementName('font-face'), false)
+    $$.deepEqual(customElement_isValidCustomElementName('my-custom'), true)
   })
 
-  test('isValidElementName()', () => {
-    expect(customElement_isValidElementName('.name')).toBe(false)
-    expect(customElement_isValidElementName('div')).toBe(true)
+  $$.test('isValidElementName()', () => {
+    $$.deepEqual(customElement_isValidElementName('.name'), false)
+    $$.deepEqual(customElement_isValidElementName('div'), true)
   })
 
-  test('isVoidElementName()', () => {
-    expect(customElement_isVoidElementName('br')).toBe(true)
-    expect(customElement_isVoidElementName('div')).toBe(false)
+  $$.test('isVoidElementName()', () => {
+    $$.deepEqual(customElement_isVoidElementName('br'), true)
+    $$.deepEqual(customElement_isVoidElementName('div'), false)
   })
 
 })

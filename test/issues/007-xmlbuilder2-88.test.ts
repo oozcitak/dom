@@ -1,8 +1,8 @@
 import $$ from "../TestHelpers"
 
-describe('Issues', () => {
+$$.suite('Issues', () => {
 
-  test('DOM textContent returns encoded text #7', () => {
+  $$.test('DOM textContent returns encoded text #7', () => {
     // https://github.com/oozcitak/xmlbuilder2/issues/88
     const xmlStr = $$.t`
     <?xml version="1.0" encoding="utf-8"?>
@@ -14,7 +14,7 @@ describe('Issues', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root
         text
           # <data>

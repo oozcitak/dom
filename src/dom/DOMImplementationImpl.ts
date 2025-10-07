@@ -10,17 +10,17 @@ import {
 import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
- * Represents an object providing methods which are not dependent on 
+ * Represents an object providing methods which are not dependent on
  * any particular document.
  */
 export class DOMImplementationImpl implements DOMImplementation {
 
-  _ID!: string
+  _ID = "@oozcitak/dom"
   _associatedDocument: Document
 
   /**
    * Initializes a new instance of `DOMImplementation`.
-   * 
+   *
    * @param document - the associated document
    */
   constructor(document?: Document) {
@@ -32,7 +32,7 @@ export class DOMImplementationImpl implements DOMImplementation {
     publicId: string, systemId: string): DocumentType {
     /**
      * 1. Validate qualifiedName.
-     * 2. Return a new doctype, with qualifiedName as its name, publicId as its 
+     * 2. Return a new doctype, with qualifiedName as its name, publicId as its
      * public ID, and systemId as its system ID, and with its node document set
      * to the associated document of the context object.
      */
@@ -52,8 +52,8 @@ export class DOMImplementationImpl implements DOMImplementation {
 
     /**
      * 2. Let element be null.
-     * 3. If qualifiedName is not the empty string, then set element to 
-     * the result of running the internal createElementNS steps, given document, 
+     * 3. If qualifiedName is not the empty string, then set element to
+     * the result of running the internal createElementNS steps, given document,
      * namespace, qualifiedName, and an empty dictionary.
      */
     let element: Element | null = null
@@ -107,20 +107,20 @@ export class DOMImplementationImpl implements DOMImplementation {
     doc._contentType = "text/html"
 
     /**
-     * 3. Append a new doctype, with "html" as its name and with its node 
+     * 3. Append a new doctype, with "html" as its name and with its node
      * document set to doc, to doc.
      */
     doc.appendChild(create_documentType(doc, "html", "", ""))
 
     /**
-     * 4. Append the result of creating an element given doc, html, and the 
+     * 4. Append the result of creating an element given doc, html, and the
      * HTML namespace, to doc.
      */
     const htmlElement = element_createAnElement(doc, "html", infraNamespace.HTML)
     doc.appendChild(htmlElement)
 
     /**
-     * 5. Append the result of creating an element given doc, head, and the 
+     * 5. Append the result of creating an element given doc, head, and the
      * HTML namespace, to the html element created earlier.
      */
     const headElement = element_createAnElement(doc, "head", infraNamespace.HTML)
@@ -128,10 +128,10 @@ export class DOMImplementationImpl implements DOMImplementation {
 
     /**
      * 6. If title is given:
-     * 6.1. Append the result of creating an element given doc, title, and 
+     * 6.1. Append the result of creating an element given doc, title, and
      * the HTML namespace, to the head element created earlier.
      * 6.2. Append a new Text node, with its data set to title (which could
-     * be the empty string) and its node document set to doc, to the title 
+     * be the empty string) and its node document set to doc, to the title
      * element created earlier.
      */
     if (title !== undefined) {
@@ -142,7 +142,7 @@ export class DOMImplementationImpl implements DOMImplementation {
     }
 
     /**
-     * 7. Append the result of creating an element given doc, body, and the 
+     * 7. Append the result of creating an element given doc, body, and the
      * HTML namespace, to the html element created earlier.
      */
     const bodyElement = element_createAnElement(doc, "body", infraNamespace.HTML)
@@ -164,7 +164,7 @@ export class DOMImplementationImpl implements DOMImplementation {
 
   /**
    * Creates a new `DOMImplementation`.
-   * 
+   *
    * @param document - owner document
    */
   static _create(document: Document): DOMImplementationImpl {

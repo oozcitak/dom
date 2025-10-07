@@ -1,8 +1,8 @@
 import $$ from "../TestHelpers"
 
-describe('StaticRange', () => {
+$$.suite('StaticRange', () => {
 
-  test('constructor', () => {
+  $$.test('constructor', () => {
 		const root = $$.newDoc
 		const node1 = root._nodeDocument.createElement('node1')
 		const node2 = root._nodeDocument.createElement('node2')
@@ -12,14 +12,14 @@ describe('StaticRange', () => {
 		node1.append(child1, child2)
 
     const range = new $$.StaticRange({ startContainer: node1, startOffset: 1, endContainer: node2, endOffset: 0 })
-		expect(range.startContainer).toBe(node1)
-		expect(range.startOffset).toBe(1)
-		expect(range.endContainer).toBe(node2)
-		expect(range.endOffset).toBe(0)
+		$$.deepEqual(range.startContainer, node1)
+		$$.deepEqual(range.startOffset, 1)
+		$$.deepEqual(range.endContainer, node2)
+		$$.deepEqual(range.endOffset, 0)
 
 		const attrNode = root._nodeDocument.createAttribute('att')
 		node1.attributes.setNamedItem(attrNode)
-		expect(() => new $$.StaticRange({ startContainer: attrNode, startOffset: 0, endContainer: attrNode, endOffset: 1 })).toThrow()
+		$$.throws(() => new $$.StaticRange({ startContainer: attrNode, startOffset: 0, endContainer: attrNode, endOffset: 1 }))
   })
 
 })

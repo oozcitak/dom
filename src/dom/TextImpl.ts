@@ -8,7 +8,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class TextImpl extends CharacterDataImpl implements Text {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.Text
 
   _name: string = ''
   _assignedSlot: Slot | null = null
@@ -25,7 +25,7 @@ export class TextImpl extends CharacterDataImpl implements Text {
   /** @inheritdoc */
   get wholeText(): string {
     /**
-     * The wholeText attribute’s getter must return the concatenation of the 
+     * The wholeText attribute’s getter must return the concatenation of the
      * data of the contiguous Text nodes of the context object, in tree order.
      */
     let text = ''
@@ -52,7 +52,7 @@ export class TextImpl extends CharacterDataImpl implements Text {
 
   /**
    * Creates a `Text`.
-   * 
+   *
    * @param document - owner document
    * @param data - the text content
    */

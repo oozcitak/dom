@@ -1,8 +1,8 @@
 import $$ from "../TestHelpers"
 
-describe('XMLSerializer', () => {
+$$.suite('XMLSerializer', () => {
 
-  test('basic', () => {
+  $$.test('basic', () => {
     const doc = $$.dom.createDocument('ns', 'root')
     const de = doc.documentElement
     if (de) {
@@ -23,7 +23,7 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="ns">' +
       '<node xmlns="" att="val"/>' +
       '<!--same node below-->' +
@@ -36,7 +36,7 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('serializer + parser', () => {
+  $$.test('serializer + parser', () => {
     const xmlStr =
       '<section xmlns="http://www.ibm.com/events"' +
       ' xmlns:bk="urn:loc.gov:books"' +
@@ -52,10 +52,10 @@ describe('XMLSerializer', () => {
 
     const serializer = new $$.XMLSerializer()
     const parser = new $$.DOMParser()
-    expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
+    $$.deepEqual(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml")), xmlStr)
   })
 
-  test('namespace declaration attribute', () => {
+  $$.test('namespace declaration attribute', () => {
     const doc = $$.dom.createDocument('ns', 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns')
@@ -63,28 +63,28 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="ns"><foo xmlns=""/></root>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root (ns:ns) xmlns="ns" (ns:http://www.w3.org/2000/xmlns/)
         foo
       `)
   })
 
-  test('skip XML namespace declaration attribute', () => {
+  $$.test('skip XML namespace declaration attribute', () => {
     const doc = $$.dom.createDocument('ns', 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:ns', 'http://www.w3.org/XML/1998/namespace')
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="ns"/>'
     )
   })
 
-  test('default namespace', () => {
+  $$.test('default namespace', () => {
     const ns = 'uri:myns'
     const doc = $$.dom.createDocument(ns, 'root')
     const node1 = doc.createElementNS(ns, 'node1')
@@ -96,10 +96,10 @@ describe('XMLSerializer', () => {
     node2.appendChild(doc.createTextNode('text'))
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="uri:myns"><node1><node2>text</node2></node1></root>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root (ns:uri:myns)
         node1 (ns:uri:myns)
           node2 (ns:uri:myns)
@@ -107,7 +107,7 @@ describe('XMLSerializer', () => {
       `)
   })
 
-  test('namespace prefix', () => {
+  $$.test('namespace prefix', () => {
     const ns = 'uri:myns'
     const doc = $$.dom.createDocument(ns, 'root')
     if (doc.documentElement) {
@@ -115,15 +115,15 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="uri:myns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:myschema.xsd"/>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root (ns:uri:myns) xsi:schemaLocation="uri:myschema.xsd" (ns:http://www.w3.org/2001/XMLSchema-instance)
       `)
   })
 
-  test('explicit namespace declaration', () => {
+  $$.test('explicit namespace declaration', () => {
     const svgNs = 'http://www.w3.org/2000/svg'
     const xlinkNs = 'http://www.w3.org/1999/xlink'
 
@@ -139,18 +139,18 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
       '<script type="text/ecmascript" xlink:href="foo.js"/>' +
       '</svg>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg) xmlns:xlink="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
         script (ns:http://www.w3.org/2000/svg) type="text/ecmascript" xlink:href="foo.js" (ns:http://www.w3.org/1999/xlink)
       `)
   })
 
-  test('empty default namespace', () => {
+  $$.test('empty default namespace', () => {
     const svgNs = 'http://www.w3.org/2000/svg'
 
     const doc = $$.dom.createDocument(svgNs, 'svg')
@@ -160,18 +160,18 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns=""/>' +
       '</svg>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg)
         script
       `)
   })
 
-  test('default namespace override', () => {
+  $$.test('default namespace override', () => {
     const svgNs = 'http://www.w3.org/2000/svg'
     const xlinkNs = 'http://www.w3.org/1999/xlink'
 
@@ -182,18 +182,18 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns="http://www.w3.org/1999/xlink"/>' +
       '</svg>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg)
         script (ns:http://www.w3.org/1999/xlink)
       `)
   })
 
-  test('prefixed namespace override', () => {
+  $$.test('prefixed namespace override', () => {
     const ns1 = 'uri:my ns1'
     const ns2 = 'uri:my ns2'
 
@@ -211,14 +211,14 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<p:root xmlns:p="uri:my ns1">' +
       '<p:node><p:child/></p:node>' +
       '<p:node xmlns:p="uri:my ns2"><p:child/></p:node>' +
       '<p:node><p:child/></p:node>' +
       '</p:root>'
     )
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       p:root (ns:uri:my ns1)
         p:node (ns:uri:my ns1)
           p:child (ns:uri:my ns1)
@@ -229,29 +229,29 @@ describe('XMLSerializer', () => {
       `)
   })
 
-  test('xml namespace', () => {
+  $$.test('xml namespace', () => {
     const ns = 'http://www.w3.org/XML/1998/namespace'
     const doc = $$.dom.createDocument(ns, 'root')
     if (!doc.documentElement) throw new Error("Document element is null.")
     doc.documentElement.append(doc.createElement('foo'), doc.createElement('bar'))
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<xml:root><foo/><bar/></xml:root>'
     )
   })
 
-  test('element with xmlns prefix (not well-formed)', () => {
+  $$.test('element with xmlns prefix (not well-formed)', () => {
     const doc = $$.dom.createDocument('ns', 'root')
     const node = doc.createElementNS('http://www.w3.org/2000/xmlns/', 'xmlns:foo')
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(node)).toBe(
+    $$.deepEqual(serializer.serializeToString(node),
       '<xmlns:foo/>'
     )
   })
 
-  test('fragment', () => {
+  $$.test('fragment', () => {
     const ns = 'uri:myns'
     const doc = $$.dom.createDocument(ns, 'root')
     const frag = doc.createDocumentFragment()
@@ -259,211 +259,211 @@ describe('XMLSerializer', () => {
     frag.appendChild(doc.createElementNS(ns, 'node2'))
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(frag)).toBe(
+    $$.deepEqual(serializer.serializeToString(frag),
       '<node1 xmlns="uri:myns"/><node2 xmlns="uri:myns"/>'
     )
   })
 
-  test('document type pubId, sysId', () => {
+  $$.test('document type pubId, sysId', () => {
     const ns = 'uri:myns'
     const doctype = $$.dom.createDocumentType('root', 'pubId', 'sysId')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<!DOCTYPE root PUBLIC "pubId" "sysId"><root xmlns="uri:myns"/>'
     )
   })
 
-  test('document type pubId', () => {
+  $$.test('document type pubId', () => {
     const ns = 'uri:myns'
     const doctype = $$.dom.createDocumentType('root', 'pubId', '')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<!DOCTYPE root PUBLIC "pubId"><root xmlns="uri:myns"/>'
     )
   })
 
-  test('document type sysId', () => {
+  $$.test('document type sysId', () => {
     const ns = 'uri:myns'
     const doctype = $$.dom.createDocumentType('root', '', 'sysId')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<!DOCTYPE root SYSTEM "sysId"><root xmlns="uri:myns"/>'
     )
   })
 
-  test('document type', () => {
+  $$.test('document type', () => {
     const ns = 'uri:myns'
     const doctype = $$.dom.createDocumentType('root', '', '')
     const doc = $$.dom.createDocument(ns, 'root', doctype)
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<!DOCTYPE root><root xmlns="uri:myns"/>'
     )
   })
 
-  test('invalid document type pubId', () => {
+  $$.test('invalid document type pubId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId\x09', 'sysId')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(doctype, true))
   })
 
-  test('invalid document type sysId', () => {
+  $$.test('invalid document type sysId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', 'sysId\x00')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(doctype, true))
   })
 
-  test('invalid document type sysId', () => {
+  $$.test('invalid document type sysId', () => {
     const doctype = $$.dom.createDocumentType('root', 'pubId', '"sysId\'')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(doctype, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(doctype, true))
   })
 
-  test('invalid element name', () => {
+  $$.test('invalid element name', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createElement('name')
     ele._localName = "invalid:name"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid element name', () => {
+  $$.test('invalid element name', () => {
     const doc = $$.dom.createDocument('ns', 'root')
     const ele = doc.createElementNS('otherNS', 'name')
     ele._namespacePrefix = "xmlns"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid element name', () => {
+  $$.test('invalid element name', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createElement('name')
     ele._localName = "invalidname\0"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid comment', () => {
+  $$.test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createComment('name')
     ele._data = "invalid\0"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid comment', () => {
+  $$.test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createComment('name')
     ele._data = "comment--invalid"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid comment', () => {
+  $$.test('invalid comment', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createComment('name')
     ele._data = "comment-invalid-"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid text', () => {
+  $$.test('invalid text', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createTextNode('name')
     ele._data = "invalid\0"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createProcessingInstruction('name', 'value')
     ele._target = "invalid:target"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createProcessingInstruction('name', 'value')
     ele._target = "xml"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createProcessingInstruction('name', 'value')
     ele._data = "value\0"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createProcessingInstruction('name', 'value')
     ele._data = "value?>"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const ele = doc.createCDATASection('name')
     ele._data = "value]]>"
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(ele, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(ele, true))
   })
 
-  test('invalid attribute name', () => {
+  $$.test('invalid attribute name', () => {
     const doc = $$.dom.createDocument(null, '')
     const node1 = doc.createElement('node')
     node1.setAttribute('att', 'val1')
     node1.attributes[0]._localName = 'att:name'
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(node1, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node1, true))
     const node2 = doc.createElement('node')
     node2.setAttribute('att', 'val1')
     node2.attributes[0]._localName = 'att\0'
-    expect(() => serializer._xmlSerialization(node2, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node2, true))
     const node3 = doc.createElement('node')
     node3.setAttribute('xmlns', 'val1')
-    expect(() => serializer._xmlSerialization(node3, true)).toThrow()    
+    $$.throws(() => serializer._xmlSerialization(node3, true))
   })
 
-  test('invalid attributes value', () => {
+  $$.test('invalid attributes value', () => {
     const doc = $$.dom.createDocument(null, '')
     const node = doc.createElement('node')
     node.setAttribute('att', 'val')
     node.attributes[0]._value = 'val\0'
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node, true))
   })
 
-  test('invalid attributes value - XMLNS', () => {
+  $$.test('invalid attributes value - XMLNS', () => {
     const doc = $$.dom.createDocument(null, '')
     const node = doc.createElement('node')
     node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'http://www.w3.org/2000/xmlns/')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node, true))
   })
 
-  test('invalid attributes value - undeclare namespace', () => {
+  $$.test('invalid attributes value - undeclare namespace', () => {
     const doc = $$.dom.createDocument(null, '')
     const node = doc.createElement('node')
     node.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', '')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node, true))
   })
 
-  test('invalid node type', () => {
+  $$.test('invalid node type', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const invalid = doc.createElement('node')
     if (doc.documentElement) {
@@ -472,56 +472,56 @@ describe('XMLSerializer', () => {
     Object.defineProperty(invalid, "nodeType", { value: 0 })
 
     const serializer = new $$.XMLSerializer()
-    expect(() => serializer.serializeToString(doc)).toThrow()
+    $$.throws(() => serializer.serializeToString(doc))
   })
 
-  test('null document element', () => {
+  $$.test('null document element', () => {
     const doc = $$.dom.createDocument(null, '')
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(doc, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(doc, true))
   })
 
-  test('escape text', () => {
+  $$.test('escape text', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const txt = doc.createTextNode('abc&<>abc')
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(txt)).toBe('abc&amp;&lt;&gt;abc')
+    $$.deepEqual(serializer.serializeToString(txt), 'abc&amp;&lt;&gt;abc')
   })
 
-  test('escape attribute value', () => {
+  $$.test('escape attribute value', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const node = doc.createElement('node')
     node.setAttribute('att', 'abc"&<>abc')
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(node)).toBe('<node att="abc&quot;&amp;&lt;&gt;abc"/>')
+    $$.deepEqual(serializer.serializeToString(node), '<node att="abc&quot;&amp;&lt;&gt;abc"/>')
   })
 
-  test('null attribute value', () => {
+  $$.test('null attribute value', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const node = doc.createElement('node')
     node.setAttribute('att', null as unknown as string)
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(node)).toBe('<node att=""/>')
+    $$.deepEqual(serializer.serializeToString(node), '<node att=""/>')
   })
 
-  test('multiple attributes with same name', () => {
+  $$.test('multiple attributes with same name', () => {
     const doc = $$.dom.createDocument(null, '')
     const node = doc.createElement('node')
     node.setAttribute('att', 'val1')
     node.setAttribute('att2', 'val1')
     node.attributes[1]._localName = 'att'
     const serializer = new $$.XMLSerializer() as any
-    expect(() => serializer._xmlSerialization(node, true)).toThrow()
+    $$.throws(() => serializer._xmlSerialization(node, true))
   })
 
-  test('XML namespace', () => {
+  $$.test('XML namespace', () => {
     const doc = $$.dom.createDocument('http://www.w3.org/XML/1998/namespace', 'root')
     if (doc.documentElement) {
       doc.documentElement.appendChild(doc.createElement('foo'))
       doc.documentElement.appendChild(doc.createElement('bar'))
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<xml:root>' +
       '<foo/>' +
       '<bar/>' +
@@ -529,7 +529,7 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('duplicate namespaces', () => {
+  $$.test('duplicate namespaces', () => {
     const doc = $$.dom.createDocument('ns1', 'd:root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:d', 'ns1')
@@ -539,7 +539,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(doc.createElement('bar'))
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<d:root xmlns:d="ns1">' +
       '<e:foo xmlns:e="ns1"/>' +
       '<bar/>' +
@@ -547,7 +547,7 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('attribute with namespace and no prefix', () => {
+  $$.test('attribute with namespace and no prefix', () => {
     const doc = $$.dom.createDocument(null, 'r')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', "xmlns:x0", "ns")
@@ -558,14 +558,14 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(b)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<r xmlns:x0="ns" xmlns:x2="ns">' +
       '<b xmlns:x1="ns" x1:name="v"/>' +
       '</r>'
     )
   })
 
-  test('nested default namespace declaration attributes with same namespace are ignored', () => {
+  $$.test('nested default namespace declaration attributes with same namespace are ignored', () => {
     const doc = $$.dom.createDocument('ns', 'r')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'ns')
@@ -574,21 +574,21 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(n)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<r xmlns="ns">' +
       '<n/>' +
       '</r>'
     )
   })
 
-  test('prefix of an attribute is replaced with another existing prefix mapped to the same namespace URI', () => {
+  $$.test('prefix of an attribute is replaced with another existing prefix mapped to the same namespace URI', () => {
     const doc = $$.dom.createDocument(null, 'r')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xx', 'uri')
       doc.documentElement.setAttributeNS('uri', 'p:name', 'v')
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<r xmlns:xx="uri" xx:name="v"/>'
     )
 
@@ -599,26 +599,26 @@ describe('XMLSerializer', () => {
       b.setAttributeNS('uri', 'p:name', 'v')
       doc2.documentElement.appendChild(b)
     }
-    expect(serializer.serializeToString(doc2)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc2),
       '<r xmlns:xx="uri">' +
       '<b xx:name="v"/>' +
       '</r>'
     )
   })
 
-  test('prefix of an attribute is NOT preserved if neither its prefix nor its namespace URI is not already used', () => {
+  $$.test('prefix of an attribute is NOT preserved if neither its prefix nor its namespace URI is not already used', () => {
     const doc = $$.dom.createDocument(null, 'r')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xx', 'uri')
       doc.documentElement.setAttributeNS('uri2', 'xx:name', 'value')
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<r xmlns:xx="uri" xmlns:ns1="uri2" ns1:name="value"/>'
     )
   })
 
-  test('same prefix declared in an ancestor element', () => {
+  $$.test('same prefix declared in an ancestor element', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri1')
@@ -627,14 +627,14 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(child)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:p="uri1">' +
       '<child xmlns:ns1="uri2" ns1:foobar="value"/>' +
       '</root>'
     )
   })
 
-  test('drop element prefix if the namespace is same as inherited default namespace', () => {
+  $$.test('drop element prefix if the namespace is same as inherited default namespace', () => {
     const doc = $$.dom.createDocument('uri', 'root')
     if (doc.documentElement) {
       const child = doc.createElementNS('uri', 'p:child')
@@ -642,14 +642,14 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(child)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns="uri">' +
       '<child xmlns:p="uri"/>' +
       '</root>'
     )
   })
 
-  test('find an appropriate prefix', () => {
+  $$.test('find an appropriate prefix', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p1', 'u1')
@@ -660,7 +660,7 @@ describe('XMLSerializer', () => {
       child.appendChild(child2)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:p1="u1">' +
       '<child xmlns:p2="u1">' +
       '<p2:child2/>' +
@@ -669,32 +669,32 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('xmlns:* attributes', () => {
+  $$.test('xmlns:* attributes', () => {
     const doc = $$.dom.createDocument('uri1', 'p:root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri2')
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<ns1:root xmlns:ns1="uri1" xmlns:p="uri2"/>'
     )
   })
 
-  test('prefix re-declared in ancestor element', () => {
+  $$.test('prefix re-declared in ancestor element', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:p', 'uri2')
       doc.documentElement.appendChild(doc.createElementNS('uri1', 'p:child'))
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:p="uri2">' +
       '<p:child xmlns:p="uri1"/>' +
       '</root>'
     )
   })
 
-  test('default namespace does not apply if was declared in an ancestor', () => {
+  $$.test('default namespace does not apply if was declared in an ancestor', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'uri1')
@@ -703,14 +703,14 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(table)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:x="uri1">' +
       '<table xmlns="uri1"/>' +
       '</root>'
     )
   })
 
-  test('multiple generated prefixes', () => {
+  $$.test('multiple generated prefixes', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       const child1 = doc.createElement('child1')
@@ -722,7 +722,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(child2)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root>' +
       '<child1 xmlns:ns1="uri1" ns1:attr1="value1" xmlns:ns2="uri2" ns2:attr2="value2"/>' +
       '<child2 xmlns:ns3="uri3" ns3:attr3="value3"/>' +
@@ -730,7 +730,7 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('attributes in same namespace', () => {
+  $$.test('attributes in same namespace', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       const child1 = doc.createElement('child')
@@ -741,7 +741,7 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(child2)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root>' +
       '<child xmlns:ns1="uri" ns1:attr="value"/>' +
       '<child xmlns:ns2="uri" ns2:attr="value"/>' +
@@ -749,19 +749,19 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('attributes in same namespace in a single element', () => {
+  $$.test('attributes in same namespace in a single element', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('uri', 'attr1', 'value1')
       doc.documentElement.setAttributeNS('uri', 'attr2', 'value2')
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:ns1="uri" ns1:attr1="value1" ns1:attr2="value2"/>'
     )
   })
 
-  test('skip namespace definition attribute if it was already defined in an ancestor', () => {
+  $$.test('skip namespace definition attribute if it was already defined in an ancestor', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (doc.documentElement) {
       doc.documentElement.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:x', 'v')
@@ -770,14 +770,14 @@ describe('XMLSerializer', () => {
       doc.documentElement.appendChild(child)
     }
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root xmlns:x="v">' +
       '<child/>' +
       '</root>'
     )
   })
 
-  test('void element', () => {
+  $$.test('void element', () => {
     const doc = $$.dom.createHTMLDocument('title')
     const body = doc.getElementsByTagName('body')[0]
     if (body) {
@@ -785,11 +785,11 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<!DOCTYPE html>' +
       '<html xmlns="http://www.w3.org/1999/xhtml">' +
       '<head>' +
-      '<title>title</title>' + 
+      '<title>title</title>' +
       '</head>' +
       '<body>' +
       '<hr />' +
@@ -798,7 +798,7 @@ describe('XMLSerializer', () => {
     )
   })
 
-  test('local default namespace attribute', () => {
+  $$.test('local default namespace attribute', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const de = doc.documentElement
     if (de) {
@@ -808,14 +808,14 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root>' +
-      '<x:node xmlns:x="ns1" xmlns="ns2"/>' + 
+      '<x:node xmlns:x="ns1" xmlns="ns2"/>' +
       '</root>'
     )
   })
 
-  test('empty local default namespace attribute', () => {
+  $$.test('empty local default namespace attribute', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const de = doc.documentElement
     if (de) {
@@ -825,14 +825,14 @@ describe('XMLSerializer', () => {
     }
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe(
+    $$.deepEqual(serializer.serializeToString(doc),
       '<root>' +
-      '<x:node xmlns:x="ns1" xmlns=""/>' + 
+      '<x:node xmlns:x="ns1" xmlns=""/>' +
       '</root>'
     )
   })
 
-  test('Check if start tag serialization does NOT apply the default namespace if its namespace is declared in an ancestor.', () => {
+  $$.test('Check if start tag serialization does NOT apply the default namespace if its namespace is declared in an ancestor.', () => {
     // see: https://github.com/web-platform-tests/wpt/pull/16703
     const str = `<root xmlns:x="uri1"><table xmlns="uri1"/></root>`
 
@@ -842,6 +842,6 @@ describe('XMLSerializer', () => {
     const serializer = new $$.XMLSerializer()
     const newStr = serializer.serializeToString(doc)
 
-    expect(newStr).toBe(str)
+    $$.deepEqual(newStr, str)
   })
 })

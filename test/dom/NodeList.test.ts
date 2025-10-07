@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('NodeList', () => {
+$$.suite('NodeList', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -21,74 +21,74 @@ describe('NodeList', () => {
 
   const list = doc.documentElement.childNodes
 
-  test('length', () => {
-    expect(list.length).toBe(5)
+  $$.test('length', () => {
+    $$.deepEqual(list.length, 5)
   })
 
-  test('item()', () => {
-    expect(list.item(0)).toBe(ele1)
-    expect(list.item(1)).toBe(ele2)
-    expect(list.item(2)).toBe(ele3)
-    expect(list.item(3)).toBe(ele4)
-    expect(list.item(4)).toBe(ele5)
-    expect(list.item(-1)).toBeNull()
-    expect(list.item(1001)).toBeNull()
+  $$.test('item()', () => {
+    $$.deepEqual(list.item(0), ele1)
+    $$.deepEqual(list.item(1), ele2)
+    $$.deepEqual(list.item(2), ele3)
+    $$.deepEqual(list.item(3), ele4)
+    $$.deepEqual(list.item(4), ele5)
+    $$.deepEqual(list.item(-1), null)
+    $$.deepEqual(list.item(1001), null)
   })
 
-  test('indexed getter', () => {
-    expect(list[0]).toBe(ele1)
-    expect(list[1]).toBe(ele2)
-    expect(list[2]).toBe(ele3)
-    expect(list[3]).toBe(ele4)
-    expect(list[4]).toBe(ele5)
-    expect(list[-1]).toBeUndefined()
-    expect(list[1001]).toBeUndefined()
+  $$.test('indexed getter', () => {
+    $$.deepEqual(list[0], ele1)
+    $$.deepEqual(list[1], ele2)
+    $$.deepEqual(list[2], ele3)
+    $$.deepEqual(list[3], ele4)
+    $$.deepEqual(list[4], ele5)
+    $$.deepEqual(list[-1], undefined)
+    $$.deepEqual(list[1001], undefined)
   })
 
-  test('indexed setter', () => {
+  $$.test('indexed setter', () => {
     const newEle = doc.createElement('tagX')
     list[2] = newEle
-    expect(list[0]).toBe(ele1)
-    expect(list[1]).toBe(ele2)
-    expect(list[2]).toBe(newEle)
-    expect(list[3]).toBe(ele4)
-    expect(list[4]).toBe(ele5)
-    expect(list[-1]).toBeUndefined()
-    expect(list[1001]).toBeUndefined()
+    $$.deepEqual(list[0], ele1)
+    $$.deepEqual(list[1], ele2)
+    $$.deepEqual(list[2], newEle)
+    $$.deepEqual(list[3], ele4)
+    $$.deepEqual(list[4], ele5)
+    $$.deepEqual(list[-1], undefined)
+    $$.deepEqual(list[1001], undefined)
     list[2] = ele3
   })
 
-  test('keys()', () => {
+  $$.test('keys()', () => {
     if (list === undefined) throw new Error("List is undefined")
-    expect([...list.keys()]).toEqual([0, 1, 2, 3, 4])
+    $$.deepEqual([...list.keys()], [0, 1, 2, 3, 4])
   })
 
-  test('values()', () => {
+  $$.test('values()', () => {
     if (list === undefined) throw new Error("List is undefined")
-    expect([...list.values()]).toEqual([ele1, ele2, ele3, ele4, ele5])
+    $$.deepEqual([...list.values()], [ele1, ele2, ele3, ele4, ele5])
   })
 
-  test('entries()', () => {
+  $$.test('entries()', () => {
     if (list === undefined) throw new Error("List is undefined")
-    expect([...list.entries()]).toEqual([[0, ele1], [1, ele2], [2, ele3], [3, ele4], [4, ele5]])
+    $$.deepEqual([...list.entries()], [[0, ele1], [1, ele2], [2, ele3], [3, ele4], [4, ele5]])
   })
 
-  test('iteration()', () => {
+  $$.test('iteration()', () => {
     if (list === undefined) throw new Error("List is undefined")
     let arr = []
     for (const ele of list) {
       arr.push(ele)
     }
-    expect(arr).toEqual([ele1, ele2, ele3, ele4, ele5])
+    $$.deepEqual(arr, [ele1, ele2, ele3, ele4, ele5])
   })
 
-  test('forEach()', () => {
+  $$.test('forEach()', () => {
     if (list === undefined) throw new Error("List is undefined")
     let arr: Array<[number, any]> = []
     list.forEach((node, index) => {
       arr.push([index, node])
     })
-    expect(arr).toEqual([[0, ele1], [1, ele2], [2, ele3], [3, ele4], [4, ele5]])
+    $$.deepEqual(arr, [[0, ele1], [1, ele2], [2, ele3], [3, ele4], [4, ele5]])
   })
 
 })

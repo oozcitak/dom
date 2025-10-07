@@ -1,45 +1,45 @@
 import $$ from "../TestHelpers"
 
-describe('DOMImplementation', () => {
+$$.suite('DOMImplementation', () => {
 
-  test('singleton pattern', () => {
+  $$.test('singleton pattern', () => {
     const impl1 = $$.dom
     const impl2 = $$.dom
-    expect(impl1).toBe(impl2)
+    $$.deepEqual(impl1, impl2)
   })
 
-  test('ID', () => {
+  $$.test('ID', () => {
     const impl = $$.dom
-    expect(impl._ID).toBe("@oozcitak/dom")
+    $$.deepEqual(impl._ID, "@oozcitak/dom")
   })
 
-  test('createDocumentType()', () => {
+  $$.test('createDocumentType()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
-    expect($$.printTree(doctype)).toBe($$.t`
+    $$.deepEqual($$.printTree(doctype), $$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       `)
   })
 
-  test('createDocument()', () => {
+  $$.test('createDocument()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'qname', doctype)
-    expect(doc.contentType).toBe('application/xml')
+    $$.deepEqual(doc.contentType, 'application/xml')
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       qname (ns:myns)
       `)
 
     const xhtml = $$.dom.createDocument('http://www.w3.org/1999/xhtml', 'html')
-    expect(xhtml.contentType).toBe('application/xhtml+xml')
+    $$.deepEqual(xhtml.contentType, 'application/xhtml+xml')
     const svg = $$.dom.createDocument('http://www.w3.org/2000/svg', 'svg')
-    expect(svg.contentType).toBe('image/svg+xml')
+    $$.deepEqual(svg.contentType, 'image/svg+xml')
   })
 
-  test('createHTMLDocument()', () => {
+  $$.test('createHTMLDocument()', () => {
     const doc = $$.dom.createHTMLDocument('htmldoc')
-    expect(doc.contentType).toBe('text/html')
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual(doc.contentType, 'text/html')
+    $$.deepEqual($$.printTree(doc), $$.t`
       !DOCTYPE html
       HTML (ns:http://www.w3.org/1999/xhtml)
         HEAD (ns:http://www.w3.org/1999/xhtml)
@@ -49,10 +49,10 @@ describe('DOMImplementation', () => {
       `)
   })
 
-  test('createHTMLDocument() without title', () => {
+  $$.test('createHTMLDocument() without title', () => {
     const doc = $$.dom.createHTMLDocument()
-    expect(doc.contentType).toBe('text/html')
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual(doc.contentType, 'text/html')
+    $$.deepEqual($$.printTree(doc), $$.t`
       !DOCTYPE html
       HTML (ns:http://www.w3.org/1999/xhtml)
         HEAD (ns:http://www.w3.org/1999/xhtml)
@@ -60,8 +60,8 @@ describe('DOMImplementation', () => {
       `)
   })
 
-  test('hasFeature()', () => {
-    expect($$.dom.hasFeature()).toBe(true)
+  $$.test('hasFeature()', () => {
+    $$.deepEqual($$.dom.hasFeature(), true)
   })
 
 })

@@ -30,7 +30,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class DocumentImpl extends NodeImpl implements Document {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.Document
   _children = new Set<Node>()
 
   _encoding = {
@@ -72,7 +72,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   get implementation(): DOMImplementation {
     /**
-     * The implementation attribute’s getter must return the DOMImplementation 
+     * The implementation attribute’s getter must return the DOMImplementation
      * object that is associated with the document.
      */
     return this._implementation || (this._implementation = create_domImplementation(this))
@@ -108,8 +108,8 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   get characterSet(): string {
     /**
-     * The characterSet attribute’s getter, charset attribute’s getter, and 
-     * inputEncoding attribute’s getter, must return context object’s 
+     * The characterSet attribute’s getter, charset attribute’s getter, and
+     * inputEncoding attribute’s getter, must return context object’s
      * encoding’s name.
      */
     return this._encoding.name
@@ -132,7 +132,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   get doctype(): DocumentType | null {
     /**
-     * The doctype attribute’s getter must return the child of the document 
+     * The doctype attribute’s getter must return the child of the document
      * that is a doctype, and null otherwise.
      */
     for (const child of this._children) {
@@ -153,7 +153,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   getElementsByTagName(qualifiedName: string): HTMLCollection {
     /**
-     * The getElementsByTagName(qualifiedName) method, when invoked, must return 
+     * The getElementsByTagName(qualifiedName) method, when invoked, must return
      * the list of elements with qualified name qualifiedName for the context object.
      */
     return node_listOfElementsWithQualifiedName(qualifiedName, this)
@@ -162,8 +162,8 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   getElementsByTagNameNS(namespace: string | null, localName: string): HTMLCollection {
     /**
-     * The getElementsByTagNameNS(namespace, localName) method, when invoked, 
-     * must return the list of elements with namespace namespace and local name 
+     * The getElementsByTagNameNS(namespace, localName) method, when invoked,
+     * must return the list of elements with namespace namespace and local name
      * localName for the context object.
      */
     return node_listOfElementsWithNamespace(namespace, localName, this)
@@ -172,7 +172,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   getElementsByClassName(classNames: string): HTMLCollection {
     /**
-     * The getElementsByClassName(classNames) method, when invoked, must return 
+     * The getElementsByClassName(classNames) method, when invoked, must return
      * the list of elements with class names classNames for the context object.
      */
     return node_listOfElementsWithClassNames(classNames, this)
@@ -189,10 +189,10 @@ export class DocumentImpl extends NodeImpl implements Document {
      * 4. If options is a dictionary and options’s is is present, then set is
      * to it.
      * 5. Let namespace be the HTML namespace, if the context object is an
-     * HTML document or context object’s content type is 
+     * HTML document or context object’s content type is
      * "application/xhtml+xml", and null otherwise.
-     * 6. Return the result of creating an element given the context object, 
-     * localName, namespace, null, is, and with the synchronous custom elements 
+     * 6. Return the result of creating an element given the context object,
+     * localName, namespace, null, is, and with the synchronous custom elements
      * flag set.
      */
 
@@ -222,8 +222,8 @@ export class DocumentImpl extends NodeImpl implements Document {
   createElementNS(namespace: string | null, qualifiedName: string,
     options?: string | { is: string }): Element {
     /**
-     * The createElementNS(namespace, qualifiedName, options) method, when 
-     * invoked, must return the result of running the internal createElementNS 
+     * The createElementNS(namespace, qualifiedName, options) method, when
+     * invoked, must return the result of running the internal createElementNS
      * steps, given context object, namespace, qualifiedName, and options.
      */
     return document_internalCreateElementNS(this, namespace,
@@ -233,7 +233,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   createDocumentFragment(): DocumentFragment {
     /**
-     * The createDocumentFragment() method, when invoked, must return a new 
+     * The createDocumentFragment() method, when invoked, must return a new
      * DocumentFragment node with its node document set to the context object.
      */
     return create_documentFragment(this)
@@ -242,7 +242,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   createTextNode(data: string): Text {
     /**
-     * The createTextNode(data) method, when invoked, must return a new Text 
+     * The createTextNode(data) method, when invoked, must return a new Text
      * node with its data set to data and node document set to the context object.
      */
     return create_text(this, data)
@@ -251,9 +251,9 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   createCDATASection(data: string): CDATASection {
     /**
-     * 1. If context object is an HTML document, then throw a 
+     * 1. If context object is an HTML document, then throw a
      * "NotSupportedError" DOMException.
-     * 2. If data contains the string "]]>", then throw an 
+     * 2. If data contains the string "]]>", then throw an
      * "InvalidCharacterError" DOMException.
      * 3. Return a new CDATASection node with its data set to data and node
      * document set to the context object.
@@ -279,9 +279,9 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   createProcessingInstruction(target: string, data: string): ProcessingInstruction {
     /**
-     * 1. If target does not match the Name production, then throw an 
+     * 1. If target does not match the Name production, then throw an
      * "InvalidCharacterError" DOMException.
-     * 2. If data contains the string "?>", then throw an 
+     * 2. If data contains the string "?>", then throw an
      * "InvalidCharacterError" DOMException.
      * 3. Return a new ProcessingInstruction node, with target set to target,
      * data set to data, and node document set to the context object.
@@ -357,7 +357,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   createAttributeNS(namespace: string, qualifiedName: string): Attr {
 
     /**
-     * 1. Let namespace, prefix, and localName be the result of passing 
+     * 1. Let namespace, prefix, and localName be the result of passing
      * namespace and qualifiedName to validate and extract.
      * 2. Return a new attribute whose namespace is namespace, namespace prefix
      * is prefix, local name is localName, and node document is context object.
@@ -379,7 +379,7 @@ export class DocumentImpl extends NodeImpl implements Document {
   /** @inheritdoc */
   createRange(): Range {
     /**
-     * The createRange() method, when invoked, must return a new live range 
+     * The createRange() method, when invoked, must return a new live range
      * with (context object, 0) as its start and end.
      */
     const range = create_range()
@@ -435,14 +435,14 @@ export class DocumentImpl extends NodeImpl implements Document {
 
   /**
    * Gets the parent event target for the given event.
-   * 
+   *
    * @param event - an event
    */
   _getTheParent(event: Event): EventTarget | null {
     /**
      * TODO: Implement realms
      * A document’s get the parent algorithm, given an event, returns null if
-     * event’s type attribute value is "load" or document does not have a 
+     * event’s type attribute value is "load" or document does not have a
      * browsing context, and the document’s relevant global object otherwise.
      */
     if (event._type === "load") {

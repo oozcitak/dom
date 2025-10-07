@@ -14,10 +14,10 @@ export class EventImpl implements Event {
   static AT_TARGET = 2
   static BUBBLING_PHASE = 3
 
-  NONE!: number
-  CAPTURING_PHASE!: number
-  AT_TARGET!: number
-  BUBBLING_PHASE!: number
+  NONE = 0
+  CAPTURING_PHASE = 1
+  AT_TARGET = 2
+  BUBBLING_PHASE = 3
 
   _target: PotentialEventTarget = null
   _relatedTarget: PotentialEventTarget = null
@@ -48,7 +48,7 @@ export class EventImpl implements Event {
 
     /**
      * When a constructor of the Event interface, or of an interface that
-     * inherits from the Event interface, is invoked, these steps must be run, 
+     * inherits from the Event interface, is invoked, these steps must be run,
      * given the arguments type and eventInitDict:
      * 1. Let event be the result of running the inner event creation steps with
      * this interface, null, now, and eventInitDict.
@@ -112,9 +112,9 @@ export class EventImpl implements Event {
     let index = path.length - 1
     while (index >= 0) {
       /**
-       * 9.1. If path[index]'s root-of-closed-tree is true, then increase 
+       * 9.1. If path[index]'s root-of-closed-tree is true, then increase
        * currentTargetHiddenSubtreeLevel by 1.
-       * 9.2. If path[index]'s invocation target is currentTarget, then set 
+       * 9.2. If path[index]'s invocation target is currentTarget, then set
        * currentTargetIndex to index and break.
        * 9.3. If path[index]'s slot-in-closed-tree is true, then decrease
        * currentTargetHiddenSubtreeLevel by 1.
@@ -147,9 +147,9 @@ export class EventImpl implements Event {
     index = currentTargetIndex - 1
     while (index >= 0) {
       /**
-       * 12.1. If path[index]'s root-of-closed-tree is true, then increase 
+       * 12.1. If path[index]'s root-of-closed-tree is true, then increase
        * currentHiddenLevel by 1.
-       * 12.2. If currentHiddenLevel is less than or equal to maxHiddenLevel, 
+       * 12.2. If currentHiddenLevel is less than or equal to maxHiddenLevel,
        * then prepend path[index]'s invocation target to composedPath.
        */
       if (path[index].rootOfClosedTree) {
@@ -195,9 +195,9 @@ export class EventImpl implements Event {
     index = currentTargetIndex + 1
     while (index < path.length) {
       /**
-       * 15.1. If path[index]'s slot-in-closed-tree is true, then increase 
+       * 15.1. If path[index]'s slot-in-closed-tree is true, then increase
        * currentHiddenLevel by 1.
-       * 15.2. If currentHiddenLevel is less than or equal to maxHiddenLevel, 
+       * 15.2. If currentHiddenLevel is less than or equal to maxHiddenLevel,
        * then append path[index]'s invocation target to composedPath.
        */
       if (path[index].slotInClosedTree) {
@@ -214,7 +214,7 @@ export class EventImpl implements Event {
       if (path[index].rootOfClosedTree) {
         /**
          * 15.3.1. Decrease currentHiddenLevel by 1.
-         * 15.3.2. If currentHiddenLevel is less than maxHiddenLevel, then set 
+         * 15.3.2. If currentHiddenLevel is less than maxHiddenLevel, then set
          * maxHiddenLevel to currentHiddenLevel.
          */
         currentHiddenLevel--

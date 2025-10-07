@@ -1,8 +1,8 @@
 import $$ from "../TestHelpers"
 
-describe('ChildNode', () => {
+$$.suite('ChildNode', () => {
 
-  test('before()', () => {
+  $$.test('before()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -12,22 +12,22 @@ describe('ChildNode', () => {
     de.appendChild(ele)
     const txt = doc.createTextNode('txt')
     de.appendChild(txt)
-    
-    ele.before(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    ele.before(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
     txt.before(doc.createElement('node1'),
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
     doctype.before(doc.createComment('comment1'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       ! comment1
       !DOCTYPE qname PUBLIC pubid sysid
       n:root (ns:myns)
@@ -46,7 +46,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('before() with single node', () => {
+  $$.test('before() with single node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -55,11 +55,11 @@ describe('ChildNode', () => {
     de.appendChild(ele)
     const txt = doc.createTextNode('txt')
     de.appendChild(txt)
-    
+
     ele.before('text1')
     txt.before('text2')
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         # text1
         ele
@@ -68,7 +68,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('before() with own node', () => {
+  $$.test('before() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -81,10 +81,10 @@ describe('ChildNode', () => {
     de.appendChild(ele2)
     de.appendChild(ele3)
     de.appendChild(ele4)
-    
+
     ele4.before(ele3, ele2, ele1)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele3
         ele2
@@ -93,7 +93,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('before() with removed node', () => {
+  $$.test('before() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -111,7 +111,7 @@ describe('ChildNode', () => {
     // no-op
     ele4.before(ele1)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele1
         ele2
@@ -119,7 +119,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('after()', () => {
+  $$.test('after()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -129,22 +129,22 @@ describe('ChildNode', () => {
     de.appendChild(ele)
     const txt = doc.createTextNode('txt')
     de.appendChild(txt)
-    
-    ele.after(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    ele.after(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
-      
+
     txt.after(doc.createElement('node1'),
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
     doctype.after(doc.createComment('comment1'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       ! comment1
       n:root (ns:myns)
@@ -163,7 +163,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('after() with own node', () => {
+  $$.test('after() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -176,10 +176,10 @@ describe('ChildNode', () => {
     de.appendChild(ele2)
     de.appendChild(ele3)
     de.appendChild(ele4)
-    
+
     ele1.after(ele4, ele3, ele2)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele1
         ele4
@@ -188,7 +188,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('after() with removed node', () => {
+  $$.test('after() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -206,7 +206,7 @@ describe('ChildNode', () => {
     // no-op
     ele4.after(ele1)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele1
         ele2
@@ -214,7 +214,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('replaceWith()', () => {
+  $$.test('replaceWith()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -224,22 +224,22 @@ describe('ChildNode', () => {
     de.appendChild(ele)
     const txt = doc.createTextNode('txt')
     de.appendChild(txt)
-    
-    ele.replaceWith(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    ele.replaceWith(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
-      
+
     txt.replaceWith(doc.createElement('node1'),
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
     doctype.replaceWith(doc.createComment('comment1'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       ! comment1
       n:root (ns:myns)
         node1
@@ -255,7 +255,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('replaceWith() with own node', () => {
+  $$.test('replaceWith() with own node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -268,10 +268,10 @@ describe('ChildNode', () => {
     de.appendChild(ele2)
     de.appendChild(ele3)
     de.appendChild(ele4)
-    
+
     ele1.replaceWith(ele4, ele3, ele2)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele4
         ele3
@@ -279,7 +279,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('replaceWith() with self node', () => {
+  $$.test('replaceWith() with self node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -292,10 +292,10 @@ describe('ChildNode', () => {
     de.appendChild(ele2)
     de.appendChild(ele3)
     de.appendChild(ele4)
-    
+
     ele1.replaceWith(ele4, ele3, ele2, ele1)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele4
         ele3
@@ -304,7 +304,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('replaceWith() with removed node', () => {
+  $$.test('replaceWith() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -322,7 +322,7 @@ describe('ChildNode', () => {
     // no-op
     ele4.replaceWith(ele1)
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele1
         ele2
@@ -330,7 +330,7 @@ describe('ChildNode', () => {
       `)
   })
 
-  test('remove()', () => {
+  $$.test('remove()', () => {
     const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
     const doc = $$.dom.createDocument('myns', 'n:root', doctype)
     if (!doc.documentElement)
@@ -340,17 +340,17 @@ describe('ChildNode', () => {
     de.appendChild(ele)
     const txt = doc.createTextNode('txt')
     de.appendChild(txt)
-    
+
     ele.remove()
     txt.remove()
     doctype.remove()
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
       `)
   })
 
-  test('remove() with removed node', () => {
+  $$.test('remove() with removed node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -368,7 +368,7 @@ describe('ChildNode', () => {
     // no-op
     ele4.remove()
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         ele1
         ele2

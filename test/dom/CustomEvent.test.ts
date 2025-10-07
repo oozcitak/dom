@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('CustomEvent', () => {
+$$.suite('CustomEvent', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -9,21 +9,21 @@ describe('CustomEvent', () => {
 
   const de = doc.documentElement
 
-  test('constructor()', () => {
+  $$.test('constructor()', () => {
     const event = new $$.CustomEvent("custom", {
       cancelable: true,
       bubbles: true,
       composed: true,
       detail: "some data"
     })
-    expect(event.type).toBe("custom")
-    expect(event.bubbles).toBe(true)
-    expect(event.cancelable).toBe(true)
-    expect(event.composed).toBe(true)
-    expect(event.detail).toBe("some data")
+    $$.deepEqual(event.type, "custom")
+    $$.deepEqual(event.bubbles, true)
+    $$.deepEqual(event.cancelable, true)
+    $$.deepEqual(event.composed, true)
+    $$.deepEqual(event.detail, "some data")
   })
 
-  test('dispatch()', () => {
+  $$.test('dispatch()', () => {
     const ele = doc.createElement('ele')
     de.appendChild(ele)
 
@@ -33,31 +33,31 @@ describe('CustomEvent', () => {
       const ce = e as any
       // cannot init a dispatched event
       ce.initCustomEvent("something-else")
-      expect(ce.type).toBe("custom")
-      expect(ce.detail).toBe("data")
+      $$.deepEqual(ce.type, "custom")
+      $$.deepEqual(ce.detail, "data")
     }, false)
 
     ele.dispatchEvent(event)
   })
 
-  test('initCustomEvent()', () => {
+  $$.test('initCustomEvent()', () => {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom", true, true, "some data")
-    expect(event.type).toBe("custom")
-    expect(event.bubbles).toBe(true)
-    expect(event.cancelable).toBe(true)
-    expect(event.composed).toBe(false)
-    expect(event.detail).toBe("some data")
+    $$.deepEqual(event.type, "custom")
+    $$.deepEqual(event.bubbles, true)
+    $$.deepEqual(event.cancelable, true)
+    $$.deepEqual(event.composed, false)
+    $$.deepEqual(event.detail, "some data")
   })
 
-  test('initCustomEvent() defaults', () => {
+  $$.test('initCustomEvent() defaults', () => {
     const event = new $$.CustomEvent("custom")
     event.initCustomEvent("custom")
-    expect(event.type).toBe("custom")
-    expect(event.bubbles).toBe(false)
-    expect(event.cancelable).toBe(false)
-    expect(event.composed).toBe(false)
-    expect(event.detail).toBeNull()
+    $$.deepEqual(event.type, "custom")
+    $$.deepEqual(event.bubbles, false)
+    $$.deepEqual(event.cancelable, false)
+    $$.deepEqual(event.composed, false)
+    $$.deepEqual(event.detail, null)
   })
 
 })

@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('NodeFilter', () => {
+$$.suite('NodeFilter', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -22,7 +22,7 @@ describe('NodeFilter', () => {
   child31.appendChild(doc.createElement('child3_1_2'))
   node3.appendChild(doc.createElement('child3_2'))
 
-  expect($$.printTree(doc)).toBe($$.t`
+  $$.deepEqual($$.printTree(doc), $$.t`
     root
       node1
         child1
@@ -37,7 +37,7 @@ describe('NodeFilter', () => {
         child3_2
     `)
 
-  test('acceptNode()', () => {
+  $$.test('acceptNode()', () => {
     const filter = $$.NodeFilter._create()
     const iter = doc.createTreeWalker(root, $$.WhatToShow.All, filter)
     let str = ''
@@ -46,13 +46,13 @@ describe('NodeFilter', () => {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
-    expect(str).toBe(':node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
+    $$.deepEqual(str, ':node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
   })
 
-  test('constants', () => {
+  $$.test('constants', () => {
     const filter = $$.NodeFilter._create()
-    expect(filter.FILTER_ACCEPT).toBe(1)
-    expect($$.NodeFilter.FILTER_ACCEPT).toBe(1)
+    $$.deepEqual(filter.FILTER_ACCEPT, 1)
+    $$.deepEqual($$.NodeFilter.FILTER_ACCEPT, 1)
   })
 
 })

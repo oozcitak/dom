@@ -1,15 +1,15 @@
 import $$ from "../TestHelpers"
-import { 
-  tree_getDescendantNodes, tree_getDescendantElements, tree_getSiblingNodes, 
-  tree_isConstrained, tree_nodeLength, tree_isEmpty, tree_rootNode, 
+import {
+  tree_getDescendantNodes, tree_getDescendantElements, tree_getSiblingNodes,
+  tree_isConstrained, tree_nodeLength, tree_isEmpty, tree_rootNode,
   tree_isDescendantOf, tree_isAncestorOf, tree_isSiblingOf, tree_isPreceding,
-  tree_isFollowing, tree_firstChild, tree_lastChild, tree_getAncestorNodes, 
+  tree_isFollowing, tree_firstChild, tree_lastChild, tree_getAncestorNodes,
   tree_getCommonAncestor
 } from "../../src/algorithm"
 
-describe('Tree', () => {
+$$.suite('Tree', () => {
 
-  test('getDescendantNodes()', () => {
+  $$.test('getDescendantNodes()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -30,10 +30,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantNodes(doc as any, true, true, (node) => { return (node.nodeType === 3) })) {
         str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('text shtext ')
+    $$.deepEqual(str, 'text shtext ')
   })
 
-  test('getDescendantNodes() with no descendants', () => {
+  $$.test('getDescendantNodes() with no descendants', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -43,10 +43,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantNodes(de)) {
         str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('')
+    $$.deepEqual(str, '')
   })
 
-  test('getDescendantNodes() with self=true', () => {
+  $$.test('getDescendantNodes() with self=true', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -58,10 +58,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantNodes(de, true)) {
         str += childNode.nodeName + ' '
     }
-    expect(str).toBe('root node node ')
+    $$.deepEqual(str, 'root node node ')
   })
 
-  test('getDescendantNodes() with self=false', () => {
+  $$.test('getDescendantNodes() with self=false', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -73,10 +73,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantNodes(de)) {
         str += childNode.nodeName + ' '
     }
-    expect(str).toBe('node node ')
+    $$.deepEqual(str, 'node node ')
   })
 
-  test('getDescendantElements()', () => {
+  $$.test('getDescendantElements()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -97,10 +97,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantElements(doc, true, true, (node) => { return node.nodeName.startsWith('s') })) {
         str += childNode.nodeName + ' '
     }
-    expect(str).toBe('sele sh1 sh2 ')
+    $$.deepEqual(str, 'sele sh1 sh2 ')
   })
 
-  test('getDescendantElements() with no descendants', () => {
+  $$.test('getDescendantElements() with no descendants', () => {
     const doc = $$.dom.createDocument(null, 'root')
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -110,10 +110,10 @@ describe('Tree', () => {
     for (const childNode of tree_getDescendantElements(de)) {
         str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('')
+    $$.deepEqual(str, '')
   })
 
-  test('getSiblingNodes()', () => {
+  $$.test('getSiblingNodes()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -131,20 +131,20 @@ describe('Tree', () => {
     for (const childNode of tree_getSiblingNodes(txt1 as any, true, (node) => { return (node.nodeType === 3) })) {
       str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('text1 text2 ')
+    $$.deepEqual(str, 'text1 text2 ')
     str = ''
     for (const childNode of tree_getSiblingNodes(txt1 as any, false, (node) => { return (node.nodeType === 3) })) {
       str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('text2 ')
+    $$.deepEqual(str, 'text2 ')
     let count = 0
     for (const _ of tree_getSiblingNodes(txt1 as any)) {
       count++
     }
-    expect(count).toBe(3)
+    $$.deepEqual(count, 3)
   })
 
-  test('getSiblingNodes() with no siblings', () => {
+  $$.test('getSiblingNodes() with no siblings', () => {
     const doc = $$.dom.createDocument(null, 'root')
     const node = doc.createElement('node')
 
@@ -152,10 +152,10 @@ describe('Tree', () => {
     for (const childNode of tree_getSiblingNodes(node)) {
         str += childNode.nodeValue + ' '
     }
-    expect(str).toBe('')
+    $$.deepEqual(str, '')
   })
 
-  test('getAncestorNodes()', () => {
+  $$.test('getAncestorNodes()', () => {
     const doc = $$.dom.createDocument('my ns', 'root', null)
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -173,10 +173,10 @@ describe('Tree', () => {
     for (const childNode of tree_getAncestorNodes(node4)) {
       str += childNode.nodeName + ' '
     }
-    expect(str).toBe('node3 node2 node1 root #document ')
+    $$.deepEqual(str, 'node3 node2 node1 root #document ')
   })
 
-  test('getAncestorNodes() with self=true', () => {
+  $$.test('getAncestorNodes() with self=true', () => {
     const doc = $$.dom.createDocument('my ns', 'root', null)
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -194,10 +194,10 @@ describe('Tree', () => {
     for (const childNode of tree_getAncestorNodes(node4, true, (node) => { return (node.nodeName.startsWith('n')) })) {
       str += childNode.nodeName + ' '
     }
-    expect(str).toBe('node3 node1 ')
+    $$.deepEqual(str, 'node3 node1 ')
   })
 
-  test('getAncestorNodes() with self=false', () => {
+  $$.test('getAncestorNodes() with self=false', () => {
     const doc = $$.dom.createDocument('my ns', 'root', null)
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -215,10 +215,10 @@ describe('Tree', () => {
     for (const childNode of tree_getAncestorNodes(node4, false, (node) => { return (node.nodeName.startsWith('n')) })) {
       str += childNode.nodeName + ' '
     }
-    expect(str).toBe('node3 node1 ')
+    $$.deepEqual(str, 'node3 node1 ')
   })
 
-  test('getAncestorNodes() without ancestors', () => {
+  $$.test('getAncestorNodes() without ancestors', () => {
     const doc = $$.dom.createDocument('my ns', 'root', null)
     const node = doc.createElement('node')
 
@@ -226,10 +226,10 @@ describe('Tree', () => {
     for (const childNode of tree_getAncestorNodes(node)) {
       str += childNode.nodeName + ' '
     }
-    expect(str).toBe('')
+    $$.deepEqual(str, '')
   })
 
-  test('getCommonAncestor()', () => {
+  $$.test('getCommonAncestor()', () => {
     const doc = $$.dom.createDocument('my ns', 'root', null)
     if (!doc.documentElement)
       throw new Error("documentElement is null")
@@ -251,18 +251,18 @@ describe('Tree', () => {
     node22.appendChild(node23)
     node23.appendChild(node24)
 
-    expect(tree_getCommonAncestor(node11, node11)).toBe(de)
-    expect(tree_getCommonAncestor(node24, node13)).toBe(de)
-    expect(tree_getCommonAncestor(node11, node13)).toBe(node11)
+    $$.deepEqual(tree_getCommonAncestor(node11, node11), de)
+    $$.deepEqual(tree_getCommonAncestor(node24, node13), de)
+    $$.deepEqual(tree_getCommonAncestor(node11, node13), node11)
 
     const node3 = doc.createElement('node3')
-    expect(tree_getCommonAncestor(node11, node3)).toBeNull()
+    $$.deepEqual(tree_getCommonAncestor(node11, node3), null)
   })
 
-  test('isConstrained()', () => {
+  $$.test('isConstrained()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pub', 'sys')
     const doc = $$.dom.createDocument('ns', '')
-    
+
     doc.appendChild(doc.createComment('comment'))
     doc.appendChild(doc.createProcessingInstruction('target', 'data'))
     doc.appendChild(doctype)
@@ -271,7 +271,7 @@ describe('Tree', () => {
     doc.appendChild(doc.createElement('root'))
     doc.appendChild(doc.createComment('comment'))
     doc.appendChild(doc.createProcessingInstruction('target', 'data'))
-    
+
     if (!doc.documentElement)
       throw new Error("documentElement is null")
     const de = doc.documentElement
@@ -283,7 +283,7 @@ describe('Tree', () => {
       doc.createTextNode('text'),
       ele,
       doc.createComment('comment'),
-      doc.createProcessingInstruction('target', 'data'),      
+      doc.createProcessingInstruction('target', 'data'),
       doc.createCDATASection('cdata'),
       doc.createTextNode('text')
     )
@@ -293,15 +293,15 @@ describe('Tree', () => {
       doc.createCDATASection('cdata'),
       doc.createTextNode('text'),
       doc.createComment('comment'),
-      doc.createProcessingInstruction('target', 'data'),      
+      doc.createProcessingInstruction('target', 'data'),
       doc.createCDATASection('cdata'),
       doc.createTextNode('text')
-    )    
+    )
 
-    expect(tree_isConstrained(doc as any)).toBe(true)
+    $$.deepEqual(tree_isConstrained(doc as any), true)
   })
 
-  test('isConstrained() - two doctypes', () => {
+  $$.test('isConstrained() - two doctypes', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const doctype1 = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     const doctype2 = $$.dom.createDocumentType('root', 'pub', 'sys') as any
@@ -309,10 +309,10 @@ describe('Tree', () => {
     doc._children.add(doctype2)
     doctype1._parent = doc
     doctype2._parent = doc
-    expect(tree_isConstrained(doc as any)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc as any), false)
   })
 
-  test('isConstrained() - doctype after element', () => {
+  $$.test('isConstrained() - doctype after element', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const ele = doc.createElement('root') as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
@@ -320,10 +320,10 @@ describe('Tree', () => {
     doc._children.add(doctype)
     ele._parent = doc
     doctype._parent = doc
-    expect(tree_isConstrained(doc)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc), false)
   })
 
-  test('isConstrained() - two document elements', () => {
+  $$.test('isConstrained() - two document elements', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const ele1 = doc.createElement('root') as any
     const ele2 = doc.createElement('root') as any
@@ -331,35 +331,35 @@ describe('Tree', () => {
     doc._children.add(ele2)
     ele1._parent = doc
     ele2._parent = doc
-    expect(tree_isConstrained(doc)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc), false)
   })
 
-  test('isConstrained() - text at root level', () => {
+  $$.test('isConstrained() - text at root level', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const node = doc.createTextNode('root') as any
     doc._children.add(node)
     node._parent = doc
-    expect(tree_isConstrained(doc)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc), false)
   })
 
-  test('isConstrained() - CDATA at root level', () => {
+  $$.test('isConstrained() - CDATA at root level', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const node = doc.createCDATASection('root') as any
     doc._children.add(node)
     node._parent = doc
-    expect(tree_isConstrained(doc)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc), false)
   })
 
-  test('isConstrained() - doctype in fragment', () => {
+  $$.test('isConstrained() - doctype in fragment', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const frag = doc.createDocumentFragment() as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     frag._children.add(doctype)
     doctype._parent = frag
-    expect(tree_isConstrained(frag)).toBe(false)
+    $$.deepEqual(tree_isConstrained(frag), false)
   })
 
-  test('isConstrained() - doctype inside element node', () => {
+  $$.test('isConstrained() - doctype inside element node', () => {
     const doc = $$.dom.createDocument('ns', '') as any
     const doctype = $$.dom.createDocumentType('root', 'pub', 'sys') as any
     const de = doc.createElement('root') as any
@@ -368,10 +368,10 @@ describe('Tree', () => {
     de.appendChild(ele)
     de._children.add(doctype)
     doctype._parent = ele
-    expect(tree_isConstrained(doc)).toBe(false)
+    $$.deepEqual(tree_isConstrained(doc), false)
   })
 
-  test('nodeLength()', () => {
+  $$.test('nodeLength()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -382,12 +382,12 @@ describe('Tree', () => {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(tree_nodeLength(doctype as any)).toBe(0)
-    expect(tree_nodeLength(de as any)).toBe(3)
-    expect(tree_nodeLength(ele[1] as any)).toBe(4)
+    $$.deepEqual(tree_nodeLength(doctype as any), 0)
+    $$.deepEqual(tree_nodeLength(de as any), 3)
+    $$.deepEqual(tree_nodeLength(ele[1] as any), 4)
   })
 
-  test('isEmpty()', () => {
+  $$.test('isEmpty()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -398,12 +398,12 @@ describe('Tree', () => {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(tree_isEmpty(doctype as any)).toBe(true)
-    expect(tree_isEmpty(de as any)).toBe(false)
-    expect(tree_isEmpty(ele[1] as any)).toBe(false)
+    $$.deepEqual(tree_isEmpty(doctype as any), true)
+    $$.deepEqual(tree_isEmpty(de as any), false)
+    $$.deepEqual(tree_isEmpty(ele[1] as any), false)
   })
 
-  test('rootNode()', () => {
+  $$.test('rootNode()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -414,10 +414,10 @@ describe('Tree', () => {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(tree_rootNode(de as any)).toBe(doc)
+    $$.deepEqual(tree_rootNode(de as any), doc)
   })
 
-  test('isDescendantOf()', () => {
+  $$.test('isDescendantOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -435,14 +435,14 @@ describe('Tree', () => {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(tree_isDescendantOf(de as any, de as any)).toBe(false)
-    expect(tree_isDescendantOf(de as any, de as any, true)).toBe(true)
-    expect(tree_isDescendantOf(de as any, ele[0] as any)).toBe(true)
-    expect(tree_isDescendantOf(de as any, shtext as any)).toBe(false)
-    expect(tree_isDescendantOf(de as any, shtext as any, false, true)).toBe(true)
+    $$.deepEqual(tree_isDescendantOf(de as any, de as any), false)
+    $$.deepEqual(tree_isDescendantOf(de as any, de as any, true), true)
+    $$.deepEqual(tree_isDescendantOf(de as any, ele[0] as any), true)
+    $$.deepEqual(tree_isDescendantOf(de as any, shtext as any), false)
+    $$.deepEqual(tree_isDescendantOf(de as any, shtext as any, false, true), true)
   })
 
-  test('isAncestorOf()', () => {
+  $$.test('isAncestorOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -460,14 +460,14 @@ describe('Tree', () => {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(tree_isAncestorOf(de as any, de as any)).toBe(false)
-    expect(tree_isAncestorOf(de as any, de as any, true)).toBe(true)
-    expect(tree_isAncestorOf(ele[0] as any, de as any)).toBe(true)
-    expect(tree_isAncestorOf(shtext as any, de as any)).toBe(false)
-    expect(tree_isAncestorOf(shtext as any, de as any, false, true)).toBe(true)
+    $$.deepEqual(tree_isAncestorOf(de as any, de as any), false)
+    $$.deepEqual(tree_isAncestorOf(de as any, de as any, true), true)
+    $$.deepEqual(tree_isAncestorOf(ele[0] as any, de as any), true)
+    $$.deepEqual(tree_isAncestorOf(shtext as any, de as any), false)
+    $$.deepEqual(tree_isAncestorOf(shtext as any, de as any, false, true), true)
   })
 
-  test('isSiblingOf()', () => {
+  $$.test('isSiblingOf()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -486,14 +486,14 @@ describe('Tree', () => {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(tree_isSiblingOf(de as any, de as any)).toBe(false)
-    expect(tree_isSiblingOf(de as any, de as any, true)).toBe(true)
-    expect(tree_isSiblingOf(ele[0] as any, de as any)).toBe(false)
-    expect(tree_isSiblingOf(ele[0] as any, ele[1] as any)).toBe(true)
-    expect(tree_isSiblingOf(shtext as any, shele as any)).toBe(true)
+    $$.deepEqual(tree_isSiblingOf(de as any, de as any), false)
+    $$.deepEqual(tree_isSiblingOf(de as any, de as any, true), true)
+    $$.deepEqual(tree_isSiblingOf(ele[0] as any, de as any), false)
+    $$.deepEqual(tree_isSiblingOf(ele[0] as any, ele[1] as any), true)
+    $$.deepEqual(tree_isSiblingOf(shtext as any, shele as any), true)
   })
 
-  test('isPreceding()', () => {
+  $$.test('isPreceding()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -506,22 +506,22 @@ describe('Tree', () => {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(tree_isPreceding(de as any, de as any)).toBe(false)
-    expect(tree_isPreceding(ele[0] as any, de as any)).toBe(true)
-    expect(tree_isPreceding(de as any, ele[0] as any)).toBe(false)
-    expect(tree_isPreceding(ele[1] as any, ele[0] as any)).toBe(true)
+    $$.deepEqual(tree_isPreceding(de as any, de as any), false)
+    $$.deepEqual(tree_isPreceding(ele[0] as any, de as any), true)
+    $$.deepEqual(tree_isPreceding(de as any, ele[0] as any), false)
+    $$.deepEqual(tree_isPreceding(ele[1] as any, ele[0] as any), true)
     // free node
     const freeEle = doc.createElement('free')
-    expect(tree_isPreceding(de as any, freeEle as any)).toBe(false)
+    $$.deepEqual(tree_isPreceding(de as any, freeEle as any), false)
     // from another doc
     const doc2 = $$.dom.createDocument('my ns', 'root2')
     if (!doc2.documentElement)
       throw new Error("documentElement is null")
     const de2 = doc2.documentElement
-    expect(tree_isPreceding(de as any, de2 as any)).toBe(false)
+    $$.deepEqual(tree_isPreceding(de as any, de2 as any), false)
   })
 
-  test('isFollowing()', () => {
+  $$.test('isFollowing()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -534,22 +534,22 @@ describe('Tree', () => {
       doc.createComment('comment')]
     de.append(...ele)
 
-    expect(tree_isFollowing(de as any, de as any)).toBe(false)
-    expect(tree_isFollowing(ele[0] as any, de as any)).toBe(false)
-    expect(tree_isFollowing(de as any, ele[0] as any)).toBe(true)
-    expect(tree_isFollowing(ele[0] as any, ele[1] as any)).toBe(true)
+    $$.deepEqual(tree_isFollowing(de as any, de as any), false)
+    $$.deepEqual(tree_isFollowing(ele[0] as any, de as any), false)
+    $$.deepEqual(tree_isFollowing(de as any, ele[0] as any), true)
+    $$.deepEqual(tree_isFollowing(ele[0] as any, ele[1] as any), true)
     // free node
     const freeEle = doc.createElement('free')
-    expect(tree_isFollowing(de as any, freeEle as any)).toBe(false)
+    $$.deepEqual(tree_isFollowing(de as any, freeEle as any), false)
     // from another doc
     const doc2 = $$.dom.createDocument('my ns', 'root2')
     if (!doc2.documentElement)
       throw new Error("documentElement is null")
     const de2 = doc2.documentElement
-    expect(tree_isFollowing(de as any, de2 as any)).toBe(false)
+    $$.deepEqual(tree_isFollowing(de as any, de2 as any), false)
   })
 
-  test('firstChild()', () => {
+  $$.test('firstChild()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -568,11 +568,11 @@ describe('Tree', () => {
     shadowRoot.appendChild(shtext)
     shadowRoot.appendChild(doc.createElement('sh2'))
 
-    expect(tree_firstChild(de as any)).toBe(ele[0])
-    expect(tree_firstChild(shadowRoot as any)).toBe(shele)
+    $$.deepEqual(tree_firstChild(de as any), ele[0])
+    $$.deepEqual(tree_firstChild(shadowRoot as any), shele)
   })
 
-  test('lastChild()', () => {
+  $$.test('lastChild()', () => {
     const doctype = $$.dom.createDocumentType('name', 'pubId', 'sysId')
     const doc = $$.dom.createDocument('my ns', 'root', doctype)
     if (!doc.documentElement)
@@ -590,8 +590,8 @@ describe('Tree', () => {
     shadowRoot.appendChild(shele)
     shadowRoot.appendChild(shtext)
 
-    expect(tree_lastChild(de as any)).toBe(ele[3])
-    expect(tree_lastChild(shadowRoot as any)).toBe(shtext)
+    $$.deepEqual(tree_lastChild(de as any), ele[3])
+    $$.deepEqual(tree_lastChild(shadowRoot as any), shtext)
   })
 
 })

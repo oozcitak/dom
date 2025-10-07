@@ -29,7 +29,7 @@ import { document_adopt } from "./DocumentAlgorithm"
 /**
  * Ensures pre-insertion validity of a node into a parent before a
  * child.
- * 
+ *
  * @param node - node to insert
  * @param parent - parent node to receive node
  * @param child - child node to insert node before
@@ -63,7 +63,7 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
     throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
-   * 4. If node is not a DocumentFragment, DocumentType, Element, Text, 
+   * 4. If node is not a DocumentFragment, DocumentType, Element, Text,
    * ProcessingInstruction, or Comment node, throw a "HierarchyRequestError"
    * DOMException.
    */
@@ -179,7 +179,7 @@ export function mutation_ensurePreInsertionValidity(node: Node, parent: Node, ch
 /**
  * Ensures pre-insertion validity of a node into a parent before a
  * child, then adopts the node to the tree and inserts it.
- * 
+ *
  * @param node - node to insert
  * @param parent - parent node to receive node
  * @param child - child node to insert node before
@@ -208,7 +208,7 @@ export function mutation_preInsert(node: Node, parent: Node,
 
 /**
  * Inserts a node into a parent node before the given child node.
- * 
+ *
  * @param node - node to insert
  * @param parent - parent node to receive node
  * @param child - child node to insert node before
@@ -224,7 +224,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   }
 
   /**
-   * 1. Let count be the number of children of node if it is a 
+   * 1. Let count be the number of children of node if it is a
    * DocumentFragment node, and one otherwise.
    */
   const count = (node._nodeType === NodeType.DocumentFragment ?
@@ -235,11 +235,11 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
    */
   if (child !== null) {
     /**
-     * 2.1. For each live range whose start node is parent and start 
-     * offset is greater than child's index, increase its start 
+     * 2.1. For each live range whose start node is parent and start
+     * offset is greater than child's index, increase its start
      * offset by count.
-     * 2.2. For each live range whose end node is parent and end 
-     * offset is greater than child's index, increase its end 
+     * 2.2. For each live range whose end node is parent and end
+     * offset is greater than child's index, increase its end
      * offset by count.
      */
     if (dom.rangeList.size !== 0) {
@@ -256,14 +256,14 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   }
 
   /**
-   * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
+   * 3. Let nodes be node’s children, if node is a DocumentFragment node;
    * otherwise « node ».
    */
   const nodes = node._nodeType === NodeType.DocumentFragment ?
     new Array<Node>(...node._children) : [node]
 
   /**
-   * 4. If node is a DocumentFragment node, remove its children with the 
+   * 4. If node is a DocumentFragment node, remove its children with the
    * suppress observers flag set.
    */
   if (node._nodeType === NodeType.DocumentFragment) {
@@ -273,7 +273,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   }
 
   /**
-   * 5. If node is a DocumentFragment node, then queue a tree mutation record 
+   * 5. If node is a DocumentFragment node, then queue a tree mutation record
    * for node with « », nodes, null, and null.
    */
   if (dom.features.mutationObservers) {
@@ -283,7 +283,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
   }
 
   /**
-   * 6. Let previousSibling be child’s previous sibling or parent’s last 
+   * 6. Let previousSibling be child’s previous sibling or parent’s last
    * child if child is null.
    */
   const previousSibling = (child ? child._previousSibling : parent._lastChild)
@@ -342,7 +342,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     }
 
     /**
-     * 7.3. If parent is a shadow host and node is a slotable, then 
+     * 7.3. If parent is a shadow host and node is a slotable, then
      * assign a slot for node.
      */
     if (dom.features.slots) {
@@ -352,7 +352,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     }
 
     /**
-     * 7.4. If node is a Text node, run the child text content change 
+     * 7.4. If node is a Text node, run the child text content change
      * steps for parent.
      */
     if (dom.features.steps) {
@@ -362,7 +362,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     }
 
     /**
-     * 7.5. If parent's root is a shadow root, and parent is a slot 
+     * 7.5. If parent's root is a shadow root, and parent is a slot
      * whose assigned nodes is the empty list, then run signal
      * a slot change for parent.
      */
@@ -381,7 +381,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
     }
 
     /**
-     * 7.7. For each shadow-including inclusive descendant 
+     * 7.7. For each shadow-including inclusive descendant
      * inclusiveDescendant of node, in shadow-including tree
      * order:
      */
@@ -403,7 +403,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
           if (Guard.isCustomElementNode(inclusiveDescendant)) {
             /**
              * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
-             * element callback reaction with inclusiveDescendant, callback name 
+             * element callback reaction with inclusiveDescendant, callback name
              * "connectedCallback", and an empty argument list.
              */
             customElement_enqueueACustomElementCallbackReaction(
@@ -436,7 +436,7 @@ export function mutation_insert(node: Node, parent: Node, child: Node | null,
 /**
  * Inserts a node into a parent node. Optimized routine for the common case where
  * node is not a document fragment node and it has no child nodes.
- * 
+ *
  * @param node - node to insert
  * @param parent - parent node to receive node
  * @param suppressObservers - whether to notify observers
@@ -445,25 +445,25 @@ function mutation_insert_single(node: Node, parent: Node,
   suppressObservers?: boolean): void {
 
   /**
-   * 1. Let count be the number of children of node if it is a 
+   * 1. Let count be the number of children of node if it is a
    * DocumentFragment node, and one otherwise.
    * 2. If child is non-null, then:
-   * 2.1. For each live range whose start node is parent and start 
-   * offset is greater than child's index, increase its start 
+   * 2.1. For each live range whose start node is parent and start
+   * offset is greater than child's index, increase its start
    * offset by count.
-   * 2.2. For each live range whose end node is parent and end 
-   * offset is greater than child's index, increase its end 
+   * 2.2. For each live range whose end node is parent and end
+   * offset is greater than child's index, increase its end
    * offset by count.
-   * 3. Let nodes be node’s children, if node is a DocumentFragment node; 
+   * 3. Let nodes be node’s children, if node is a DocumentFragment node;
    * otherwise « node ».
-   * 4. If node is a DocumentFragment node, remove its children with the 
+   * 4. If node is a DocumentFragment node, remove its children with the
    * suppress observers flag set.
-   * 5. If node is a DocumentFragment node, then queue a tree mutation record 
+   * 5. If node is a DocumentFragment node, then queue a tree mutation record
    * for node with « », nodes, null, and null.
    */
 
   /**
-   * 6. Let previousSibling be child’s previous sibling or parent’s last 
+   * 6. Let previousSibling be child’s previous sibling or parent’s last
    * child if child is null.
    */
   const previousSibling = parent._lastChild
@@ -510,7 +510,7 @@ function mutation_insert_single(node: Node, parent: Node,
   }
 
   /**
-   * 7.3. If parent is a shadow host and node is a slotable, then 
+   * 7.3. If parent is a shadow host and node is a slotable, then
    * assign a slot for node.
    */
   if (dom.features.slots) {
@@ -520,7 +520,7 @@ function mutation_insert_single(node: Node, parent: Node,
   }
 
   /**
-   * 7.4. If node is a Text node, run the child text content change 
+   * 7.4. If node is a Text node, run the child text content change
    * steps for parent.
    */
   if (dom.features.steps) {
@@ -530,7 +530,7 @@ function mutation_insert_single(node: Node, parent: Node,
   }
 
   /**
-   * 7.5. If parent's root is a shadow root, and parent is a slot 
+   * 7.5. If parent's root is a shadow root, and parent is a slot
    * whose assigned nodes is the empty list, then run signal
    * a slot change for parent.
    */
@@ -549,7 +549,7 @@ function mutation_insert_single(node: Node, parent: Node,
   }
 
   /**
-   * 7.7. For each shadow-including inclusive descendant 
+   * 7.7. For each shadow-including inclusive descendant
    * inclusiveDescendant of node, in shadow-including tree
    * order:
    * 7.7.1. Run the insertion steps with inclusiveDescendant.
@@ -567,7 +567,7 @@ function mutation_insert_single(node: Node, parent: Node,
       if (Guard.isCustomElementNode(node)) {
         /**
          * 7.7.2.1. If inclusiveDescendant is custom, then enqueue a custom
-         * element callback reaction with inclusiveDescendant, callback name 
+         * element callback reaction with inclusiveDescendant, callback name
          * "connectedCallback", and an empty argument list.
          */
         customElement_enqueueACustomElementCallbackReaction(
@@ -595,7 +595,7 @@ function mutation_insert_single(node: Node, parent: Node,
 
 /**
  * Appends a node to the children of a parent node.
- * 
+ *
  * @param node - a node
  * @param parent - the parent to receive node
  */
@@ -608,7 +608,7 @@ export function mutation_append(node: Node, parent: Node): Node {
 
 /**
  * Replaces a node with another node.
- * 
+ *
  * @param child - child node to remove
  * @param node - node to insert
  * @param parent - parent node to receive node
@@ -626,22 +626,22 @@ export function mutation_replace(child: Node, node: Node,
     throw new HierarchyRequestError(`Only document, document fragment and element nodes can contain child nodes. Parent node is ${parent.nodeName}.`)
 
   /**
-   * 2. If node is a host-including inclusive ancestor of parent, throw a 
+   * 2. If node is a host-including inclusive ancestor of parent, throw a
    * "HierarchyRequestError" DOMException.
    */
   if (tree_isHostIncludingAncestorOf(parent, node, true))
     throw new HierarchyRequestError(`The node to be inserted cannot be an ancestor of parent node. Node is ${node.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
-   * 3. If child’s parent is not parent, then throw a "NotFoundError" 
+   * 3. If child’s parent is not parent, then throw a "NotFoundError"
    * DOMException.
    */
   if (child._parent !== parent)
     throw new NotFoundError(`The reference child node cannot be found under parent node. Child node is ${child.nodeName}, parent node is ${parent.nodeName}.`)
 
   /**
-   * 4. If node is not a DocumentFragment, DocumentType, Element, Text, 
-   * ProcessingInstruction, or Comment node, throw a "HierarchyRequestError" 
+   * 4. If node is not a DocumentFragment, DocumentType, Element, Text,
+   * ProcessingInstruction, or Comment node, throw a "HierarchyRequestError"
    * DOMException.
    */
   if (node._nodeType !== NodeType.DocumentFragment &&
@@ -654,8 +654,8 @@ export function mutation_replace(child: Node, node: Node,
     throw new HierarchyRequestError(`Only document fragment, document type, element, text, processing instruction, cdata section or comment nodes can be inserted. Node is ${node.nodeName}.`)
 
   /**
-   * 5. If either node is a Text node and parent is a document, or node is a 
-   * doctype and parent is not a document, throw a "HierarchyRequestError" 
+   * 5. If either node is a Text node and parent is a document, or node is a
+   * doctype and parent is not a document, throw a "HierarchyRequestError"
    * DOMException.
    */
   if (node._nodeType === NodeType.Text &&
@@ -667,7 +667,7 @@ export function mutation_replace(child: Node, node: Node,
     throw new HierarchyRequestError(`A document type node can only be inserted under a document node. Parent node is ${parent.nodeName}.`)
 
   /**
-   * 6. If parent is a document, and any of the statements below, switched on 
+   * 6. If parent is a document, and any of the statements below, switched on
    * node, are true, throw a "HierarchyRequestError" DOMException.
    * - DocumentFragment node
    * If node has more than one element child or has a Text node child.
@@ -754,7 +754,7 @@ export function mutation_replace(child: Node, node: Node,
   if (child._parent !== null) {
     /**
      * 12.1. Set removedNodes to [child].
-     * 12.2. Remove child from its parent with the suppress observers flag 
+     * 12.2. Remove child from its parent with the suppress observers flag
      * set.
      */
     removedNodes.push(child)
@@ -762,7 +762,7 @@ export function mutation_replace(child: Node, node: Node,
   }
 
   /**
-   * 13. Let nodes be node’s children if node is a DocumentFragment node; 
+   * 13. Let nodes be node’s children if node is a DocumentFragment node;
    * otherwise [node].
    */
   let nodes: Node[] = []
@@ -773,13 +773,13 @@ export function mutation_replace(child: Node, node: Node,
   }
 
   /**
-   * 14. Insert node into parent before reference child with the suppress 
+   * 14. Insert node into parent before reference child with the suppress
    * observers flag set.
    */
   mutation_insert(node, parent, referenceChild, true)
 
   /**
-   * 15. Queue a tree mutation record for parent with nodes, removedNodes, 
+   * 15. Queue a tree mutation record for parent with nodes, removedNodes,
    * previousSibling, and reference child.
    */
   if (dom.features.mutationObservers) {
@@ -795,7 +795,7 @@ export function mutation_replace(child: Node, node: Node,
 
 /**
  * Replaces all nodes of a parent with the given node.
- * 
+ *
  * @param node - node to insert
  * @param parent - parent node to receive node
  */
@@ -814,7 +814,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
 
   /**
    * 3. Let addedNodes be the empty list.
-   * 4. If node is DocumentFragment node, then set addedNodes to node’s 
+   * 4. If node is DocumentFragment node, then set addedNodes to node’s
    * children.
    * 5. Otherwise, if node is non-null, set addedNodes to [node].
    */
@@ -826,7 +826,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
   }
 
   /**
-   * 6. Remove all parent’s children, in tree order, with the suppress 
+   * 6. Remove all parent’s children, in tree order, with the suppress
    * observers flag set.
    */
   for (const childNode of removedNodes) {
@@ -834,7 +834,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
   }
 
   /**
-   * 7. If node is not null, then insert node into parent before null with the 
+   * 7. If node is not null, then insert node into parent before null with the
    * suppress observers flag set.
    */
   if (node !== null) {
@@ -842,7 +842,7 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
   }
 
   /**
-   * 8. Queue a tree mutation record for parent with addedNodes, removedNodes, 
+   * 8. Queue a tree mutation record for parent with addedNodes, removedNodes,
    * null, and null.
    */
   if (dom.features.mutationObservers) {
@@ -854,13 +854,13 @@ export function mutation_replaceAll(node: Node | null, parent: Node): void {
 /**
  * Ensures pre-removal validity of a child node from a parent, then
  * removes it.
- * 
+ *
  * @param child - child node to remove
  * @param parent - parent node
  */
 export function mutation_preRemove(child: Node, parent: Node): Node {
   /**
-   * 1. If child’s parent is not parent, then throw a "NotFoundError" 
+   * 1. If child’s parent is not parent, then throw a "NotFoundError"
    * DOMException.
    * 2. Remove child from parent.
    * 3. Return child.
@@ -875,7 +875,7 @@ export function mutation_preRemove(child: Node, parent: Node): Node {
 
 /**
  * Removes a child node from its parent.
- * 
+ *
  * @param node - node to remove
  * @param parent - parent node
  * @param suppressObservers - whether to notify observers
@@ -889,9 +889,9 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
     const index = tree_index(node)
 
     /**
-     * 2. For each live range whose start node is an inclusive descendant of 
+     * 2. For each live range whose start node is an inclusive descendant of
      * node, set its start to (parent, index).
-     * 3. For each live range whose end node is an inclusive descendant of 
+     * 3. For each live range whose end node is an inclusive descendant of
      * node, set its end to (parent, index).
      */
     for (const range of dom.rangeList) {
@@ -910,9 +910,9 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
     }
 
     /**
-     * 4. For each live range whose start node is parent and start offset is 
+     * 4. For each live range whose start node is parent and start offset is
      * greater than index, decrease its start offset by 1.
-     * 5. For each live range whose end node is parent and end offset is greater 
+     * 5. For each live range whose end node is parent and end offset is greater
      * than index, decrease its end offset by 1.
      */
     for (const range of dom.rangeList) {
@@ -926,7 +926,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 6. For each NodeIterator object iterator whose root’s node document is 
+   * 6. For each NodeIterator object iterator whose root’s node document is
    * node’s node document, run the NodeIterator pre-removing steps given node
    * and iterator.
    */
@@ -970,7 +970,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   if (!next) parent._lastChild = prev
 
   /**
-   * 10. If node is assigned, then run assign slotables for node’s assigned 
+   * 10. If node is assigned, then run assign slotables for node’s assigned
    * slot.
    */
   if (dom.features.slots) {
@@ -980,8 +980,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 11. If parent’s root is a shadow root, and parent is a slot whose 
-   * assigned nodes is the empty list, then run signal a slot change for 
+   * 11. If parent’s root is a shadow root, and parent is a slot whose
+   * assigned nodes is the empty list, then run signal a slot change for
    * parent.
    */
   if (dom.features.slots) {
@@ -1012,8 +1012,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 14. If node is custom, then enqueue a custom element callback 
-   * reaction with node, callback name "disconnectedCallback", 
+   * 14. If node is custom, then enqueue a custom element callback
+   * reaction with node, callback name "disconnectedCallback",
    * and an empty argument list.
    */
   if (dom.features.customElements) {
@@ -1024,7 +1024,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 15. For each shadow-including descendant descendant of node, 
+   * 15. For each shadow-including descendant descendant of node,
    * in shadow-including tree order, then:
    */
   let descendant = tree_getFirstDescendantNode(node, false, true)
@@ -1037,8 +1037,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
     }
 
     /**
-     * 15.2. If descendant is custom, then enqueue a custom element 
-     * callback reaction with descendant, callback name 
+     * 15.2. If descendant is custom, then enqueue a custom element
+     * callback reaction with descendant, callback name
      * "disconnectedCallback", and an empty argument list.
      */
     if (dom.features.customElements) {
@@ -1052,11 +1052,11 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 16. For each inclusive ancestor inclusiveAncestor of parent, and 
-   * then for each registered of inclusiveAncestor's registered 
-   * observer list, if registered's options's subtree is true, 
-   * then append a new transient registered observer whose 
-   * observer is registered's observer, options is registered's 
+   * 16. For each inclusive ancestor inclusiveAncestor of parent, and
+   * then for each registered of inclusiveAncestor's registered
+   * observer list, if registered's options's subtree is true,
+   * then append a new transient registered observer whose
+   * observer is registered's observer, options is registered's
    * options, and source is registered to node's registered
    * observer list.
    */
@@ -1077,8 +1077,8 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 17. If suppress observers flag is unset, then queue a tree mutation 
-   * record for parent with « », « node », oldPreviousSibling, and 
+   * 17. If suppress observers flag is unset, then queue a tree mutation
+   * record for parent with « », « node », oldPreviousSibling, and
    * oldNextSibling.
    */
   if (dom.features.mutationObservers) {
@@ -1089,7 +1089,7 @@ export function mutation_remove(node: Node, parent: Node, suppressObservers?: bo
   }
 
   /**
-   * 18. If node is a Text node, then run the child text content change steps 
+   * 18. If node is a Text node, then run the child text content change steps
    * for parent.
    */
   if (dom.features.steps) {

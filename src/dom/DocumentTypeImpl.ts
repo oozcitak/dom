@@ -3,12 +3,12 @@ import { NodeImpl } from "./NodeImpl"
 import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 
 /**
- * Represents an object providing methods which are not dependent on 
+ * Represents an object providing methods which are not dependent on
  * any particular document
  */
 export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.DocumentType
 
   _name: string = ''
   _publicId: string = ''
@@ -16,7 +16,7 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
   /**
    * Initializes a new instance of `DocumentType`.
-   * 
+   *
    * @param name - name of the node
    * @param publicId - `PUBLIC` identifier
    * @param systemId - `SYSTEM` identifier
@@ -50,7 +50,7 @@ export class DocumentTypeImpl extends NodeImpl implements DocumentType {
 
   /**
    * Creates a new `DocumentType`.
-   * 
+   *
    * @param document - owner document
    * @param name - name of the node
    * @param publicId - `PUBLIC` identifier

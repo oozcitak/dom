@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('NodeIterator', () => {
+$$.suite('NodeIterator', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -22,7 +22,7 @@ describe('NodeIterator', () => {
   child31.appendChild(doc.createElement('child3_1_2'))
   node3.appendChild(doc.createElement('child3_2'))
 
-  expect($$.printTree(doc)).toBe($$.t`
+  $$.deepEqual($$.printTree(doc), $$.t`
     root
       node1
         child1
@@ -37,7 +37,7 @@ describe('NodeIterator', () => {
         child3_2
     `)
 
-  test('nextNode()', () => {
+  $$.test('nextNode()', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()
@@ -45,10 +45,10 @@ describe('NodeIterator', () => {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
-    expect(str).toBe(':root:node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
+    $$.deepEqual(str, ':root:node1:child1:#text:child2:#comment:node2:node3:child3_1:child3_1_1:child3_1_2:child3_2')
   })
 
-  test('nextNode() with type filter', () => {
+  $$.test('nextNode() with type filter', () => {
     const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element)
     let str = ''
     let node = iter.nextNode()
@@ -56,14 +56,14 @@ describe('NodeIterator', () => {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
-    expect(str).toBe(':node1:child1:child2')
+    $$.deepEqual(str, ':node1:child1:child2')
   })
 
-  test('nextNode() with user filter', () => {
+  $$.test('nextNode() with user filter', () => {
     const iter = doc.createNodeIterator(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
-    
+
 
     let str = ''
     let node = iter.nextNode()
@@ -71,10 +71,10 @@ describe('NodeIterator', () => {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
-    expect(str).toBe(':child1:child2')
+    $$.deepEqual(str, ':child1:child2')
   })
 
-  test('previousNode()', () => {
+  $$.test('previousNode()', () => {
     const iter = doc.createNodeIterator(root)
     let str = ''
     let node = iter.nextNode()
@@ -86,7 +86,7 @@ describe('NodeIterator', () => {
       str += ':' + node.nodeName
       node = iter.previousNode()
     }
-    expect(str).toBe(':child3_2:child3_1_2:child3_1_1:child3_1:node3:node2:#comment:child2:#text:child1:node1:root')
+    $$.deepEqual(str, ':child3_2:child3_1_2:child3_1_1:child3_1:node3:node2:#comment:child2:#text:child1:node1:root')
   })
 
 })

@@ -29,8 +29,8 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class ElementImpl extends NodeImpl implements Element {
 
-  _nodeType!: NodeType
-  _children: Set<Node> = new Set<Node>()
+  _nodeType = NodeType.Element
+  _children = new Set<Node>()
 
   _namespace: string | null = null
   _namespacePrefix: string | null = null
@@ -113,8 +113,8 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   getAttributeNames(): string[] {
     /**
-     * The getAttributeNames() method, when invoked, must return the qualified 
-     * names of the attributes in context object’s attribute list, in order, 
+     * The getAttributeNames() method, when invoked, must return the qualified
+     * names of the attributes in context object’s attribute list, in order,
      * and a new list otherwise.
      */
     const names: string[] = []
@@ -129,7 +129,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   getAttribute(qualifiedName: string): string | null {
     /**
-     * 1. Let attr be the result of getting an attribute given qualifiedName 
+     * 1. Let attr be the result of getting an attribute given qualifiedName
      * and the context object.
      * 2. If attr is null, return null.
      * 3. Return attr’s value.
@@ -141,7 +141,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   getAttributeNS(namespace: string, localName: string): string | null {
     /**
-     * 1. Let attr be the result of getting an attribute given namespace, 
+     * 1. Let attr be the result of getting an attribute given namespace,
      * localName, and the context object.
      * 2. If attr is null, return null.
      * 3. Return attr’s value.
@@ -153,15 +153,15 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   setAttribute(qualifiedName: string, value: string): void {
     /**
-     * 1. If qualifiedName does not match the Name production in XML, then 
+     * 1. If qualifiedName does not match the Name production in XML, then
      * throw an "InvalidCharacterError" DOMException.
      */
     if (!xml_isName(qualifiedName))
       throw new InvalidCharacterError()
 
     /**
-     * 2. If the context object is in the HTML namespace and its node document 
-     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * 2. If the context object is in the HTML namespace and its node document
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII
      * lowercase.
      */
     if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
@@ -183,8 +183,8 @@ export class ElementImpl extends NodeImpl implements Element {
 
     /**
      * 4. If attribute is null, create an attribute whose local name is
-     * qualifiedName, value is value, and node document is context object’s 
-     * node document, then append this attribute to context object, and 
+     * qualifiedName, value is value, and node document is context object’s
+     * node document, then append this attribute to context object, and
      * then return.
      */
     if (attribute === null) {
@@ -205,7 +205,7 @@ export class ElementImpl extends NodeImpl implements Element {
     /**
      * 1. Let namespace, prefix, and localName be the result of passing
      * namespace and qualifiedName to validate and extract.
-     * 2. Set an attribute value for the context object using localName, value, 
+     * 2. Set an attribute value for the context object using localName, value,
      * and also prefix and namespace.
      */
     const [ns, prefix, localName] =
@@ -218,7 +218,7 @@ export class ElementImpl extends NodeImpl implements Element {
   removeAttribute(qualifiedName: string): void {
     /**
      * The removeAttribute(qualifiedName) method, when invoked, must remove an
-     * attribute given qualifiedName and the context object, and then return 
+     * attribute given qualifiedName and the context object, and then return
      * undefined.
      */
     element_removeAnAttributeByName(qualifiedName, this)
@@ -227,8 +227,8 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   removeAttributeNS(namespace: string, localName: string): void {
     /**
-     * The removeAttributeNS(namespace, localName) method, when invoked, must 
-     * remove an attribute given namespace, localName, and context object, and 
+     * The removeAttributeNS(namespace, localName) method, when invoked, must
+     * remove an attribute given namespace, localName, and context object, and
      * then return undefined.
      */
     element_removeAnAttributeByNamespaceAndLocalName(namespace,
@@ -238,8 +238,8 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   hasAttribute(qualifiedName: string): boolean {
     /**
-     * 1. If the context object is in the HTML namespace and its node document 
-     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * 1. If the context object is in the HTML namespace and its node document
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII
      * lowercase.
      * 2. Return true if the context object has an attribute whose qualified
      * name is qualifiedName, and false otherwise.
@@ -269,7 +269,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
     /**
      * 2. If the context object is in the HTML namespace and its node document
-     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII
      * lowercase.
      */
     if (this._namespace === infraNamespace.HTML && this._nodeDocument._type === "html") {
@@ -362,8 +362,8 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   setAttributeNode(attr: Attr): Attr | null {
     /**
-     * The setAttributeNode(attr) and setAttributeNodeNS(attr) methods, when 
-     * invoked, must return the result of setting an attribute given attr and 
+     * The setAttributeNode(attr) and setAttributeNodeNS(attr) methods, when
+     * invoked, must return the result of setting an attribute given attr and
      * the context object.
      */
     return element_setAnAttribute(attr, this)
@@ -377,7 +377,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   removeAttributeNode(attr: Attr): Attr {
     /**
-     * 1. If context object’s attribute list does not contain attr, then throw 
+     * 1. If context object’s attribute list does not contain attr, then throw
      * a "NotFoundError" DOMException.
      * 2. Remove attr from context object.
      * 3. Return attr.
@@ -407,9 +407,9 @@ export class ElementImpl extends NodeImpl implements Element {
       throw new NotSupportedError()
 
     /**
-     * 2. If context object’s local name is not a valid custom element name, 
-     * "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", 
-     * "h3", "h4", "h5", "h6", "header", "main" "nav", "p", "section", 
+     * 2. If context object’s local name is not a valid custom element name,
+     * "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2",
+     * "h3", "h4", "h5", "h6", "header", "main" "nav", "p", "section",
      * or "span", then throw a "NotSupportedError" DOMException.
      */
     if (!customElement_isValidCustomElementName(this._localName) &&
@@ -417,10 +417,10 @@ export class ElementImpl extends NodeImpl implements Element {
       throw new NotSupportedError()
 
     /**
-     * 3. If context object’s local name is a valid custom element name, 
+     * 3. If context object’s local name is a valid custom element name,
      * or context object’s is value is not null, then:
-     * 3.1. Let definition be the result of looking up a custom element 
-     * definition given context object’s node document, its namespace, its 
+     * 3.1. Let definition be the result of looking up a custom element
+     * definition given context object’s node document, its namespace, its
      * local name, and its is value.
      * 3.2. If definition is not null and definition’s disable shadow is true,
      *  then throw a "NotSupportedError" DOMException.
@@ -434,14 +434,14 @@ export class ElementImpl extends NodeImpl implements Element {
     }
 
     /**
-     * 4. If context object is a shadow host, then throw an "NotSupportedError" 
+     * 4. If context object is a shadow host, then throw an "NotSupportedError"
      * DOMException.
      */
     if (this._shadowRoot !== null)
       throw new NotSupportedError()
 
     /**
-     * 5. Let shadow be a new shadow root whose node document is context 
+     * 5. Let shadow be a new shadow root whose node document is context
      * object’s node document, host is context object, and mode is init’s mode.
      * 6. Set context object’s shadow root to shadow.
      * 7. Return shadow.
@@ -472,10 +472,10 @@ export class ElementImpl extends NodeImpl implements Element {
      * TODO: Selectors
      * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
      * 2. If s is failure, throw a "SyntaxError" DOMException.
-     * 3. Let elements be context object’s inclusive ancestors that are 
+     * 3. Let elements be context object’s inclusive ancestors that are
      * elements, in reverse tree order.
      * 4. For each element in elements, if match a selector against an element,
-     * using s, element, and :scope element context object, returns success, 
+     * using s, element, and :scope element context object, returns success,
      * return element. [SELECTORS4]
      * 5. Return null.
      */
@@ -488,7 +488,7 @@ export class ElementImpl extends NodeImpl implements Element {
      * TODO: Selectors
      * 1. Let s be the result of parse a selector from selectors. [SELECTORS4]
      * 2. If s is failure, throw a "SyntaxError" DOMException.
-     * 3. Return true if the result of match a selector against an element, 
+     * 3. Return true if the result of match a selector against an element,
      * using s, element, and :scope element context object, returns success,
      * and false otherwise. [SELECTORS4]
      */
@@ -504,7 +504,7 @@ export class ElementImpl extends NodeImpl implements Element {
   getElementsByTagName(qualifiedName: string): HTMLCollection {
     /**
      * The getElementsByTagName(qualifiedName) method, when invoked, must return
-     * the list of elements with qualified name qualifiedName for context 
+     * the list of elements with qualified name qualifiedName for context
      * object.
      */
     return node_listOfElementsWithQualifiedName(qualifiedName, this)
@@ -513,7 +513,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   getElementsByTagNameNS(namespace: string, localName: string): HTMLCollection {
     /**
-     * The getElementsByTagNameNS(namespace, localName) method, when invoked, 
+     * The getElementsByTagNameNS(namespace, localName) method, when invoked,
      * must return the list of elements with namespace namespace and local name
      * localName for context object.
      */
@@ -523,7 +523,7 @@ export class ElementImpl extends NodeImpl implements Element {
   /** @inheritdoc */
   getElementsByClassName(classNames: string): HTMLCollection {
     /**
-     * The getElementsByClassName(classNames) method, when invoked, must return 
+     * The getElementsByClassName(classNames) method, when invoked, must return
      * the list of elements with class names classNames for context object.
      */
     return node_listOfElementsWithClassNames(classNames, this)
@@ -552,13 +552,13 @@ export class ElementImpl extends NodeImpl implements Element {
     element_insertAdjacent(this, where, text)
   }
 
-  /** 
+  /**
    * Returns the qualified name.
    */
   get _qualifiedName(): string {
     /**
-     * An element’s qualified name is its local name if its namespace prefix is 
-     * null, and its namespace prefix, followed by ":", followed by its 
+     * An element’s qualified name is its local name if its namespace prefix is
+     * null, and its namespace prefix, followed by ":", followed by its
      * local name, otherwise.
      */
     return (this._namespacePrefix ?
@@ -572,8 +572,8 @@ export class ElementImpl extends NodeImpl implements Element {
   get _htmlUppercasedQualifiedName(): string {
     /**
      * 1. Let qualifiedName be context object’s qualified name.
-     * 2. If the context object is in the HTML namespace and its node document 
-     * is an HTML document, then set qualifiedName to qualifiedName in ASCII 
+     * 2. If the context object is in the HTML namespace and its node document
+     * is an HTML document, then set qualifiedName to qualifiedName in ASCII
      * uppercase.
      * 3. Return qualifiedName.
      */
@@ -624,7 +624,7 @@ export class ElementImpl extends NodeImpl implements Element {
 
   /**
    * Creates a new `Element`.
-   * 
+   *
    * @param document - owner document
    * @param localName - local name
    * @param namespace - namespace

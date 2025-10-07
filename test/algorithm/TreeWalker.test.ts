@@ -3,7 +3,7 @@ import {
   treeWalker_traverseChildren, treeWalker_traverseSiblings
 } from "../../src/algorithm"
 
-describe('TreeWalker', () => {
+$$.suite('TreeWalker', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -29,7 +29,7 @@ describe('TreeWalker', () => {
   const child32 = doc.createElement('child3_2')
   node3.appendChild(child32)
 
-  expect($$.printTree(doc)).toBe($$.t`
+  $$.deepEqual($$.printTree(doc), $$.t`
     root
       node1
         child1
@@ -44,86 +44,86 @@ describe('TreeWalker', () => {
         child3_2
     `)
 
-  test('traverseChildren() first child', () => {
+  $$.test('traverseChildren() first child', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
     const node = treeWalker_traverseChildren(iter as any, true)
 
-    expect(node).toBe(child1)
+    $$.deepEqual(node, child1)
   })
 
-  test('traverseChildren() sibling of first child', () => {
+  $$.test('traverseChildren() sibling of first child', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('c') && node.nodeName.endsWith('2') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
     const node = treeWalker_traverseChildren(iter as any, true)
 
-    expect(node).toBe(child2)
+    $$.deepEqual(node, child2)
   })
 
-  test('traverseChildren() without matching children null', () => {
+  $$.test('traverseChildren() without matching children null', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element, (node) =>
       node.nodeName.startsWith('x') ? $$.FilterResult.Accept : $$.FilterResult.Skip
     )
 
     const node = treeWalker_traverseChildren(iter as any, true)
 
-    expect(node).toBeNull()
+    $$.deepEqual(node, null)
   })
 
-  test('traverseChildren() without children returns null', () => {
+  $$.test('traverseChildren() without children returns null', () => {
     const iter = doc.createTreeWalker(child2)
 
     const node = treeWalker_traverseChildren(iter as any, true)
 
-    expect(node).toBeNull()
+    $$.deepEqual(node, null)
   })
 
-  test('traverseSiblings() next sibling', () => {
+  $$.test('traverseSiblings() next sibling', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node1
     const node = treeWalker_traverseSiblings(iter as any, true)
 
-    expect(node).toBe(node2)
+    $$.deepEqual(node, node2)
   })
 
-  test('traverseSiblings() previous sibling', () => {
+  $$.test('traverseSiblings() previous sibling', () => {
     const iter = doc.createTreeWalker(root, $$.WhatToShow.Element)
 
     iter.currentNode = node2
     const node = treeWalker_traverseSiblings(iter as any, false)
 
-    expect(node).toBe(node1)
+    $$.deepEqual(node, node1)
   })
 
-  test('traverseSiblings() at root returns null', () => {
+  $$.test('traverseSiblings() at root returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     const node = treeWalker_traverseSiblings(iter as any, true)
 
-    expect(node).toBeNull()
+    $$.deepEqual(node, null)
   })
 
-  test('traverseSiblings() without siblings returns null', () => {
+  $$.test('traverseSiblings() without siblings returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = child32
     const node = treeWalker_traverseSiblings(iter as any, true)
 
-    expect(node).toBeNull()
+    $$.deepEqual(node, null)
   })
 
-  test('traverseSiblings() without siblings returns null', () => {
+  $$.test('traverseSiblings() without siblings returns null', () => {
     const iter = doc.createTreeWalker(root)
 
     iter.currentNode = node3
     const node = treeWalker_traverseSiblings(iter as any, true)
 
-    expect(node).toBeNull()
+    $$.deepEqual(node, null)
   })
 
 })

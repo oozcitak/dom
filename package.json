@@ -1,6 +1,6 @@
 {
   "name": "@oozcitak/dom",
-  "version": "1.15.10",
+  "version": "2.0.0",
   "keywords": [
     "dom",
     "whatwg"
@@ -19,54 +19,26 @@
   },
   "main": "./lib/index",
   "engines": {
-    "node": ">=8.0"
+    "node": ">=20.0"
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
-    "@oozcitak/infra": "1.0.8",
-    "@oozcitak/url": "1.0.4",
-    "@oozcitak/util": "8.3.8"
+    "@oozcitak/infra": "^2.0.0",
+    "@oozcitak/url": "^2.0.0",
+    "@oozcitak/util": "^9.0.1"
   },
   "devDependencies": {
-    "@types/benchmark": "*",
-    "@types/dedent": "*",
-    "@types/jest": "*",
-    "@types/jsdom": "*",
-    "@types/node": "*",
-    "@types/semver": "*",
-    "@types/xmldom": "*",
-    "benchmark": "*",
-    "chalk": "*",
-    "dedent": "*",
-    "fast-xml-parser": "*",
-    "glob": "*",
-    "jest": "*",
-    "jsdom": "*",
-    "semver": "*",
-    "ts-jest": "^26.3.0",
-    "ts-node": "*",
-    "typescript": "*",
-    "xmldom": "*"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "/test/.*\\.test\\.tsx?$",
-    "testEnvironment": "node",
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}"
-    ]
+    "@types/node": "^20.0.0",
+    "@types/dedent": "^0.7.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "dedent": "^1.7.0"
   },
   "scripts": {
-    "compile": "rm -rf lib && tsc --version && tsc",
-    "test": "npm run compile && jest --coverage",
-    "perf": "npm run compile && ts-node ./perf/perf.ts",
-    "prof-create": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof-create.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate-create.log && rm isolate-v8.log",
-    "prof-parse": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof-parse.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate-parse.log && rm isolate-v8.log",
-    "prof-serialize": "npm run compile && rm -f isolate-*-v8.log && node --prof ./perf/prof-serialize.js && find . -name isolate-*-v8.log -exec mv {} isolate-v8.log ; && node --prof-process isolate-v8.log > isolate-serialize.log && rm isolate-v8.log",
-    "publish-public": "npm run test && npm publish --access public"
+    "test": "tsc && tsx --test --experimental-test-coverage test/**/*test.ts",
+    "cover": "tsc && tsx --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=./coverage/lcov.info test/**/*test.ts",
+    "publish-public": "tsc && npm run cover && npm publish --access public"
   }
 }

@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('Event', () => {
+$$.suite('Event', () => {
 
   const doc = $$.dom.createDocument('ns', 'root')
 
@@ -11,49 +11,49 @@ describe('Event', () => {
   const ele = doc.createElement('ele')
   de.appendChild(ele)
 
-  test('properties', () => {
+  $$.test('properties', () => {
     const event = new $$.Event('custom', {})
-    expect(event.target).toBeNull()
-    expect(event.composedPath()).toEqual([])
+    $$.deepEqual(event.target, null)
+    $$.deepEqual(event.composedPath(), [])
 
     ele.addEventListener('custom', function (e) {
       // cannot init a dispatched event
       e.initEvent("something-else")
-      expect(e.type).toBe("custom")
+      $$.deepEqual(e.type, "custom")
 
-      expect(e.bubbles).toBe(false)
-      expect(e.cancelable).toBe(false)
-      expect(e.cancelBubble).toBe(false)
-      expect(e.composed).toBe(false)
-      expect(e.defaultPrevented).toBe(false)
-      expect(e.isTrusted).toBe(false)
-      expect(e.returnValue).toBe(true)
-      expect(e.type).toBe("custom")
-      expect(e.eventPhase).toBe($$.Event.AT_TARGET)
-      expect(e.target).toBe(ele)
-      expect(e.srcElement).toBe(ele)
-      expect(e.currentTarget).toBe(ele)
-      expect(e.composedPath()).toEqual([ele, de, doc])
+      $$.deepEqual(e.bubbles, false)
+      $$.deepEqual(e.cancelable, false)
+      $$.deepEqual(e.cancelBubble, false)
+      $$.deepEqual(e.composed, false)
+      $$.deepEqual(e.defaultPrevented, false)
+      $$.deepEqual(e.isTrusted, false)
+      $$.deepEqual(e.returnValue, true)
+      $$.deepEqual(e.type, "custom")
+      $$.deepEqual(e.eventPhase, $$.Event.AT_TARGET)
+      $$.deepEqual(e.target, ele)
+      $$.deepEqual(e.srcElement, ele)
+      $$.deepEqual(e.currentTarget, ele)
+      $$.deepEqual(e.composedPath(), [ele, de, doc])
     }, false)
 
     ele.dispatchEvent(event)
   })
 
-  test('initEvent()', () => {
+  $$.test('initEvent()', () => {
     const event = doc.createEvent('Event')
     event.initEvent('custom', true, true)
 
     ele.addEventListener('custom', function (e) {
-      expect(e.type).toBe("custom")
-      expect(e.bubbles).toBe(true)
-      expect(e.cancelable).toBe(true)
-      expect(e.target).toBe(ele)
+      $$.deepEqual(e.type, "custom")
+      $$.deepEqual(e.bubbles, true)
+      $$.deepEqual(e.cancelable, true)
+      $$.deepEqual(e.target, ele)
     }, false)
 
     ele.dispatchEvent(event)
   })
 
-  test('propagation', () => {
+  $$.test('propagation', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -63,10 +63,10 @@ describe('Event', () => {
       propagated = true
     }, false)
     childEle.dispatchEvent(event)
-    expect(propagated).toBe(true)
+    $$.deepEqual(propagated, true)
   })
 
-  test('stopPropagation()', () => {
+  $$.test('stopPropagation()', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -80,10 +80,10 @@ describe('Event', () => {
     }, false)
     childEle.dispatchEvent(event)
 
-    expect(propagated).toBe(false)
+    $$.deepEqual(propagated, false)
   })
 
-  test('cancelBubble()', () => {
+  $$.test('cancelBubble()', () => {
     const childEle = doc.createElement('child')
     ele.appendChild(childEle)
 
@@ -97,10 +97,10 @@ describe('Event', () => {
     }, false)
     childEle.dispatchEvent(event)
 
-    expect(propagated).toBe(false)
+    $$.deepEqual(propagated, false)
   })
 
-  test('immediate propagation', () => {
+  $$.test('immediate propagation', () => {
     let propagated = 0
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {
@@ -111,10 +111,10 @@ describe('Event', () => {
     }, false)
     ele.dispatchEvent(event)
 
-    expect(propagated).toBe(2)
+    $$.deepEqual(propagated, 2)
   })
 
-  test('stopImmediatePropagation()', () => {
+  $$.test('stopImmediatePropagation()', () => {
     let propagated = false
     const event = new $$.Event("custom")
     ele.addEventListener('custom', function (e) {
@@ -125,22 +125,22 @@ describe('Event', () => {
     }, false)
     ele.dispatchEvent(event)
 
-    expect(propagated).toBe(false)
+    $$.deepEqual(propagated, false)
   })
 
-  test('constants', () => {
+  $$.test('constants', () => {
     const event = new $$.Event('custom', {})
-    expect(event.CAPTURING_PHASE).toBe(1)
-    expect($$.Event.CAPTURING_PHASE).toBe(1)
+    $$.deepEqual(event.CAPTURING_PHASE, 1)
+    $$.deepEqual($$.Event.CAPTURING_PHASE, 1)
   })
 
-  test('set returnValue', () => {
+  $$.test('set returnValue', () => {
     const event = new $$.Event('custom', { cancelable: true })
     event.returnValue = false
-    expect(event.returnValue).toBe(false)
+    $$.deepEqual(event.returnValue, false)
     const event2 = new $$.Event('custom', { cancelable: false })
     event2.returnValue = false
-    expect(event2.returnValue).toBe(true)
+    $$.deepEqual(event2.returnValue, true)
   })
 
 })

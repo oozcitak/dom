@@ -8,7 +8,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class AttrImpl extends NodeImpl implements Attr {
 
-  _nodeType!: NodeType
+  _nodeType = NodeType.Attribute
   _localName: string
   _namespace: string | null = null
   _namespacePrefix: string | null = null
@@ -17,7 +17,7 @@ export class AttrImpl extends NodeImpl implements Attr {
 
   /**
    * Initializes a new instance of `Attr`.
-   * 
+   *
    * @param localName - local name
    */
   private constructor(localName: string) {
@@ -48,19 +48,19 @@ export class AttrImpl extends NodeImpl implements Attr {
   get value(): string { return this._value }
   set value(value: string) {
     /**
-     * The value attribute’s setter must set an existing attribute value with 
+     * The value attribute’s setter must set an existing attribute value with
      * context object and the given value.
      */
     attr_setAnExistingAttributeValue(this, value)
   }
 
-  /** 
+  /**
    * Returns the qualified name.
    */
   get _qualifiedName(): string {
     /**
-     * An attribute’s qualified name is its local name if its namespace prefix 
-     * is null, and its namespace prefix, followed by ":", followed by its 
+     * An attribute’s qualified name is its local name if its namespace prefix
+     * is null, and its namespace prefix, followed by ":", followed by its
      * local name, otherwise.
      */
     return (this._namespacePrefix !== null ?
@@ -70,7 +70,7 @@ export class AttrImpl extends NodeImpl implements Attr {
 
   /**
    * Creates an `Attr`.
-   * 
+   *
    * @param document - owner document
    * @param localName - local name
    */

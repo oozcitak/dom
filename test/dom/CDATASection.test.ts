@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('CDATASection', () => {
+$$.suite('CDATASection', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,28 +10,28 @@ describe('CDATASection', () => {
   const node = doc.createCDATASection('data')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', () => {
-    expect(node.nodeType).toBe(4)
-    expect(node.nodeName).toBe('#cdata-section')
-    expect(node.data).toBe('data')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node.nodeType, 4)
+    $$.deepEqual(node.nodeName, '#cdata-section')
+    $$.deepEqual(node.data, 'data')
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(4)
-    expect(clonedNode.nodeName).toBe('#cdata-section')
-    expect(clonedNode.data).toBe('data')
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 4)
+    $$.deepEqual(clonedNode.nodeName, '#cdata-section')
+    $$.deepEqual(clonedNode.data, 'data')
   })
 
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const node1 = $$.CDATASection._create(doc as any, 'data')
-    expect(node1.nodeType).toBe(4)
-    expect(node1.nodeName).toBe('#cdata-section')
-    expect(node1.data).toBe('data')
+    $$.deepEqual(node1.nodeType, 4)
+    $$.deepEqual(node1.nodeName, '#cdata-section')
+    $$.deepEqual(node1.data, 'data')
     const node2 = $$.CDATASection._create(doc as any)
-    expect(node2.data).toBe('')
+    $$.deepEqual(node2.data, '')
   })
 
 })

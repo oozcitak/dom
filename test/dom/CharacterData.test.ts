@@ -2,7 +2,7 @@ import $$ from "../TestHelpers"
 import { MutationRecord } from "../../src/dom/interfaces"
 import { dom } from "../../src/dom"
 
-describe('CharacterData', () => {
+$$.suite('CharacterData', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -14,133 +14,127 @@ describe('CharacterData', () => {
   doc.documentElement.appendChild(node1)
   doc.documentElement.appendChild(node2)
 
-  test('constructor()', () => {
-    expect(node1.data).toBe('data')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node1.data, 'data')
   })
 
-  test('isEqualNode()', () => {
-    expect(node1.isEqualNode(node2)).toBe(true)
-    expect(node1.isEqualNode()).toBe(false)
+  $$.test('isEqualNode()', () => {
+    $$.deepEqual(node1.isEqualNode(node2), true)
+    $$.deepEqual(node1.isEqualNode(), false)
   })
 
-  test('nodeValue, textContent, data', () => {
-    expect(node1.nodeValue).toBe('data')
-    expect(node1.textContent).toBe('data')
-    expect(node1.data).toBe('data')
+  $$.test('nodeValue, textContent, data', () => {
+    $$.deepEqual(node1.nodeValue, 'data')
+    $$.deepEqual(node1.textContent, 'data')
+    $$.deepEqual(node1.data, 'data')
     node1.nodeValue = 'new data'
-    expect(node1.nodeValue).toBe('new data')
-    expect(node1.textContent).toBe('new data')
-    expect(node1.data).toBe('new data')
+    $$.deepEqual(node1.nodeValue, 'new data')
+    $$.deepEqual(node1.textContent, 'new data')
+    $$.deepEqual(node1.data, 'new data')
     node1.textContent = 'other data'
-    expect(node1.nodeValue).toBe('other data')
-    expect(node1.textContent).toBe('other data')
-    expect(node1.data).toBe('other data')
+    $$.deepEqual(node1.nodeValue, 'other data')
+    $$.deepEqual(node1.textContent, 'other data')
+    $$.deepEqual(node1.data, 'other data')
     node1.data = 'old data'
-    expect(node1.nodeValue).toBe('old data')
-    expect(node1.textContent).toBe('old data')
-    expect(node1.data).toBe('old data')
+    $$.deepEqual(node1.nodeValue, 'old data')
+    $$.deepEqual(node1.textContent, 'old data')
+    $$.deepEqual(node1.data, 'old data')
     // assign null
     node1.nodeValue = null
-    expect(node1.data).toBe('')
+    $$.deepEqual(node1.data, '')
     node1.data = 'data'
     node1.textContent = null
-    expect(node1.data).toBe('')
+    $$.deepEqual(node1.data, '')
     node1.data = 'data'
   })
 
-  test('length', () => {
-    expect(node1.length).toBe(4)
+  $$.test('length', () => {
+    $$.deepEqual(node1.length, 4)
   })
 
-  test('appendData', () => {
+  $$.test('appendData', () => {
     node1.appendData(' or data')
-    expect(node1.data).toBe('data or data')
+    $$.deepEqual(node1.data, 'data or data')
     node1.data = 'data'
   })
 
-  test('insertData', () => {
+  $$.test('insertData', () => {
     node1.insertData(2, 'da')
-    expect(node1.data).toBe('dadata')
+    $$.deepEqual(node1.data, 'dadata')
     node1.data = 'data'
   })
 
-  test('deleteData', () => {
+  $$.test('deleteData', () => {
     node1.data = 'a long night'
     node1.deleteData(2, 5)
-    expect(node1.data).toBe('a night')
-    expect(() => node1.deleteData(20, 1)).toThrow()
+    $$.deepEqual(node1.data, 'a night')
+    $$.throws(() => node1.deleteData(20, 1))
     node1.deleteData(1, 60)
-    expect(node1.data).toBe('a')
+    $$.deepEqual(node1.data, 'a')
     node1.data = 'data'
   })
 
-  test('deleteData updates live range', () => {
+  $$.test('deleteData updates live range', () => {
     const range = new $$.Range()
 
     node1.data = 'aaxxxaa'
     range.setStart(node1, 1)
     range.setEnd(node1, 4)
     node1.deleteData(2, 3)
-    expect(node1.data).toBe('aaaa')
-    expect(range.startOffset).toBe(1)
-    expect(range.endOffset).toBe(2)
+    $$.deepEqual(node1.data, 'aaaa')
+    $$.deepEqual(range.startOffset, 1)
+    $$.deepEqual(range.endOffset, 2)
 
     node1.data = 'aaxxxaa'
     range.setStart(node1, 3)
     range.setEnd(node1, 6)
     node1.deleteData(2, 3)
-    expect(node1.data).toBe('aaaa')
-    expect(range.startOffset).toBe(2)
-    expect(range.endOffset).toBe(3)
+    $$.deepEqual(node1.data, 'aaaa')
+    $$.deepEqual(range.startOffset, 2)
+    $$.deepEqual(range.endOffset, 3)
 
     node1.data = 'aaxxxaa'
     range.setStart(node1, 6)
     range.setEnd(node1, 7)
     node1.deleteData(2, 3)
-    expect(node1.data).toBe('aaaa')
-    expect(range.startOffset).toBe(3)
-    expect(range.endOffset).toBe(4)
+    $$.deepEqual(node1.data, 'aaaa')
+    $$.deepEqual(range.startOffset, 3)
+    $$.deepEqual(range.endOffset, 4)
 
     node1.data = 'data'
   })
 
-  test('replaceData', () => {
+  $$.test('replaceData', () => {
     node1.data = 'a long night'
     node1.replaceData(2, 4, 'starry')
-    expect(node1.data).toBe('a starry night')
+    $$.deepEqual(node1.data, 'a starry night')
     node1.data = 'data'
   })
 
-  test('substringData', () => {
+  $$.test('substringData', () => {
     node1.data = 'a long night'
-    expect(node1.substringData(2, 4)).toBe('long')
-    expect(() => node1.substringData(20, 4)).toThrow()
-    expect(node1.substringData(2, 40)).toBe('long night')
+    $$.deepEqual(node1.substringData(2, 4), 'long')
+    $$.throws(() => node1.substringData(20, 4))
+    $$.deepEqual(node1.substringData(2, 40), 'long night')
     node1.data = 'data'
   })
 
-  test('mutation observer', (done) => {
+  $$.test('mutation observer', () => {
     node1.data = 'a long night'
 
 		const callback = (mutations: MutationRecord[]) => {
-			try {
-        for (let mutation of mutations) {
-  				if (mutation.type === 'characterData') {
-	  				expect(mutation.target).toBe(node1)
-		  			expect([...mutation.addedNodes]).toEqual([])
-			  		expect([...mutation.removedNodes]).toEqual([])
-				  	expect(mutation.previousSibling).toBeNull()
-					  expect(mutation.nextSibling).toBeNull()
-					  expect(mutation.oldValue).toBe('a long night')
-					  done()
-				  }
+      for (let mutation of mutations) {
+        if (mutation.type === 'characterData') {
+          $$.deepEqual(mutation.target, node1)
+          $$.deepEqual([...mutation.addedNodes], [])
+          $$.deepEqual([...mutation.removedNodes], [])
+          $$.deepEqual(mutation.previousSibling, null)
+          $$.deepEqual(mutation.nextSibling, null)
+          $$.deepEqual(mutation.oldValue, 'a long night')
         }
-				done()
-			} catch (e) {
-				done(e)
-			}        
+			}
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node1, { characterData: true, characterDataOldValue: true })
     node1.deleteData(2, 5)
@@ -151,7 +145,7 @@ describe('CharacterData', () => {
     node1.data = 'data'
   })
 
-  test('mutation observer without setting', (done) => {
+  $$.test('mutation observer without setting', () => {
     node1.data = 'a long night'
 
     let fired = false
@@ -161,9 +155,8 @@ describe('CharacterData', () => {
           fired = true
         }
       }
-      done()
 		}
-    const observer = new $$.MutationObserver(callback)    
+    const observer = new $$.MutationObserver(callback)
 
 		observer.observe(node1, { characterData: true, characterDataOldValue: true })
     dom.setFeatures(false)
@@ -175,7 +168,7 @@ describe('CharacterData', () => {
 
     node1.data = 'data'
 
-    expect(fired).toBe(false)
+    $$.deepEqual(fired, false)
   })
 
 })

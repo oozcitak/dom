@@ -1,27 +1,27 @@
 import $$ from "../TestHelpers"
 
-describe('Slotable', () => {
+$$.suite('Slotable', () => {
 
-  test('null assignedSlot', () => {
+  $$.test('null assignedSlot', () => {
     const doc = $$.dom.createHTMLDocument('doc')
-    expect(doc.createElementNS('http://www.w3.org/1999/xhtml', 'div').assignedSlot).toBeNull()
+    $$.deepEqual(doc.createElementNS('http://www.w3.org/1999/xhtml', 'div').assignedSlot, null)
 
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     var shadowRoot = shadowHost.attachShadow({mode: 'open'})
     var childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
     shadowHost.appendChild(childElement)
-    expect(childElement.assignedSlot).toBeNull()
+    $$.deepEqual(childElement.assignedSlot, null)
     var childTextNode = doc.createTextNode('')
     shadowHost.appendChild(childTextNode)
-    expect(childTextNode.assignedSlot).toBeNull()
+    $$.deepEqual(childTextNode.assignedSlot, null)
     var slot = doc.createElementNS('http://www.w3.org/1999/xhtml', 'slot') as any
     slot._name = 'foo'
     shadowRoot.appendChild(slot)
-    expect(childElement.assignedSlot).toBeNull()
-    expect(childTextNode.assignedSlot).toBeNull()
+    $$.deepEqual(childElement.assignedSlot, null)
+    $$.deepEqual(childTextNode.assignedSlot, null)
   })
 
-  test('assignedSlot in open shadow tree', () => {
+  $$.test('assignedSlot in open shadow tree', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
@@ -35,11 +35,11 @@ describe('Slotable', () => {
     htmlSlot._assignedNodes = []
     shadowRoot.appendChild(slot)
 
-    expect(childElement.assignedSlot).toBe(slot)
-    expect(childTextNode.assignedSlot).toBe(slot)
+    $$.deepEqual(childElement.assignedSlot, slot)
+    $$.deepEqual(childTextNode.assignedSlot, slot)
   })
 
-  test('assignedSlot in open closed tree', () => {
+  $$.test('assignedSlot in open closed tree', () => {
     const doc = $$.dom.createHTMLDocument('doc')
     const shadowHost = doc.createElementNS('http://www.w3.org/1999/xhtml', 'div')
     const childElement = doc.createElementNS('http://www.w3.org/1999/xhtml', 'b')
@@ -53,8 +53,8 @@ describe('Slotable', () => {
     htmlSlot._assignedNodes = []
     shadowRoot.appendChild(slot)
 
-    expect(childElement.assignedSlot).toBe(null)
-    expect(childTextNode.assignedSlot).toBe(null)
+    $$.deepEqual(childElement.assignedSlot, null)
+    $$.deepEqual(childTextNode.assignedSlot, null)
   })
 
 })
