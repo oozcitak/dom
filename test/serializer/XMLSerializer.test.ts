@@ -1,19 +1,19 @@
 import $$ from "../TestHelpers"
 
-describe('XMLSerializer', () => {
+$$.suite('XMLSerializer', () => {
 
-  test('with namespace', () => {
+  $$.test('with namespace', () => {
     const doc = $$.dom.createDocument('ns', 'root')
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe('<root xmlns="ns"/>')
+    $$.deepEqual(serializer.serializeToString(doc), '<root xmlns="ns"/>')
   })
 
-  test('without namespace', () => {
+  $$.test('without namespace', () => {
     const doc = $$.dom.createDocument(null, 'root')
 
     const serializer = new $$.XMLSerializer()
-    expect(serializer.serializeToString(doc)).toBe('<root/>')
+    $$.deepEqual(serializer.serializeToString(doc), '<root/>')
   })
 
 })

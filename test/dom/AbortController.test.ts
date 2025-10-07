@@ -33,20 +33,17 @@ function doAmazingness(options: { signal: AbortSignal }) {
   })
 }
 
-describe('AbortController', () => {
+$$.suite('AbortController', () => {
 
-  test('abort()', (done) => {
+  $$.test('abort()', async () => {
     const controller = new $$.AbortController()
     const signal = controller.signal
 
-    expect(signal.aborted).toBe(false)
+    $$.deepEqual(signal.aborted, false)
 
-    doAmazingness({ signal }).then(
+     doAmazingness({ signal }).then(
       () => { throw new Error("Should have been aborted!") },
-      () => {
-        expect(signal.aborted).toBe(true)    
-        done() 
-      }
+      () => { $$.deepEqual(signal.aborted, true) }
     )
 
     controller.abort()

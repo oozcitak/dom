@@ -1,40 +1,40 @@
 import $$ from "../TestHelpers"
 
-describe('Node Constructors', () => {
+$$.suite('Node Constructors', () => {
 
   const doc = $$.window.document
 
-  test('Comment constructor()', () => {
+  $$.test('Comment constructor()', () => {
     const node = new $$.Comment()
-    expect(node.ownerDocument).toBe(doc)
-    expect(node.data).toBe('')
+    $$.deepEqual(node.ownerDocument, doc)
+    $$.deepEqual(node.data, '')
     const node2 = new $$.Comment('test')
-    expect(node2.ownerDocument).toBe(doc)
-    expect(node2.data).toBe('test')
+    $$.deepEqual(node2.ownerDocument, doc)
+    $$.deepEqual(node2.data, 'test')
   })
 
-  test('DocumentFragment constructor()', () => {
+  $$.test('DocumentFragment constructor()', () => {
     const node = new $$.DocumentFragment()
-    expect(node.ownerDocument).toBe(doc)
+    $$.deepEqual(node.ownerDocument, doc)
   })
 
-  test('Document constructor()', () => {
+  $$.test('Document constructor()', () => {
     const node = new $$.Document()
-    expect(node.ownerDocument).toBeNull()
+    $$.deepEqual(node.ownerDocument, null)
   })
 
-  test('Text constructor()', () => {
+  $$.test('Text constructor()', () => {
     const node = new $$.Text()
-    expect(node.ownerDocument).toBe(doc)
-    expect(node.data).toBe('')
+    $$.deepEqual(node.ownerDocument, doc)
+    $$.deepEqual(node.data, '')
     const node2 = new $$.Text('test')
-    expect(node2.ownerDocument).toBe(doc)
-    expect(node2.data).toBe('test')
+    $$.deepEqual(node2.ownerDocument, doc)
+    $$.deepEqual(node2.data, 'test')
   })
 
-  test('XMLDocument constructor()', () => {
+  $$.test('XMLDocument constructor()', () => {
     const node = new $$.XMLDocument()
-    expect(node.ownerDocument).toBeNull()
+    $$.deepEqual(node.ownerDocument, null)
   })
 
 })

@@ -24,23 +24,23 @@ export class NodeFilterImpl implements NodeFilter {
   static SHOW_DOCUMENT_FRAGMENT = 0x400
   static SHOW_NOTATION = 0x800
 
-  FILTER_ACCEPT!: number
-  FILTER_REJECT!: number
-  FILTER_SKIP!: number
+  FILTER_ACCEPT = 1
+  FILTER_REJECT = 2
+  FILTER_SKIP = 3
 
-  SHOW_ALL!: number
-  SHOW_ELEMENT!: number
-  SHOW_ATTRIBUTE!: number
-  SHOW_TEXT!: number
-  SHOW_CDATA_SECTION!: number
-  SHOW_ENTITY_REFERENCE!: number
-  SHOW_ENTITY!: number
-  SHOW_PROCESSING_INSTRUCTION!: number
-  SHOW_COMMENT!: number
-  SHOW_DOCUMENT!: number
-  SHOW_DOCUMENT_TYPE!: number
-  SHOW_DOCUMENT_FRAGMENT!: number
-  SHOW_NOTATION!: number
+  SHOW_ALL = 0xffffffff
+  SHOW_ELEMENT = 0x1
+  SHOW_ATTRIBUTE = 0x2
+  SHOW_TEXT = 0x4
+  SHOW_CDATA_SECTION = 0x8
+  SHOW_ENTITY_REFERENCE = 0x10
+  SHOW_ENTITY = 0x20
+  SHOW_PROCESSING_INSTRUCTION = 0x40
+  SHOW_COMMENT = 0x80
+  SHOW_DOCUMENT = 0x100
+  SHOW_DOCUMENT_TYPE = 0x200
+  SHOW_DOCUMENT_FRAGMENT = 0x400
+  SHOW_NOTATION = 0x800
 
   /**
    * Initializes a new instance of `NodeFilter`.
@@ -49,7 +49,7 @@ export class NodeFilterImpl implements NodeFilter {
 
   }
 
-  /** 
+  /**
    * Callback function.
    */
   acceptNode(node: Node): FilterResult {

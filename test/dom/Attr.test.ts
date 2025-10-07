@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('Attr', () => {
+$$.suite('Attr', () => {
 
   const doc = $$.dom.createDocument('mydefaultns', 'root')
 
@@ -15,74 +15,74 @@ describe('Attr', () => {
   if (attr === null)
     throw new Error("attr is null")
 
-  test('constructor()', () => {
-    expect(attr.nodeType).toBe(2)
-    expect(attr.nodeName).toBe('ns:name')
-    expect(attr.ownerElement).toBe(ele)
-    expect(attr.namespaceURI).toBe('http://www.w3.org/1999/xhtml')
-    expect(attr.prefix).toBe('ns')
-    expect(attr.localName).toBe('name')
-    expect(attr.value).toBe('value')
+  $$.test('constructor()', () => {
+    $$.deepEqual(attr.nodeType, 2)
+    $$.deepEqual(attr.nodeName, 'ns:name')
+    $$.deepEqual(attr.ownerElement, ele)
+    $$.deepEqual(attr.namespaceURI, 'http://www.w3.org/1999/xhtml')
+    $$.deepEqual(attr.prefix, 'ns')
+    $$.deepEqual(attr.localName, 'name')
+    $$.deepEqual(attr.value, 'value')
   })
 
-  test('value', () => {
-    expect(attr.value).toBe('value')
+  $$.test('value', () => {
+    $$.deepEqual(attr.value, 'value')
     attr.value = 'modified'
-    expect(attr.value).toBe('modified')
+    $$.deepEqual(attr.value, 'modified')
     attr.value = 'value'
   })
 
-  test('nodeValue', () => {
+  $$.test('nodeValue', () => {
     attr.nodeValue = 'modified'
-    expect(attr.nodeValue).toBe('modified')
+    $$.deepEqual(attr.nodeValue, 'modified')
     attr.nodeValue = 'value'
   })
 
-  test('textContent', () => {
+  $$.test('textContent', () => {
     attr.textContent = 'modified'
-    expect(attr.textContent).toBe('modified')
+    $$.deepEqual(attr.textContent, 'modified')
     attr.textContent = 'value'
   })
 
-  test('nodeValue with null', () => {
+  $$.test('nodeValue with null', () => {
     attr.nodeValue = null
-    expect(attr.nodeValue).toBe('')
+    $$.deepEqual(attr.nodeValue, '')
     attr.nodeValue = 'value'
   })
 
-  test('textContent with null', () => {
+  $$.test('textContent with null', () => {
     attr.textContent = null
-    expect(attr.textContent).toBe('')
+    $$.deepEqual(attr.textContent, '')
     attr.textContent = 'value'
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedAttr = attr.cloneNode() as any
-    expect(clonedAttr).not.toBe(attr)
-    expect(clonedAttr.nodeType).toBe(2)
-    expect(clonedAttr.nodeName).toBe('ns:name')
-    expect(clonedAttr.ownerElement).toBeNull()
-    expect(clonedAttr.namespaceURI).toBe('http://www.w3.org/1999/xhtml')
-    expect(clonedAttr.prefix).toBe('ns')
-    expect(clonedAttr.localName).toBe('name')
-    expect(clonedAttr.value).toBe('value')
+    $$.notDeepEqual(clonedAttr, attr)
+    $$.deepEqual(clonedAttr.nodeType, 2)
+    $$.deepEqual(clonedAttr.nodeName, 'ns:name')
+    $$.deepEqual(clonedAttr.ownerElement, null)
+    $$.deepEqual(clonedAttr.namespaceURI, 'http://www.w3.org/1999/xhtml')
+    $$.deepEqual(clonedAttr.prefix, 'ns')
+    $$.deepEqual(clonedAttr.localName, 'name')
+    $$.deepEqual(clonedAttr.value, 'value')
   })
 
-  test('lookupPrefix()', () => {
-    expect(attr.lookupPrefix('myns')).toBe('n')
-    expect(attr.lookupPrefix(null)).toBeNull()
+  $$.test('lookupPrefix()', () => {
+    $$.deepEqual(attr.lookupPrefix('myns'), 'n')
+    $$.deepEqual(attr.lookupPrefix(null), null)
     const cloned = attr.cloneNode() as any
-    expect(cloned.lookupPrefix('none')).toBeNull()
+    $$.deepEqual(cloned.lookupPrefix('none'), null)
   })
 
-  test('lookupNamespaceURI()', () => {
-    expect(attr.lookupNamespaceURI('n')).toBe('myns')
-    expect(attr.lookupNamespaceURI(null)).toBe('mydefaultns')
+  $$.test('lookupNamespaceURI()', () => {
+    $$.deepEqual(attr.lookupNamespaceURI('n'), 'myns')
+    $$.deepEqual(attr.lookupNamespaceURI(null), 'mydefaultns')
     const cloned = attr.cloneNode() as any
-    expect(cloned.lookupNamespaceURI('none')).toBeNull()
+    $$.deepEqual(cloned.lookupNamespaceURI('none'), null)
   })
 
-  test('isEqualNode()', () => {
+  $$.test('isEqualNode()', () => {
     const attr1 = doc.createAttributeNS('my ns', 'att')
     attr1.value = 'val'
     const attr2 = doc.createAttributeNS('my ns', 'att')
@@ -93,12 +93,12 @@ describe('Attr', () => {
     attr4.value = 'val'
     const attr5 = doc.createAttributeNS('my ns', 'att')
     attr5.value = 'other val'
-    expect(attr1.isEqualNode(attr2)).toBe(true)
-    expect(attr1.isEqualNode(attr3)).toBe(false)
-    expect(attr1.isEqualNode(attr4)).toBe(false)
-    expect(attr1.isEqualNode(attr5)).toBe(false)
-    expect(attr1.isEqualNode(null)).toBe(false)
-    expect(attr1.isEqualNode()).toBe(false)
+    $$.deepEqual(attr1.isEqualNode(attr2), true)
+    $$.deepEqual(attr1.isEqualNode(attr3), false)
+    $$.deepEqual(attr1.isEqualNode(attr4), false)
+    $$.deepEqual(attr1.isEqualNode(attr5), false)
+    $$.deepEqual(attr1.isEqualNode(null), false)
+    $$.deepEqual(attr1.isEqualNode(), false)
   })
 
 })

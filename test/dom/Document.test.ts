@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('Document', () => {
+$$.suite('Document', () => {
 
   const doctype = $$.dom.createDocumentType('qname', 'pubid', 'sysid')
   const doc = $$.dom.createDocument('myns', 'n:root', doctype)
@@ -34,8 +34,8 @@ describe('Document', () => {
   if (!htmlDoc.documentElement)
     throw new Error("documentElement is null")
 
-  test('constructor()', () => {
-    expect($$.printTree(doc)).toBe($$.t`
+  $$.test('constructor()', () => {
+    $$.deepEqual($$.printTree(doc), $$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       n:root (ns:myns)
         tagged id="tele1"
@@ -46,154 +46,154 @@ describe('Document', () => {
         shadow
           my-custom-element (ns:http://www.w3.org/1999/xhtml)
       `)
-    expect(doc.URL).toBe('about:blank')
-    expect(doc.documentURI).toBe('about:blank')
-    expect(doc.origin).toBe('null')
-    expect(doc.compatMode).toBe('CSS1Compat')
-    expect(doc.characterSet).toBe('UTF-8')
-    expect(doc.charset).toBe('UTF-8')
-    expect(doc.inputEncoding).toBe('UTF-8')
-    expect(doc.contentType).toBe('application/xml')
-    expect(doc.nodeType).toBe(9)
-    expect(doc.nodeName).toBe('#document')
-    expect(doc.doctype).toBe(doctype)
-    expect(doc.documentElement && doc.documentElement.tagName).toBe('n:root')
-    expect(() => doc.createElement('invalid name')).toThrow()
+    $$.deepEqual(doc.URL, 'about:blank')
+    $$.deepEqual(doc.documentURI, 'about:blank')
+    $$.deepEqual(doc.origin, 'null')
+    $$.deepEqual(doc.compatMode, 'CSS1Compat')
+    $$.deepEqual(doc.characterSet, 'UTF-8')
+    $$.deepEqual(doc.charset, 'UTF-8')
+    $$.deepEqual(doc.inputEncoding, 'UTF-8')
+    $$.deepEqual(doc.contentType, 'application/xml')
+    $$.deepEqual(doc.nodeType, 9)
+    $$.deepEqual(doc.nodeName, '#document')
+    $$.deepEqual(doc.doctype, doctype)
+    $$.deepEqual(doc.documentElement && doc.documentElement.tagName, 'n:root')
+    $$.throws(() => doc.createElement('invalid name'))
   })
 
-  test('doctype', () => {
-    expect(doc.doctype).toBe(doctype)
+  $$.test('doctype', () => {
+    $$.deepEqual(doc.doctype, doctype)
     const emptyDoc = $$.dom.createDocument(null, 'root')
-    expect(emptyDoc.doctype).toBe(null)
+    $$.deepEqual(emptyDoc.doctype, null)
   })
 
-  test('getElementById()', () => {
-    expect(doc.getElementById('uniq')).toBe(tele)
+  $$.test('getElementById()', () => {
+    $$.deepEqual(doc.getElementById('uniq'), tele)
   })
 
-  test('getElementsByTagName()', () => {
+  $$.test('getElementsByTagName()', () => {
     const list = doc.getElementsByTagName('tagged')
-    expect(list.length).toBe(2)
-    expect(list.item(0)).toBe(tele1)
-    expect(list.item(1)).toBe(tele2)
+    $$.deepEqual(list.length, 2)
+    $$.deepEqual(list.item(0), tele1)
+    $$.deepEqual(list.item(1), tele2)
     const listAll = doc.getElementsByTagName('*')
-    expect(listAll.length).toBe(7)
+    $$.deepEqual(listAll.length, 7)
   })
 
-  test('getElementsByTagNameNS()', () => {
+  $$.test('getElementsByTagNameNS()', () => {
     const list = doc.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'div')
-    expect(list.length).toBe(1)
-    expect(list.item(0)).toBe(nele1)
+    $$.deepEqual(list.length, 1)
+    $$.deepEqual(list.item(0), nele1)
   })
 
-  test('getElementsByClassName()', () => {
+  $$.test('getElementsByClassName()', () => {
     const list = doc.getElementsByClassName('para')
-    expect(list.length).toBe(1)
-    expect(list.item(0)).toBe(nele1)
+    $$.deepEqual(list.length, 1)
+    $$.deepEqual(list.item(0), nele1)
     const list2 = doc.getElementsByClassName('PaRa')
-    expect(list2.length).toBe(0)
+    $$.deepEqual(list2.length, 0)
     // class names are not case-sensitive in quirks mode
     const mode = doc._mode
     doc._mode = "quirks"
     const list3 = doc.getElementsByClassName('PaRa')
-    expect(list3.length).toBe(1)
-    expect(list3.item(0)).toBe(nele1)
+    $$.deepEqual(list3.length, 1)
+    $$.deepEqual(list3.item(0), nele1)
     doc._mode = mode
   })
 
-  test('createElement()', () => {
-    expect(() => { doc.createElement('invalid name') }).toThrow()
+  $$.test('createElement()', () => {
+    $$.throws(() => { doc.createElement('invalid name') })
     const ele = doc.createElement('tagged')
-    expect(ele.tagName).toBe('tagged')
+    $$.deepEqual(ele.tagName, 'tagged')
   })
 
-  test('createElementNS()', () => {
-    expect(() => { doc.createElementNS('http://www.w3.org/1999/xhtml', 'invalid name') }).toThrow()
+  $$.test('createElementNS()', () => {
+    $$.throws(() => { doc.createElementNS('http://www.w3.org/1999/xhtml', 'invalid name') })
     const ele = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div')
-    expect(ele.tagName).toBe('n:div')
-    expect(ele.namespaceURI).toBe('http://www.w3.org/1999/xhtml')
-    expect(ele.prefix).toBe('n')
-    expect(ele.localName).toBe('div')
-    expect(() => { doc.createElementNS(null, 'prefix:name') }).toThrow()
-    expect(() => { doc.createElementNS('some ns', 'xml:name') }).toThrow()
-    expect(() => { doc.createElementNS('some ns', 'xmlns:name') }).toThrow()
-    expect(() => { doc.createElementNS('some ns', 'xmlns') }).toThrow()
-    expect(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'some:name') }).toThrow()
-    expect(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'somename') }).toThrow()
+    $$.deepEqual(ele.tagName, 'n:div')
+    $$.deepEqual(ele.namespaceURI, 'http://www.w3.org/1999/xhtml')
+    $$.deepEqual(ele.prefix, 'n')
+    $$.deepEqual(ele.localName, 'div')
+    $$.throws(() => { doc.createElementNS(null, 'prefix:name') })
+    $$.throws(() => { doc.createElementNS('some ns', 'xml:name') })
+    $$.throws(() => { doc.createElementNS('some ns', 'xmlns:name') })
+    $$.throws(() => { doc.createElementNS('some ns', 'xmlns') })
+    $$.throws(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'some:name') })
+    $$.throws(() => { doc.createElementNS('http://www.w3.org/2000/xmlns/', 'somename') })
     // is value
     const ele2 = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div', {is: 'my-div'})
-    expect(ele2._is).toBe('my-div')
+    $$.deepEqual(ele2._is, 'my-div')
     const ele3 = doc.createElementNS('http://www.w3.org/1999/xhtml', 'n:div', 'my-div')
-    expect(ele3._is).toBe('my-div')
+    $$.deepEqual(ele3._is, 'my-div')
   })
 
-  test('createDocumentFragment()', () => {
+  $$.test('createDocumentFragment()', () => {
     const ele = doc.createDocumentFragment()
-    expect(ele.nodeType).toBe(11)
-    expect(ele.nodeName).toBe('#document-fragment')
+    $$.deepEqual(ele.nodeType, 11)
+    $$.deepEqual(ele.nodeName, '#document-fragment')
   })
 
-  test('createTextNode()', () => {
+  $$.test('createTextNode()', () => {
     const ele = doc.createTextNode('contents')
-    expect(ele.nodeType).toBe(3)
-    expect(ele.nodeName).toBe('#text')
-    expect(ele.data).toBe('contents')
+    $$.deepEqual(ele.nodeType, 3)
+    $$.deepEqual(ele.nodeName, '#text')
+    $$.deepEqual(ele.data, 'contents')
   })
 
-  test('createCDATASection()', () => {
-    expect(() => { doc.createCDATASection(']]>') }).toThrow()
+  $$.test('createCDATASection()', () => {
+    $$.throws(() => { doc.createCDATASection(']]>') })
     const ele = doc.createCDATASection('contents')
-    expect(ele.nodeType).toBe(4)
-    expect(ele.nodeName).toBe('#cdata-section')
-    expect(ele.data).toBe('contents')
-    expect(() => htmlDoc.createCDATASection('data')).toThrow()
+    $$.deepEqual(ele.nodeType, 4)
+    $$.deepEqual(ele.nodeName, '#cdata-section')
+    $$.deepEqual(ele.data, 'contents')
+    $$.throws(() => htmlDoc.createCDATASection('data'))
   })
 
-  test('createComment()', () => {
+  $$.test('createComment()', () => {
     const ele = doc.createComment('contents')
-    expect(ele.nodeType).toBe(8)
-    expect(ele.nodeName).toBe('#comment')
-    expect(ele.data).toBe('contents')
+    $$.deepEqual(ele.nodeType, 8)
+    $$.deepEqual(ele.nodeName, '#comment')
+    $$.deepEqual(ele.data, 'contents')
   })
 
-  test('createProcessingInstruction()', () => {
-    expect(() => { doc.createProcessingInstruction('invalid target', 'contents') }).toThrow()
-    expect(() => { doc.createProcessingInstruction('target', '?>') }).toThrow()
+  $$.test('createProcessingInstruction()', () => {
+    $$.throws(() => { doc.createProcessingInstruction('invalid target', 'contents') })
+    $$.throws(() => { doc.createProcessingInstruction('target', '?>') })
     const ele = doc.createProcessingInstruction('target', 'contents')
-    expect(ele.nodeType).toBe(7)
-    expect(ele.nodeName).toBe('target')
-    expect(ele.data).toBe('contents')
+    $$.deepEqual(ele.nodeType, 7)
+    $$.deepEqual(ele.nodeName, 'target')
+    $$.deepEqual(ele.data, 'contents')
   })
 
-  test('createAttribute()', () => {
-    expect(() => { doc.createAttribute('invalid name') }).toThrow()
+  $$.test('createAttribute()', () => {
+    $$.throws(() => { doc.createAttribute('invalid name') })
     const ele = doc.createAttribute('attr')
-    expect(ele.name).toBe('attr')
+    $$.deepEqual(ele.name, 'attr')
     const att1 = htmlDoc.createAttribute('ATTR')
-    expect(att1.name).toBe('attr')
+    $$.deepEqual(att1.name, 'attr')
   })
 
-  test('createAttributeNS()', () => {
-    expect(() => { doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'invalid name') }).toThrow()
+  $$.test('createAttributeNS()', () => {
+    $$.throws(() => { doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'invalid name') })
     const ele = doc.createAttributeNS('http://www.w3.org/1999/xhtml', 'n:div')
-    expect(ele.name).toBe('n:div')
-    expect(ele.namespaceURI).toBe('http://www.w3.org/1999/xhtml')
-    expect(ele.prefix).toBe('n')
-    expect(ele.localName).toBe('div')
+    $$.deepEqual(ele.name, 'n:div')
+    $$.deepEqual(ele.namespaceURI, 'http://www.w3.org/1999/xhtml')
+    $$.deepEqual(ele.prefix, 'n')
+    $$.deepEqual(ele.localName, 'div')
   })
 
-  test('importNode()', () => {
+  $$.test('importNode()', () => {
     const ele1 = doc.createElement('tagged')
     ele1.setAttribute('att', 'val')
     const ele2 = doc.importNode(ele1)
-    expect(ele1).not.toBe(ele2)
-    expect(ele1.nodeType).toBe(ele2.nodeType)
-    expect(ele1.nodeName).toBe(ele2.nodeName)
-    expect(() => doc.importNode($$.dom.createDocument('myns', 'root'))).toThrow()
-    expect(() => doc.importNode(shadow)).toThrow()
+    $$.notStrictEqual(ele1, ele2)
+    $$.deepEqual(ele1.nodeType, ele2.nodeType)
+    $$.deepEqual(ele1.nodeName, ele2.nodeName)
+    $$.throws(() => doc.importNode($$.dom.createDocument('myns', 'root')))
+    $$.throws(() => doc.importNode(shadow))
   })
 
-  test('adoptNode()', () => {
+  $$.test('adoptNode()', () => {
     const otherDoc = $$.dom.createDocument('myns', 'otherroot')
     const otherEle = otherDoc.createElement('othernode')
     otherEle.setAttribute('att', 'val')
@@ -202,74 +202,74 @@ describe('Document', () => {
     if (otherDoc.documentElement) {
       otherDoc.documentElement.appendChild(otherEle)
       otherEle.appendChild(anotherEle)
-      expect(otherDoc.documentElement.firstChild).toBe(otherEle)
+      $$.deepEqual(otherDoc.documentElement.firstChild, otherEle)
     }
 
     doc.adoptNode(otherEle)
-    expect(otherEle.ownerDocument).toBe(doc)
-    expect(otherEle.attributes[0].ownerDocument).toBe(doc)
-    expect(anotherEle.ownerDocument).toBe(doc)
+    $$.deepEqual(otherEle.ownerDocument, doc)
+    $$.deepEqual(otherEle.attributes[0].ownerDocument, doc)
+    $$.deepEqual(anotherEle.ownerDocument, doc)
     if (otherDoc.documentElement) {
-      expect(otherDoc.documentElement.firstChild).toBeNull()
+      $$.deepEqual(otherDoc.documentElement.firstChild, null)
     }
 
-    expect(() => doc.adoptNode($$.dom.createDocument('myns', 'root'))).toThrow()
-    expect(() => doc.adoptNode(shadow)).toThrow()
+    $$.throws(() => doc.adoptNode($$.dom.createDocument('myns', 'root')))
+    $$.throws(() => doc.adoptNode(shadow))
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedDoc = <any>doc.cloneNode()
-    expect(clonedDoc).not.toBe(doc)
-    expect(clonedDoc.URL).toBe('about:blank')
-    expect(clonedDoc.documentURI).toBe('about:blank')
-    expect(clonedDoc.origin).toBe('null')
-    expect(clonedDoc.compatMode).toBe('CSS1Compat')
-    expect(clonedDoc.characterSet).toBe('UTF-8')
-    expect(clonedDoc.charset).toBe('UTF-8')
-    expect(clonedDoc.inputEncoding).toBe('UTF-8')
-    expect(clonedDoc.contentType).toBe('application/xml')
-    expect(clonedDoc.nodeType).toBe(9)
-    expect(clonedDoc.nodeName).toBe('#document')
-    expect(clonedDoc.doctype).toBeNull()
-    expect(clonedDoc.documentElement).toBeNull()
+    $$.notDeepEqual(clonedDoc, doc)
+    $$.deepEqual(clonedDoc.URL, 'about:blank')
+    $$.deepEqual(clonedDoc.documentURI, 'about:blank')
+    $$.deepEqual(clonedDoc.origin, 'null')
+    $$.deepEqual(clonedDoc.compatMode, 'CSS1Compat')
+    $$.deepEqual(clonedDoc.characterSet, 'UTF-8')
+    $$.deepEqual(clonedDoc.charset, 'UTF-8')
+    $$.deepEqual(clonedDoc.inputEncoding, 'UTF-8')
+    $$.deepEqual(clonedDoc.contentType, 'application/xml')
+    $$.deepEqual(clonedDoc.nodeType, 9)
+    $$.deepEqual(clonedDoc.nodeName, '#document')
+    $$.deepEqual(clonedDoc.doctype, null)
+    $$.deepEqual(clonedDoc.documentElement, null)
   })
 
-  test('cloneNode(deep: true)', () => {
+  $$.test('cloneNode(deep: true)', () => {
     const clonedDoc = <any>doc.cloneNode(true)
-    expect(clonedDoc).not.toBe(doc)
-    expect(clonedDoc.URL).toBe('about:blank')
-    expect(clonedDoc.documentURI).toBe('about:blank')
-    expect(clonedDoc.origin).toBe('null')
-    expect(clonedDoc.compatMode).toBe('CSS1Compat')
-    expect(clonedDoc.characterSet).toBe('UTF-8')
-    expect(clonedDoc.charset).toBe('UTF-8')
-    expect(clonedDoc.inputEncoding).toBe('UTF-8')
-    expect(clonedDoc.contentType).toBe('application/xml')
-    expect(clonedDoc.nodeType).toBe(9)
-    expect(clonedDoc.nodeName).toBe('#document')
-    expect(clonedDoc.doctype.name).toBe('qname')
-    expect(clonedDoc.documentElement.tagName).toBe('n:root')
+    $$.notDeepEqual(clonedDoc, doc)
+    $$.deepEqual(clonedDoc.URL, 'about:blank')
+    $$.deepEqual(clonedDoc.documentURI, 'about:blank')
+    $$.deepEqual(clonedDoc.origin, 'null')
+    $$.deepEqual(clonedDoc.compatMode, 'CSS1Compat')
+    $$.deepEqual(clonedDoc.characterSet, 'UTF-8')
+    $$.deepEqual(clonedDoc.charset, 'UTF-8')
+    $$.deepEqual(clonedDoc.inputEncoding, 'UTF-8')
+    $$.deepEqual(clonedDoc.contentType, 'application/xml')
+    $$.deepEqual(clonedDoc.nodeType, 9)
+    $$.deepEqual(clonedDoc.nodeName, '#document')
+    $$.deepEqual(clonedDoc.doctype.name, 'qname')
+    $$.deepEqual(clonedDoc.documentElement.tagName, 'n:root')
   })
 
-  test('lookupPrefix()', () => {
-    expect(doc.lookupPrefix('myns')).toBe('n')
-    expect(doc.lookupPrefix(null)).toBeNull()
+  $$.test('lookupPrefix()', () => {
+    $$.deepEqual(doc.lookupPrefix('myns'), 'n')
+    $$.deepEqual(doc.lookupPrefix(null), null)
     const emptyDoc = $$.dom.createDocument(null, '')
-    expect(emptyDoc.lookupPrefix('myns')).toBeNull()
+    $$.deepEqual(emptyDoc.lookupPrefix('myns'), null)
   })
 
-  test('lookupNamespaceURI()', () => {
-    expect(doc.lookupNamespaceURI('n')).toBe('myns')
-    expect(doc.lookupNamespaceURI(null)).toBeNull()
+  $$.test('lookupNamespaceURI()', () => {
+    $$.deepEqual(doc.lookupNamespaceURI('n'), 'myns')
+    $$.deepEqual(doc.lookupNamespaceURI(null), null)
     const emptyDoc = $$.dom.createDocument(null, '')
-    expect(emptyDoc.lookupNamespaceURI(null)).toBeNull()
+    $$.deepEqual(emptyDoc.lookupNamespaceURI(null), null)
   })
 
-  test('Unsupported Methods', () => {
-    expect(() => { doc.createEvent('mouseevent') }).toThrow()
+  $$.test('Unsupported Methods', () => {
+    $$.throws(() => { doc.createEvent('mouseevent') })
   })
 
-  test('createNodeIterator()', () => {
+  $$.test('createNodeIterator()', () => {
     const ele = doc.getElementById('tele1')
     if (!ele)
       throw new Error("element is null")
@@ -281,27 +281,27 @@ describe('Document', () => {
       str += ':' + node.nodeName
       node = iter.nextNode()
     }
-    expect(str).toBe(':tagged:node_with_id:tagged:div:#text:shadow:my-custom-element')
+    $$.deepEqual(str, ':tagged:node_with_id:tagged:div:#text:shadow:my-custom-element')
   })
 
-  test('implementation', () => {
+  $$.test('implementation', () => {
     const impl = doc.implementation
-    expect(impl.createDocument).not.toBeUndefined()
+    $$.notDeepEqual(impl.createDocument, undefined)
   })
 
-  test('quirks mode', () => {
+  $$.test('quirks mode', () => {
     const docImpl = doc as any
     docImpl._mode = "quirks"
-    expect(doc.compatMode).toBe('BackCompat')
+    $$.deepEqual(doc.compatMode, 'BackCompat')
   })
 
-  test('createElement - HTML', () => {
+  $$.test('createElement - HTML', () => {
     const ele = htmlDoc.createElement('H1')
-    expect(ele.localName).toBe('h1')
+    $$.deepEqual(ele.localName, 'h1')
     const customEle1 = htmlDoc.createElement('BUTTON', 'custom-button')
-    expect(customEle1.localName).toBe('button')
+    $$.deepEqual(customEle1.localName, 'button')
     const customEle2 = htmlDoc.createElement('BUTTON', { is: 'custom-button' })
-    expect(customEle2.localName).toBe('button')
+    $$.deepEqual(customEle2.localName, 'button')
   })
 
 })

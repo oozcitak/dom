@@ -1,7 +1,7 @@
 import $$ from "../TestHelpers"
 import { traversal_filter } from "../../src/algorithm"
 
-describe('Traverse', () => {
+$$.suite('Traverse', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -27,7 +27,7 @@ describe('Traverse', () => {
   const child32 = doc.createElement('child3_2')
   node3.appendChild(child32)
 
-  expect($$.printTree(doc)).toBe($$.t`
+  $$.deepEqual($$.printTree(doc), $$.t`
     root
       node1
         child1
@@ -42,20 +42,20 @@ describe('Traverse', () => {
         child3_2
     `)
 
-  test('filterNode()', () => {
+  $$.test('filterNode()', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
       node.nodeName.endsWith('1') ? $$.FilterResult.Accept : $$.FilterResult.Reject
     )
 
-    expect(traversal_filter(iter as any, node1 as any)).toBe($$.FilterResult.Accept)
+    $$.deepEqual(traversal_filter(iter as any, node1 as any), $$.FilterResult.Accept)
   })
 
-  test('filterNode() recursion check', () => {
+  $$.test('filterNode() recursion check', () => {
     const iter = doc.createTreeWalker(node1, $$.WhatToShow.Element, (node) =>
     traversal_filter(iter as any, node1 as any)
     )
 
-    expect(() => traversal_filter(iter as any, node1 as any)).toThrow()
+    $$.throws(() => traversal_filter(iter as any, node1 as any))
   })
 
 })

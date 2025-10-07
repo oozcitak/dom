@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('NonDocumentTypeChildNode', () => {
+$$.suite('NonDocumentTypeChildNode', () => {
 
   const doc = $$.dom.createDocument('myns', 'n:root')
 
@@ -18,15 +18,15 @@ describe('NonDocumentTypeChildNode', () => {
   de.appendChild(child3)
   de.appendChild(child4)
 
-  test('previousElementSibling', () => {
-    expect(child4.previousElementSibling).toBe(child3)
-    expect(child3.previousElementSibling).toBe(child1)
-    expect(child1.previousElementSibling).toBeNull()
+  $$.test('previousElementSibling', () => {
+    $$.deepEqual(child4.previousElementSibling, child3)
+    $$.deepEqual(child3.previousElementSibling, child1)
+    $$.deepEqual(child1.previousElementSibling, null)
   })
 
-  test('nextElementSibling', () => {
-    expect(child1.nextElementSibling).toBe(child3)
-    expect(child3.nextElementSibling).toBeNull()
+  $$.test('nextElementSibling', () => {
+    $$.deepEqual(child1.nextElementSibling, child3)
+    $$.deepEqual(child3.nextElementSibling, null)
   })
 
 })

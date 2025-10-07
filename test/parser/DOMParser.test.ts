@@ -1,17 +1,17 @@
 import $$ from "../TestHelpers"
 
-describe('DOMParser', () => {
+$$.suite('DOMParser', () => {
 
-  test('HTML parser not yet supported', () => {
+  $$.test('HTML parser not yet supported', () => {
     const parser = new $$.DOMParser()
-    expect(() => parser.parseFromString('', "text/html")).toThrow()
+    $$.throws(() => parser.parseFromString('', "text/html"))
   })
 
-  test('XML parser', () => {
+  $$.test('XML parser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString('<root/>', "application/xml")
-    
-    expect($$.printTree(doc)).toBe($$.t`
+
+    $$.deepEqual($$.printTree(doc), $$.t`
       root
       `)
   })

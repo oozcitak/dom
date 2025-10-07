@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('DOMTokenList', () => {
+$$.suite('DOMTokenList', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -15,103 +15,103 @@ describe('DOMTokenList', () => {
   doc.documentElement.appendChild(ele2)
   const list2 = ele2.classList
 
-  test('length', () => {
-    expect(list.length).toBe(3)
-  })
-    
-  test('item()', () => {
-    expect(list.item(0)).toBe('one')
-    expect(list.item(1)).toBe('two')
-    expect(list.item(2)).toBe('three')
-    expect(list.item(-1)).toBe(null)
-    expect(list.item(1001)).toBe(null)
+  $$.test('length', () => {
+    $$.deepEqual(list.length, 3)
   })
 
-  test('contains()', () => {
-    expect(list.contains('one')).toBe(true)
-    expect(list.contains('two')).toBe(true)
-    expect(list.contains('three')).toBe(true)
-    expect(list.contains('none')).toBe(false)
+  $$.test('item()', () => {
+    $$.deepEqual(list.item(0), 'one')
+    $$.deepEqual(list.item(1), 'two')
+    $$.deepEqual(list.item(2), 'three')
+    $$.deepEqual(list.item(-1), null)
+    $$.deepEqual(list.item(1001), null)
   })
 
-  test('add()', () => {
+  $$.test('contains()', () => {
+    $$.deepEqual(list.contains('one'), true)
+    $$.deepEqual(list.contains('two'), true)
+    $$.deepEqual(list.contains('three'), true)
+    $$.deepEqual(list.contains('none'), false)
+  })
+
+  $$.test('add()', () => {
     list.add('four', 'five')
-    expect(list.length).toBe(5)
-    expect(() => list.add('')).toThrow()
-    expect(() => list.add('one two')).toThrow()
+    $$.deepEqual(list.length, 5)
+    $$.throws(() => list.add(''))
+    $$.throws(() => list.add('one two'))
   })
 
-  test('remove()', () => {
+  $$.test('remove()', () => {
     list.remove('four', 'five')
-    expect(list.length).toBe(3)
-    expect(() => list.remove('')).toThrow()
-    expect(() => list.remove(' ')).toThrow()
+    $$.deepEqual(list.length, 3)
+    $$.throws(() => list.remove(''))
+    $$.throws(() => list.remove(' '))
   })
 
-  test('toggle()', () => {
-    expect(list.toggle('one')).toBe(false)
-    expect(list.toggle('one')).toBe(true)
-    expect(list.toggle('one', false)).toBe(false)
-    expect(list.length).toBe(2)
-    expect(list.toggle('one', false)).toBe(false)
-    expect(list.length).toBe(2)
-    expect(list.toggle('one', true)).toBe(true)
-    expect(list.length).toBe(3)
-    expect(list.toggle('one', true)).toBe(true)
-    expect(list.length).toBe(3)
-    expect(() => list.toggle('')).toThrow()
-    expect(() => list.toggle('one two')).toThrow()
+  $$.test('toggle()', () => {
+    $$.deepEqual(list.toggle('one'), false)
+    $$.deepEqual(list.toggle('one'), true)
+    $$.deepEqual(list.toggle('one', false), false)
+    $$.deepEqual(list.length, 2)
+    $$.deepEqual(list.toggle('one', false), false)
+    $$.deepEqual(list.length, 2)
+    $$.deepEqual(list.toggle('one', true), true)
+    $$.deepEqual(list.length, 3)
+    $$.deepEqual(list.toggle('one', true), true)
+    $$.deepEqual(list.length, 3)
+    $$.throws(() => list.toggle(''))
+    $$.throws(() => list.toggle('one two'))
   })
 
-  test('replace()', () => {
-    expect(() => list.replace('', '1')).toThrow()
-    expect(() => list.replace('one', '')).toThrow()
-    expect(() => list.replace(' ', '1')).toThrow()
-    expect(() => list.replace('one', ' ')).toThrow()
-    expect(list.replace('one', '1')).toBe(true)
-    expect(list.replace('one', '1')).toBe(false)
-    expect(list.length).toBe(3)
+  $$.test('replace()', () => {
+    $$.throws(() => list.replace('', '1'))
+    $$.throws(() => list.replace('one', ''))
+    $$.throws(() => list.replace(' ', '1'))
+    $$.throws(() => list.replace('one', ' '))
+    $$.deepEqual(list.replace('one', '1'), true)
+    $$.deepEqual(list.replace('one', '1'), false)
+    $$.deepEqual(list.length, 3)
   })
 
-  test('supports()', () => {
-    expect(() => list.supports('feature')).toThrow()
+  $$.test('supports()', () => {
+    $$.throws(() => list.supports('feature'))
   })
 
-  test('value', () => {
+  $$.test('value', () => {
     list.value = 'four five six seven'
-    expect(list.length).toBe(4)
+    $$.deepEqual(list.length, 4)
     list.add('eight')
-    expect(list.value).toBe('four five six seven eight')
-    expect(list.length).toBe(5)
+    $$.deepEqual(list.value, 'four five six seven eight')
+    $$.deepEqual(list.length, 5)
   })
 
-  test('iteration', () => {
+  $$.test('iteration', () => {
     list.value = 'one two three'
     let names = ''
     for (const name of list) {
       names += '_' + name
     }
-    expect(names).toBe('_one_two_three')
+    $$.deepEqual(names, '_one_two_three')
   })
 
-  test('empty token list', () => {
+  $$.test('empty token list', () => {
     list2.value = ''
-    expect(list2.length).toBe(0)
+    $$.deepEqual(list2.length, 0)
   })
 
-  test('change attribute', () => {
+  $$.test('change attribute', () => {
     ele.setAttribute('class', 'four five six seven')
     let names = ''
     for (const name of list) {
       names += '_' + name
     }
-    expect(names).toBe('_four_five_six_seven')
+    $$.deepEqual(names, '_four_five_six_seven')
     ele.setAttribute('x', 'four five six seven')
     names = ''
     for (const name of list) {
       names += '_' + name
     }
-    expect(names).toBe('_four_five_six_seven')
+    $$.deepEqual(names, '_four_five_six_seven')
   })
 
 })

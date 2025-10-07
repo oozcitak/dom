@@ -5,12 +5,12 @@ os:
   - "osx"
 
 node_js:
-  - "8"
-  - "10"
-  - "12"
+  - "20"
+  - "22"
+  - "24"
   - "node"
 
-script: 
+script:
   - npm test
-after_success: 
-  - bash <(curl -s https://codecov.io/bash)  
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('Comment', () => {
+$$.suite('Comment', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,27 +10,27 @@ describe('Comment', () => {
   const node = doc.createComment('data')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', () => {
-    expect(node.nodeType).toBe(8)
-    expect(node.nodeName).toBe('#comment')
-    expect(node.data).toBe('data')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node.nodeType, 8)
+    $$.deepEqual(node.nodeName, '#comment')
+    $$.deepEqual(node.data, 'data')
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(8)
-    expect(clonedNode.nodeName).toBe('#comment')
-    expect(clonedNode.data).toBe('data')
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 8)
+    $$.deepEqual(clonedNode.nodeName, '#comment')
+    $$.deepEqual(clonedNode.data, 'data')
   })
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const node1 = $$.Comment._create(doc as any, 'data')
-    expect(node1.nodeType).toBe(8)
-    expect(node1.nodeName).toBe('#comment')
-    expect(node1.data).toBe('data')
+    $$.deepEqual(node1.nodeType, 8)
+    $$.deepEqual(node1.nodeName, '#comment')
+    $$.deepEqual(node1.data, 'data')
     const node2 = $$.Comment._create(doc as any)
-    expect(node2.data).toBe('')
+    $$.deepEqual(node2.data, '')
   })
 
 })

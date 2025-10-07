@@ -9,14 +9,14 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
  */
 export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
-  _nodeType!: NodeType
-  _children: Set<Node> = new Set<Node>()
+  _nodeType = NodeType.DocumentFragment
+  _children = new Set<Node>()
 
   _host: Element | null
 
   /**
    * Initializes a new instance of `DocumentFragment`.
-   * 
+   *
    * @param host - shadow root's host element
    */
   public constructor(host: Element | null = null) {
@@ -49,7 +49,7 @@ export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
   /**
    * Creates a new `DocumentFragment`.
-   * 
+   *
    * @param document - owner document
    * @param host - shadow root's host element
    */

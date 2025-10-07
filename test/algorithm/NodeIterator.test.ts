@@ -1,7 +1,7 @@
 import $$ from "../TestHelpers"
 import { nodeIterator_traverse } from "../../src/algorithm"
 
-describe('NodeIterator', () => {
+$$.suite('NodeIterator', () => {
 
   const doc = $$.dom.createDocument(null, 'root')
   const root = doc.documentElement
@@ -27,7 +27,7 @@ describe('NodeIterator', () => {
   const child32 = doc.createElement('child3_2')
   node3.appendChild(child32)
 
-  expect($$.printTree(doc)).toBe($$.t`
+  $$.deepEqual($$.printTree(doc), $$.t`
     root
       node1
         child1
@@ -42,25 +42,25 @@ describe('NodeIterator', () => {
         child3_2
     `)
 
-  test('traverse() forward', () => {
+  $$.test('traverse() forward', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
     iter.nextNode() // skip root
     const node = nodeIterator_traverse(iter as any, true)
 
-    expect(node).toBe(node1)
-    expect(iter.referenceNode).toBe(node1)
-    expect(iter.pointerBeforeReferenceNode).toBe(false)
+    $$.deepEqual(node, node1)
+    $$.deepEqual(iter.referenceNode, node1)
+    $$.deepEqual(iter.pointerBeforeReferenceNode, false)
   })
 
-  test('traverse() backward', () => {
+  $$.test('traverse() backward', () => {
     const iter = doc.createNodeIterator(root, $$.WhatToShow.Element)
 
     const node = nodeIterator_traverse(iter as any, false)
 
-    expect(node).toBeNull()
-    expect(iter.referenceNode).toBe(root)
-    expect(iter.pointerBeforeReferenceNode).toBe(true)
+    $$.deepEqual(node, null)
+    $$.deepEqual(iter.referenceNode, root)
+    $$.deepEqual(iter.pointerBeforeReferenceNode, true)
   })
 
 })

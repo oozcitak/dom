@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('ProcessingInstruction', () => {
+$$.suite('ProcessingInstruction', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -10,33 +10,33 @@ describe('ProcessingInstruction', () => {
   const node = doc.createProcessingInstruction('program', 'instruction')
   doc.documentElement.appendChild(node)
 
-  test('constructor()', () => {
-    expect(node.nodeType).toBe(7)
-    expect(node.nodeName).toBe('program')
-    expect(node.target).toBe('program')
-    expect(node.data).toBe('instruction')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node.nodeType, 7)
+    $$.deepEqual(node.nodeName, 'program')
+    $$.deepEqual(node.target, 'program')
+    $$.deepEqual(node.data, 'instruction')
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedNode = <any>node.cloneNode()
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(7)
-    expect(clonedNode.nodeName).toBe('program')
-    expect(clonedNode.target).toBe('program')
-    expect(clonedNode.data).toBe('instruction')
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 7)
+    $$.deepEqual(clonedNode.nodeName, 'program')
+    $$.deepEqual(clonedNode.target, 'program')
+    $$.deepEqual(clonedNode.data, 'instruction')
   })
 
-  test('isEqualNode()', () => {
+  $$.test('isEqualNode()', () => {
     const node2 = doc.createProcessingInstruction('program', 'instruction')
-    expect(node.isEqualNode(node2)).toBe(true)
-    expect(node.isEqualNode()).toBe(false)
+    $$.deepEqual(node.isEqualNode(node2), true)
+    $$.deepEqual(node.isEqualNode(), false)
   })
 
-  test('_create()', () => {
+  $$.test('_create()', () => {
     const node1 = $$.ProcessingInstruction._create(doc as any, 'target', 'data')
-    expect(node1.nodeType).toBe(7)
-    expect(node1.nodeName).toBe('target')
-    expect(node1.data).toBe('data')
+    $$.deepEqual(node1.nodeType, 7)
+    $$.deepEqual(node1.nodeName, 'target')
+    $$.deepEqual(node1.data, 'data')
   })
 
 })

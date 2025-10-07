@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('ParentNode', () => {
+$$.suite('ParentNode', () => {
 
   const doc = $$.dom.createDocument('myns', 'n:root')
 
@@ -20,43 +20,43 @@ describe('ParentNode', () => {
   de.appendChild(child4)
   de.appendChild(child5)
 
-  test('children', () => {
-    expect(de.children.length).toBe(2)
-    expect(de.children[0]).toBe(child2)
-    expect(de.children[1]).toBe(child4)
+  $$.test('children', () => {
+    $$.deepEqual(de.children.length, 2)
+    $$.deepEqual(de.children[0], child2)
+    $$.deepEqual(de.children[1], child4)
   })
 
-  test('firstElementChild', () => {
-    expect(de.firstElementChild).toBe(child2)
-    expect(child2.firstElementChild).toBeNull()
+  $$.test('firstElementChild', () => {
+    $$.deepEqual(de.firstElementChild, child2)
+    $$.deepEqual(child2.firstElementChild, null)
   })
 
-  test('lastElementChild', () => {
-    expect(de.lastElementChild).toBe(child4)
-    expect(child2.lastElementChild).toBeNull()
+  $$.test('lastElementChild', () => {
+    $$.deepEqual(de.lastElementChild, child4)
+    $$.deepEqual(child2.lastElementChild, null)
   })
 
-  test('childElementCount', () => {
-    expect(de.childElementCount).toBe(2)
+  $$.test('childElementCount', () => {
+    $$.deepEqual(de.childElementCount, 2)
   })
 
-  test('prepend() with element node', () => {
+  $$.test('prepend() with element node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
 
     if (!doc.documentElement)
       throw new Error("documentElement is null")
-  
+
     const de = doc.documentElement
     de.appendChild(doc.createTextNode('txt'))
     de.appendChild(doc.createElement('ele'))
-      
-    de.prepend(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    de.prepend(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         node1
         # text1
@@ -68,20 +68,20 @@ describe('ParentNode', () => {
       `)
   })
 
-  test('prepend() with document fragment node', () => {
+  $$.test('prepend() with document fragment node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     const frag = doc.createDocumentFragment()
-  
+
     frag.appendChild(doc.createTextNode('txt'))
     frag.appendChild(doc.createElement('ele'))
-      
-    frag.prepend(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    frag.prepend(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
-    expect($$.printTree(frag)).toBe($$.t`
+    $$.deepEqual($$.printTree(frag), $$.t`
       node1
       # text1
       # text2
@@ -92,34 +92,34 @@ describe('ParentNode', () => {
       `)
   })
 
-  test('prepend() with document node', () => {
+  $$.test('prepend() with document node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
-     
+
     doc.prepend(doc.createComment('comment1'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       ! comment1
       n:root (ns:myns)
       `)
   })
 
-  test('append() with element node', () => {
+  $$.test('append() with element node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
 
     if (!doc.documentElement)
       throw new Error("documentElement is null")
-  
+
     const de = doc.documentElement
     de.appendChild(doc.createTextNode('txt'))
     de.appendChild(doc.createElement('ele'))
-      
-    de.append(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    de.append(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
         # txt
         ele
@@ -131,20 +131,20 @@ describe('ParentNode', () => {
       `)
   })
 
-  test('append() with document fragment node', () => {
+  $$.test('append() with document fragment node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
     const frag = doc.createDocumentFragment()
-  
+
     frag.appendChild(doc.createTextNode('txt'))
     frag.appendChild(doc.createElement('ele'))
-      
-    frag.append(doc.createElement('node1'), 
-      doc.createTextNode('text1'), 
-      'text2', 
-      doc.createTextNode('text3'), 
+
+    frag.append(doc.createElement('node1'),
+      doc.createTextNode('text1'),
+      'text2',
+      doc.createTextNode('text3'),
       doc.createElement('node2'))
 
-    expect($$.printTree(frag)).toBe($$.t`
+    $$.deepEqual($$.printTree(frag), $$.t`
       # txt
       ele
       node1
@@ -155,25 +155,25 @@ describe('ParentNode', () => {
       `)
   })
 
-  test('append() with document node', () => {
+  $$.test('append() with document node', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
-     
+
     doc.append(doc.createComment('comment1'))
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       n:root (ns:myns)
       ! comment1
       `)
   })
 
-  test('querySelector()', () => {
+  $$.test('querySelector()', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
-    expect(() => doc.querySelector('*')).toThrow()
+    $$.throws(() => doc.querySelector('*'))
   })
 
-  test('querySelectorAll()', () => {
+  $$.test('querySelectorAll()', () => {
     const doc = $$.dom.createDocument('myns', 'n:root')
-    expect(() => doc.querySelectorAll('*')).toThrow()
+    $$.throws(() => doc.querySelectorAll('*'))
   })
 
 })

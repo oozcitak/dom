@@ -1,17 +1,17 @@
 import $$ from "./TestHelpers"
 import { DOMImplementation, DOMParser, XMLSerializer } from "../src"
 
-describe('module exports', () => {
+$$.suite('module exports', () => {
 
-  test('implementation', () => {
+  $$.test('implementation', () => {
     const impl = new DOMImplementation()
     const doctype = impl.createDocumentType('qname', 'pubid', 'sysid')
-    expect($$.printTree(doctype)).toBe($$.t`
+    $$.deepEqual($$.printTree(doctype), $$.t`
       !DOCTYPE qname PUBLIC pubid sysid
       `)
   })
 
-  test('serializer + parser', () => {
+  $$.test('serializer + parser', () => {
     const xmlStr =
       '<section xmlns="http://www.ibm.com/events"' +
       ' xmlns:bk="urn:loc.gov:books"' +
@@ -27,7 +27,7 @@ describe('module exports', () => {
 
       const serializer = new $$.XMLSerializer()
       const parser = new $$.DOMParser()
-      expect(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml"))).toBe(xmlStr)
+      $$.deepEqual(serializer.serializeToString(parser.parseFromString(xmlStr, "application/xml")), xmlStr)
   })
 
 })

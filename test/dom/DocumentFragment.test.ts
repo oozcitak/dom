@@ -1,6 +1,6 @@
 import $$ from "../TestHelpers"
 
-describe('DocumentFragment', () => {
+$$.suite('DocumentFragment', () => {
 
   const doc = $$.dom.createDocument('myns', 'root')
 
@@ -15,44 +15,44 @@ describe('DocumentFragment', () => {
   node.appendChild(doc.createTextNode(''))
   node.appendChild(doc.createTextNode('test'))
 
-  test('constructor()', () => {
-    expect(node.nodeType).toBe(11)
-    expect(node.nodeName).toBe('#document-fragment')
+  $$.test('constructor()', () => {
+    $$.deepEqual(node.nodeType, 11)
+    $$.deepEqual(node.nodeName, '#document-fragment')
   })
 
-  test('textContent', () => {
-    expect(node.textContent).toBe('thisisatest')
+  $$.test('textContent', () => {
+    $$.deepEqual(node.textContent, 'thisisatest')
     node.textContent = null
-    expect(node.childNodes.length).toBe(0)
+    $$.deepEqual(node.childNodes.length, 0)
     node.textContent = 'or is it?'
-    expect(node.childNodes.length).toBe(1)
+    $$.deepEqual(node.childNodes.length, 1)
     let text = <any>node.childNodes.item(0)
-    expect(text.nodeType).toBe(3)
-    expect(text.data).toBe('or is it?')
+    $$.deepEqual(text.nodeType, 3)
+    $$.deepEqual(text.data, 'or is it?')
   })
 
-  test('cloneNode()', () => {
+  $$.test('cloneNode()', () => {
     const clonedNode = node.cloneNode()
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(11)
-    expect(clonedNode.nodeName).toBe('#document-fragment')
-    expect(clonedNode.childNodes.length).toBe(0)
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 11)
+    $$.deepEqual(clonedNode.nodeName, '#document-fragment')
+    $$.deepEqual(clonedNode.childNodes.length, 0)
   })
 
-  test('cloneNode(deep : true)', () => {
+  $$.test('cloneNode(deep : true)', () => {
     const clonedNode = node.cloneNode(true)
-    expect(clonedNode).not.toBe(node)
-    expect(clonedNode.nodeType).toBe(11)
-    expect(clonedNode.nodeName).toBe('#document-fragment')
-    expect(clonedNode.childNodes.length).toBe(1)
+    $$.notDeepEqual(clonedNode, node)
+    $$.deepEqual(clonedNode.nodeType, 11)
+    $$.deepEqual(clonedNode.nodeName, '#document-fragment')
+    $$.deepEqual(clonedNode.childNodes.length, 1)
   })
 
-  test('lookupPrefix()', () => {
-    expect(node.lookupPrefix('none')).toBeNull()
+  $$.test('lookupPrefix()', () => {
+    $$.deepEqual(node.lookupPrefix('none'), null)
   })
 
-  test('lookupNamespaceURI()', () => {
-    expect(node.lookupNamespaceURI('none')).toBeNull()
+  $$.test('lookupNamespaceURI()', () => {
+    $$.deepEqual(node.lookupNamespaceURI('none'), null)
   })
 
 })

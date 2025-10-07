@@ -1,8 +1,8 @@
 import $$ from "../TestHelpers"
 
-describe('XMLParser', () => {
+$$.suite('XMLParser', () => {
 
-  test('basic', () => {
+  $$.test('basic', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
       <!DOCTYPE root PUBLIC "pubid" "sysid">
@@ -19,21 +19,20 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
-      !DOCTYPE root PUBLIC pubid sysid
-      root
-        node att="val"
-        !  same node below 
-        node att="val" att2="val2"
-        ? kidding itwas="different"
-        ? forreal
-        $ here be dragons
-        text
-          # alien's pinky toe
-      `)
+    $$.deepEqual($$.printTree(doc),
+      '!DOCTYPE root PUBLIC pubid sysid\n' +
+      'root\n' +
+      '  node att="val"\n' +
+      '  !  same node below \n' +
+      '  node att="val" att2="val2"\n' +
+      '  ? kidding itwas="different"\n' +
+      '  ? forreal\n' +
+      '  $ here be dragons\n' +
+      '  text\n' +
+      "    # alien's pinky toe")
   })
 
-  test('internal subset', () => {
+  $$.test('internal subset', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
       <!DOCTYPE root SYSTEM "sysid" [
@@ -66,21 +65,20 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
-      !DOCTYPE root SYSTEM sysid
-      root
-        node att="val"
-        !  same node below 
-        node att="val" att2="val2"
-        ? kidding itwas="different"
-        ? forreal
-        $ here be dragons
-        text
-          # alien's pinky toe
-      `)
+    $$.deepEqual($$.printTree(doc),
+      '!DOCTYPE root SYSTEM sysid\n' +
+      'root\n' +
+      '  node att="val"\n' +
+      '  !  same node below \n' +
+      '  node att="val" att2="val2"\n' +
+      '  ? kidding itwas="different"\n' +
+      '  ? forreal\n' +
+      '  $ here be dragons\n' +
+      '  text\n' +
+      "    # alien's pinky toe")
   })
 
-  test('closing tag should match', () => {
+  $$.test('closing tag should match', () => {
     const xmlStr = $$.t`
       <root>
         <node att="val"/>
@@ -89,24 +87,24 @@ describe('XMLParser', () => {
 
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
-    expect(doc.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('default namespace', () => {
+  $$.test('default namespace', () => {
     const xmlStr = '<root xmlns="uri:myns"><node1><node2>text</node2></node1></root>'
 
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root (ns:uri:myns) xmlns="uri:myns" (ns:http://www.w3.org/2000/xmlns/)
         node1 (ns:uri:myns)
           node2 (ns:uri:myns)
-            # text    
+            # text
     `)
   })
 
-  test('namespace prefix', () => {
+  $$.test('namespace prefix', () => {
     const xmlStr =
       '<root xmlns="uri:myns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:myschema.xsd">' +
       '<node1><node2>text</node2></node1>' +
@@ -115,7 +113,7 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root (ns:uri:myns) xmlns="uri:myns" (ns:http://www.w3.org/2000/xmlns/) xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" (ns:http://www.w3.org/2000/xmlns/) xsi:schemaLocation="uri:myschema.xsd" (ns:http://www.w3.org/2001/XMLSchema-instance)
         node1 (ns:uri:myns)
           node2 (ns:uri:myns)
@@ -123,7 +121,7 @@ describe('XMLParser', () => {
       `)
   })
 
-  test('explicit namespace declaration', () => {
+  $$.test('explicit namespace declaration', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
       '<script type="text/ecmascript" xlink:href="foo.js"/>' +
@@ -132,13 +130,13 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/) xmlns:xlink="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
         script (ns:http://www.w3.org/2000/svg) type="text/ecmascript" xlink:href="foo.js" (ns:http://www.w3.org/1999/xlink)
       `)
   })
 
-  test('empty default namespace', () => {
+  $$.test('empty default namespace', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns=""/>' +
@@ -147,13 +145,13 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/)
         script xmlns="" (ns:http://www.w3.org/2000/xmlns/)
       `)
   })
 
-  test('default namespace override', () => {
+  $$.test('default namespace override', () => {
     const xmlStr =
       '<svg xmlns="http://www.w3.org/2000/svg">' +
       '<script xmlns="http://www.w3.org/1999/xlink"/>' +
@@ -162,13 +160,13 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       svg (ns:http://www.w3.org/2000/svg) xmlns="http://www.w3.org/2000/svg" (ns:http://www.w3.org/2000/xmlns/)
         script (ns:http://www.w3.org/1999/xlink) xmlns="http://www.w3.org/1999/xlink" (ns:http://www.w3.org/2000/xmlns/)
       `)
   })
 
-  test('prefixed namespace override', () => {
+  $$.test('prefixed namespace override', () => {
     const xmlStr =
       '<p:root xmlns:p="uri:my ns1">' +
       '<p:node><p:child/></p:node>' +
@@ -179,7 +177,7 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       p:root (ns:uri:my ns1) xmlns:p="uri:my ns1" (ns:http://www.w3.org/2000/xmlns/)
         p:node (ns:uri:my ns1)
           p:child (ns:uri:my ns1)
@@ -190,95 +188,95 @@ describe('XMLParser', () => {
       `)
   })
 
-  test('invalid nodes', () => {
+  $$.test('invalid nodes', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<?xml version="1.0"?><root>\x00</root>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<?xml version="1.0"?><root>\x01</root>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
     const doc3 = parser.parseFromString('<?xml version="1.1"?><root/>', "application/xml")
-    expect(doc3.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc3.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid DTD', () => {
+  $$.test('invalid DTD', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<!DOCTYPE root PUBLIC "pub\\id" "sysid"><root/>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<!DOCTYPE root PUBLIC "pubid" "sysid\0"><root/>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid comment', () => {
+  $$.test('invalid comment', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<!--hello--world--><root/>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<!--hello\0world--><root/>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
     const doc3 = parser.parseFromString('<!--hello-world---><root/>', "application/xml")
-    expect(doc3.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc3.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid CDATA', () => {
+  $$.test('invalid CDATA', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<root><![CDATA[ab\0xy]]></root>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid processing instruction', () => {
+  $$.test('invalid processing instruction', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<root><?x:target?></root>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<root><?target val\0?></root>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid element name', () => {
+  $$.test('invalid element name', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<d:root:x/>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<xmlns:root/>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
   })
 
-  test('invalid attributes', () => {
+  $$.test('invalid attributes', () => {
     const parser = new $$.DOMParser()
     const doc1 = parser.parseFromString('<root att="val" att="val"/>', "application/xml")
-    expect(doc1.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc1.getElementsByTagName("parsererror").length, 1)
     const doc2 = parser.parseFromString('<root att\0="val"/>', "application/xml")
-    expect(doc2.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc2.getElementsByTagName("parsererror").length, 1)
     const doc3 = parser.parseFromString('<root xmlns:x="http://www.w3.org/2000/xmlns/"/>', "application/xml")
-    expect(doc3.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc3.getElementsByTagName("parsererror").length, 1)
     const doc4 = parser.parseFromString('<root xmlns:x=""/>', "application/xml")
-    expect(doc4.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc4.getElementsByTagName("parsererror").length, 1)
     const doc5 = parser.parseFromString('<root d:att\0="val"/>', "application/xml")
-    expect(doc5.getElementsByTagName("parsererror").length).toBe(1)
+    $$.deepEqual(doc5.getElementsByTagName("parsererror").length, 1)
   })
 
   // https://www.w3.org/TR/xml-c14n2-testcases/
-  test('Tests from Canonical XML - 1', () => {
+  $$.test('Tests from Canonical XML - 1', () => {
     const str = $$.t`
     <?xml version="1.0"?>
 
     <?xml-stylesheet   href="doc.xsl"
        type="text/xsl"   ?>
-    
+
     <!DOCTYPE doc SYSTEM "doc.dtd">
-    
+
     <doc>Hello, world!<!-- Comment 1 --></doc>
-    
+
     <?pi-without-data     ?>
-    
+
     <!-- Comment 2 -->
-    
-    <!-- Comment 3 -->       
+
+    <!-- Comment 3 -->
     `
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(str, "application/xml")
     const ser = new $$.XMLSerializer()
-    
-    expect(ser.serializeToString(doc)).toBe(
+
+    $$.deepEqual(ser.serializeToString(doc),
       '<?xml-stylesheet href="doc.xsl"\n   type="text/xsl"   ?>' +
-      '<!DOCTYPE doc SYSTEM "doc.dtd">' + 
+      '<!DOCTYPE doc SYSTEM "doc.dtd">' +
       '<doc>Hello, world!<!-- Comment 1 --></doc>' +
       '<?pi-without-data?>' +
       '<!-- Comment 2 -->' +
@@ -286,7 +284,7 @@ describe('XMLParser', () => {
     )
   })
 
-  test('Tests from Canonical XML - 2', () => {
+  $$.test('Tests from Canonical XML - 2', () => {
     const str = $$.t`
     <!DOCTYPE doc [<!ATTLIST e9 attr CDATA "default">]>
     <doc>
@@ -305,13 +303,13 @@ describe('XMLParser', () => {
              </e8>
           </e7>
        </e6>
-    </doc>     
+    </doc>
     `
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(str, "application/xml")
     const ser = new $$.XMLSerializer()
-    
-    expect(ser.serializeToString(doc)).toBe(
+
+    $$.deepEqual(ser.serializeToString(doc),
       '<!DOCTYPE doc>' +
       '<doc>' +
          '<e1/>' +
@@ -330,7 +328,7 @@ describe('XMLParser', () => {
     )
   })
 
-  test('decode entities', () => {
+  $$.test('decode entities', () => {
     const xmlStr = $$.t`
       <?xml version="1.0"?>
       <root>hello &lt;&amp;&gt; world</root>
@@ -338,7 +336,7 @@ describe('XMLParser', () => {
     const parser = new $$.DOMParser()
     const doc = parser.parseFromString(xmlStr, "application/xml")
 
-    expect($$.printTree(doc)).toBe($$.t`
+    $$.deepEqual($$.printTree(doc), $$.t`
       root
         # hello <&> world
       `)

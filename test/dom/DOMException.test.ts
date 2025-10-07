@@ -10,249 +10,249 @@ import {
   SyntaxError
 } from "../../src/dom/DOMException"
 
-describe('DOMException', () => {
+$$.suite('DOMException', () => {
 
-  test('WrongDocumentError()', () => {
+  $$.test('WrongDocumentError()', () => {
     const err1 = new WrongDocumentError()
-    expect(err1.name).toBe("WrongDocumentError")
-    expect(err1.message).toBe("The object is in the wrong document. ")
+    $$.deepEqual(err1.name, "WrongDocumentError")
+    $$.deepEqual(err1.message, "The object is in the wrong document. ")
     const err2 = new WrongDocumentError("x")
-    expect(err2.name).toBe("WrongDocumentError")
-    expect(err2.message).toBe("The object is in the wrong document. x")
+    $$.deepEqual(err2.name, "WrongDocumentError")
+    $$.deepEqual(err2.message, "The object is in the wrong document. x")
   })
 
-  test('DOMStringSizeError', () => {
+  $$.test('DOMStringSizeError', () => {
     const err1 = new DOMStringSizeError()
-    expect(err1.name).toBe("DOMStringSizeError")
-    expect(err1.message).toBe("")
+    $$.deepEqual(err1.name, "DOMStringSizeError")
+    $$.deepEqual(err1.message, "")
     const err2 = new DOMStringSizeError("x")
-    expect(err2.name).toBe("DOMStringSizeError")
-    expect(err2.message).toBe("x")
+    $$.deepEqual(err2.name, "DOMStringSizeError")
+    $$.deepEqual(err2.message, "x")
   })
 
-  test('WrongDocumentError', () => {
+  $$.test('WrongDocumentError', () => {
     const err1 = new WrongDocumentError()
-    expect(err1.name).toBe("WrongDocumentError")
-    expect(err1.message).toBe("The object is in the wrong document. ")
+    $$.deepEqual(err1.name, "WrongDocumentError")
+    $$.deepEqual(err1.message, "The object is in the wrong document. ")
     const err2 = new WrongDocumentError("x")
-    expect(err2.name).toBe("WrongDocumentError")
-    expect(err2.message).toBe("The object is in the wrong document. x")
+    $$.deepEqual(err2.name, "WrongDocumentError")
+    $$.deepEqual(err2.message, "The object is in the wrong document. x")
   })
 
-  test('NoDataAllowedError', () => {
+  $$.test('NoDataAllowedError', () => {
     const err1 = new NoDataAllowedError()
-    expect(err1.name).toBe("NoDataAllowedError")
-    expect(err1.message).toBe("")
+    $$.deepEqual(err1.name, "NoDataAllowedError")
+    $$.deepEqual(err1.message, "")
     const err2 = new NoDataAllowedError("x")
-    expect(err2.name).toBe("NoDataAllowedError")
-    expect(err2.message).toBe("x")
+    $$.deepEqual(err2.name, "NoDataAllowedError")
+    $$.deepEqual(err2.message, "x")
   })
 
-  test('NoModificationAllowedError', () => {
+  $$.test('NoModificationAllowedError', () => {
     const err1 = new NoModificationAllowedError()
-    expect(err1.name).toBe("NoModificationAllowedError")
-    expect(err1.message).toBe("The object can not be modified. ")
+    $$.deepEqual(err1.name, "NoModificationAllowedError")
+    $$.deepEqual(err1.message, "The object can not be modified. ")
     const err2 = new NoModificationAllowedError("x")
-    expect(err2.name).toBe("NoModificationAllowedError")
-    expect(err2.message).toBe("The object can not be modified. x")
+    $$.deepEqual(err2.name, "NoModificationAllowedError")
+    $$.deepEqual(err2.message, "The object can not be modified. x")
   })
 
-  test('NotSupportedError', () => {
+  $$.test('NotSupportedError', () => {
     const err1 = new NotSupportedError()
-    expect(err1.name).toBe("NotSupportedError")
-    expect(err1.message).toBe("The operation is not supported. ")
+    $$.deepEqual(err1.name, "NotSupportedError")
+    $$.deepEqual(err1.message, "The operation is not supported. ")
     const err2 = new NotSupportedError("x")
-    expect(err2.name).toBe("NotSupportedError")
-    expect(err2.message).toBe("The operation is not supported. x")
+    $$.deepEqual(err2.name, "NotSupportedError")
+    $$.deepEqual(err2.message, "The operation is not supported. x")
   })
 
-  test('InUseAttributeError', () => {
+  $$.test('InUseAttributeError', () => {
     const err1 = new InUseAttributeError()
-    expect(err1.name).toBe("InUseAttributeError")
-    expect(err1.message).toBe("")
+    $$.deepEqual(err1.name, "InUseAttributeError")
+    $$.deepEqual(err1.message, "")
     const err2 = new InUseAttributeError("x")
-    expect(err2.name).toBe("InUseAttributeError")
-    expect(err2.message).toBe("x")
+    $$.deepEqual(err2.name, "InUseAttributeError")
+    $$.deepEqual(err2.message, "x")
   })
 
-  test('InvalidStateError', () => {
+  $$.test('InvalidStateError', () => {
     const err1 = new InvalidStateError()
-    expect(err1.name).toBe("InvalidStateError")
-    expect(err1.message).toBe("The object is in an invalid state. ")
+    $$.deepEqual(err1.name, "InvalidStateError")
+    $$.deepEqual(err1.message, "The object is in an invalid state. ")
     const err2 = new InvalidStateError("x")
-    expect(err2.name).toBe("InvalidStateError")
-    expect(err2.message).toBe("The object is in an invalid state. x")
+    $$.deepEqual(err2.name, "InvalidStateError")
+    $$.deepEqual(err2.message, "The object is in an invalid state. x")
   })
 
-  test('InvalidModificationError', () => {
+  $$.test('InvalidModificationError', () => {
     const err1 = new InvalidModificationError()
-    expect(err1.name).toBe("InvalidModificationError")
-    expect(err1.message).toBe("The object can not be modified in this way. ")
+    $$.deepEqual(err1.name, "InvalidModificationError")
+    $$.deepEqual(err1.message, "The object can not be modified in this way. ")
     const err2 = new InvalidModificationError("x")
-    expect(err2.name).toBe("InvalidModificationError")
-    expect(err2.message).toBe("The object can not be modified in this way. x")
+    $$.deepEqual(err2.name, "InvalidModificationError")
+    $$.deepEqual(err2.message, "The object can not be modified in this way. x")
   })
 
-  test('NamespaceError', () => {
+  $$.test('NamespaceError', () => {
     const err1 = new NamespaceError()
-    expect(err1.name).toBe("NamespaceError")
-    expect(err1.message).toBe("The operation is not allowed by Namespaces in XML. [XMLNS] ")
+    $$.deepEqual(err1.name, "NamespaceError")
+    $$.deepEqual(err1.message, "The operation is not allowed by Namespaces in XML. [XMLNS] ")
     const err2 = new NamespaceError("x")
-    expect(err2.name).toBe("NamespaceError")
-    expect(err2.message).toBe("The operation is not allowed by Namespaces in XML. [XMLNS] x")
+    $$.deepEqual(err2.name, "NamespaceError")
+    $$.deepEqual(err2.message, "The operation is not allowed by Namespaces in XML. [XMLNS] x")
   })
 
-  test('InvalidAccessError', () => {
+  $$.test('InvalidAccessError', () => {
     const err1 = new InvalidAccessError()
-    expect(err1.name).toBe("InvalidAccessError")
-    expect(err1.message).toBe("The object does not support the operation or argument. ")
+    $$.deepEqual(err1.name, "InvalidAccessError")
+    $$.deepEqual(err1.message, "The object does not support the operation or argument. ")
     const err2 = new InvalidAccessError("x")
-    expect(err2.name).toBe("InvalidAccessError")
-    expect(err2.message).toBe("The object does not support the operation or argument. x")
+    $$.deepEqual(err2.name, "InvalidAccessError")
+    $$.deepEqual(err2.message, "The object does not support the operation or argument. x")
   })
 
-  test('ValidationError', () => {
+  $$.test('ValidationError', () => {
     const err1 = new ValidationError()
-    expect(err1.name).toBe("ValidationError")
-    expect(err1.message).toBe("")
+    $$.deepEqual(err1.name, "ValidationError")
+    $$.deepEqual(err1.message, "")
     const err2 = new ValidationError("x")
-    expect(err2.name).toBe("ValidationError")
-    expect(err2.message).toBe("x")
+    $$.deepEqual(err2.name, "ValidationError")
+    $$.deepEqual(err2.message, "x")
   })
 
-  test('TypeMismatchError', () => {
+  $$.test('TypeMismatchError', () => {
     const err1 = new TypeMismatchError()
-    expect(err1.name).toBe("TypeMismatchError")
-    expect(err1.message).toBe("")
+    $$.deepEqual(err1.name, "TypeMismatchError")
+    $$.deepEqual(err1.message, "")
     const err2 = new TypeMismatchError("x")
-    expect(err2.name).toBe("TypeMismatchError")
-    expect(err2.message).toBe("x")
+    $$.deepEqual(err2.name, "TypeMismatchError")
+    $$.deepEqual(err2.message, "x")
   })
 
-  test('SecurityError', () => {
+  $$.test('SecurityError', () => {
     const err1 = new SecurityError()
-    expect(err1.name).toBe("SecurityError")
-    expect(err1.message).toBe("The operation is insecure. ")
+    $$.deepEqual(err1.name, "SecurityError")
+    $$.deepEqual(err1.message, "The operation is insecure. ")
     const err2 = new SecurityError("x")
-    expect(err2.name).toBe("SecurityError")
-    expect(err2.message).toBe("The operation is insecure. x")
+    $$.deepEqual(err2.name, "SecurityError")
+    $$.deepEqual(err2.message, "The operation is insecure. x")
   })
 
-  test('NetworkError', () => {
+  $$.test('NetworkError', () => {
     const err1 = new NetworkError()
-    expect(err1.name).toBe("NetworkError")
-    expect(err1.message).toBe("A network error occurred. ")
+    $$.deepEqual(err1.name, "NetworkError")
+    $$.deepEqual(err1.message, "A network error occurred. ")
     const err2 = new NetworkError("x")
-    expect(err2.name).toBe("NetworkError")
-    expect(err2.message).toBe("A network error occurred. x")
+    $$.deepEqual(err2.name, "NetworkError")
+    $$.deepEqual(err2.message, "A network error occurred. x")
   })
 
-  test('AbortError', () => {
+  $$.test('AbortError', () => {
     const err1 = new AbortError()
-    expect(err1.name).toBe("AbortError")
-    expect(err1.message).toBe("The operation was aborted. ")
+    $$.deepEqual(err1.name, "AbortError")
+    $$.deepEqual(err1.message, "The operation was aborted. ")
     const err2 = new AbortError("x")
-    expect(err2.name).toBe("AbortError")
-    expect(err2.message).toBe("The operation was aborted. x")
+    $$.deepEqual(err2.name, "AbortError")
+    $$.deepEqual(err2.message, "The operation was aborted. x")
   })
 
-  test('URLMismatchError', () => {
+  $$.test('URLMismatchError', () => {
     const err1 = new URLMismatchError()
-    expect(err1.name).toBe("URLMismatchError")
-    expect(err1.message).toBe("The given URL does not match another URL. ")
+    $$.deepEqual(err1.name, "URLMismatchError")
+    $$.deepEqual(err1.message, "The given URL does not match another URL. ")
     const err2 = new URLMismatchError("x")
-    expect(err2.name).toBe("URLMismatchError")
-    expect(err2.message).toBe("The given URL does not match another URL. x")
+    $$.deepEqual(err2.name, "URLMismatchError")
+    $$.deepEqual(err2.message, "The given URL does not match another URL. x")
   })
 
-  test('QuotaExceededError', () => {
+  $$.test('QuotaExceededError', () => {
     const err1 = new QuotaExceededError()
-    expect(err1.name).toBe("QuotaExceededError")
-    expect(err1.message).toBe("The quota has been exceeded. ")
+    $$.deepEqual(err1.name, "QuotaExceededError")
+    $$.deepEqual(err1.message, "The quota has been exceeded. ")
     const err2 = new QuotaExceededError("x")
-    expect(err2.name).toBe("QuotaExceededError")
-    expect(err2.message).toBe("The quota has been exceeded. x")
+    $$.deepEqual(err2.name, "QuotaExceededError")
+    $$.deepEqual(err2.message, "The quota has been exceeded. x")
   })
 
-  test('TimeoutError', () => {
+  $$.test('TimeoutError', () => {
     const err1 = new TimeoutError()
-    expect(err1.name).toBe("TimeoutError")
-    expect(err1.message).toBe("The operation timed out. ")
+    $$.deepEqual(err1.name, "TimeoutError")
+    $$.deepEqual(err1.message, "The operation timed out. ")
     const err2 = new TimeoutError("x")
-    expect(err2.name).toBe("TimeoutError")
-    expect(err2.message).toBe("The operation timed out. x")
+    $$.deepEqual(err2.name, "TimeoutError")
+    $$.deepEqual(err2.message, "The operation timed out. x")
   })
 
-  test('InvalidNodeTypeError', () => {
+  $$.test('InvalidNodeTypeError', () => {
     const err1 = new InvalidNodeTypeError()
-    expect(err1.name).toBe("InvalidNodeTypeError")
-    expect(err1.message).toBe("The supplied node is incorrect or has an incorrect ancestor for this operation. ")
+    $$.deepEqual(err1.name, "InvalidNodeTypeError")
+    $$.deepEqual(err1.message, "The supplied node is incorrect or has an incorrect ancestor for this operation. ")
     const err2 = new InvalidNodeTypeError("x")
-    expect(err2.name).toBe("InvalidNodeTypeError")
-    expect(err2.message).toBe("The supplied node is incorrect or has an incorrect ancestor for this operation. x")
+    $$.deepEqual(err2.name, "InvalidNodeTypeError")
+    $$.deepEqual(err2.message, "The supplied node is incorrect or has an incorrect ancestor for this operation. x")
   })
 
-  test('DataCloneError', () => {
+  $$.test('DataCloneError', () => {
     const err1 = new DataCloneError()
-    expect(err1.name).toBe("DataCloneError")
-    expect(err1.message).toBe("The object can not be cloned. ")
+    $$.deepEqual(err1.name, "DataCloneError")
+    $$.deepEqual(err1.message, "The object can not be cloned. ")
     const err2 = new DataCloneError("x")
-    expect(err2.name).toBe("DataCloneError")
-    expect(err2.message).toBe("The object can not be cloned. x")
+    $$.deepEqual(err2.name, "DataCloneError")
+    $$.deepEqual(err2.message, "The object can not be cloned. x")
   })
 
-  test('NotImplementedError', () => {
+  $$.test('NotImplementedError', () => {
     const err1 = new NotImplementedError()
-    expect(err1.name).toBe("NotImplementedError")
-    expect(err1.message).toBe("The DOM method is not implemented by this module. ")
+    $$.deepEqual(err1.name, "NotImplementedError")
+    $$.deepEqual(err1.message, "The DOM method is not implemented by this module. ")
     const err2 = new NotImplementedError("x")
-    expect(err2.name).toBe("NotImplementedError")
-    expect(err2.message).toBe("The DOM method is not implemented by this module. x")
+    $$.deepEqual(err2.name, "NotImplementedError")
+    $$.deepEqual(err2.message, "The DOM method is not implemented by this module. x")
   })
 
-  test('HierarchyRequestError', () => {
+  $$.test('HierarchyRequestError', () => {
     const err1 = new HierarchyRequestError()
-    expect(err1.name).toBe("HierarchyRequestError")
-    expect(err1.message).toBe("The operation would yield an incorrect node tree. ")
+    $$.deepEqual(err1.name, "HierarchyRequestError")
+    $$.deepEqual(err1.message, "The operation would yield an incorrect node tree. ")
     const err2 = new HierarchyRequestError("x")
-    expect(err2.name).toBe("HierarchyRequestError")
-    expect(err2.message).toBe("The operation would yield an incorrect node tree. x")
+    $$.deepEqual(err2.name, "HierarchyRequestError")
+    $$.deepEqual(err2.message, "The operation would yield an incorrect node tree. x")
   })
 
-  test('NotFoundError', () => {
+  $$.test('NotFoundError', () => {
     const err1 = new NotFoundError()
-    expect(err1.name).toBe("NotFoundError")
-    expect(err1.message).toBe("The object can not be found here. ")
+    $$.deepEqual(err1.name, "NotFoundError")
+    $$.deepEqual(err1.message, "The object can not be found here. ")
     const err2 = new NotFoundError("x")
-    expect(err2.name).toBe("NotFoundError")
-    expect(err2.message).toBe("The object can not be found here. x")
+    $$.deepEqual(err2.name, "NotFoundError")
+    $$.deepEqual(err2.message, "The object can not be found here. x")
   })
 
-  test('IndexSizeError', () => {
+  $$.test('IndexSizeError', () => {
     const err1 = new IndexSizeError()
-    expect(err1.name).toBe("IndexSizeError")
-    expect(err1.message).toBe("The index is not in the allowed range. ")
+    $$.deepEqual(err1.name, "IndexSizeError")
+    $$.deepEqual(err1.message, "The index is not in the allowed range. ")
     const err2 = new IndexSizeError("x")
-    expect(err2.name).toBe("IndexSizeError")
-    expect(err2.message).toBe("The index is not in the allowed range. x")
+    $$.deepEqual(err2.name, "IndexSizeError")
+    $$.deepEqual(err2.message, "The index is not in the allowed range. x")
   })
 
-  test('SyntaxError', () => {
+  $$.test('SyntaxError', () => {
     const err1 = new SyntaxError()
-    expect(err1.name).toBe("SyntaxError")
-    expect(err1.message).toBe("The string did not match the expected pattern. ")
+    $$.deepEqual(err1.name, "SyntaxError")
+    $$.deepEqual(err1.message, "The string did not match the expected pattern. ")
     const err2 = new SyntaxError("x")
-    expect(err2.name).toBe("SyntaxError")
-    expect(err2.message).toBe("The string did not match the expected pattern. x")
+    $$.deepEqual(err2.name, "SyntaxError")
+    $$.deepEqual(err2.message, "The string did not match the expected pattern. x")
   })
 
-  test('InvalidCharacterError', () => {
+  $$.test('InvalidCharacterError', () => {
     const err1 = new InvalidCharacterError()
-    expect(err1.name).toBe("InvalidCharacterError")
-    expect(err1.message).toBe("The string contains invalid characters. ")
+    $$.deepEqual(err1.name, "InvalidCharacterError")
+    $$.deepEqual(err1.message, "The string contains invalid characters. ")
     const err2 = new InvalidCharacterError("x")
-    expect(err2.name).toBe("InvalidCharacterError")
-    expect(err2.message).toBe("The string contains invalid characters. x")
+    $$.deepEqual(err2.name, "InvalidCharacterError")
+    $$.deepEqual(err2.message, "The string contains invalid characters. x")
   })
 
 

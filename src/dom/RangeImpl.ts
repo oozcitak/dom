@@ -29,10 +29,10 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   static END_TO_END = 2
   static END_TO_START = 3
 
-  START_TO_START!: number
-  START_TO_END!: number
-  END_TO_END!: number
-  END_TO_START!: number
+  START_TO_START = 0
+  START_TO_END = 1
+  END_TO_END = 2
+  END_TO_START = 3
 
   _start: BoundaryPoint
   _end: BoundaryPoint
@@ -58,7 +58,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   get commonAncestorContainer(): Node {
     /**
      * 1. Let container be start node.
-     * 2. While container is not an inclusive ancestor of end node, let 
+     * 2. While container is not an inclusive ancestor of end node, let
      * container be container’s parent.
      * 3. Return container.
      */
@@ -96,7 +96,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. Set the start of the context object to boundary point 
+     * 3. Set the start of the context object to boundary point
      * (parent, node’s index).
      */
     let parent = node._parent
@@ -112,7 +112,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. Set the start of the context object to boundary point 
+     * 3. Set the start of the context object to boundary point
      * (parent, node’s index plus 1).
      */
     let parent = node._parent
@@ -128,7 +128,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. Set the end of the context object to boundary point 
+     * 3. Set the end of the context object to boundary point
      * (parent, node’s index).
      */
     let parent = node._parent
@@ -144,7 +144,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 1. Let parent be node’s parent.
      * 2. If parent is null, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. Set the end of the context object to boundary point 
+     * 3. Set the end of the context object to boundary point
      * (parent, node’s index plus 1).
      */
     let parent = node._parent
@@ -158,7 +158,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   collapse(toStart?: boolean | undefined): void {
     /**
-     * The collapse(toStart) method, when invoked, must if toStart is true, 
+     * The collapse(toStart) method, when invoked, must if toStart is true,
      * set end to start, and set start to end otherwise.
      */
     if (toStart) {
@@ -171,7 +171,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   selectNode(node: Node): void {
     /**
-     * The selectNode(node) method, when invoked, must select node within 
+     * The selectNode(node) method, when invoked, must select node within
      * context object.
      */
     range_select(node, this)
@@ -208,7 +208,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
       throw new NotSupportedError()
 
     /**
-     * 2. If context object’s root is not the same as sourceRange’s root, 
+     * 2. If context object’s root is not the same as sourceRange’s root,
      * then throw a "WrongDocumentError" DOMException.
      */
     if (range_root(this) !== range_root(sourceRange))
@@ -217,16 +217,16 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     /**
      * 3. If how is:
      * - START_TO_START:
-     * Let this point be the context object’s start. Let other point be 
+     * Let this point be the context object’s start. Let other point be
      * sourceRange’s start.
      * - START_TO_END:
-     * Let this point be the context object’s end. Let other point be 
+     * Let this point be the context object’s end. Let other point be
      * sourceRange’s start.
      * - END_TO_END:
-     * Let this point be the context object’s end. Let other point be 
+     * Let this point be the context object’s end. Let other point be
      * sourceRange’s end.
      * - END_TO_START:
-     * Let this point be the context object’s start. Let other point be 
+     * Let this point be the context object’s start. Let other point be
      * sourceRange’s end.
      */
     let thisPoint: BoundaryPoint
@@ -278,8 +278,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   deleteContents(): void {
     /**
      * 1. If the context object is collapsed, then return.
-     * 2. Let original start node, original start offset, original end node, 
-     * and original end offset be the context object’s start node, 
+     * 2. Let original start node, original start offset, original end node,
+     * and original end offset be the context object’s start node,
      * start offset, end node, and end offset, respectively.
      */
     if (range_collapsed(this)) return
@@ -293,7 +293,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 3. If original start node and original end node are the same, and they
      * are a Text, ProcessingInstruction, or Comment node, replace data with
      * node original start node, offset original start offset, count original
-     * end offset minus original start offset, and data the empty string, 
+     * end offset minus original start offset, and data the empty string,
      * and then return.
      */
     if (originalStartNode === originalEndNode &&
@@ -304,7 +304,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     }
 
     /**
-     * 4. Let nodes to remove be a list of all the nodes that are contained in 
+     * 4. Let nodes to remove be a list of all the nodes that are contained in
      * the context object, in tree order, omitting any node whose parent is also
      * contained in the context object.
      */
@@ -322,7 +322,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
 
     if (tree_isAncestorOf(originalEndNode, originalStartNode, true)) {
       /**
-       * 5. If original start node is an inclusive ancestor of original end 
+       * 5. If original start node is an inclusive ancestor of original end
        * node, set new node to original start node and new offset to original
        * start offset.
        */
@@ -351,9 +351,9 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     }
 
     /**
-     * 7. If original start node is a Text, ProcessingInstruction, or Comment 
-     * node, replace data with node original start node, offset original start 
-     * offset, count original start node’s length minus original start offset, 
+     * 7. If original start node is a Text, ProcessingInstruction, or Comment
+     * node, replace data with node original start node, offset original start
+     * offset, count original start node’s length minus original start offset,
      * data the empty string.
      */
     if (Guard.isCharacterDataNode(originalStartNode)) {
@@ -363,7 +363,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     }
 
     /**
-     * 8. For each node in nodes to remove, in tree order, remove node from its 
+     * 8. For each node in nodes to remove, in tree order, remove node from its
      * parent.
      */
     for (const node of nodesToRemove) {
@@ -374,8 +374,8 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     }
 
     /**
-     * 9. If original end node is a Text, ProcessingInstruction, or Comment 
-     * node, replace data with node original end node, offset 0, count original 
+     * 9. If original end node is a Text, ProcessingInstruction, or Comment
+     * node, replace data with node original end node, offset 0, count original
      * end offset and data the empty string.
      */
     if (Guard.isCharacterDataNode(originalEndNode)) {
@@ -393,7 +393,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   extractContents(): DocumentFragment {
     /**
-     * The extractContents() method, when invoked, must return the result of 
+     * The extractContents() method, when invoked, must return the result of
      * extracting the context object.
      */
     return range_extract(this)
@@ -402,7 +402,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   cloneContents(): DocumentFragment {
     /**
-     * The cloneContents() method, when invoked, must return the result of 
+     * The cloneContents() method, when invoked, must return the result of
      * cloning the contents of the context object.
      */
     return range_cloneTheContents(this)
@@ -411,7 +411,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   insertNode(node: Node): void {
     /**
-     * The insertNode(node) method, when invoked, must insert node into the 
+     * The insertNode(node) method, when invoked, must insert node into the
      * context object.
      */
     return range_insert(node, this)
@@ -420,7 +420,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   surroundContents(newParent: Node): void {
     /**
-     * 1. If a non-Text node is partially contained in the context object, then 
+     * 1. If a non-Text node is partially contained in the context object, then
      * throw an "InvalidStateError" DOMException.
      */
     for (const node of range_getPartiallyContainedNodes(this)) {
@@ -430,7 +430,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     }
 
     /**
-     * 2. If newParent is a Document, DocumentType, or DocumentFragment node, 
+     * 2. If newParent is a Document, DocumentType, or DocumentFragment node,
      * then throw an "InvalidNodeTypeError" DOMException.
      */
     if (Guard.isDocumentNode(newParent) ||
@@ -467,7 +467,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   /** @inheritdoc */
   cloneRange(): Range {
     /**
-     * The cloneRange() method, when invoked, must return a new live range with 
+     * The cloneRange() method, when invoked, must return a new live range with
      * the same start and end as the context object.
      */
     return create_range(this._start, this._end)
@@ -477,7 +477,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
   detach(): void {
     /**
      * The detach() method, when invoked, must do nothing.
-     * 
+     *
      * since JS lacks weak references, we still use detach
      */
     dom.rangeList.delete(this)
@@ -494,7 +494,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
 
     /**
      * 2. If node is a doctype, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. If offset is greater than node’s length, then throw an 
+     * 3. If offset is greater than node’s length, then throw an
      * "IndexSizeError" DOMException.
      */
     if (Guard.isDocumentTypeNode(node))
@@ -523,7 +523,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
      * 1. If node’s root is different from the context object’s root, then throw
      * a "WrongDocumentError" DOMException.
      * 2. If node is a doctype, then throw an "InvalidNodeTypeError" DOMException.
-     * 3. If offset is greater than node’s length, then throw an 
+     * 3. If offset is greater than node’s length, then throw an
      * "IndexSizeError" DOMException.
      */
     if (tree_rootNode(node) !== range_root(this))
@@ -570,7 +570,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
     const offset = tree_index(node)
 
     /**
-     * 5. If (parent, offset) is before end and (parent, offset plus 1) is 
+     * 5. If (parent, offset) is before end and (parent, offset plus 1) is
      * after start, return true.
      */
     if (boundaryPoint_position([parent, offset], this._end) === BoundaryPosition.Before &&
@@ -636,7 +636,7 @@ export class RangeImpl extends AbstractRangeImpl implements Range {
 
   /**
    * Creates a new `Range`.
-   * 
+   *
    * @param start - start point
    * @param end - end point
    */

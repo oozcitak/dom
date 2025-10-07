@@ -1,57 +1,57 @@
 import $$ from "../TestHelpers"
 import { EmptySet } from "../../src/util"
 
-describe('EmptySet', () => {
+$$.suite('EmptySet', () => {
 
   const set = new EmptySet<number>()
 
-  test('size', () => {
-    expect(set.size).toBe(0)
+  $$.test('size', () => {
+    $$.deepEqual(set.size, 0)
   })
 
-  test('add()', () => {
-    expect(() => set.add(1)).toThrow()
+  $$.test('add()', () => {
+    $$.throws(() => set.add(1))
   })
 
-  test('clear()', () => {
+  $$.test('clear()', () => {
     set.clear()
-    expect(set.size).toBe(0)
+    $$.deepEqual(set.size, 0)
   })
 
-  test('delete()', () => {
-    expect(set.delete(1)).toBe(false)
+  $$.test('delete()', () => {
+    $$.deepEqual(set.delete(1), false)
   })
 
-  test('forEach()', () => {
+  $$.test('forEach()', () => {
     let str = ""
     set.forEach(e => str += e.toString())
-    expect(str).toBe("")
+    $$.deepEqual(str, "")
   })
 
-  test('has()', () => {
-    expect(set.has(1)).toBe(false)
+  $$.test('has()', () => {
+    $$.deepEqual(set.has(1), false)
   })
 
-  test('entries()', () => {
+  $$.test('entries()', () => {
     let str = ""
     for (const e of set.entries()) { str += e[0].toString() }
-    expect(str).toBe("")
+    $$.deepEqual(str, "")
   })
 
-  test('keys()', () => {
+  $$.test('keys()', () => {
     let str = ""
     for (const e of set.keys()) { str += e.toString() }
-    expect(str).toBe("")
+    $$.deepEqual(str, "")
   })
 
-  test('values()', () => {
+  $$.test('values()', () => {
     let str = ""
     for (const e of set.values()) { str += e.toString() }
-    expect(str).toBe("")
+    $$.deepEqual(str, "")
   })
 
-  test('toString()', () => {
-    expect(set.toString()).toBe("[object EmptySet]")
+  $$.test('toString()', () => {
+    $$.deepEqual(set.toString(), "[object EmptySet]")
   })
 
 })
