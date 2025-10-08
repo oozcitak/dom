@@ -31,7 +31,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 export class DocumentImpl extends NodeImpl implements Document {
 
   _nodeType = NodeType.Document
-  _children = new Set<Node>()
+  _children: any = new Set<Node>()
 
   _encoding = {
     name: "UTF-8",

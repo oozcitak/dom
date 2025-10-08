@@ -81,7 +81,7 @@ export abstract class NodeImpl extends EventTargetImpl implements Node {
 
   abstract _nodeType: NodeType
   _parent: Node | null = null
-  _children = new EmptySet<Node>
+  _children: any = new EmptySet<Node>
   _firstChild: Node | null = null
   _lastChild: Node | null = null
   _previousSibling: Node | null = null
