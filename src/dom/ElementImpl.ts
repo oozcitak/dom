@@ -30,7 +30,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 export class ElementImpl extends NodeImpl implements Element {
 
   _nodeType = NodeType.Element
-  _children = new Set<Node>()
+  _children: any = new Set<Node>()
 
   _namespace: string | null = null
   _namespacePrefix: string | null = null

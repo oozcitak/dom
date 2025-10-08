@@ -10,7 +10,7 @@ import { idl_defineConst } from "../algorithm/WebIDLAlgorithm"
 export class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
   _nodeType = NodeType.DocumentFragment
-  _children = new Set<Node>()
+  _children: any = new Set<Node>()
 
   _host: Element | null
 

@@ -1,4 +1,4 @@
-export class EmptySet<T> implements Set<T> {
+export class EmptySet<T> {
 
   get size(): number {
     return 0
@@ -24,19 +24,19 @@ export class EmptySet<T> implements Set<T> {
     return false
   }
 
-  [Symbol.iterator](): IterableIterator<T> {
+  [Symbol.iterator]() {
     return new EmptySetIterator<T>()
   }
 
-  entries(): IterableIterator<[T, T]> {
+  entries() {
     return new EmptySetIterator<[T, T]>()
   }
 
-  keys(): IterableIterator<T> {
+  keys() {
     return new EmptySetIterator<T>()
   }
 
-  values(): IterableIterator<T> {
+  values() {
     return new EmptySetIterator<T>()
   }
 
@@ -45,12 +45,12 @@ export class EmptySet<T> implements Set<T> {
   }
 }
 
-class EmptySetIterator<T> implements IterableIterator<T> {
-  [Symbol.iterator](): IterableIterator<T> {
+class EmptySetIterator<T> {
+  [Symbol.iterator]() {
     return this
   }
 
-  next(): IteratorResult<T> {
+  next() {
     return { done: true, value: null }
   }
 }

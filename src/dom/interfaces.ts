@@ -665,7 +665,7 @@ export interface Node extends EventTarget {
    */
   _nodeType: NodeType
   _parent: Node | null
-  _children: Set<Node>
+  _children: any
   _firstChild: Node | null
   _lastChild: Node | null
   _previousSibling: Node | null
