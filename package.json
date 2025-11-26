@@ -1,6 +1,6 @@
 {
   "name": "@oozcitak/dom",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "keywords": [
     "dom",
     "whatwg"
@@ -26,9 +26,9 @@
   ],
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@oozcitak/infra": "^2.0.1",
-    "@oozcitak/url": "^2.0.1",
-    "@oozcitak/util": "^9.0.2"
+    "@oozcitak/infra": "^2.0.2",
+    "@oozcitak/url": "^3.0.0",
+    "@oozcitak/util": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",
